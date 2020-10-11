@@ -1,6 +1,10 @@
-# Demo1App
+# MARKONO
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.9.
+
+# Before getting started
+
+ Ask for assets folder from development, due to its large size, it is not maintained at github
 
 ## Development server
 

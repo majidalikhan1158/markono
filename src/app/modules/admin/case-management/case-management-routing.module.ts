@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CreateCaseComponent } from './create-case/create-case.component';
-import { Error4Component } from '../../errors/error4/error4.component';
+import { Error404Component } from '../../errors/error404/error404.component';
+import { QuotationListComponent } from './quotation-list/quotation-list.component';
 
 const routes: Routes = [
   {
@@ -9,8 +10,12 @@ const routes: Routes = [
     component: CreateCaseComponent,
   },
   {
+    path: 'quotation-list',
+    component: QuotationListComponent,
+  },
+  {
     path: '**',
-    component: Error4Component,
+    component: Error404Component,
   },
 ];
 

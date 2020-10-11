@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { ErrorsComponent } from './errors.component';
-import { Error4Component } from './error4/error4.component';
+import { Error404Component  } from './error404/error404.component';
 
 const routes: Routes = [
   {
@@ -11,7 +11,7 @@ const routes: Routes = [
     children: [
       {
         path: '**',
-        component: Error4Component,
+        component: Error404Component,
       }
     ],
   },

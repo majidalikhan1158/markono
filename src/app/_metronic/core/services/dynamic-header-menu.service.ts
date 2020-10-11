@@ -11,9 +11,12 @@ const emptyMenuConfig = {
 })
 export class DynamicHeaderMenuService {
   private menuConfigSubject = new BehaviorSubject<any>(emptyMenuConfig);
+  private headerLabelSubject = new BehaviorSubject<string>('');
   menuConfig$: Observable<any>;
+  headerLabel$: Observable<any>;
   constructor() {
     this.menuConfig$ = this.menuConfigSubject.asObservable();
+    this.headerLabel$ = this.headerLabelSubject.asObservable();
     this.loadMenu();
   }
 
@@ -29,5 +32,9 @@ export class DynamicHeaderMenuService {
 
   private getMenu(): any {
     return this.menuConfigSubject.value;
+  }
+
+  public setHeaderLabel(label: string) {
+    this.headerLabelSubject.next(label);
   }
 }

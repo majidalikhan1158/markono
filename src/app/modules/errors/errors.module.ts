@@ -3,11 +3,11 @@ import {CommonModule} from '@angular/common';
 
 import {ErrorsRoutingModule} from './errors-routing.module';
 import {ErrorsComponent} from './errors.component';
-import {Error4Component} from './error4/error4.component';
+import {Error404Component} from './error404/error404.component';
 
 
 @NgModule({
-  declarations: [ ErrorsComponent, Error4Component],
+  declarations: [ ErrorsComponent, Error404Component],
   imports: [
     CommonModule,
     ErrorsRoutingModule

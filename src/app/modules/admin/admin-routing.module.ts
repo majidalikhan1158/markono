@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { AdminComponent } from './admin.component';
 import { Routes, RouterModule } from '@angular/router';
-import { Error4Component } from '../errors/error4/error4.component';
+import { Error404Component } from '../errors/error404/error404.component';
 
 const routes: Routes = [
   {
@@ -16,8 +16,15 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'product-management',
+        loadChildren: () =>
+          import('../admin/product-management/product-management.module').then(
+            (m) => m.ProductManagementModule
+          ),
+      },
+      {
         path: '**',
-        component: Error4Component,
+        component: Error404Component,
       },
     ]
   }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from './_layout/layout.component';
-import { Error4Component } from '../modules/errors/error4/error4.component';
+import { Error404Component } from '../modules/errors/error404/error404.component';
 
 const routes: Routes = [
   {
@@ -17,7 +17,7 @@ const routes: Routes = [
       },
       {
         path: '**',
-        component: Error4Component,
+        component: Error404Component,
       },
     ],
   },

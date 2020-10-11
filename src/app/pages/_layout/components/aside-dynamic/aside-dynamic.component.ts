@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { LayoutService, DynamicAsideMenuService } from '../../../../_metronic/core';
+import { LayoutService, DynamicAsideMenuService, DynamicHeaderMenuService } from '../../../../_metronic/core';
+import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-headers.config';
 
 @Component({
   selector: 'app-aside-dynamic',
@@ -30,7 +31,8 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     private layout: LayoutService,
     private router: Router,
     private menu: DynamicAsideMenuService,
-    private cdr: ChangeDetectorRef) { }
+    private cdr: ChangeDetectorRef,
+    private dynamicHeaderMenuService: DynamicHeaderMenuService) { }
 
   ngOnInit(): void {
     // load view settings
@@ -56,6 +58,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     ).subscribe((event: NavigationEnd) => {
       this.currentUrl = event.url;
       this.cdr.detectChanges();
+      this.setHeaderLabel();
     });
     this.subscriptions.push(routerSubscr);
 
@@ -65,6 +68,14 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     });
     this.subscriptions.push(menuSubscr);
+  }
+
+  private setHeaderLabel() {
+    DynamicPageHeaderLabels.items.forEach(element => {
+      if (element.page === this.currentUrl) {
+        this.dynamicHeaderMenuService.setHeaderLabel(element.title);
+      }
+    });
   }
 
   private getLogo() {

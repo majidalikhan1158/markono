@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { LayoutService } from '../../../../../_metronic/core';
+import { LayoutService, DynamicHeaderMenuService } from '../../../../../_metronic/core';
+import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-headers.config';
 
 function getCurrentURL(location) {
   return location.split(/[?#]/)[0];
@@ -16,8 +17,8 @@ export class HeaderMenuComponent implements OnInit {
   rootArrowEnabled: boolean;
   location: Location;
   headerMenuDesktopToggle: string;
-
-  constructor(private layout: LayoutService, private loc: Location) {
+  headerLabel: string;
+  constructor(private layout: LayoutService, private loc: Location, public dynamicHeaderMenuService: DynamicHeaderMenuService) {
     this.location = this.loc;
   }
 
@@ -27,6 +28,17 @@ export class HeaderMenuComponent implements OnInit {
     this.headerMenuDesktopToggle = this.layout.getProp(
       'header.menu.desktop.toggle'
     );
+    this.setHeaderLabel();
+  }
+
+  private setHeaderLabel() {
+    const location = this.location.path();
+    const current = getCurrentURL(location);
+    DynamicPageHeaderLabels.items.forEach(element => {
+      if (element.page === current) {
+        this.dynamicHeaderMenuService.setHeaderLabel(element.title);
+      }
+    });
   }
 
   getMenuItemActive(url) {

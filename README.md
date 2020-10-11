@@ -4,7 +4,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 # Before getting started
 
- Ask for assets folder from development, due to its large size, it is not maintained at github
+ Ask for assets folder from development team, due to its large size, it is not maintained at github
 
 ## Development server
 

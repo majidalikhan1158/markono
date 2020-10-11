@@ -9,9 +9,9 @@ export const DynamicPageHeaderLabels = {
         title: 'Quotations',
         page: '/admin/case-management/quotation-list',
       },
-      { 
+      {
         title: 'Product Specs',
         page: '/admin/product-management/create',
       }
     ]
-  }
+  };

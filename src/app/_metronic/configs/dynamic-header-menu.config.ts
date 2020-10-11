@@ -1,8 +1,7 @@
 export const DynamicHeaderMenuConfig = {
   items: [
-    
   ]
-}
+};
 
 // export const DynamicHeaderMenuConfig = {
 //   items: [

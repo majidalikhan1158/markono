@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { CaseManagementRoutingModule } from './case-management-routing.module';
 import { CommonModule } from '@angular/common';
-import { CreateCaseComponent } from './create-case/create-case.component';
+import { CaseManagementRoutingModule } from './case-management-routing.module';
 import { MaterialUiModule } from '../../material-ui/material-ui.module';
+import { CreateCaseComponent } from './create-case/create-case.component';
 import { QuotationListComponent } from './quotation-list/quotation-list.component';
 
 @NgModule({
@@ -13,7 +13,7 @@ import { QuotationListComponent } from './quotation-list/quotation-list.componen
   imports: [
     CommonModule,
     CaseManagementRoutingModule,
-    MaterialUiModule
+    MaterialUiModule,
   ]
 })
 export class CaseManagementModule { }

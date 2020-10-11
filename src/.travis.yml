@@ -14,8 +14,6 @@ before_script:
   - npm install -g @angular/cli
 
 script:
-  - ng lint
-  - ng test --watch false --browsers ChromeHeadless
-  - ng e2e --protractor-config='e2e/protractor.ci.conf.js'
-  - yarn build --prod --base-href $base_href #base_href should be given in travis as an environment variable
+  - yarn all_tests #Uses yarn to run our custom script all_tests
+  - yarn build --prod --base-href $base_href
   

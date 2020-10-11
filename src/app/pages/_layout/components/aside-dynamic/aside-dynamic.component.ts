@@ -71,11 +71,16 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   }
 
   private setHeaderLabel() {
+    let pageLabelFound = false;
     DynamicPageHeaderLabels.items.forEach(element => {
       if (element.page === this.currentUrl) {
+        pageLabelFound = true;
         this.dynamicHeaderMenuService.setHeaderLabel(element.title);
       }
     });
+    if (!pageLabelFound) {
+      this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
+    }
   }
 
   private getLogo() {

@@ -16,6 +16,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: '',
+        loadChildren: () =>
+          import('../modules/admin/admin.module').then(
+            (m) => m.AdminModule
+          ),
+      },
+      {
         path: '**',
         component: Error404Component,
       },

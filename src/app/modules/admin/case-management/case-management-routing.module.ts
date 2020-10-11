@@ -14,6 +14,10 @@ const routes: Routes = [
     component: QuotationListComponent,
   },
   {
+    path: '',
+    component: CreateCaseComponent,
+  },
+  {
     path: '**',
     component: Error404Component,
   },

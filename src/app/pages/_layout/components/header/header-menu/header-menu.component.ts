@@ -32,13 +32,18 @@ export class HeaderMenuComponent implements OnInit {
   }
 
   private setHeaderLabel() {
+    let pageLabelFound = false;
     const location = this.location.path();
     const current = getCurrentURL(location);
     DynamicPageHeaderLabels.items.forEach(element => {
       if (element.page === current) {
+        pageLabelFound = true;
         this.dynamicHeaderMenuService.setHeaderLabel(element.title);
       }
     });
+    if (!pageLabelFound) {
+      this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
+    }
   }
 
   getMenuItemActive(url) {

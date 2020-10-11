@@ -1,0 +1,93 @@
+.stepper-transparent {
+    background-color: transparent !important;
+}
+
+.display-flex {
+    display: flex;
+}
+
+.card.card-custom.reference-no-card > .card-body, 
+.card.card-custom.search-customer-card > .card-body{
+    padding: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+ 
+.card.card-custom.reference-no-card .card-body 
+.mat-form-field .mat-form-field-wrapper .mat-form-field-flex 
+> .mat-form-field-outline,
+.card.card-custom.search-customer-card .card-body 
+.mat-form-field .mat-form-field-wrapper .mat-form-field-flex 
+> .mat-form-field-outline {
+    background: #eef0f8;
+    border-radius: 5px;
+}
+
+.card.card-custom.reference-no-card .card-body 
+.mat-form-field .mat-form-field-wrapper .mat-form-field-flex
+> .mat-form-field-infix,
+.card.card-custom.search-customer-card .card-body 
+.mat-form-field .mat-form-field-wrapper .mat-form-field-flex
+> .mat-form-field-infix {
+    // padding-top: 5px;
+    // padding-bottom: 5px;
+}
+
+
+.card.card-custom.reference-no-card .card-body 
+.mat-form-field .mat-form-field-wrapper .mat-form-field-flex 
+.mat-form-field-infix  > .txtReferenceNo {
+    padding-left: 10px;
+}
+
+.card.card-custom.reference-no-card .card-body .mat-form-field > .mat-form-field-wrapper,
+.card.card-custom.search-customer-card .card-body .mat-form-field > .mat-form-field-wrapper
+ {
+    padding-top: 10px;
+    padding-bottom: 10px; 
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.card.card-custom > .card-header {
+    min-height: 45px;
+}
+
+.card.card-custom.customer-info-card .card-header .card-toolbar > h6 {
+    font-weight: 400;
+    margin-bottom: 0px;
+    font-size: 14px;
+}
+
+.card.card-custom.customer-info-card .card-body .row div p >  span.material-icons {
+    color: #ffa800;
+    font-size: 10px !important;
+}
+
+.card.card-custom.customer-info-card .card-body .row div >  p.info-label {
+    color: #7E8299;
+    margin-bottom: 5px;
+}
+
+.card.card-custom.customer-info-card .card-body .row div >  p.info-label-value {
+    font-size: 14px;
+}
+
+.card.card-custom.customer-info-card .card-body .row div.col-lg-4 {
+    padding-right: 0px;;
+} 
+
+mat-horizontal-stepper .mat-horizontal-content-container  {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+mat-horizontal-stepper .mat-horizontal-stepper-header-container > .mat-stepper-horizontal-line {
+    background-color: rgba(0, 0, 0, 0.54);
+    height: 2px;
+    border-top-style: none;
+}

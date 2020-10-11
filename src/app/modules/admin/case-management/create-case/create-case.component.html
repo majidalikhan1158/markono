@@ -1,0 +1,275 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper="matHorizontalStepper" class="stepper-transparent">
+    <mat-step [stepControl]="firstFormGroup">
+      <ng-template matStepLabel>Customer Info.</ng-template>
+      <div class="row">
+          <div class="col-xl-8">
+            <div class="card card-custom example example-compact gutter-b case-type-card">
+                <div class="card-header">
+                  <div class="card-title">
+                    <h3 class="card-label">Choose Case Type</h3>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div>
+                    <mat-radio-group>
+                        <mat-radio-button value="0" (change)="handleCaseTypeChange($event)">Print Order</mat-radio-button>
+                        <mat-radio-button value="1" (change)="handleCaseTypeChange($event)">Warehouse order</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+              </div>
+              
+          </div>
+          <div class="col-xl-4" *ngIf="isShowExternalReferenceNumberBox">
+            <div class="card card-custom example example-compact gutter-b reference-no-card">
+                <div class="card-header">
+                  <div class="card-title">
+                    <h3 class="card-label">External Reference No.</h3>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div>
+                    <mat-form-field appearance="outline">
+                        <input matInput placeholder="Reference No" class="txtReferenceNo"
+                        [(ngModel)]="txtReferenceNumber"
+                        (keydown.enter)="handleReferenceNumberChange()"
+                        (focusout)="handleReferenceNumberChange()">
+                    </mat-form-field>
+                  </div>
+                </div>
+            </div>  
+          </div>
+      </div>
+
+      <div class="row" *ngIf="isShowSearchCustomerBox">
+        <div class="col-lg-12">
+          <div class="card card-custom example example-compact gutter-b search-customer-card">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label">Search Customer</h3>
+              </div>
+              <div class="card-toolbar">
+                <a style="color: #3699FF; font-weight: bold;"> + ADD NEW CUSTOMER</a>
+              </div>
+            </div>
+            <div class="card-body display-flex">
+              <div class="col-lg-4">
+                <mat-form-field appearance="outline">
+                  <mat-icon matPrefix>search</mat-icon>
+                  <input matInput placeholder="Search" id="txtSearchCustomer"
+                  (keydown.enter)="handleCustomerSearch()"
+                  [(ngModel)]="txtSearchCustomer">
+                </mat-form-field>
+              </div>
+              <div class="col-lg-3">
+                <button class="btn btn-primary font-weight-bolder font-size-sm  mr-3 mt-5 cursor-pointer btnCustomerSearch"
+                (click)="handleCustomerSearch()">SEARCH</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-6" *ngIf="isShowCustomerInfoBox">
+          <div class="card card-custom example example-compact gutter-b customer-info-card">
+              <div class="card-header">
+                <div class="card-title">
+                  <h3 class="card-label">Customer Info.</h3>
+                </div>
+                <div class="card-toolbar">
+                  <h6>Sell-to-No: DPC149</h6>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <p>
+                      <span class="material-icons">
+                        stop_circle
+                      </span>
+                      General Info</p>
+                  </div>
+                </div>
+                <div class="row display-flex">
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Company Name</p>
+                    <p class="info-label-value">CPI - Elsevier Ltd</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Contact Person</p>
+                    <p class="info-label-value">CPIANTONYROWE</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Email</p>
+                    <p class="info-label-value">-</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Phone No</p>
+                    <p class="info-label-value">-</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Co-ordinator</p>
+                    <p class="info-label-value">-</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Sales Person</p>
+                    <p class="info-label-value">-</p>
+                  </div>
+                </div>
+                <br><br>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <p>
+                      <span class="material-icons">
+                        stop_circle
+                      </span>
+                      Address</p>
+                  </div>
+                </div>
+                <div class="row display-flex">
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Address 1</p>
+                    <p class="info-label-value">422 Than Road</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Address 2</p>
+                    <p class="info-label-value">CC Industrial Building Lorem Ipsum</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Postcode</p>
+                    <p class="info-label-value">332143</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">City</p>
+                    <p class="info-label-value">UK</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">State</p>
+                    <p class="info-label-value">-</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Country</p>
+                    <p class="info-label-value">United Kingdom</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+        </div>
+        
+        <div class="col-xl-6" *ngIf="isShowCustomerInfoBox">
+          <div class="card card-custom example example-compact gutter-b customer-info-card">
+              <div class="card-header">
+                <div class="card-title">
+                  <h3 class="card-label">Billing Info.</h3>
+                </div>
+                <div class="card-toolbar">
+                  <h6>Bill-to-No: DPC149</h6>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <p>
+                      <span class="material-icons">
+                        stop_circle
+                      </span>
+                      General Info</p>
+                  </div>
+                </div>
+                <div class="row display-flex">
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Company Name</p>
+                    <p class="info-label-value">CPI - Elsevier Ltd</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Contact Person</p>
+                    <p class="info-label-value">CPIANTONYROWE</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Email</p>
+                    <p class="info-label-value">-</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Phone No</p>
+                    <p class="info-label-value">-</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Co-ordinator</p>
+                    <p class="info-label-value">-</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Sales Person</p>
+                    <p class="info-label-value">-</p>
+                  </div>
+                </div>
+                <br><br>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <p>
+                      <span class="material-icons">
+                        stop_circle
+                      </span>
+                      Address</p>
+                  </div>
+                </div>
+                <div class="row display-flex">
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Address 1</p>
+                    <p class="info-label-value">422 Than Road</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Address 2</p>
+                    <p class="info-label-value">CC Industrial Building Lorem Ipsum</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Postcode</p>
+                    <p class="info-label-value">332143</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">City</p>
+                    <p class="info-label-value">UK</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">State</p>
+                    <p class="info-label-value">-</p>
+                  </div>
+                  <div class="col-lg-4 col-4">
+                    <p class="info-label">Country</p>
+                    <p class="info-label-value">United Kingdom</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <button mat-button matStepperNext class="btn btn-primary font-weight-bolder float-right" >Next</button>
+        </div>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Case Details</ng-template>
+        <mat-form-field>
+          <input matInput placeholder="Address" formControlName="secondCtrl" required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Summary</ng-template>
+      You are now done.
+       <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>

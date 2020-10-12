@@ -16,4 +16,11 @@ before_script:
 script:
   - yarn all_tests #Uses yarn to run our custom script all_tests
   - yarn build --prod --base-href $base_href
-  
+
+deploy:
+  provider: pages
+  skip_cleanup: true # To avoid cleanup of the artifact generated during script
+  github_token: $GITHUB_TOKEN # Provided as an environment variable in travis
+  local_dir: docs # Replace this with your project name
+  on:
+    branch: CI/CD

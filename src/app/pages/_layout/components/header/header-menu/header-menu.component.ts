@@ -42,7 +42,7 @@ export class HeaderMenuComponent implements OnInit {
       }
     });
     if (!pageLabelFound) {
-      this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
+      this.dynamicHeaderMenuService.setHeaderLabel('Shop Floor Collection');
     }
   }
 

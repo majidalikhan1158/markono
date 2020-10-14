@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700");
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 // Global vendors
 @import "~bootstrap/dist/css/bootstrap.css";
 // => Material
@@ -28,6 +28,9 @@
 @import "./assets/sass/themes/layout/brand/dark.scss";
 @import "./assets/sass/themes/layout/aside/dark.scss";
 
+html, body {
+  font-family: 'Roboto';
+}
 // Header themes
 // .header-base-light {
 //     @import "./assets/sass/themes/layout/header/base/light.scss";
@@ -64,6 +67,18 @@
 // }
 
 // hide bootstrap dropdown arrow globally
+
+
+@font-face {
+  font-family: 'Roboto-Bold';
+  src: url('../../assets/fonts/Roboto-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-Regular';
+  src: url('../../assets/fonts/Roboto-Regular.ttf') format('truetype');
+}
+
 .dropdown-toggle::after {
   display: none !important;
 }
@@ -74,4 +89,69 @@
 
 app-toolbar .sticky-toolbar  {
   display: none !important;
+}
+
+.font-roboto-bold {
+  font-family: Roboto-Bold;
+  font-weight: bold;
+  color: #484848;
+}
+
+.display-flex-direction-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.font-10px {
+  font-size: 10px !important;
+}
+
+.font-12px {
+  font-size: 12px !important;
+}
+
+.font-14px{
+  font-size: 14px !important;
+}
+.font-20px {
+  font-size: 20px !important;
+}
+
+.app-label-grey {
+  color: #AFAFAF;
+  font-size: 12px;
+  font-family: Roboto;
+  padding-bottom: 5px;
+}
+
+.app-label-black {
+  color: #343434;
+  font-size: 12px;
+  font-family: Roboto;
+}
+
+.padding-left-right-0px {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.padding-0px {
+  padding: 0px !important;
+}
+
+
+.padding-left-10px {
+  padding-left: 10px;
+}
+
+.padding-left-15px{
+  padding-left: 15px;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.color-484848 {
+  color: #484848;
 }

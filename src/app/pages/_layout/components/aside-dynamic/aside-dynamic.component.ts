@@ -79,7 +79,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
       }
     });
     if (!pageLabelFound) {
-      this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
+      this.dynamicHeaderMenuService.setHeaderLabel('Shop Floor Collection');
     }
   }
 

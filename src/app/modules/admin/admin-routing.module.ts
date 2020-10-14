@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { AdminComponent } from './admin.component';
 import { Routes, RouterModule } from '@angular/router';
+import { AdminComponent } from './admin.component';
 import { Error404Component } from '../errors/error404/error404.component';
-import { CreateCaseComponent } from './case-management/create-case/create-case.component';
+import { ShopFloorCollectionComponent } from './shop-floor-collection/shop-floor-collection.component';
 
 const routes: Routes = [
   {
@@ -25,10 +25,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        loadChildren: () =>
-          import('../admin/case-management/case-management.module').then(
-            (m) => m.CaseManagementModule
-          ),
+        component: ShopFloorCollectionComponent
       },
       {
         path: '**',

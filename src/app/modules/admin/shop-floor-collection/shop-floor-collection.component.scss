@@ -58,12 +58,6 @@
     opacity: 1;
 }
 
-.row1 .col-lg-3,
-.row1 .col-lg-6,
-.row1 .col-lg-3 {
-    padding-right: 5px;
-}
-
 .card.card-custom.onthe-machine-card .card-body .row.row1 {
     padding: 10px;
 }
@@ -97,22 +91,21 @@ mat-form-field.txtSearchWithJobNo {
     width: 100%;
 }
 
-mat-form-field.txtSearchWithJobNo .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-outline {
-    border: 1px solid #DBDBDB !important;
-    border-radius: 2px !important;
-}
+// mat-form-field.txtSearchWithJobNo .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-outline {
+//     border: 1px solid #DBDBDB !important;
+//     border-radius: 2px !important;
+// }
 
-.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick{
-    border: 1px solid #DBDBDB !important;
-}
+// .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick{
+    
+// }
 
-mat-form-field.txtSearchWithJobNo .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-outline:hover,
-mat-form-field.txtSearchWithJobNo .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-outline:focus
-{
-    border: 1px solid #DBDBDB !important;
-    border-radius: 2px !important;
-}
-
+// mat-form-field.txtSearchWithJobNo .mat-form-field-wrapper .mat-form-field-flex
+// {
+//     border: 1px solid #DBDBDB ;
+//     border-radius: 2px !important;
+// }
+ 
 .table.job-schedule-table thead tr th {
     background-color: #F2F2F2;
     width: auto !important;
@@ -132,6 +125,7 @@ table.job-schedule-table{
     padding-right: 0px;
     padding-top: 0px;
     padding-bottom: 25px;
+    vertical-align: sub !important;
 }
 
 .job-schedule-table.table tbody tr td.action-column{
@@ -139,7 +133,8 @@ table.job-schedule-table{
 }
 
 .job-schedule-table.table tbody tr .row-second-column{
-    padding-top: 20px !important;
+    padding-top: 25px;
+    vertical-align: unset !important;
 }
 
 .job-schedule-table.table tbody tr.table-last-row {

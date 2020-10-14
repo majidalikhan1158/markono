@@ -323,66 +323,66 @@ export class ShopFloorCollectionComponent implements OnInit {
           {
             x: '',
             y: 10
-          }, 
+          },
           {
             x: '',
             y: 20
-          }, 
+          },
           {
             x: '',
             y: 30
-          }, 
+          },
           {
             x: '6:00',
             y: 40
-          }, 
+          },
           {
             x: '',
             y: 50
-          }, 
+          },
           {
             x: '',
             y: 60
-          }, 
+          },
           {
             x: '8:00',
             y: 70
-          }, 
+          },
           {
             x: '',
             y: 80
-          }, 
+          },
           {
             x: '',
             y: 90
-          }, 
+          },
           {
             x: '10:00',
             y: 100
-          }, 
+          },
           {
             x: '',
             y: 110
-          }, 
+          },
           {
             x: '',
             y: 120
-          }, 
+          },
           {
             x: '12:00',
             y: 130
-          }, 
+          },
           {
             x: '',
             y: 140
           }, {
             x: '',
             y: 150
-          }, 
+          },
           {
             x: '',
             y: 160
-          }, 
+          },
           {
             x: '14:00',
             y: 170
@@ -390,11 +390,11 @@ export class ShopFloorCollectionComponent implements OnInit {
           {
             x: '',
             y: 180
-          }, 
+          },
           {
             x: '',
             y: 190
-          }, 
+          },
           {
             x: '16:00',
             y: 200
@@ -402,11 +402,11 @@ export class ShopFloorCollectionComponent implements OnInit {
           {
             x: '',
             y: 210
-          }, 
+          },
           {
             x: '',
             y: 220
-          }, 
+          },
           {
             x: '',
             y: 230
@@ -414,11 +414,11 @@ export class ShopFloorCollectionComponent implements OnInit {
           {
             x: '18:00',
             y: 240
-          }, 
+          },
           {
             x: '',
             y: 250
-          }, 
+          },
           {
             x: '',
             y: 260
@@ -426,7 +426,7 @@ export class ShopFloorCollectionComponent implements OnInit {
           {
             x: '',
             y: 270
-          }, 
+          },
           {
             x: '',
             y: 280
@@ -434,11 +434,11 @@ export class ShopFloorCollectionComponent implements OnInit {
           {
             x: '20:00',
             y: 290
-          }, 
+          },
           {
             x: '',
             y: 300
-          }, 
+          },
           {
             x: '',
             y: 310
@@ -446,7 +446,7 @@ export class ShopFloorCollectionComponent implements OnInit {
           {
             x: '',
             y: 320
-          }, 
+          },
           {
             x: '',
             y: 330
@@ -454,11 +454,11 @@ export class ShopFloorCollectionComponent implements OnInit {
           {
             x: '22:00',
             y: 310
-          }, 
+          },
           {
             x: '',
             y: 320
-          }, 
+          },
           {
             x: '',
             y: 330
@@ -466,7 +466,7 @@ export class ShopFloorCollectionComponent implements OnInit {
           {
             x: '',
             y: 340
-          }, 
+          },
           {
             x: '',
             y: 350
@@ -474,11 +474,11 @@ export class ShopFloorCollectionComponent implements OnInit {
           {
             x: '24:00',
             y: 360
-          }, 
+          },
           {
             x: '',
             y: 370
-          }, 
+          },
           {
             x: '',
             y: 380
@@ -486,7 +486,7 @@ export class ShopFloorCollectionComponent implements OnInit {
           {
             x: '',
             y: 390
-          }, 
+          },
           {
             x: '',
             y: 400

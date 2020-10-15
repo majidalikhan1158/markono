@@ -148,10 +148,33 @@ app-toolbar .sticky-toolbar  {
   padding-left: 15px;
 }
 
+.padding-b-5px {
+  padding-bottom: 5px !important;
+}
+
+.padding-b-20px {
+  padding-bottom: 20px !important;
+}
+
+.padding-l-0px {
+  padding-left: 0px !important;
+}
+
+.padding-r-0px {
+  padding-right: 0px !important;
+}
+
+.margin-l-20px{
+  margin-left: 20px !important; 
+}
+
 .display-flex {
   display: flex;
 }
 
+.display-grid {
+  display: grid;
+}
 .color-484848 {
   color: #484848;
 }

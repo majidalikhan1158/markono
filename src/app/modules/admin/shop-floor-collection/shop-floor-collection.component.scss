@@ -1,3 +1,7 @@
+.shopFloorCollectionScreen {
+    margin-top: -64px;
+}
+
 .shopFloorCollectionScreen .card-body{
     padding: 0px !important;
     padding-left: 15px !important;
@@ -82,16 +86,46 @@ mat-form-field.selectBoxJobSchedule{
     float: right;
     margin: auto;
     margin-right: 0px;
+    margin-top: 3px;
 }
 
 mat-form-field.txtSearchWithJobNo {
     width: 100%;
 }
+
+mat-form-field.txtSearchWithJobNo .mat-form-field-wrapper {
+    padding-bottom: 5px;
+    margin-bottom: 0px;
+}
+
+mat-form-field.txtSearchWithJobNo.mat-form-field-appearance-outline .mat-form-field-outline {
+    color: #f2f2f2;
+    border: 1px solid;
+    border-radius: 5px;
+}
+
+mat-form-field.txtSearchWithJobNo.mat-form-field-appearance-outline .mat-form-field-outline:hover {
+    border: none;
+}
+
+mat-form-field.txtSearchWithJobNo.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: #3699ff;
+    border: 0px solid;
+}
+
+
  
  
 .table.job-schedule-table thead tr th {
     background-color: #F2F2F2;
     width: auto !important;
+    position: sticky;
+    top: 0px;
+    z-index: 1000;
+}
+
+.table.job-schedule-table thead th:last-child {
+    z-index: 100;
 }
 
 table.job-schedule-table{
@@ -129,12 +163,7 @@ table.job-schedule-table{
     height: 25px;
     line-height: inherit !important;
 }
-
-
-.btnOperators {
-    width: 84px;
-    padding-left: 15px !important;
-}
+ 
 
 .outline-button {
     border: 1px solid #5FACE2 !important;
@@ -148,10 +177,7 @@ table.job-schedule-table{
 .apexcharts-canvas  {
     width: 100% !important;
 }
-
-.apexcharts-text.apexcharts-xaxis-label {
-    transform: none !important;
-}
+ 
 
 .apexcharts-canvas svg {
     width: 100% !important;
@@ -162,7 +188,7 @@ table.job-schedule-table{
 .color-box{
     width: 10px;
     height:10px;
-    padding: 5px;
+    padding: 0px;
 }
 
 .color-box-label {
@@ -170,7 +196,7 @@ table.job-schedule-table{
     font-weight: 600; 
     margin-left: 5px;
     width: auto;
-    padding-right: 16px;
+    padding-right: 20px;
 }
 
 .mat-tab-body.mat-tab-body-active {
@@ -212,6 +238,10 @@ table.job-schedule-table{
     margin-top: -4px;
  }
 
+ .oee-card .apexcharts-inner.apexcharts-graphical{
+    transform: translate(6px,-6px);
+ }
+
  .data-collection-box {
     margin-right:5px;
     padding-top: 10px;
@@ -245,4 +275,8 @@ mat-form-field.mat-form-field-type-mat-select .mat-form-field-ripple {
 
 mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-select-arrow {
     color: white;
+}
+
+.onthe-machine-card .mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
+    display: none !important;
 }

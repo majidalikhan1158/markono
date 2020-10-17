@@ -5,7 +5,7 @@ import {
   ElementRef,
   AfterViewInit,
 } from '@angular/core';
-import { LayoutService, LayoutInitService } from '../../_metronic/core';
+import { LayoutService, LayoutInitService, DynamicHeaderMenuService } from '../../_metronic/core';
 import KTLayoutContent from '../../../assets/js/layout/base/content';
 
 @Component({
@@ -43,7 +43,8 @@ export class LayoutComponent implements OnInit, AfterViewInit {
 
   constructor(
     private initService: LayoutInitService,
-    private layout: LayoutService
+    private layout: LayoutService,
+    public dynamicHeaderMenuService: DynamicHeaderMenuService
   ) {
     this.initService.init();
   }

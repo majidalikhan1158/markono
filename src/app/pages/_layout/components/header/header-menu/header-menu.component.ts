@@ -29,6 +29,7 @@ export class HeaderMenuComponent implements OnInit {
       'header.menu.desktop.toggle'
     );
     this.setHeaderLabel();
+    this.handlerShopFloorScreen();
   }
 
   private setHeaderLabel() {
@@ -42,7 +43,22 @@ export class HeaderMenuComponent implements OnInit {
       }
     });
     if (!pageLabelFound) {
-      this.dynamicHeaderMenuService.setHeaderLabel('Shop Floor Collection');
+      this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
+    }
+  }
+
+  private handlerShopFloorScreen() {
+    const location = this.location.path();
+    const current = getCurrentURL(location) as string;
+
+    if (current.trim() === '' || current.trim() === '/') {
+      this.dynamicHeaderMenuService.setShouldHeaderDisplay(false);
+      document.body.classList.add('aside-minimize');
+    } else {
+      this.dynamicHeaderMenuService.setShouldHeaderDisplay(true);
+      if (document.body.classList.contains('aside-minimize')) {
+        document.body.classList.remove('aside-minimize');
+      }
     }
   }
 

@@ -497,6 +497,7 @@ export class ShopFloorCollectionComponent implements OnInit {
       ],
       chart: {
         height: 120,
+        width: '100%',
         type: 'heatmap',
         toolbar: {
           show: false,

@@ -122,7 +122,7 @@ export const DefaultLayoutConfig = {
 
   // Content
   content: {
-    width: 'fixed', // fluid|fixed
+    width: 'fluid', // fluid|fixed
   },
 
   // Brand

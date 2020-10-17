@@ -21,12 +21,14 @@
           </div>
           <br>
           <div class="row last-row">
-            <div class="col-lg-6 col-12 display-flex-direction-column">
-              <span class="app-label">Time Lapsed</span>
-              <span class="font-roboto-bold font-20px">00:23:34</span>
-            </div>
-            <div class="col-lg-6 col-12">
-              <button mat-raised-button color="primary" class="outline-button btnOperators">Operators</button>
+            <div class="col-lg-12 col-12 display-flex">
+              <div class="col-lg-6 col-12 display-flex-direction-column padding-0px">
+                <span class="app-label">Time Lapsed</span>
+                <span class="font-roboto-bold font-20px">00:23:34</span>
+              </div>
+              <div class="col-lg-6 col-12 padding-0px text-right">
+                <button mat-raised-button color="primary" class="outline-button btnOperators">Operators</button>
+              </div>
             </div>
           </div>
         </div>
@@ -52,7 +54,7 @@
           </div>
           <div class="row timeline-chart-label-row">
             <div class="col-sm-12">
-              <div class="display-flex">
+              <div class="display-flex margin-l-30px">
                 <div class="col-xs-1 color-box" style="background-color : #66ff33;"></div>
                 <span class="color-box-label"> In Circle</span>
                 <div class="col-xs-1 color-box" style="background-color : #ffff4d;"></div>
@@ -110,7 +112,7 @@
             <div class="col-lg-12 col-12 display-flex">
               <div class="col-lg-4 padding-left-right-0px display-flex-direction-column">
                 <span class="app-label-grey">Current Job</span>
-                <span class="font-20px padding-b-5px" style="color: #5FACE2;">#918615-1-1-1</span>
+                <span class="font-20px padding-b-5px font-roboto-bold" style="color: #5FACE2;">#918615-1-1-1</span>
                 <span class="font-weight-bold font-12px color-484848">Behavioural Pharmacology Cover 3c+W/Bx1c</span>
               </div>
               <div class="col-lg-5 display-flex">
@@ -118,7 +120,7 @@
                   <span class="app-label-grey">Quantity</span>
                   <span class="app-label-black font-20px">4,031</span>
                 </div>
-                <div class="col-lg-8 padding-left-right-0px display-flex-direction-column">
+                <div class="col-lg-8 padding-left-right-0px display-flex-direction-column text-right">
                   <span class="app-label-grey padding-b-5px">Choose Job Status</span>
                   <span>
                     <mat-form-field class="selectBoxJobStatus">
@@ -130,9 +132,11 @@
                   </span>
                 </div>
               </div>
-              <div class="col-lg-3 margin-l-20px padding-l-0px">
-                <span style="padding-right: 10px;"> <img src="./assets/media/custom-icons/stop-icon.png" /></span>
-                <span> <img src="./assets/media/custom-icons/pause-icon.png" /></span>
+              <div class="col-lg-3 padding-l-0px padding-r-0px">
+                <div class="margin-t-22px text-right">
+                  <span style="padding-right: 10px;"> <img src="./assets/media/custom-icons/stop-icon.png" /></span>
+                  <span> <img src="./assets/media/custom-icons/pause-icon.png" /></span>
+                </div>
               </div>
             </div>
           </div>
@@ -273,7 +277,7 @@
           <div class="row">
             <div class="tab-content">
               <!--begin::Table-->
-              <div class="table-responsive scrollableDiv" style="height:454px !important">
+              <div class="table-responsive scrollableDiv" style="height:467px !important">
                 <table class="table table-head-custom table-head-bg table-borderless table-vertical-center
                 job-schedule-table">
                   <thead>

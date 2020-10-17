@@ -12,11 +12,14 @@ const emptyMenuConfig = {
 export class DynamicHeaderMenuService {
   private menuConfigSubject = new BehaviorSubject<any>(emptyMenuConfig);
   private headerLabelSubject = new BehaviorSubject<string>('');
+  private shouldHeaderDisplaySubject = new BehaviorSubject<boolean>(true);
   menuConfig$: Observable<any>;
   headerLabel$: Observable<any>;
+  shouldHeaderDisplay$: Observable<boolean>;
   constructor() {
     this.menuConfig$ = this.menuConfigSubject.asObservable();
     this.headerLabel$ = this.headerLabelSubject.asObservable();
+    this.shouldHeaderDisplay$ = this.shouldHeaderDisplaySubject.asObservable();
     this.loadMenu();
   }
 
@@ -36,5 +39,9 @@ export class DynamicHeaderMenuService {
 
   public setHeaderLabel(label: string) {
     this.headerLabelSubject.next(label);
+  }
+
+  public setShouldHeaderDisplay(flag: boolean) {
+    this.shouldHeaderDisplaySubject.next(flag)
   }
 }

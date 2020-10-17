@@ -59,6 +59,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
       this.currentUrl = event.url;
       this.cdr.detectChanges();
       this.setHeaderLabel();
+      this.handlerShopFloorScreen();
     });
     this.subscriptions.push(routerSubscr);
 
@@ -79,10 +80,22 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
       }
     });
     if (!pageLabelFound) {
-      this.dynamicHeaderMenuService.setHeaderLabel('Shop Floor Collection');
+      this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
     }
   }
 
+  private handlerShopFloorScreen() {
+    if (this.currentUrl.trim() === '' || this.currentUrl.trim() === '/') {
+      this.dynamicHeaderMenuService.setShouldHeaderDisplay(false);
+      document.body.classList.add('aside-minimize');
+    } else {
+      this.dynamicHeaderMenuService.setShouldHeaderDisplay(true);
+      if (document.body.classList.contains('aside-minimize')) {
+        document.body.classList.remove('aside-minimize');
+      }
+    }
+  }
+ 
   private getLogo() {
     if (this.brandSkin === 'light') {
       return './assets/media/logos/logo-dark.png';

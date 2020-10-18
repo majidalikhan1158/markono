@@ -1,0 +1,38 @@
+.case-details-types .card-body{
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.overall-cost-card .card-body {
+    padding: 15px !important;
+}
+
+.overall-cost-card .card-header {
+    padding-left: 15px !important;
+}
+
+.case-details-types .mat-list-base{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.case-details-types .mat-pseudo-checkbox {
+    display: none !important;
+}
+.case-details-types .mat-list-item-content  {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.case-details-types .mat-list-text {
+    padding-right: 0px !important;
+    font-size: 12px;
+    color: #AFAFAF;
+    font-family: 'Roboto-Regular';
+}
+
+.case-details-types .mat-list-single-selected-option .mat-list-text {
+    color: #5FACE2;
+    font-family: 'Roboto-Bold';
+}

@@ -1,0 +1,109 @@
+<div class="modal-header">
+  <h4 class="modal-title">Add New Customer</h4>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-lg-12">
+      <p class="col-lg-12 info-title mb-2 padding-l-0px">
+        <span class="span-yellow material-icons">
+          stop_circle
+        </span>
+        General Info
+      </p>
+    </div>
+    <div class="col-lg-12 display-flex">
+      <div class="col-lg-6 padding-l-0px">
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Enter External Reference no">
+        </mat-form-field>
+      </div>
+      <div class="col-lg-6 padding-0px">
+       <select class="form-control selectBoxCusomterOf">
+        <option>1</option>
+        <option>3</option>
+        <option>4</option>
+       </select>
+      </div>
+    </div>
+    <div class="col-lg-12 display-flex">
+      <div class="col-lg-6 padding-l-0px">
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Contact Person">
+        </mat-form-field>
+      </div>
+      <div class="col-lg-6 padding-0px">
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Email">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-lg-12 display-flex">
+      <div class="col-lg-6 padding-l-0px">
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Phone no.">
+        </mat-form-field>
+      </div>
+      <div class="col-lg-6 padding-0px">
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Website">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-lg-12 display-flex">
+      <div class="col-lg-6 padding-l-0px">
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Sales Person">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-lg-12">
+      <p class="col-lg-12 info-title mb-2 padding-l-0px">
+        <span class="span-yellow material-icons">
+          stop_circle
+        </span>
+        Address
+      </p>
+    </div>
+    <div class="col-lg-12 display-flex">
+      <div class="col-lg-6 padding-l-0px">
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Address Line 1">
+        </mat-form-field>
+      </div>
+      <div class="col-lg-6 padding-0px">
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Address Line 2">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-lg-12 display-flex">
+      <div class="col-lg-6 padding-l-0px">
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="City">
+        </mat-form-field>
+      </div>
+      <div class="col-lg-6 padding-0px">
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Country">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-lg-12 display-flex">
+      <div class="col-lg-6 padding-l-0px">
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Postal Code">
+        </mat-form-field>
+      </div>
+    </div> 
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary ui-action-modal-button" (click)="closeModal()">CANCEL</button>
+  <button type="button" class="btn btn-primary ui-action-modal-button" (click)="addCustomer()">ADD</button>
+</div>

@@ -28,9 +28,7 @@
 @import "./assets/sass/themes/layout/brand/dark.scss";
 @import "./assets/sass/themes/layout/aside/dark.scss";
 
-html, body {
-  font-family: 'Roboto';
-}
+
 // Header themes
 // .header-base-light {
 //     @import "./assets/sass/themes/layout/header/base/light.scss";
@@ -71,12 +69,26 @@ html, body {
 
 @font-face {
   font-family: 'Roboto-Bold';
-  src: url('../../assets/fonts/Roboto-Bold.ttf') format('truetype');
+  src: url('./assets/fonts/Roboto-Bold.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Roboto-Regular';
-  src: url('../../assets/fonts/Roboto-Regular.ttf') format('truetype');
+  src: url('./assets/fonts/Roboto-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto-Medium';
+  src: url('./assets/fonts/Roboto-Medium.ttf') format('truetype');
+}
+
+@import '~@angular/material/theming';
+$custom-typography: mat-typography-config(
+  $font-family: 'Roboto-Regular',
+);
+
+html, body {
+  font-family: 'Roboto-Regular';
 }
 
 .dropdown-toggle::after {
@@ -92,8 +104,17 @@ app-toolbar .sticky-toolbar  {
 }
 
 .font-roboto-bold {
-  font-family: Roboto-Bold;
-  font-weight: bold;
+  font-family: 'Roboto-Bold';
+  color: #484848;
+}
+
+.font-roboto-regular {
+  font-family: 'Roboto-Regular';
+  color: #484848;
+}
+
+.font-roboto-medium {
+  font-family: 'Roboto-Medium';
   color: #484848;
 }
 
@@ -120,8 +141,12 @@ app-toolbar .sticky-toolbar  {
 .app-label-grey {
   color: #AFAFAF;
   font-size: 12px;
-  font-family: Roboto;
+  font-family: 'Roboto-Medium';
   padding-bottom: 5px;
+}
+
+.font-b-500 {
+  font-weight: 500;
 }
 
 .app-label-black {
@@ -139,13 +164,16 @@ app-toolbar .sticky-toolbar  {
   padding: 0px !important;
 }
 
-
 .padding-left-10px {
   padding-left: 10px;
 }
 
 .padding-left-15px{
   padding-left: 15px;
+}
+
+.padding-b-0px {
+  padding-bottom: 0px !important;
 }
 
 .padding-b-5px {
@@ -185,4 +213,111 @@ app-toolbar .sticky-toolbar  {
 }
 .color-484848 {
   color: #484848;
+}
+
+.btn-primary {
+  background: #5FACE2 ;
+  font-size: 14px !important;
+}
+
+.stepper-back-button {
+  background: transparent !important;
+  color: #484848 !important;
+}
+
+.stepper-back-button {
+  background:  #5FACE2 !important;
+  color: #FFFFFF !important;
+}
+
+.stepper-next-button,
+.stepper-back-button {
+  width: 100px;
+  font-size: 14px !important;
+  font-family: 'Roboto-Medium';
+}
+
+.blue-link {
+  color: #5FACE2;
+  cursor: pointer;
+  font-family: 'Roboto-Medium';
+}
+
+.ui-action-modal-button {
+  text-transform: uppercase !important;
+  font: 14px "Roboto-Medium" !important;
+  width: 100px;
+  letter-spacing: 1px;
+  height: 36px !important;
+}
+
+.modal .modal-header .modal-title {
+  font: normal normal bold 20px/24px 'Roboto-Bold' !important;
+}
+
+.modal .modal-header .close span {
+  display: inline !important;
+  font-size: 28px !important;
+  color: #AFAFAF !important;
+}
+
+.span-yellow.material-icons {
+  color: #FFC916;
+  font-size: 10px !important;
+}
+
+p.info-title {
+  font: normal normal normal 12px/16px 'Roboto-Regular';
+}
+
+p.info-label {
+  color: #AFAFAF;
+  margin-bottom: 5px;
+  font: normal normal normal 12px/16px 'Roboto-Regular';
+}
+  
+mat-form-field.mat-form-field-type-mat-select .mat-form-field-ripple {
+  background: transparent !important;
+}
+
+mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-select-arrow {
+  color: white;
+}
+
+
+.scrollableDiv {
+  overflow: auto;
+  overflow-x: hidden;
+}
+.scrollableDiv::-webkit-scrollbar {
+   width: 4px;
+}
+
+.scrollableDiv::-webkit-scrollbar-track {
+   border-radius: 10px;
+   background: transparent !important;
+}
+
+.scrollableDiv::-webkit-scrollbar-thumb {
+   border-radius: 10px;
+   background: #B7B7B7;
+}
+
+.float-right {
+  float: right;
+}
+
+.width-150 {
+  width: 150px !important;
+  max-width: 150px !important;
+}
+
+.width-100 {
+  width: 100px !important;
+  max-width: 100px !important;
+}
+
+.width-90 {
+  width: 90px !important;
+  max-width: 90px !important;
 }

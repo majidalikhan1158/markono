@@ -204,25 +204,6 @@ table.job-schedule-table{
 }
 
 
-.scrollableDiv {
-    overflow: auto;
-    overflow-x: hidden;
- }
- .scrollableDiv::-webkit-scrollbar {
-     width: 4px;
- }
- 
- .scrollableDiv::-webkit-scrollbar-track {
-     border-radius: 10px;
-     background: transparent !important;
- }
- 
- .scrollableDiv::-webkit-scrollbar-thumb {
-     border-radius: 10px;
-     background: #B7B7B7;
- }
-
-
  .equipment-timeline-card  .card-rounded-bottom {
     height: 120px; 
     margin-top: -23px;
@@ -268,14 +249,7 @@ table.job-schedule-table{
  .onthe-machine-card .card-rounded-bottom.comulative-chart {
      height: 150px;
  }
- 
-mat-form-field.mat-form-field-type-mat-select .mat-form-field-ripple {
-    background: transparent !important;
-}
 
-mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-select-arrow {
-    color: white;
-}
 
 .onthe-machine-card .mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
     display: none !important;

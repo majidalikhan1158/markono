@@ -1,93 +1,132 @@
-.stepper-transparent {
+app-create-case,
+app-add-customer-modal {
+  .stepper-transparent {
     background-color: transparent !important;
-}
+ }
 
-.display-flex {
-    display: flex;
-}
+  .card-header {
+    min-height: 45px !important;
+  }
 
-.card.card-custom.reference-no-card > .card-body, 
-.card.card-custom.search-customer-card > .card-body{
-    padding: 0px;
-    padding-left: 5px;
-    padding-right: 5px;
-}
+  .card-header .card-title h3.card-label {
+    font-size: 20px !important;
+    font-family: "Roboto-Bold" !important;
+    font-weight: bold !important;
+  }
+
+  .case-type-card .card-body {
+    padding-top: 18px !important;
+    padding-bottom: 18px !important;
+  }
+
+  .reference-no-card .card-body {
+    padding: 0px !important;
+    padding-bottom: 5px !important;
+  }
+
+  .search-customer-card .card-body {
+    padding: 0px !important;
+    padding-bottom: 5px !important;
+  }
+
+  .case-type-card
+    .mat-radio-button.mat-accent.mat-radio-checked
+    .mat-radio-outer-circle {
+    border-color: #5face2;
+  }
+
+  .case-type-card
+    .mat-radio-button.mat-accent.mat-radio-checked
+    .mat-radio-persistent-ripple,
+  .mat-radio-button.mat-accent .mat-radio-inner-circle,
+  .mat-radio-button.mat-accent
+    .mat-radio-ripple
+    .mat-ripple-element:not(.mat-radio-persistent-ripple),
+  .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
+    background-color: #5face2;
+  }
+
+  .case-type-card .mat-radio-label-content {
+    font: normal normal normal 14px/17px "Roboto-Medium";
+  }
  
-.card.card-custom.reference-no-card .card-body 
-.mat-form-field .mat-form-field-wrapper .mat-form-field-flex 
-> .mat-form-field-outline,
-.card.card-custom.search-customer-card .card-body 
-.mat-form-field .mat-form-field-wrapper .mat-form-field-flex 
-> .mat-form-field-outline {
-    background: #eef0f8;
-    border-radius: 5px;
-}
-
-.card.card-custom.reference-no-card .card-body 
-.mat-form-field .mat-form-field-wrapper .mat-form-field-flex
-> .mat-form-field-infix,
-.card.card-custom.search-customer-card .card-body 
-.mat-form-field .mat-form-field-wrapper .mat-form-field-flex
-> .mat-form-field-infix {
-    // padding-top: 5px;
-    // padding-bottom: 5px;
-}
-
-
-.card.card-custom.reference-no-card .card-body 
-.mat-form-field .mat-form-field-wrapper .mat-form-field-flex 
-.mat-form-field-infix  > .txtReferenceNo {
+  .reference-no-card .txtReferenceNo {
     padding-left: 10px;
-}
+  }
 
-.card.card-custom.reference-no-card .card-body .mat-form-field > .mat-form-field-wrapper,
-.card.card-custom.search-customer-card .card-body .mat-form-field > .mat-form-field-wrapper
- {
-    padding-top: 10px;
-    padding-bottom: 10px; 
-    padding-left: 5px;
-    padding-right: 5px;
-}
+  .reference-no-card .mat-form-field .mat-form-field-wrapper,
+  .search-customer-card .mat-form-field .mat-form-field-wrapper {
+    padding: 5px !important;
+  }
 
-mat-form-field {
-    width: 100%;
-}
-
-.card.card-custom > .card-header {
-    min-height: 45px;
-}
-
-.card.card-custom.customer-info-card .card-header .card-toolbar > h6 {
+  .customer-info-card .card-header h6 {
     font-weight: 400;
     margin-bottom: 0px;
     font-size: 14px;
-}
+  }
 
-.card.card-custom.customer-info-card .card-body .row div p >  span.material-icons {
-    color: #ffa800;
-    font-size: 10px !important;
-}
+  p.info-label-value {
+    font: normal normal normal 14px/17px "Roboto-Regular";
+  }
 
-.card.card-custom.customer-info-card .card-body .row div >  p.info-label {
-    color: #7E8299;
-    margin-bottom: 5px;
-}
+  .customer-info-card div.col-lg-4 {
+    padding-right: 0px;
+  }
 
-.card.card-custom.customer-info-card .card-body .row div >  p.info-label-value {
-    font-size: 14px;
-}
-
-.card.card-custom.customer-info-card .card-body .row div.col-lg-4 {
-    padding-right: 0px;;
-} 
-
-mat-horizontal-stepper .mat-horizontal-content-container  {
+  mat-horizontal-stepper .mat-horizontal-content-container {
     padding-left: 0px;
     padding-right: 0px;
-}
+  }
 
-mat-horizontal-stepper .mat-horizontal-stepper-header-container > .mat-stepper-horizontal-line {
+  mat-horizontal-stepper
+    .mat-horizontal-stepper-header-container
+    .mat-stepper-horizontal-line {
     background-color: rgba(0, 0, 0, 0.54);
     height: 2px;
     border-top-style: none;
+  }
+
+  .btnCustomerSearch {
+    width: 90px;
+    height: 38px;
+  }
+
+  .card-toolbar h6 {
+    font: normal normal normal 14px/17px "Roboto-Bold";
+  }
+
+  .mat-step-header .mat-step-icon {
+    background-color: #afafaf;
+    width: 36px;
+    height: 36px;
+  }
+
+  .mat-step-header .mat-step-icon.mat-step-icon-selected {
+    background-color: #5face2;
+  }
+
+  .mat-step-header .mat-step-icon.mat-step-icon-state-edit {
+    background-color: #7DB961;
+  }
+
+  
+.mat-form-field-outline {
+    background: #eef0f8;
+    border-radius: 5px;
+  }
+  
+  .mat-form-field .mat-form-field-flex {
+    height: 48px ;
+  }
+  
+  mat-form-field.mat-form-field-type-mat-input .mat-form-field-infix {
+    border-top-width: 0px !important;
+    font-size: 14px !important;
+    padding-top: 18px !important;
+  }
+  
+  mat-form-field {
+    width: 100%;
+    height: 55px !important;
+  }
 }

@@ -85,7 +85,8 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   }
 
   private handlerShopFloorScreen() {
-    if (this.currentUrl.trim() === '' || this.currentUrl.trim() === '/') {
+    console.log(this.currentUrl);
+    if (this.currentUrl.trim() === '/admin/shopfloor-collection') {
       this.dynamicHeaderMenuService.setShouldHeaderDisplay(false);
       document.body.classList.add('aside-minimize');
     } else {

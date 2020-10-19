@@ -65,10 +65,6 @@ app-add-customer-modal {
     font-size: 14px;
   }
 
-  p.info-label-value {
-    font: normal normal normal 14px/17px "Roboto-Regular";
-  }
-
   .customer-info-card div.col-lg-4 {
     padding-right: 0px;
   }
@@ -78,11 +74,10 @@ app-add-customer-modal {
     padding-right: 0px;
   }
 
-  mat-horizontal-stepper
-    .mat-horizontal-stepper-header-container
+    mat-horizontal-stepper .mat-horizontal-stepper-header-container
     .mat-stepper-horizontal-line {
-    background-color: rgba(0, 0, 0, 0.54);
-    height: 2px;
+    background-color: #d8d8d8;
+    height: 1px;
     border-top-style: none;
   }
 

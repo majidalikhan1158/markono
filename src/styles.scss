@@ -82,6 +82,11 @@
   src: url('./assets/fonts/Roboto-Medium.ttf') format('truetype');
 }
 
+@font-face {
+  font-family: 'Roboto-Black';
+  src: url('./assets/fonts/Roboto-Black.ttf') format('truetype');
+}
+
 @import '~@angular/material/theming';
 $custom-typography: mat-typography-config(
   $font-family: 'Roboto-Regular',
@@ -180,6 +185,10 @@ app-toolbar .sticky-toolbar  {
   padding-bottom: 5px !important;
 }
 
+.padding-b-15px {
+  padding-bottom: 15px !important;
+}
+
 .padding-b-20px {
   padding-bottom: 20px !important;
 }
@@ -190,6 +199,10 @@ app-toolbar .sticky-toolbar  {
 
 .padding-r-0px {
   padding-right: 0px !important;
+}
+
+.padding-r-10px {
+  padding-right: 10px !important;
 }
 
 .margin-l-20px{
@@ -218,6 +231,8 @@ app-toolbar .sticky-toolbar  {
 .btn-primary {
   background: #5FACE2 ;
   font-size: 14px !important;
+  font-family: 'Roboto-Medium' !important;
+  opacity: 0.8 !important;
 }
 
 .stepper-back-button {
@@ -225,8 +240,7 @@ app-toolbar .sticky-toolbar  {
   color: #484848 !important;
 }
 
-.stepper-back-button {
-  background:  #5FACE2 !important;
+.stepper-next-button {
   color: #FFFFFF !important;
 }
 
@@ -243,7 +257,7 @@ app-toolbar .sticky-toolbar  {
   font-family: 'Roboto-Medium';
 }
 
-.ui-action-modal-button {
+.ui-modal-action-button {
   text-transform: uppercase !important;
   font: 14px "Roboto-Medium" !important;
   width: 100px;
@@ -251,6 +265,10 @@ app-toolbar .sticky-toolbar  {
   height: 36px !important;
 }
 
+.ui-modal-cancel-button {
+  background: transparent !important; 
+  border: none !important;
+}
 .modal .modal-header .modal-title {
   font: normal normal bold 20px/24px 'Roboto-Bold' !important;
 }
@@ -267,13 +285,20 @@ app-toolbar .sticky-toolbar  {
 }
 
 p.info-title {
-  font: normal normal normal 12px/16px 'Roboto-Regular';
+  font-size: 12px;
+  font-family: 'Roboto-Regular';
 }
 
 p.info-label {
   color: #AFAFAF;
   margin-bottom: 5px;
-  font: normal normal normal 12px/16px 'Roboto-Regular';
+  font-size: 12px;
+  font-family: 'Roboto-Regular'
+}
+
+p.info-label-value {
+  font-size: 14px;
+  font-family: 'Roboto-Regular'
 }
   
 mat-form-field.mat-form-field-type-mat-select .mat-form-field-ripple {
@@ -320,4 +345,31 @@ mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-selec
 .width-90 {
   width: 90px !important;
   max-width: 90px !important;
+}
+
+.mat-input-element {
+  color: #343434 !important;
+  font-family: 'Robot-Regular';
+}
+
+.sticky-bottom {
+  position: absolute;
+  bottom: 0;
+}
+
+.position-relative {
+  position:relative;
+}
+
+.full-width {
+  width: 100%;
+}
+
+
+input::placeholder {
+  color: #AFAFAF !important;
+}
+
+.footer-fixed .content {
+  padding-bottom: unset !important;
 }

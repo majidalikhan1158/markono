@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { Error404Component } from '../errors/error404/error404.component';
 import { ShopFloorCollectionComponent } from './shop-floor-collection/shop-floor-collection.component';
+import { CreateCaseComponent } from './case-management/create-case/create-case.component';
 
 const routes: Routes = [
   {
@@ -24,8 +25,12 @@ const routes: Routes = [
           ),
       },
       {
-        path: '',
+        path: 'shopfloor-collection',
         component: ShopFloorCollectionComponent
+      },
+      {
+        path: '',
+        component: CreateCaseComponent
       },
       {
         path: '**',

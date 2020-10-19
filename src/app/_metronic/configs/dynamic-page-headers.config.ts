@@ -12,6 +12,10 @@ export const DynamicPageHeaderLabels = {
       {
         title: 'Product Specs',
         page: '/admin/product-management/create',
+      },
+      {
+        title: 'ShopFloor Collection',
+        page: '/admin/shopfloor-collection',
       }
     ]
   };

@@ -51,7 +51,7 @@ export class HeaderMenuComponent implements OnInit {
     const location = this.location.path();
     const current = getCurrentURL(location) as string;
 
-    if (current.trim() === '' || current.trim() === '/') {
+    if (current.trim() === '/admin/shopfloor-collection') {
       this.dynamicHeaderMenuService.setShouldHeaderDisplay(false);
       document.body.classList.add('aside-minimize');
     } else {

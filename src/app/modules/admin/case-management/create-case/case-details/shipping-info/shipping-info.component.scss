@@ -58,10 +58,15 @@ app-shipping-info {
   .shipping-info-details-card .mat-form-field-outline {
     height: 100% !important;
   }
+  .shipping-info-details-card table {
+    border-collapse: separate !important;
+  }
 
   .table.shipping-info-details-table {
       border: 1px solid #E6E6E6 !important;
       border-radius: 4px !important;
+      -moz-border-radius: 4px;
+      -webkit-border-radius: 4px;
   }
   .shipping-info-details-table thead tr {
     background-color: transparent !important;

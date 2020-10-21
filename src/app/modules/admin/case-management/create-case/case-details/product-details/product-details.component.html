@@ -13,140 +13,167 @@
                           </tr>
                         </thead>
                         <tbody>
-                            <tr class="outer-row">
-                                <td>1</td>
-                                <td>
-                                    <mat-form-field appearance="outline" class="width-150">
-                                        <input matInput placeholder="Search">
-                                    </mat-form-field>
-                                </td>
-                                <td>
-                                    <select class="form-control selectBoxPrintType width-100">
-                                        <option>1</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <mat-form-field appearance="outline" class="width-90">
-                                        <input matInput placeholder="0">
-                                    </mat-form-field>
-                                </td>
-                                <td>0</td>
-                                <td>
-                                    <mat-form-field appearance="outline" class="width-90">
-                                        <input matInput placeholder="0">
-                                    </mat-form-field>
-                                </td>
-                                <td>
-                                    <mat-form-field appearance="outline" class="width-90">
-                                        <input matInput placeholder="0.00">
-                                    </mat-form-field>
-                                </td>
-                                <td>0.00</td>
-                                <td class="action-column pb-0">
-                                    <span class="material-icons expansion-icon" (click)="showProductDetails()">
-                                        {{rowExpansionIcon}}
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <ng-container *ngIf="shouldShowProductDetails">
-                                <tr>
-                                    <td class="pr-0 pl-2 pb-0" colspan="9">
-                                        <div class="col-lg-12 display-flex pl-1 pr-0">
-                                            <div class="col-lg-2 pr-0 pl-1">
-                                                <p class="info-label">Title</p>
-                                                <p class="info-label-value font-12px">Passer: Psychology 3e</p>
-                                            </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <p class="info-label">Total extent</p>
-                                                <p class="info-label-value font-12px">1004</p>
-                                            </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <p class="info-label">Binding Type</p>
-                                                <p class="info-label-value font-12px">Paper Back</p>
-                                            </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <p class="info-label">Product Group</p>
-                                                <p class="info-label-value font-12px">Books</p>
-                                            </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <p class="info-label">Samples required</p>
-                                                <p class="info-label-value font-12px">0</p>
-                                            </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <p class="info-label">BluePrint required</p>
-                                                <p class="info-label-value font-12px">10</p>
-                                            </div>
-                                        </div>
+                            <ng-container *ngFor="let rowId of rowsToDisplay">
+                                <tr class="outer-row">
+                                    <td>
+                                        {{rowId}}
+                                    <td>
+                                        <mat-form-field appearance="outline" class="width-150">
+                                            <mat-icon matPrefix >search</mat-icon>
+                                            <input matInput placeholder="Search">
+                                        </mat-form-field>
+                                    </td>
+                                    <td>
+                                        <select class="form-control selectBoxPrintType width-100">
+                                            <option>1</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <mat-form-field appearance="outline" class="width-90">
+                                            <input matInput placeholder="0">
+                                        </mat-form-field>
+                                    </td>
+                                    <td>0</td>
+                                    <td>
+                                        <mat-form-field appearance="outline" class="width-90">
+                                            <input matInput placeholder="0">
+                                        </mat-form-field>
+                                    </td>
+                                    <td>
+                                        <mat-form-field appearance="outline" class="width-90">
+                                            <input matInput placeholder="0.00">
+                                        </mat-form-field>
+                                    </td>
+                                    <td>0.00</td>
+                                    <td class="action-column pb-0">
+                                        <span class="material-icons expansion-icon" (click)="showProductDetails(rowId)">
+                                            {{ 
+                                                rowId == rowIdToExpand ? 
+                                                ExpansionIcons.KEYBOARD_ARROW_UP : 
+                                                ExpansionIcons.KEYBOARD_ARROW_DOWN 
+                                            }}
+                                        </span>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="pr-0 pl-2 pt-0" colspan="9">
-                                        <div class="col-lg-12 display-flex pl-1 pr-0">
-                                            <div class="col-lg-2 pr-0 pl-1">
-                                                <p class="info-label">Specs version no.</p>
-                                                <p class="info-label-value font-12px">
-                                                    V0001
-                                                    <span class="font-12px blue-link">VIEW ALL</span>
-                                                </p>
+                                <ng-container *ngIf="shouldShowProductDetails && rowId == rowIdToExpand">
+                                    <tr class="expandedRow">
+                                        <td class="pr-0 pl-2 pb-0" colspan="9">
+                                            <div class="col-lg-12 display-flex pl-1 pr-0">
+                                                <div class="col-lg-2 pr-0 pl-1">
+                                                    <p class="info-label">Title</p>
+                                                    <p class="info-label-value font-12px">Passer: Psychology 3e</p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <p class="info-label">Total extent</p>
+                                                    <p class="info-label-value font-12px">1004</p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <p class="info-label">Binding Type</p>
+                                                    <p class="info-label-value font-12px">Paper Back</p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <p class="info-label">Product Group</p>
+                                                    <p class="info-label-value font-12px">Books</p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <p class="info-label">Samples required</p>
+                                                    <p class="info-label-value font-12px">
+                                                        0
+                                                        <span class="material-icons cursor-pointer font-14px">
+                                                            edit
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <p class="info-label">BluePrint required</p>
+                                                    <p class="info-label-value font-12px" (click)="openUiModal('ADD_BLUEPRINT_MODAL')"> 
+                                                        10
+                                                        <span class="material-icons cursor-pointer font-14px">
+                                                            edit
+                                                        </span>
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <p class="info-label">Owner</p>
-                                                <p class="info-label-value font-12px">V0001</p>
+                                        </td>
+                                    </tr>
+                                    <tr class="expandedRow">
+                                        <td class="pr-0 pl-2 pt-0" colspan="9">
+                                            <div class="col-lg-12 display-flex pl-1 pr-0">
+                                                <div class="col-lg-2 pr-0 pl-1">
+                                                    <p class="info-label">Specs version no.</p>
+                                                    <p class="info-label-value font-12px">
+                                                        V0001
+                                                        <span class="font-12px blue-link">VIEW ALL</span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <p class="info-label">Owner</p>
+                                                    <p class="info-label-value font-12px">V0001</p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <p class="info-label">Job Type</p>
+                                                    <p class="info-label-value font-12px">-</p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <p class="info-label">Weight</p>
+                                                    <p class="info-label-value font-12px">-</p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <p class="info-label">F&G required</p>
+                                                    <p class="info-label-value font-12px">
+                                                        10
+                                                        <span class="material-icons cursor-pointer font-14px">
+                                                            edit
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <p class="info-label">Advances required</p>
+                                                    <p class="info-label-value font-12px">
+                                                        0
+                                                        <span class="material-icons cursor-pointer font-14px">
+                                                            edit
+                                                        </span>
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <p class="info-label">Job Type</p>
-                                                <p class="info-label-value font-12px">-</p>
+                                        </td>
+                                    </tr>
+                                    <tr class="expandedRow">
+                                        <td class="pr-0 pl-2 pt-0 pb-0" colspan="9">
+                                            <div class="col-lg-12 display-flex pl-1 pr-0">
+                                                <div class="col-lg-2 pr-0 pl-1">
+                                                    <p class="info-label">Quote no.</p>
+                                                    <p class="info-label-value font-12px">-</p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <p class="info-label">Est. Price</p>
+                                                    <p class="info-label-value font-12px">0</p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <p class="info-label">Additional Unit price</p>
+                                                    <p class="info-label-value font-12px">-</p>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <span class="font-12px blue-link">Check Inventory</span>
+                                                </div>
+                                                <div class="col-lg-2 pr-0">
+                                                    <span class="font-12px blue-link">View past orders</span>
+                                                </div>
                                             </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <p class="info-label">Weight</p>
-                                                <p class="info-label-value font-12px">-</p>
-                                            </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <p class="info-label">F&G required</p>
-                                                <p class="info-label-value font-12px">10</p>
-                                            </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <p class="info-label">Advances required</p>
-                                                <p class="info-label-value font-12px">0</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="pr-0 pl-2 pt-0 pb-0" colspan="9">
-                                        <div class="col-lg-12 display-flex pl-1 pr-0">
-                                            <div class="col-lg-2 pr-0 pl-1">
-                                                <p class="info-label">Quote no.</p>
-                                                <p class="info-label-value font-12px">-</p>
-                                            </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <p class="info-label">Est. Price</p>
-                                                <p class="info-label-value font-12px">0</p>
-                                            </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <p class="info-label">Additional Unit price</p>
-                                                <p class="info-label-value font-12px">-</p>
-                                            </div>
-                                            <div class="col-lg-2 pr-0">
-                                                
-                                            </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <span class="font-12px blue-link">Check Inventory</span>
-                                            </div>
-                                            <div class="col-lg-2 pr-0">
-                                                <span class="font-12px blue-link">View past orders</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="pr-0 pl-2 pt-0" colspan="9">
-                                        <mat-divider class="mt-1 mb-6 "></mat-divider>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pr-0 pl-2 pt-0" colspan="9">
+                                            <mat-divider class="mt-1 mb-6 "></mat-divider>
+                                        </td>
+                                    </tr>
+                                </ng-container>
                             </ng-container>
                         </tbody>
                       </table>
@@ -156,10 +183,10 @@
                   </div>
             </div>
         </div>
-
+        <br><br>
         <div class="row sticky-bottom full-width pl-5 pb-4 product-detail-footer-row">
             <div class="col-lg-12">
-                <a>
+                <a (click)="addRow()">
                     <span class="material-icons add-icon pr-2 cursor-pointer">
                         add_circle_outline
                     </span>
@@ -172,3 +199,11 @@
         </div>
     </div>
 </div>
+
+
+<app-modal id="ADD_BLUEPRINT_MODAL" size="modal-lg">
+    <app-add-blueprint-modal
+      (acceptEvent)="handleAddBluePrintEvent('ADD_BLUEPRINT_MODAL')"
+      (rejectEvent)="handleModalRejectEvent('ADD_BLUEPRINT_MODAL')"
+    ></app-add-blueprint-modal>
+</app-modal>

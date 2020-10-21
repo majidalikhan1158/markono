@@ -20,8 +20,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
 import { CdkColumnDef } from '@angular/cdk/table';
-// import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
-// import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 // import { MatAutocompleteModule } from '@angular/material/autocomplete';
 // import { MatSliderModule } from '@angular/material/slider';
 // import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -94,7 +94,7 @@ import { CdkColumnDef } from '@angular/cdk/table';
     { provide: MatBottomSheetRef, useValue: {} },
     { provide: MAT_BOTTOM_SHEET_DATA, useValue: {} },
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-    // { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ],
   exports: [
     MatInputModule,
@@ -119,6 +119,7 @@ import { CdkColumnDef } from '@angular/cdk/table';
     MatListModule,
     MatTableModule,
     MatDividerModule,
+    MatDatepickerModule,
     // MatTooltipModule,
     // MatSidenavModule,
     // MatProgressBarModule,
@@ -128,7 +129,7 @@ import { CdkColumnDef } from '@angular/cdk/table';
     // MatSlideToggleModule,
     // MatCheckboxModule,
     // MatMenuModule,
-    // MatDatepickerModule,
+    
     // MatAutocompleteModule,
     // MatListModule,
     // MatSliderModule,

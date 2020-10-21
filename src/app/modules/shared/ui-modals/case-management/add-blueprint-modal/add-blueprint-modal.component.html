@@ -1,0 +1,56 @@
+<div class="modal-header">
+    <h4 class="modal-title">Blueprint Required</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body add-blueprint-form position-relative">
+      <ng-container *ngFor="let rowId of rowsToDisplay">
+        <div class="row pb-2">
+            <div class="col-lg-12 display-flex pr-0">
+              <div class="col-lg-3 pl-0">
+                  <mat-form-field appearance="outline">
+                      <input [matDatepicker]="picker" matInput placeholder="Required date">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+              </div>
+              <div class="col-lg-3 pl-0">
+                  <mat-form-field appearance="outline">
+                      <input matInput placeholder="For who">
+                  </mat-form-field>
+              </div>
+              <div class="col-lg-2 pl-0 pr-0">
+                  <mat-form-field appearance="outline">
+                      <input matInput placeholder="Quantity">
+                  </mat-form-field>
+              </div>
+              <div class="col-lg-3">
+                  <mat-form-field appearance="outline">
+                      <input matInput placeholder="Special Instructions">
+                  </mat-form-field>
+              </div>
+              <div class="col-lg-1">
+                <span class="material-icons delete-icon pr-2 cursor-pointer pt-3" (click)="deleteRow(rowId)" *ngIf="rowId > 1">
+                    delete
+                </span>
+              </div>
+            </div> 
+        </div>
+      </ng-container>
+      <br><Br>
+    <div class="row sticky-bottom full-width pl-5 pb-4">
+        <div class="col-lg-12">
+            <a (click)="addRow()">
+                <span class="material-icons add-icon pr-2 cursor-pointer">
+                    add_circle_outline
+                </span>
+                <span class="font-14px blue-link ">ADD ANOTHER</span>
+            </a>
+        </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary ui-modal-cancel-button ui-modal-action-button" (click)="closeModal()">CANCEL</button>
+    <button type="button" class="btn btn-primary ui-modal-action-button" (click)="addBluePrint()">ADD</button>
+  </div>

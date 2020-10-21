@@ -11,26 +11,31 @@ export const CaseDetailTypesArray =
         {
             value: 'Product Details',
             id: 0,
-            enum: 'PRODUCT_DETAILS'
+            enum: 'PRODUCT_DETAILS',
+            isSelected: true
         },
         {
             value: 'Shipping Info',
             id: 1,
-            enum: 'SHIPPING_INFO'
+            enum: 'SHIPPING_INFO',
+            isSelected: false
         },
         {
             value: 'Misc. Cost',
             id: 2,
-            enum: 'MISC_COST'
+            enum: 'MISC_COST',
+            isSelected: false
         },
         {
             value: 'Special Instructions',
             id: 3,
-            enum: 'SPECIAL_INSTRUCTIONS'
+            enum: 'SPECIAL_INSTRUCTIONS',
+            isSelected: false
         },
         {
             value: 'Invoice',
             id: 4,
-            enum: 'INVOICE'
+            enum: 'INVOICE',
+            isSelected: false
         }
     ];

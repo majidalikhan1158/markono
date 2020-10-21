@@ -4,11 +4,12 @@ import { AddCustomerModalComponent } from './ui-modals/case-management/add-custo
 import { ModalComponent } from './ui-modals/modal/modal.component';
 import { MaterialUiModule } from '../material-ui/material-ui.module';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { AddBlueprintModalComponent } from './ui-modals/case-management/add-blueprint-modal/add-blueprint-modal.component';
 
 
 
 @NgModule({
-  declarations: [AddCustomerModalComponent, ModalComponent],
+  declarations: [AddCustomerModalComponent, ModalComponent, AddBlueprintModalComponent],
   imports: [
     CommonModule,
     MaterialUiModule,
@@ -16,6 +17,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   exports: [
     AddCustomerModalComponent,
+    AddBlueprintModalComponent,
     ModalComponent
   ]
 })

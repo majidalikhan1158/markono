@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { CaseDetailTypesArray } from 'src/app/modules/shared/enums/case-details-types';
+import { CaseDetailTypesArray, CaseDetailTypes } from 'src/app/modules/shared/enums/case-details-types';
 import { MatSelectionListChange } from '@angular/material/list';
 
 @Component({
@@ -9,42 +9,18 @@ import { MatSelectionListChange } from '@angular/material/list';
   encapsulation: ViewEncapsulation.None
 })
 export class CaseDetailsComponent implements OnInit {
-  caseDetailTypes =  [
-    {
-        value: 'Product Details',
-        id: 0,
-        enum: 'PRODUCT_DETAILS'
-    },
-    {
-        value: 'Shipping Info',
-        id: 1,
-        enum: 'SHIPPING_INFO'
-    },
-    {
-        value: 'Misc. Cost',
-        id: 2,
-        enum: 'MISC_COST'
-    },
-    {
-        value: 'Special Instructions',
-        id: 3,
-        enum: 'SPECIAL_INSTRUCTIONS'
-    },
-    {
-        value: 'Invoice',
-        id: 4,
-        enum: 'INVOICE'
-    }
-  ];
+  caseDetailTypesConstant = CaseDetailTypes;
+  caseDetailTypesArray = CaseDetailTypesArray;
+  currentSelectedType = CaseDetailTypes.PRODUCT_DETAILS;
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.caseDetailTypes);
   }
 
-  onGroupsChange (data) {
-    // console.log(data.option.value);
-    // data.source.deselectAll();
+  handleCaseDetailTypeChange(event: MatSelectionListChange) {
+    if (event.option.value != null) {
+      this.currentSelectedType = event.option.value;
+    }
   }
 
 }

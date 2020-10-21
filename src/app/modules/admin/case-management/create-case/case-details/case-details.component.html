@@ -3,18 +3,21 @@
         <div class="col-lg-2 padding-l-0px">
             <div class="card card-custom example example-compact gutter-b case-details-types">
                 <div class="card-body">
-                    <mat-selection-list #caseDetailTypes [multiple]="false"  (selectionChange)="onGroupsChange(caseDetailTypes)">
-                        <mat-list-option selected="true">Product Details</mat-list-option>
-                        <mat-list-option>Shipping Info</mat-list-option>
-                        <mat-list-option>Misc. Costs</mat-list-option>
-                        <mat-list-option>Special Instructions</mat-list-option>
-                        <mat-list-option>Invoice</mat-list-option>
+                    <mat-selection-list #caseDetailTypeList [multiple]="false"  (selectionChange)="handleCaseDetailTypeChange($event)">
+                        <mat-list-option *ngFor="let types of caseDetailTypesArray"
+                        [selected]="types.isSelected" [value]="types.enum">
+                            {{types.value}}
+                        </mat-list-option>
                     </mat-selection-list>
                 </div>
             </div>
         </div>
-        <div class="col-lg-10">
-            <app-product-details></app-product-details>
+        <div class="col-lg-10 pr-0">
+            <app-product-details *ngIf="currentSelectedType === caseDetailTypesConstant.PRODUCT_DETAILS"></app-product-details>
+            <app-shipping-info *ngIf="currentSelectedType === caseDetailTypesConstant.SHIPPING_INFO"></app-shipping-info>
+            <app-misc-cost *ngIf="currentSelectedType === caseDetailTypesConstant.MISC_COST"></app-misc-cost>
+            <app-special-instructions *ngIf="currentSelectedType === caseDetailTypesConstant.SPECIAL_INSTRUCTIONS"></app-special-instructions>
+            <app-invoice *ngIf="currentSelectedType === caseDetailTypesConstant.INVOICE"></app-invoice>
         </div>
     </div>
 </div>

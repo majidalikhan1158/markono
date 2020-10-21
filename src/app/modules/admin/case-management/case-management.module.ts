@@ -8,6 +8,10 @@ import { SharedModule } from '../../shared/shared.module';
 import { CustomerInfoComponent } from './create-case/customer-info/customer-info.component';
 import { CaseDetailsComponent } from './create-case/case-details/case-details.component';
 import { ProductDetailsComponent } from './create-case/case-details/product-details/product-details.component';
+import { ShippingInfoComponent } from './create-case/case-details/shipping-info/shipping-info.component';
+import { MiscCostComponent } from './create-case/case-details/misc-cost/misc-cost.component';
+import { SpecialInstructionsComponent } from './create-case/case-details/special-instructions/special-instructions.component';
+import { InvoiceComponent } from './create-case/case-details/invoice/invoice.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +20,10 @@ import { ProductDetailsComponent } from './create-case/case-details/product-deta
     CustomerInfoComponent,
     CaseDetailsComponent,
     ProductDetailsComponent,
+    ShippingInfoComponent,
+    MiscCostComponent,
+    SpecialInstructionsComponent,
+    InvoiceComponent,
   ],
   imports: [
     CommonModule,

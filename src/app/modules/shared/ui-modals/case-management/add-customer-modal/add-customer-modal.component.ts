@@ -9,7 +9,6 @@ import { UIModalID } from '../../../enums/ui-modal-ids';
   encapsulation: ViewEncapsulation.None
 })
 export class AddCustomerModalComponent implements OnInit {
-  closeResult: string;
 
   constructor(private modalService: ModalService) { }
 

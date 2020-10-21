@@ -32,8 +32,13 @@ app-product-details {
   .product-datails-table tbody tr td {
     padding-left: 12px;
     padding-right: 0px;
+    padding-top: 4px;
     font-size: 14px;
     font-family: "Roboto-Medium";
+  }
+
+  .product-datails-table tbody tr.expandedRow td {
+    padding-top: 10px;
   }
 
   .product-datails-table tbody tr td.action-column {

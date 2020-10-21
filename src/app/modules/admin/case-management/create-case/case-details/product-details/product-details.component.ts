@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/dynamic-icons';
+import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 
 @Component({
   selector: 'app-product-details',
@@ -9,19 +10,41 @@ import { ExpansionIcons } from 'src/app/modules/shared/enums/dynamic-icons';
 })
 export class ProductDetailsComponent implements OnInit {
   columnsToDisplay = ['#', 'ISBN', 'Print Type', 'Order Qty', 'Prod Qty', 'Margin(%)', 'Sekking Price', 'Sub-Total'];
+  rowsToDisplay = [1];
+  rowIdToExpand = 0;
   shouldShowProductDetails = false;
-  rowExpansionIcon = ExpansionIcons.KEYBOARD_ARROW_DOWN;
-  constructor() {
+  ExpansionIcons =  ExpansionIcons;
+  constructor(private modalService: ModalService) {
   }
 
   ngOnInit(): void {
   }
 
-  showProductDetails() {
-    this.shouldShowProductDetails = !this.shouldShowProductDetails;
-    this.rowExpansionIcon = this.shouldShowProductDetails ?
-    ExpansionIcons.KEYBOARD_ARROW_UP :
-    ExpansionIcons.KEYBOARD_ARROW_DOWN;
+  showProductDetails(rowId: number) {
+    if (this.rowIdToExpand === rowId) {
+      this.rowIdToExpand = 0;
+      this.shouldShowProductDetails = !this.shouldShowProductDetails;
+    } else {
+      this.rowIdToExpand = rowId;
+      this.shouldShowProductDetails = true;
+    }
   }
 
+  addRow() {
+    const lastRowId = this.rowsToDisplay[this.rowsToDisplay.length - 1];
+    this.rowsToDisplay.push(lastRowId + 1);
+    this.rowIdToExpand = 0;
+  }
+
+  handleAddBluePrintEvent(modalId: string) {
+
+  }
+
+  handleModalRejectEvent(modalId: string) {
+
+  }
+
+  openUiModal(modalId: string){
+    this.modalService.open(modalId);
+  }
 }

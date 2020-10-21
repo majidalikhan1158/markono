@@ -259,7 +259,8 @@ app-toolbar .sticky-toolbar  {
 
 .ui-modal-action-button {
   text-transform: uppercase !important;
-  font: 14px "Roboto-Medium" !important;
+  font-size:  14px !important;
+  font-family: 'Roboto-Medium' !important;
   width: 100px;
   letter-spacing: 1px;
   height: 36px !important;
@@ -309,6 +310,9 @@ mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-selec
   color: white;
 }
 
+.mat-form-field-prefix mat-icon {
+  color: #AFAFAF !important;
+}
 
 .scrollableDiv {
   overflow: auto;
@@ -347,6 +351,11 @@ mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-selec
   max-width: 90px !important;
 }
 
+.width-190 {
+  width: 190px !important;
+  max-width: 190px !important;
+}
+
 .mat-input-element {
   color: #343434 !important;
   font-family: 'Robot-Regular';
@@ -372,4 +381,26 @@ input::placeholder {
 
 .footer-fixed .content {
   padding-bottom: unset !important;
+}
+
+.content {
+  padding-top: 10px !important;
+}
+
+.card.card-custom .card-header {
+  padding-left: 15px !important;
+}
+
+.card.card-custom .card-label {
+  color: #3f4254 !important;
+}
+
+.color-AFAFAF {
+  color: #AFAFAF !important;
+}
+
+.delete-icon {
+  background: transparent;
+  color: #343434;
+  font-size: 22px !important;
 }

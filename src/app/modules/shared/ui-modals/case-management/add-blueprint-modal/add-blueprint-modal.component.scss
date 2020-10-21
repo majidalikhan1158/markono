@@ -1,0 +1,37 @@
+app-add-blueprint-modal {
+.add-blueprint-form mat-form-field {
+    height: 38px !important;
+}
+
+    .add-blueprint-form .mat-form-field-infix {
+        width: auto !important;
+    }
+
+    .add-blueprint-form .mat-form-field {
+        width: 100% !important;
+    }
+
+    .add-blueprint-form .mat-form-field .mat-form-field-flex {
+        height: 38px !important;
+    }
+
+    .add-blueprint-form .mat-form-field-appearance-fill {
+        background: #0000000D;
+        border-radius: 6px;
+    }
+
+    .add-blueprint-form mat-form-field.mat-form-field-type-mat-input .mat-form-field-infix {
+        padding-top: 14px !important;
+    } 
+
+    .add-blueprint-form .add-icon {
+        background: transparent;
+        color: #5face2;
+        font-size: 22px !important;
+        vertical-align: bottom;
+      } 
+}
+
+.cdk-overlay-container {
+    z-index: 1200 !important;
+}

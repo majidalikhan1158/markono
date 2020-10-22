@@ -1,1 +1,59 @@
-<p>special-instructions works!</p>
+<div class="card card-custom example example-compact gutter-b special-instruction-card">
+    <div class="card-body position-relative">
+        <div class="row" style="margin: auto">
+            <div class="col-lg-12 padding-0px">
+                <div class="tab-content">
+                    <!--begin::Table-->
+                    <div class="">
+                      <table class="table table-head-custom  table-vertical-center
+                      special-instruction-table">
+                        <thead>
+                          <tr class="text-left text-uppercase">
+                            <th *ngFor="let item of columnsToDisplay"> {{item}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let rowId of rowsToDisplay">
+                                <tr class="outer-row">
+                                    <td>
+                                        {{rowId}}
+                                    <td>
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Department</mat-label>
+                                            <input matInput placeholder="Dept. Name">
+                                        </mat-form-field>
+                                    </td>
+                                    <td class="width-590">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Description</mat-label>
+                                            <input matInput placeholder="Write Instructions">
+                                        </mat-form-field>
+                                    </td>
+                                    <td>
+                                        <span class="material-icons delete-icon pr-2 cursor-pointer" (click)="deleteRow(rowId)" *ngIf="rowsToDisplay.length > 1">
+                                            delete
+                                        </span>
+                                    </td>
+                                </tr> 
+                            </ng-container>
+                        </tbody>
+                      </table>
+      
+                    </div>
+                    <!--end::Table-->
+                  </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="row sticky-bottom full-width pl-5 pb-4 product-detail-footer-row">
+            <div class="col-lg-12">
+                <a (click)="addRow()">
+                    <span class="material-icons add-icon pr-2 cursor-pointer">
+                        add_circle_outline
+                    </span>
+                    <span class="font-14px blue-link ">ADD ANOTHER</span>
+                </a> 
+            </div>
+        </div>
+    </div>
+</div> 

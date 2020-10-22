@@ -356,6 +356,13 @@ mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-selec
   max-width: 190px !important;
 }
 
+.width-430 {
+  width: 430px;
+}
+
+.width-590 {
+  width: 590px;
+}
 .mat-input-element {
   color: #343434 !important;
   font-family: 'Robot-Regular';
@@ -404,3 +411,27 @@ input::placeholder {
   color: #343434;
   font-size: 22px !important;
 }
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  background: #0000000D !important;
+}
+ 
+.mat-form-field.mat-form-field-appearance-outline .mat-form-field-outline {
+  background: #eef0f8 ;
+  border-radius: 5px;
+}
+
+.mat-form-field.mat-form-field-appearance-outline .mat-form-field-flex {
+  height: 48px;
+}
+
+.mat-form-field-label {
+  color: #AFAFAF !important
+}
+
+ .add-icon {
+  background: transparent;
+  color: #5face2;
+  font-size: 22px !important;
+  vertical-align: bottom;
+} 

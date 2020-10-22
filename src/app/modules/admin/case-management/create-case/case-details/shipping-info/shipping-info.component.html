@@ -2,146 +2,400 @@
     <div class="card-body position-relative">
         <div class="row">
             <div class="col-lg-12">
-                <div class="card card-custom example example-compact gutter-b shipping-info-details-card">
-                    <div class="card-header">
-                        <div class="card-title">
-                          <h3 class="card-label">Shipment 1</h3>
-                        </div>
-                        <div class="card-title">
-                            <span class="font-12px color-AFAFAF pr-2">Category: </span>
-                            <span class="font-12px card-label">Samples</span>
-                        </div>
-                        <div class="card-title">
-                            <span class="font-12px color-AFAFAF pr-2">Attention To: </span>
-                            <span class="font-12px card-label">Ariadne Pte Ltd</span>
-                        </div>
-                        <div class="card-title">
-                            <span class="font-12px color-AFAFAF pr-2">Shipment Qty: </span>
-                            <span class="font-12px card-label">0</span>
-                        </div>
-
-                        <div class="card-toolbar">
-                            <span class="material-icons delete-icon pr-2 cursor-pointer">
-                                delete
-                            </span>
-                            <span class="material-icons expansion-icon">
-                                keyboard_arrow_down
-                            </span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <span class="card-body-header">Shipping Details</span>
+                <ng-container *ngFor="let shipment of shipmentsToDisplay">
+                    <div class="card card-custom example example-compact shipping-info-details-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                            <h3 class="card-label">Shipment {{shipment.boxId}}</h3>
+                            </div>
+                            <div class="card-title">
+                                <span class="font-12px color-AFAFAF pr-2">Category: </span>
+                                <span class="font-12px card-label">{{shipment.shipmentType}}</span>
+                            </div>
+                            <div class="card-title">
+                                <span class="font-12px color-AFAFAF pr-2">Attention To: </span>
+                                <span class="font-12px card-label">Ariadne Pte Ltd</span>
+                            </div>
+                            <div class="card-title">
+                                <span class="font-12px color-AFAFAF pr-2">Shipment Qty: </span>
+                                <span class="font-12px card-label">0</span>
+                            </div>
+                            <div class="card-toolbar">
+                                <span class="material-icons delete-icon pr-2 cursor-pointer" (click)="deleteShipment(shipment.shipmentId)">
+                                    delete
+                                </span>
+                                <span class="material-icons expansion-icon cursor-pointer" (click)="displayShipmentDetails(shipment.shipmentId)">
+                                    {{ 
+                                        shipment.boxId == boxIdToExpand ? 
+                                        ExpansionIcons.KEYBOARD_ARROW_UP : 
+                                        ExpansionIcons.KEYBOARD_ARROW_DOWN 
+                                    }}
+                                </span>
                             </div>
                         </div>
-                        
-                        <div class="row pt-3">
-                            <div class="col-lg-12 display-flex">
-                                <div class="col-lg-3 pl-0">
-                                    <select class="form-control selectBoxBillable">
-                                        <option>Billable?</option>
-                                        <option>Yes</option>
-                                        <option>No</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-3 pr-0 pl-0">
-                                    <mat-form-field appearance="outline">
-                                        <input [matDatepicker]="picker" matInput placeholder="Shipment Promised Date">
-                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                        <mat-datepicker #picker></mat-datepicker>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-lg-3 pr-0">
-                                    <select class="form-control selectBoxShipmentMode">
-                                        <option>Shipment Mode</option>
-                                        <option>Air Freight</option>
-                                        <option>Bulk Mail</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-3 pr-0">
-                                    <select class="form-control selectBoxShippingTerms">
-                                        <option>Shipping Terms</option>
-                                        <option>CIF</option>
-                                        <option>DDU</option>
-                                    </select>
+                        <div class="card-body" *ngIf="shouldShowShipmentDetails && shipment.boxId === boxIdToExpand">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <span class="card-body-header">Shipping Details</span>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row pt-2">
-                            <div class="col-lg-12 display-flex">
-                                <div class="col-lg-3 pl-0">
-                                    <select class="form-control selectShippingAgent">
-                                        <option>Shipping Agent</option>
-                                        <option>Yes</option>
-                                        <option>No</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-3 pr-0 pl-0">
-                                    <mat-form-field appearance="outline">
-                                        <input matInput placeholder="Account No">
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </div>
-                         
-                        <div class="row pt-10">
-                            <div class="col-lg-12">
-                                <span class="card-body-header">Items</span>
-                            </div>
-                        </div>
-
-                        <div class="row pt-3">
-                            <div class="col-lg-12">
-                                <div class="tab-content">
-                                    <!--begin::Table-->
-                                    <div class="table-responsive">
-                                      <table class="table table-head-custom table-vertical-center
-                                      shipping-info-details-table">
-                                        <thead>
-                                          <tr class="text-left">
-                                             <th>#</th>
-                                             <th>ISBN/Product No</th>
-                                             <th>Title</th>
-                                             <th>Available Qty</th>
-                                             <th>This Shipment Qty</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          <tr>
-                                              <td>1</td>
-                                              <td>9781760422791</td>
-                                              <td>Passer Psychology 3e</td>
-                                              <td>140</td>
-                                              <td>
-                                                <mat-form-field appearance="outline" class="mb-2">
-                                                    <input matInput placeholder="120">
-                                                </mat-form-field>
-                                              </td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                      
+                            
+                            <div class="row pt-3 font-12px">
+                                <div class="col-lg-12 display-flex">
+                                    <div class="col-lg-3 pl-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Billable?</mat-label>
+                                            <mat-select>
+                                                <mat-option value="option">Yes</mat-option>
+                                                <mat-option value="option">No</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
                                     </div>
-                                    <!--end::Table-->
-                                  </div>
+                                    <div class="col-lg-3 pr-0 pl-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Shipment Promised Date</mat-label>
+                                            <input matInput [matDatepicker]="picker">
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field> 
+                                    </div>
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Shipment Mode</mat-label>
+                                            <mat-select>
+                                                <mat-option value="option">Air Freight</mat-option>
+                                                <mat-option value="option">Bulk Mail</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Shipping Terms</mat-label>
+                                            <mat-select>
+                                                <mat-option value="option">CIF</mat-option>
+                                                <mat-option value="option">DDU</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row font-12px">
+                                <div class="col-lg-12 display-flex">
+                                    <div class="col-lg-3 pl-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Shipping Agent</mat-label>
+                                            <mat-select>
+                                                <mat-option value="option">Yes</mat-option>
+                                                <mat-option value="option">No</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 pr-0 pl-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Account No</mat-label>
+                                            <input matInput>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row pt-10">
+                                <div class="col-lg-12">
+                                    <span class="card-body-header">Items</span>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-lg-12">
+                                    <div class="tab-content">
+                                        <!--begin::Table-->
+                                        <div class="table-responsive">
+                                        <table class="table table-head-custom table-vertical-center
+                                        shipping-info-details-table">
+                                            <thead>
+                                            <tr class="text-left">
+                                                <th>#</th>
+                                                <th>ISBN/Product No</th>
+                                                <th>Title</th>
+                                                <th>Available Qty</th>
+                                                <th>This Shipment Qty</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>9781760422791</td>
+                                                <td>Passer Psychology 3e</td>
+                                                <td>140</td>
+                                                <td>
+                                                    <mat-form-field appearance="fill" class="">
+                                                        <input matInput placeholder="120">
+                                                    </mat-form-field>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                        
+                                        </div>
+                                        <!--end::Table-->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row pt-10">
+                                <div class="col-lg-12">
+                                    <span class="card-body-header">Shipment Specific Costs</span>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-lg-12">
+                                    <div class="tab-content">
+                                        <!--begin::Table-->
+                                        <div class="">
+                                        <table class="table table-head-custom table-vertical-center
+                                        shipping-info-details-table">
+                                            <thead>
+                                            <tr class="text-left">
+                                                <th>#</th>
+                                                <th>Cost Category</th>
+                                                <th>Description</th>
+                                                <th>Sub-Total</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr *ngFor="let rowId of rowsToDisplay">
+                                                <td>{{rowId}}</td>
+                                                <td>
+                                                    <mat-form-field appearance="fill">
+                                                        <mat-label>Choose</mat-label>
+                                                        <mat-select>
+                                                            <mat-option value="option">Yes</mat-option>
+                                                            <mat-option value="option">No</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </td>
+                                                <td>
+                                                    <mat-form-field appearance="fill">
+                                                        <mat-label>Write Description</mat-label>
+                                                        <input matInput>
+                                                    </mat-form-field>
+                                                </td>
+                                                <td>
+                                                    <mat-form-field appearance="fill">
+                                                        <mat-label>Sub total</mat-label>
+                                                        <input matInput>
+                                                    </mat-form-field>
+                                                </td>
+                                                <td>
+                                                    <span class="material-icons delete-icon pr-2 cursor-pointer pt-3" (click)="deleteRow(rowId)" *ngIf="rowsToDisplay.length > 1">
+                                                        delete
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="pb-3">
+                                                    <a (click)="addRow()">
+                                                        <span class="material-icons add-icon pr-2 cursor-pointer">
+                                                            add_circle_outline
+                                                        </span>
+                                                        <span class="font-14px blue-link ">ADD ANOTHER</span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                        
+                                        </div>
+                                        <!--end::Table-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="display-flex pt-5" style="font-size: 12px;">
+                                <div class="col-lg-6 pl-0">
+                                    <span class="card-body-header">Shipment to Address</span>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-5 pb-1">
+                                        <div class="col-lg-6 pl-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Attention To</mat-label>
+                                                <input matInput value="Ariadne Pte Ltd">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6 pl-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Contact Person</mat-label>
+                                                <input matInput value="Desmond Foo">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                        <div class="col-lg-6 pl-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Email</mat-label>
+                                                <input matInput value="desmond@ariadne.sg">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6 pl-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Phone</mat-label>
+                                                <input matInput placeholder="Phone">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                        <div class="col-lg-6 pl-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Address 1</mat-label>
+                                                <input matInput value="50 Tagore Lane">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6 pl-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Address 2</mat-label>
+                                                <input matInput value="#02-10G">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                        <div class="col-lg-6 pl-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>City</mat-label>
+                                                <input matInput value="Singapore">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6 pl-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Postcode</mat-label>
+                                                <input matInput value="787494">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                        <div class="col-lg-6 pl-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>State</mat-label>
+                                                <input matInput placeholder="State">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6 pl-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Country</mat-label>
+                                                <input matInput placeholder="Country">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pl-0 pr-0">
+                                    <span class="card-body-header">Billing Details</span>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-5 pb-1">
+                                        <div class="col-lg-6 pl-0 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Bill-to No</mat-label>
+                                                <input matInput value="DPA152">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Attention To</mat-label>
+                                                <input matInput value="Ariadne Pte Ltd">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                        <div class="col-lg-6 pl-0 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Contact Person</mat-label>
+                                                <input matInput value="Desmond Foo">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Email</mat-label>
+                                                <input matInput value="desmond@ariadne.sg">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                        <div class="col-lg-6 pl-0 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Phone</mat-label>
+                                                <input matInput placeholder="Phone">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Address 1</mat-label>
+                                                <input matInput value="50 Tagore Lane">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                        <div class="col-lg-6 pl-0 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Address 2</mat-label>
+                                                <input matInput value="#02-10G">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>City</mat-label>
+                                                <input matInput value="Singapore">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                        <div class="col-lg-6 pl-0 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Postcode</mat-label>
+                                                <input matInput value="787494">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>State</mat-label>
+                                                <input matInput placeholder="State">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                        <div class="col-lg-6 pl-0 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Country</mat-label>
+                                                <input matInput placeholder="Country">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Co-ordinator</mat-label>
+                                                <input matInput placeholder="Co-ordinator">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                        <div class="col-lg-6 pl-0 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Sales Person</mat-label>
+                                                <input matInput value="Dosmond Chew">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                 </ng-container>
             </div>
         </div>
-        <div class="row " style="margin: auto">
+        <div class="row pt-4" style="margin: auto">
             <div class="col-lg-12 padding-0px">
-                <div class="col-lg-4">
-                    <select class="form-control selectBoxAddShipmentType width-190">
-                        <option>Add Shipment Type</option>
-                        <option>Samples</option>
-                        <option>Advances</option>
-                        <option>Main Stock</option>
-                        <option>Others</option>
-                    </select>
+                <div class="col-lg-4 font-12px">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Add Shipment Type</mat-label>
+                        <mat-select (selectionChange)="handleAddShipment($event)" #addShipmentSelectBox>
+                            <mat-option [value]="type.value" *ngFor="let type of shipmentTypesArray">{{type.text}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                  
                 </div>
             </div>
         </div> 

@@ -6,10 +6,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./invoice.component.scss']
 })
 export class InvoiceComponent implements OnInit {
-
+  columnsToDisplay = ['#', 'Position', 'Notes', ''];
+  rowsToDisplay = [1];
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  addRow() {
+    const lastRowId = this.rowsToDisplay[this.rowsToDisplay.length - 1];
+    this.rowsToDisplay.push(lastRowId + 1);
+  }
+
+  deleteRow(rowId) {
+    const rowIndex = this.rowsToDisplay.indexOf(rowId);
+    this.rowsToDisplay.splice(rowIndex, 1);
+  }
 }

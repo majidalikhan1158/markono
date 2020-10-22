@@ -30,9 +30,7 @@ export class AddBlueprintModalComponent implements OnInit {
   }
 
   deleteRow(rowId) {
-    console.log(rowId);
     const rowIndex = this.rowsToDisplay.indexOf(rowId);
     this.rowsToDisplay.splice(rowIndex, 1);
-    console.log(this.rowsToDisplay)
   }
 }

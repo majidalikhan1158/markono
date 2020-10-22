@@ -4,29 +4,33 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body add-blueprint-form position-relative">
+  <div class="modal-body add-blueprint-form position-relative font-12px">
       <ng-container *ngFor="let rowId of rowsToDisplay">
-        <div class="row pb-2">
+        <div class="row pb-5">
             <div class="col-lg-12 display-flex pr-0">
               <div class="col-lg-3 pl-0">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Required date</mat-label>
                       <input [matDatepicker]="picker" matInput placeholder="Required date">
                       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                       <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
               </div>
               <div class="col-lg-3 pl-0">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="fill">
+                    <mat-label>For who</mat-label>
                       <input matInput placeholder="For who">
                   </mat-form-field>
               </div>
               <div class="col-lg-2 pl-0 pr-0">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Quantity</mat-label>
                       <input matInput placeholder="Quantity">
                   </mat-form-field>
               </div>
               <div class="col-lg-3">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Special Instructions</mat-label>
                       <input matInput placeholder="Special Instructions">
                   </mat-form-field>
               </div>

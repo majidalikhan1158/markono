@@ -6,10 +6,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./misc-cost.component.scss']
 })
 export class MiscCostComponent implements OnInit {
-
+  columnsToDisplay = ['#', 'Cost Category', 'Description', 'Sub-Total', ''];
+  rowsToDisplay = [1];
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  addRow() {
+    const lastRowId = this.rowsToDisplay[this.rowsToDisplay.length - 1];
+    this.rowsToDisplay.push(lastRowId + 1);
+  }
+
+  deleteRow(rowId) {
+    const rowIndex = this.rowsToDisplay.indexOf(rowId);
+    this.rowsToDisplay.splice(rowIndex, 1);
+  }
 }

@@ -95,6 +95,9 @@ export class ShippingInfoComponent implements OnInit {
         } else if (event.value === 'Internal Transfer (Library)') {
           element.isShipmentModeInternalTransfer = false;
           element.isShipmentModeLibrary = true;
+        } else {
+          element.isShipmentModeInternalTransfer = false;
+          element.isShipmentModeLibrary = false;
         }
       }
     });

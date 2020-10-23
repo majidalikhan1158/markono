@@ -40,7 +40,7 @@
                                 </div>
                             </div>
                             
-                            <div class="row pt-3 font-12px">
+                            <div class="row pt-3">
                                 <div class="col-lg-12 display-flex">
                                     <div class="col-lg-3 pl-0">
                                         <mat-form-field appearance="fill">
@@ -96,7 +96,7 @@
                                 </div>
                             </div>
 
-                            <div class="row font-12px">
+                            <div class="row pt-3">
                                 <div class="col-lg-12 display-flex" *ngIf="!shipment.isShipmentModeInternalTransfer && !shipment.isShipmentModeLibrary">
                                     <div class="col-lg-3 pl-0">
                                         <mat-form-field appearance="fill">
@@ -127,7 +127,7 @@
                                 </div>
                             </div>
                             
-                            <div class="row pt-10">
+                            <div class="row pt-5">
                                 <div class="col-lg-12">
                                     <span class="card-body-header">Items</span>
                                 </div>
@@ -157,7 +157,7 @@
                                                 <td>
                                                     <mat-form-field appearance="fill" class="">
                                                         <mat-label>Shipment Qty</mat-label>
-                                                        <input matInput placeholder="0">
+                                                        <input matInput >
                                                     </mat-form-field>
                                                 </td>
                                             </tr>
@@ -170,7 +170,7 @@
                                 </div>
                             </div>
 
-                            <div class="row pt-10">
+                            <div class="row pt-5">
                                 <div class="col-lg-12">
                                     <span class="card-body-header">Shipment Specific Costs</span>
                                 </div>
@@ -244,10 +244,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="display-flex pt-5" style="font-size: 12px;">
+                            <div class="display-flex pt-5">
                                 <div class="col-lg-6 pl-0">
                                     <span class="card-body-header">Shipment to Address</span>
-                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-5 pb-1">
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Attention To</mat-label>
@@ -261,7 +261,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Email</mat-label>
@@ -275,7 +275,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Address 1</mat-label>
@@ -289,7 +289,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>City</mat-label>
@@ -303,7 +303,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>State</mat-label>
@@ -320,7 +320,7 @@
                                 </div>
                                 <div class="col-lg-6 pl-0 pr-0">
                                     <span class="card-body-header">Billing Details</span>
-                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-5 pb-1">
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Bill-to No</mat-label>
@@ -334,7 +334,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Contact Person</mat-label>
@@ -348,7 +348,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Phone</mat-label>
@@ -362,7 +362,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Address 2</mat-label>
@@ -376,7 +376,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Postcode</mat-label>
@@ -390,7 +390,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Country</mat-label>
@@ -404,7 +404,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 display-flex pl-0 pr-0 pb-1">
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Sales Person</mat-label>
@@ -421,7 +421,7 @@
         </div>
         <div class="row pt-4" style="margin: auto">
             <div class="col-lg-12 padding-0px">
-                <div class="col-lg-4 font-12px">
+                <div class="col-lg-4">
                     <mat-form-field appearance="fill">
                         <mat-label>Add Shipment Type</mat-label>
                         <mat-select (selectionChange)="handleShipmentTypeChange($event)" [compareWith]="compare"

@@ -6,14 +6,9 @@ app-product-details {
     padding-bottom: 5px !important;
     min-height: 250px;
   }
-
-  .product-datails-card .table-responsive {
-    overflow-x: hidden !important;
-  }
+ 
   .product-datails-table thead tr {
-    background: transparent !important;
-    padding-bottom: 12px !important;
-    padding-top: 7px !important;
+    background: transparent !important; 
   }
 
   .product-datails-table thead th {
@@ -30,18 +25,14 @@ app-product-details {
   }
 
   .product-datails-table tbody tr td {
-    padding-left: 12px;
+    color: #484848 !important;
+    font-size: 12px !important;
+    font-family: 'Roboto-Medium';
+    padding-top: 7px ;
+    padding-bottom: 7px;
     padding-right: 0px;
-    padding-top: 7px;
-    font-family: "Roboto-Medium";
-    padding-bottom: 10px;
   }
-
-  .product-datails-table tbody tr td mat-form-field {
-    font-size: 10px !important;
-    height: 35px;
-  }
-
+ 
   .product-datails-table tbody tr.expandedRow td {
     padding-top: 10px;
   }
@@ -55,33 +46,7 @@ app-product-details {
     border: 1px solid #e6e6e6;
     opacity: 1;
   }
-
-  // .product-datails-table .outer-row mat-form-field {
-  //   height: 32px !important;
-  // }
-
-  // .product-datails-table .outer-row .mat-form-field .mat-form-field-flex,
-  // .product-datails-table .outer-row .mat-form-field .mat-form-field-fill {
-  //   height: 32px !important;
-  // }
-
-  // .outer-row .mat-form-field-type-mat-input .mat-form-field-infix {
-  //   border-top-width: 0px !important;
-  //   font-size: 12px !important;
-  //   padding-top: 13px !important;
-  // }
-
-  // .product-datails-table .selectBoxPrintType {
-  //   height: 32px;
-  //   text-align: left;
-  //   font-family: "Roboto-Regular";
-  //   border-color: #eef0f8 !important;
-  //   color: #afafaf !important;
-  //   font-size: 12px !important;
-  //   background: #eef0f8 !important;
-  //   margin-top: 5px;
-  // }
-
+ 
   .product-datails-table .expansion-icon {
     width: 26px;
     border-radius: 14px;
@@ -94,5 +59,10 @@ app-product-details {
  
   p.info-label-value {
     font-family: "Roboto-Medium";
+  }
+
+  
+  .product-datails-table .mat-form-field-wrapper {
+    padding-bottom: 0px;
   }
 }

@@ -9,7 +9,7 @@ import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
   encapsulation: ViewEncapsulation.None
 })
 export class ProductDetailsComponent implements OnInit {
-  columnsToDisplay = ['#', 'ISBN', 'Print Type', 'Order Qty', 'Prod Qty', 'Margin(%)', 'Sekking Price', 'Sub-Total'];
+  columnsToDisplay = ['#', 'ISBN', 'Print Type', 'Order Qty', 'Prod Qty', 'Margin(%)', 'Selling Price', 'Sub-Total'];
   rowsToDisplay = [1];
   rowIdToExpand = 0;
   shouldShowProductDetails = false;

@@ -412,11 +412,7 @@ input::placeholder {
 .mat-form-field.mat-form-field-appearance-outline .mat-form-field-outline {
   background: #eef0f8 ;
   border-radius: 5px;
-}
-
-.mat-form-field.mat-form-field-appearance-outline .mat-form-field-flex {
-  height: 48px;
-}
+} 
 
 .mat-form-field-label {
   color: #AFAFAF !important
@@ -431,4 +427,8 @@ input::placeholder {
 
 .mat-form-field-underline {
   bottom: auto;
+}
+
+mat-form-field {
+  font-size: 12px !important;
 }

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-special-instructions',
   templateUrl: './special-instructions.component.html',
-  styleUrls: ['./special-instructions.component.scss']
+  styleUrls: ['./special-instructions.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SpecialInstructionsComponent implements OnInit {
   columnsToDisplay = ['#', 'Department', 'Instructions', ''];

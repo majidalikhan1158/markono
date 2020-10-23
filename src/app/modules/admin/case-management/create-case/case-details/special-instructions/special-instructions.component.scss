@@ -1,21 +1,22 @@
-.special-instruction-card .card-body {
+app-special-instructions {
+  .special-instruction-card .card-body {
     padding-left: 0px !important;
     padding-right: 0px !important;
     padding-top: 5px !important;
     padding-bottom: 5px !important;
     min-height: 250px;
   }
-  
+
   .special-instruction-card .table-responsive {
     overflow-x: hidden !important;
   }
-  
+
   .special-instruction-table thead tr {
     background: transparent !important;
     padding-bottom: 12px !important;
     padding-top: 7px !important;
   }
-  
+
   .special-instruction-table thead th {
     background: transparent !important;
     font-size: 12px !important;
@@ -28,31 +29,26 @@
     padding-top: 5px;
     padding-bottom: 10px;
   }
-  
+
   .special-instruction-table tbody tr td {
-    padding-left: 12px;
-    padding-right: 0px;
-    padding-top: 7px;
+    color: #484848 !important;
+    font-size: 12px !important;
     font-family: "Roboto-Medium";
-    padding-bottom: 10px;
+    padding-top: 7px;
+    padding-bottom: 7px;
   }
-  
-  .special-instruction-table tbody tr td mat-form-field {
-    font-size: 10px !important;
-    height: 35px;
-  }
-  
-  .special-instruction-table tbody tr.expandedRow td {
-    padding-top: 10px;
-  }
-  
+
   .special-instruction-table tbody tr td.action-column {
     padding-right: 6px;
     cursor: pointer;
   }
-  
+
   .special-instruction-table .outer-row {
     border: 1px solid #e6e6e6;
     opacity: 1;
   }
-  
+
+  .special-instruction-table .mat-form-field-wrapper {
+    padding-bottom: 0px;
+  }
+}

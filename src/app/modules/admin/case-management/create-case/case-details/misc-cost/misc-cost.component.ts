@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-misc-cost',
   templateUrl: './misc-cost.component.html',
-  styleUrls: ['./misc-cost.component.scss']
+  styleUrls: ['./misc-cost.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MiscCostComponent implements OnInit {
   columnsToDisplay = ['#', 'Cost Category', 'Description', 'Sub-Total', ''];

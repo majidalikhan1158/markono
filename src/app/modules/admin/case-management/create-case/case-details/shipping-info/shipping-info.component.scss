@@ -26,23 +26,8 @@ app-shipping-info {
     font-size: 14px;
     color: #484848;
     font-family: "Roboto-Bold";
-  }
-
-  .shipping-info-details-card
-    mat-form-field.mat-form-field-type-mat-input
-    .mat-form-field-infix {
-    font-size: 12px !important;
-  }
-
-  .shipping-info-details-card .mat-form-field-flex {
-    height: 38px !important;
-    margin-top: -2px;
-  }
-
- 
-  .shipping-info-details-card table {
-    border-collapse: separate !important;
-  }
+  }  
+  
   .shipping-info-details-card table {
     border-collapse: separate !important;
   }
@@ -72,11 +57,11 @@ app-shipping-info {
     color: #484848 !important;
     font-size: 12px !important;
     font-family: 'Roboto-Medium';
-    padding-top: 10px !important;
-    padding-bottom: 0px;
+    padding-top: 7px ;
+    padding-bottom: 7px;
     } 
 
     .shipping-info-card .mat-form-field-wrapper {
-      padding-bottom: 10px;
+      padding-bottom: 0px;
     }
 }

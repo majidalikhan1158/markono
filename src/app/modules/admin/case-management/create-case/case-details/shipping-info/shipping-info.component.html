@@ -62,32 +62,59 @@
                                     <div class="col-lg-3 pr-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipment Mode</mat-label>
-                                            <mat-select>
-                                                <mat-option value="option">Air Freight</mat-option>
-                                                <mat-option value="option">Bulk Mail</mat-option>
+                                            <mat-select  (selectionChange)="handleShipmentModeChange($event,shipment.shipmentId)">
+                                                <mat-option value="Air Freight">Air Freight</mat-option>
+                                                <mat-option value="Bulk Mail">Bulk Mail</mat-option>
+                                                <mat-option value="Land Freight">Land Freight</mat-option>
+                                                <mat-option value="Sea Freight">Sea Freight</mat-option>
+                                                <mat-option value="Internal Transfer (ML3PL)">Internal Transfer (ML3PL)</mat-option>
+                                                <mat-option value="Internal Transfer (MPM3PL)">Internal Transfer (MPM3PL)</mat-option>
+                                                <mat-option value="Internal Transfer (Library)">Internal Transfer (Library)</mat-option>
+                                                <mat-option value="Postal">Postal</mat-option>
+                                                
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-lg-3 pr-0">
+                                    <div class="col-lg-3 pr-0" *ngIf="!shipment.isShipmentModeInternalTransfer && !shipment.isShipmentModeLibrary">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipping Terms</mat-label>
                                             <mat-select>
-                                                <mat-option value="option">CIF</mat-option>
-                                                <mat-option value="option">DDU</mat-option>
+                                                <mat-option value="CIF">CIF</mat-option>
+                                                <mat-option value="DDU">DDU</mat-option>
+                                                <mat-option value="Ex-Factory">Ex-Factory</mat-option>
+                                                <mat-option value="FDB">FDB</mat-option>
+                                                <mat-option value="Self Collection">Self Collection</mat-option>
                                             </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 pr-0" *ngIf="shipment.isShipmentModeInternalTransfer">
+                                        <mat-form-field appearance="fill" class="">
+                                            <mat-label>Storer Key</mat-label>
+                                            <input matInput placeholder="Storer Key">
                                         </mat-form-field>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row font-12px">
-                                <div class="col-lg-12 display-flex">
+                                <div class="col-lg-12 display-flex" *ngIf="!shipment.isShipmentModeInternalTransfer && !shipment.isShipmentModeLibrary">
                                     <div class="col-lg-3 pl-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipping Agent</mat-label>
                                             <mat-select>
-                                                <mat-option value="option">Yes</mat-option>
-                                                <mat-option value="option">No</mat-option>
+                                                <mat-option value="UPS">UPS</mat-option>
+                                                <mat-option value="SF Express">SF Express</mat-option>
+                                                <mat-option value="Hock Cheong">Hock Cheong</mat-option>
+                                                <mat-option value="Singpost">Singpost</mat-option>
+                                                <mat-option value="DHL">DHL</mat-option>
+                                                <mat-option value="Asendia">Asendia</mat-option>
+                                                <mat-option value="EES">EES</mat-option>
+                                                <mat-option value="YFE">YFE</mat-option>
+                                                <mat-option value="Publiship">Publiship</mat-option>
+                                                <mat-option value="GE Line">GE Line</mat-option>
+                                                <mat-option value="Shipco">Shipco</mat-option>
+                                                <mat-option value="Rohlig">Rohlig</mat-option>
+                                                <mat-option value="Others">Others</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
@@ -129,7 +156,8 @@
                                                 <td>140</td>
                                                 <td>
                                                     <mat-form-field appearance="fill" class="">
-                                                        <input matInput placeholder="120">
+                                                        <mat-label>Shipment Qty</mat-label>
+                                                        <input matInput placeholder="0">
                                                     </mat-form-field>
                                                 </td>
                                             </tr>
@@ -170,8 +198,13 @@
                                                     <mat-form-field appearance="fill">
                                                         <mat-label>Choose</mat-label>
                                                         <mat-select>
-                                                            <mat-option value="option">Yes</mat-option>
-                                                            <mat-option value="option">No</mat-option>
+                                                            <mat-option value="Filfillment">Filfillment</mat-option>
+                                                            <mat-option value="Fulfillment">Fulfillment</mat-option>
+                                                            <mat-option value="Packing Materials">Packing Materials</mat-option>
+                                                            <mat-option value="Order Handling">Order Handling</mat-option>
+                                                            <mat-option value="Shipping">Shipping</mat-option>
+                                                            <mat-option value="Storage Charges">Storage Charges</mat-option>
+                                                            <mat-option value="Value Added Services">Value Added Services</mat-option>
                                                         </mat-select>
                                                     </mat-form-field>
                                                 </td>
@@ -391,7 +424,8 @@
                 <div class="col-lg-4 font-12px">
                     <mat-form-field appearance="fill">
                         <mat-label>Add Shipment Type</mat-label>
-                        <mat-select (selectionChange)="handleAddShipment($event)" #addShipmentSelectBox>
+                        <mat-select (selectionChange)="handleShipmentTypeChange($event)" [compareWith]="compare"
+                        [formControl]="shipmentSelectedTypeFormControl" >
                             <mat-option [value]="type.value" *ngFor="let type of shipmentTypesArray">{{type.text}}</mat-option>
                         </mat-select>
                     </mat-form-field>

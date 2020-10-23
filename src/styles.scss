@@ -301,14 +301,7 @@ p.info-label-value {
   font-size: 14px;
   font-family: 'Roboto-Regular'
 }
-  
-mat-form-field.mat-form-field-type-mat-select .mat-form-field-ripple {
-  background: transparent !important;
-}
 
-mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-select-arrow {
-  color: white;
-}
 
 .mat-form-field-prefix mat-icon {
   color: #AFAFAF !important;
@@ -432,6 +425,10 @@ input::placeholder {
  .add-icon {
   background: transparent;
   color: #5face2;
-  font-size: 22px !important;
+  font-size: 22px !important; 
   vertical-align: bottom;
 } 
+
+.mat-form-field-underline {
+  bottom: auto;
+}

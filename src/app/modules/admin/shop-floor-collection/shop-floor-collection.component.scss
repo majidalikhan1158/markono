@@ -42,11 +42,20 @@ app-shop-floor-collection {
     padding-left: 10px;
   }
 
-  .mat-select-arrow {
+  .shopFloorCollectionScreen .mat-select-arrow {
     color: white;
     width: 12px;
     height: 7px;
   }
+
+    
+  .shopFloorCollectionScreen mat-form-field.mat-form-field-type-mat-select .mat-form-field-ripple {
+  background: transparent !important;
+}
+
+.shopFloorCollectionScreen mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-select-arrow {
+  color: white;
+}
 
   .card.card-custom.machine-status-card .card-body .row.last-row {
     padding-bottom: 5px;

@@ -12,6 +12,8 @@ import { ShippingInfoComponent } from './create-case/case-details/shipping-info/
 import { MiscCostComponent } from './create-case/case-details/misc-cost/misc-cost.component';
 import { SpecialInstructionsComponent } from './create-case/case-details/special-instructions/special-instructions.component';
 import { InvoiceComponent } from './create-case/case-details/invoice/invoice.component';
+import { SummaryComponent } from './create-case/summary/summary.component';
+import { CreateCaseService } from '../../shared/ui-services/create-case.service';
 
 @NgModule({
   declarations: [
@@ -24,12 +26,14 @@ import { InvoiceComponent } from './create-case/case-details/invoice/invoice.com
     MiscCostComponent,
     SpecialInstructionsComponent,
     InvoiceComponent,
+    SummaryComponent,
   ],
   imports: [
     CommonModule,
     CaseManagementRoutingModule,
     MaterialUiModule,
     SharedModule
-  ]
+  ],
+  providers: [CreateCaseService]
 })
 export class CaseManagementModule { }

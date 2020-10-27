@@ -1,4 +1,4 @@
 export enum CaseTypes {
-    PRINT_ORDER,
-    WAREHOUSE_ORDER
+    PRINT_ORDER = 1,
+    WAREHOUSE_ORDER = 2
 }

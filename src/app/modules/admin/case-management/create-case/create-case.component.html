@@ -1,29 +1,29 @@
 <mat-horizontal-stepper  #stepper="matHorizontalStepper" class="stepper-transparent">
-    <mat-step>
+    <mat-step  completed="false">
       <ng-template matStepLabel>Customer Info.</ng-template>
       <app-customer-info></app-customer-info>
       <div class="row">
         <div class="col-lg-12 text-right">
-          <button mat-button matStepperNext class="btn btn-primary stepper-next-button" >Next</button>
+          <button mat-button (click)="handleStepperNextEvent(createCaseSteps.CUSTOMER_INFO)" class="btn btn-primary stepper-next-button" >Next</button>
         </div>
       </div>
     </mat-step>
-    <mat-step>
+    <mat-step  completed="false">
       <ng-template matStepLabel>Case Details.</ng-template>
       <app-case-details></app-case-details>
       <div class="row">
         <div class="col-lg-12 text-right">
-          <button mat-button matStepperPrevious class="btn btn-primary stepper-back-button mr-2">Back</button>
-          <button mat-button matStepperNext class="btn btn-primary stepper-next-button">Next</button>
+          <button mat-button (click)="handleStepperBackEvent(createCaseSteps.CASE_DETAILS)" class="btn btn-primary stepper-back-button mr-2">Back</button>
+          <button mat-button (click)="handleStepperNextEvent(createCaseSteps.CASE_DETAILS)" class="btn btn-primary stepper-next-button">Next</button>
         </div>
       </div>
     </mat-step>
-    <mat-step>
+    <mat-step  completed="false">
       <ng-template matStepLabel>Summary</ng-template>
-      You are now done.
-       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
+      <app-summary [createCaseMode]="createCaseMode"></app-summary>
+       <div class="col-lg-12 text-right">
+        <button mat-button (click)="handleStepperBackEvent(createCaseSteps.SUMMARY)" class="btn btn-primary stepper-back-button mr-2">Back</button>
+        <button mat-button class="btn btn-primary stepper-next-button">Create Case</button>
       </div>
     </mat-step>
 </mat-horizontal-stepper>

@@ -13,24 +13,30 @@
                           </tr>
                         </thead>
                         <tbody>
-                            <ng-container *ngFor="let rowId of rowsToDisplay">
+                            <ng-container *ngFor="let rowId of rowsToDisplay;let i = index;">
                                 <tr class="outer-row">
                                     <td>
-                                        {{rowId}}
+                                        {{rowsToDisplay[i].id}}
                                     <td>
                                         <mat-form-field appearance="fill">
                                             <mat-label>Department</mat-label>
-                                            <input matInput placeholder="Dept. Name">
+                                            <input 
+                                                [(ngModel)]="rowsToDisplay[i].department"
+                                                matInput [disabled]="disabled"
+                                                placeholder="Dept. Name">
                                         </mat-form-field>
                                     </td>
                                     <td class="width-590">
                                         <mat-form-field appearance="fill">
-                                            <mat-label>Description</mat-label>
-                                            <input matInput placeholder="Write Instructions">
+                                            <mat-label>Write Instructions</mat-label>
+                                            <input 
+                                                [(ngModel)]="rowsToDisplay[i].instructions"
+                                                matInput   [disabled]="disabled"
+                                                placeholder="Write Instructions">
                                         </mat-form-field>
                                     </td>
                                     <td>
-                                        <span class="material-icons delete-icon pr-2 cursor-pointer" (click)="deleteRow(rowId)" *ngIf="rowsToDisplay.length > 1">
+                                        <span class="material-icons delete-icon pr-2 cursor-pointer" (click)="deleteRow(rowsToDisplay[i].id)" *ngIf="rowsToDisplay.length > 1">
                                             delete
                                         </span>
                                     </td>
@@ -46,7 +52,7 @@
         </div>
         <br><br>
         <div class="row sticky-bottom full-width pl-5 pb-4 product-detail-footer-row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" *ngIf="createCaseMode !== createCaseModes.EDIT">
                 <a (click)="addRow()">
                     <span class="material-icons add-icon pr-2 cursor-pointer">
                         add_circle_outline

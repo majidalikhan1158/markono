@@ -2,6 +2,14 @@
     height: calc(100% - 25px - 0px);
 }
 
+.case-details-types .mat-list-text {
+    display: inline !important;
+}
+
+.case-details-types .mat-list-text .material-icons {
+    color: #343434 !important;
+}
+
 .case-details-types .card-body{
     padding-left: 5px !important;
     padding-right: 5px !important;

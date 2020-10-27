@@ -2,7 +2,7 @@
     <div class="card-body position-relative">
         <div class="row">
             <div class="col-lg-12">
-                <ng-container *ngFor="let shipment of shipmentsToDisplay">
+                <ng-container *ngFor="let shipment of shipmentsToDisplay;let i = index;">
                     <div class="card card-custom example example-compact shipping-info-details-card">
                         <div class="card-header">
                             <div class="card-title">
@@ -10,7 +10,7 @@
                             </div>
                             <div class="card-title">
                                 <span class="font-12px color-AFAFAF pr-2">Category: </span>
-                                <span class="font-12px card-label">{{shipment.shipmentType}}</span>
+                                <span class="font-12px card-label">{{shipment.shippingDetails.shipmentCategory}}</span>
                             </div>
                             <div class="card-title">
                                 <span class="font-12px color-AFAFAF pr-2">Attention To: </span>
@@ -36,6 +36,9 @@
                         <div class="card-body" *ngIf="shouldShowShipmentDetails && shipment.boxId === boxIdToExpand">
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <span class="span-yellow material-icons pr-2" *ngIf="createCaseMode !== createCaseModes.EDIT">
+                                        stop_circle
+                                      </span>
                                     <span class="card-body-header">Shipping Details</span>
                                 </div>
                             </div>
@@ -45,16 +48,17 @@
                                     <div class="col-lg-3 pl-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Billable?</mat-label>
-                                            <mat-select>
-                                                <mat-option value="option">Yes</mat-option>
-                                                <mat-option value="option">No</mat-option>
+                                            <mat-select [(ngModel)]="shipmentsToDisplay[i].shippingDetails.billable" [disabled]="disabled">
+                                                <mat-option value="1">Yes</mat-option>
+                                                <mat-option value="2">No</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
                                     <div class="col-lg-3 pr-0 pl-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipment Promised Date</mat-label>
-                                            <input matInput [matDatepicker]="picker">
+                                            <input matInput [matDatepicker]="picker" 
+                                                [(ngModel)]="shipmentsToDisplay[i].shippingDetails.shippmentPromisedDate" [disabled]="disabled">
                                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                             <mat-datepicker #picker></mat-datepicker>
                                         </mat-form-field> 
@@ -62,7 +66,8 @@
                                     <div class="col-lg-3 pr-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipment Mode</mat-label>
-                                            <mat-select  (selectionChange)="handleShipmentModeChange($event,shipment.shipmentId)">
+                                            <mat-select  (selectionChange)="handleShipmentModeChange($event,shipment.shipmentId)" 
+                                                [(ngModel)]="shipmentsToDisplay[i].shippingDetails.shipmentMode" [disabled]="disabled">
                                                 <mat-option value="Air Freight">Air Freight</mat-option>
                                                 <mat-option value="Bulk Mail">Bulk Mail</mat-option>
                                                 <mat-option value="Land Freight">Land Freight</mat-option>
@@ -75,10 +80,10 @@
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-lg-3 pr-0" *ngIf="!shipment.isShipmentModeInternalTransfer && !shipment.isShipmentModeLibrary">
+                                    <div class="col-lg-3 pr-0" *ngIf="!shipment.shippingDetails.isShipmentModeInternalTransfer && !shipment.shippingDetails.isShipmentModeLibrary">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipping Terms</mat-label>
-                                            <mat-select>
+                                            <mat-select  [(ngModel)]="shipmentsToDisplay[i].shippingDetails.shippingTerms" [disabled]="disabled">
                                                 <mat-option value="CIF">CIF</mat-option>
                                                 <mat-option value="DDU">DDU</mat-option>
                                                 <mat-option value="Ex-Factory">Ex-Factory</mat-option>
@@ -87,21 +92,22 @@
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-lg-3 pr-0" *ngIf="shipment.isShipmentModeInternalTransfer">
+                                    <div class="col-lg-3 pr-0" *ngIf="shipment.shippingDetails.isShipmentModeInternalTransfer">
                                         <mat-form-field appearance="fill" class="">
                                             <mat-label>Storer Key</mat-label>
-                                            <input matInput placeholder="Storer Key">
+                                            <input matInput placeholder="Storer Key"
+                                            [(ngModel)]="shipmentsToDisplay[i].shippingDetails.storerKey" [disabled]="disabled">
                                         </mat-form-field>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row pt-3">
-                                <div class="col-lg-12 display-flex" *ngIf="!shipment.isShipmentModeInternalTransfer && !shipment.isShipmentModeLibrary">
+                                <div class="col-lg-12 display-flex" *ngIf="!shipment.shippingDetails.isShipmentModeInternalTransfer && !shipment.shippingDetails.isShipmentModeLibrary">
                                     <div class="col-lg-3 pl-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipping Agent</mat-label>
-                                            <mat-select>
+                                            <mat-select  [(ngModel)]="shipmentsToDisplay[i].shippingDetails.shippingAgent" [disabled]="disabled">
                                                 <mat-option value="UPS">UPS</mat-option>
                                                 <mat-option value="SF Express">SF Express</mat-option>
                                                 <mat-option value="Hock Cheong">Hock Cheong</mat-option>
@@ -121,7 +127,7 @@
                                     <div class="col-lg-3 pr-0 pl-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Account No</mat-label>
-                                            <input matInput>
+                                            <input matInput  [(ngModel)]="shipmentsToDisplay[i].shippingDetails.accountNumber" [disabled]="disabled">
                                         </mat-form-field>
                                     </div>
                                 </div>
@@ -129,6 +135,9 @@
                             
                             <div class="row pt-5">
                                 <div class="col-lg-12">
+                                    <span class="span-yellow material-icons pr-2" *ngIf="createCaseMode !== createCaseModes.EDIT">
+                                        stop_circle
+                                      </span>
                                     <span class="card-body-header">Items</span>
                                 </div>
                             </div>
@@ -157,7 +166,7 @@
                                                 <td>
                                                     <mat-form-field appearance="fill" class="">
                                                         <mat-label>Shipment Qty</mat-label>
-                                                        <input matInput >
+                                                        <input matInput [(ngModel)]="shipmentsToDisplay[i].shippingItems.shipmentQty" [disabled]="disabled">
                                                     </mat-form-field>
                                                 </td>
                                             </tr>
@@ -172,6 +181,9 @@
 
                             <div class="row pt-5">
                                 <div class="col-lg-12">
+                                    <span class="span-yellow material-icons pr-2" *ngIf="createCaseMode !== createCaseModes.EDIT">
+                                        stop_circle
+                                      </span>
                                     <span class="card-body-header">Shipment Specific Costs</span>
                                 </div>
                             </div>
@@ -192,12 +204,12 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr *ngFor="let rowId of rowsToDisplay">
-                                                <td>{{rowId}}</td>
+                                            <tr *ngFor="let rowId of shipmentsToDisplay[i].shippingSpecificCost;let j = index;">
+                                                <td>{{rowId.id}}</td>
                                                 <td>
                                                     <mat-form-field appearance="fill">
                                                         <mat-label>Choose</mat-label>
-                                                        <mat-select>
+                                                        <mat-select  [(ngModel)]="rowId.costCategory" [disabled]="disabled">
                                                             <mat-option value="Filfillment">Filfillment</mat-option>
                                                             <mat-option value="Fulfillment">Fulfillment</mat-option>
                                                             <mat-option value="Packing Materials">Packing Materials</mat-option>
@@ -211,24 +223,24 @@
                                                 <td>
                                                     <mat-form-field appearance="fill">
                                                         <mat-label>Write Description</mat-label>
-                                                        <input matInput>
+                                                        <input matInput   [(ngModel)]="rowId.description" [disabled]="disabled">
                                                     </mat-form-field>
                                                 </td>
                                                 <td>
                                                     <mat-form-field appearance="fill">
                                                         <mat-label>Sub total</mat-label>
-                                                        <input matInput>
+                                                        <input matInput   [(ngModel)]="rowId.subTotal" [disabled]="disabled">
                                                     </mat-form-field>
                                                 </td>
                                                 <td>
-                                                    <span class="material-icons delete-icon pr-2 cursor-pointer pt-3" (click)="deleteRow(rowId)" *ngIf="rowsToDisplay.length > 1">
+                                                    <span class="material-icons delete-icon pr-2 cursor-pointer pt-3" (click)="deleteRow(shipment.shipmentId,rowId.id)" *ngIf="shipmentsToDisplay[i].shippingSpecificCost.length > 1">
                                                         delete
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr  *ngIf="createCaseMode !== createCaseModes.EDIT">
                                                 <td colspan="5" class="pb-3">
-                                                    <a (click)="addRow()">
+                                                    <a (click)="addRow(shipment.shipmentId)">
                                                         <span class="material-icons add-icon pr-2 cursor-pointer">
                                                             add_circle_outline
                                                         </span>
@@ -246,6 +258,9 @@
                             </div>
                             <div class="display-flex pt-5">
                                 <div class="col-lg-6 pl-0">
+                                    <span class="span-yellow material-icons pr-2" *ngIf="createCaseMode !== createCaseModes.EDIT">
+                                        stop_circle
+                                      </span>
                                     <span class="card-body-header">Shipment to Address</span>
                                     <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0">
@@ -319,6 +334,9 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6 pl-0 pr-0">
+                                    <span class="span-yellow material-icons pr-2" *ngIf="createCaseMode !== createCaseModes.EDIT">
+                                        stop_circle
+                                      </span>
                                     <span class="card-body-header">Billing Details</span>
                                     <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0 pr-0">
@@ -420,7 +438,7 @@
             </div>
         </div>
         <div class="row pt-4" style="margin: auto">
-            <div class="col-lg-12 padding-0px">
+            <div class="col-lg-12 padding-0px"  *ngIf="createCaseMode !== createCaseModes.EDIT">
                 <div class="col-lg-4">
                     <mat-form-field appearance="fill">
                         <mat-label>Add Shipment Type</mat-label>

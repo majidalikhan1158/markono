@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { CreateCaseSteps, CreateCaseMode } from 'src/app/modules/shared/enums/app-constants';
+import { MatStepper } from '@angular/material/stepper';
 @Component({
   selector: 'app-create-case',
   templateUrl: './create-case.component.html',
@@ -7,16 +8,28 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
   encapsulation: ViewEncapsulation.None
 })
 export class CreateCaseComponent implements OnInit {
+  @ViewChild('stepper') private createCaseStepper: MatStepper;
   isLinear = false;
-  secondFormGroup: FormGroup;
-
-  constructor(private formBuilder: FormBuilder) { }
+  createCaseSteps = CreateCaseSteps;
+  createCaseMode = CreateCaseMode.NEW;
+  constructor() { }
 
   ngOnInit() {
-    this.secondFormGroup = this.formBuilder.group({
-      secondCtrl: ['', Validators.required]
-    });
   }
 
- 
+  handleStepperNextEvent(createCaseStep: CreateCaseSteps) {
+    if (createCaseStep === CreateCaseSteps.CASE_DETAILS) {
+      this.createCaseMode = CreateCaseMode.EDIT;
+    } else {
+      this.createCaseMode = CreateCaseMode.NEW;
+    }
+    this.createCaseStepper.selected.completed = true;
+    this.createCaseStepper.next();
+  }
+
+  handleStepperBackEvent(createCaseStep: CreateCaseSteps) {
+    this.createCaseMode = CreateCaseMode.NEW;
+    this.createCaseStepper.selected.completed = true;
+    this.createCaseStepper.previous();
+  }
 }

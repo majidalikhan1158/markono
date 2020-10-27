@@ -4,6 +4,7 @@ export const CaseDetailTypes = {
     MISC_COST: 'MISC_COST',
     SPECIAL_INSTRUCTIONS: 'SPECIAL_INSTRUCTIONS',
     INVOICE: 'INVOICE',
+    CUSTOMER_INFO: 'CUSTOMER_INFO'
 };
 
 export const CaseDetailTypesArray =

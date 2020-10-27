@@ -1,26 +1,72 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewEncapsulation,
+  Input,
+  OnDestroy,
+  ChangeDetectorRef,
+} from '@angular/core';
+import { CreateCaseMode } from 'src/app/modules/shared/enums/app-constants';
+import { InvoiceViewModel } from 'src/app/modules/shared/models/create-case';
+import { CreateCaseService } from 'src/app/modules/shared/ui-services/create-case.service';
+import { CreateCaseDataType } from 'src/app/modules/shared/enums/data-source-types';
 
 @Component({
   selector: 'app-invoice',
   templateUrl: './invoice.component.html',
   styleUrls: ['./invoice.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
-export class InvoiceComponent implements OnInit {
+export class InvoiceComponent implements OnInit, OnDestroy {
+  @Input() createCaseMode: CreateCaseMode;
+  createCaseModes = CreateCaseMode;
+  disabled = false;
   columnsToDisplay = ['#', 'Position', 'Notes', ''];
-  rowsToDisplay = [1];
-  constructor() { }
+  rowsToDisplay: InvoiceViewModel[] = [];
+  constructor(
+    private createCaseService: CreateCaseService,
+    private ref: ChangeDetectorRef
+  ) {
+  }
 
   ngOnInit(): void {
+    if (this.createCaseMode === CreateCaseMode.EDIT) {
+      this.disabled = true;
+    }
+    this.createCaseService.createCaseDataSource.subscribe((data) => {
+      if (data.invoiceList && data.invoiceList.length > 0) {
+        this.rowsToDisplay = data.invoiceList;
+      } else {
+        this.rowsToDisplay.push({
+          id: 1,
+          position: 0,
+          notes: '',
+        });
+      }
+      this.ref.detectChanges();
+    });
   }
 
   addRow() {
-    const lastRowId = this.rowsToDisplay[this.rowsToDisplay.length - 1];
-    this.rowsToDisplay.push(lastRowId + 1);
+    const totalRows = this.rowsToDisplay.length;
+    this.rowsToDisplay.push({
+      id: totalRows + 1,
+      position: 0,
+      notes: '',
+    });
   }
 
-  deleteRow(rowId) {
-    const rowIndex = this.rowsToDisplay.indexOf(rowId);
-    this.rowsToDisplay.splice(rowIndex, 1);
+  deleteRow(recordId) {
+    this.rowsToDisplay = this.rowsToDisplay.filter((x) => x.id !== recordId);
+  }
+
+  ngOnDestroy(): void {
+    /**
+     * get form data here and pass to the service
+     */
+    this.createCaseService.setCreateCaseDataSource(
+      this.rowsToDisplay,
+      CreateCaseDataType.INVOICE
+    );
   }
 }

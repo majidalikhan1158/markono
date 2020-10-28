@@ -79,9 +79,13 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   deleteRow(shipmentId, rowId) {
     this.shipmentsToDisplay.forEach((x) => {
       if (x.shipmentId === shipmentId) {
-        x.shippingSpecificCost = x.shippingSpecificCost.filter((y) => {
+        const filteredRows = x.shippingSpecificCost.filter((y) => {
           return y.id !== rowId;
         });
+        filteredRows.forEach((y, i) => {
+          y.id = i + 1;
+        });
+        x.shippingSpecificCost = filteredRows;
       }
     });
   }
@@ -123,9 +127,13 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   }
 
   deleteShipment(shipmentId) {
-    this.shipmentsToDisplay = this.shipmentsToDisplay.filter(
+    const filteredRows = this.shipmentsToDisplay.filter(
       (x) => x.shipmentId !== shipmentId
     );
+    filteredRows.forEach((x, i) => {
+      x.boxId = i + 1;
+    });
+    this.shipmentsToDisplay = filteredRows;
   }
 
   handleShipmentModeChange(event: MatSelectChange, shipmentId: number) {

@@ -57,7 +57,11 @@ export class SpecialInstructionsComponent implements OnInit, OnDestroy {
   }
 
   deleteRow(recordId) {
-    this.rowsToDisplay = this.rowsToDisplay.filter((x) => x.id !== recordId);
+    const filteredRows = this.rowsToDisplay.filter((x) => x.id !== recordId);
+    filteredRows.forEach((x, i) => {
+      x.id = i + 1;
+    });
+    this.rowsToDisplay = filteredRows;
   }
 
   ngOnDestroy(): void {

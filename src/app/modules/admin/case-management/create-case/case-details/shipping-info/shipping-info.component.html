@@ -21,7 +21,8 @@
                                 <span class="font-12px card-label">0</span>
                             </div>
                             <div class="card-toolbar">
-                                <span class="material-icons delete-icon pr-2 cursor-pointer" (click)="deleteShipment(shipment.shipmentId)">
+                                <span class="material-icons delete-icon pr-2 cursor-pointer" 
+                                    (click)="deleteShipment(shipment.shipmentId)" *ngIf="createCaseMode !== createCaseModes.EDIT"> 
                                     delete
                                 </span>
                                 <span class="material-icons expansion-icon cursor-pointer" (click)="displayShipmentDetails(shipment.shipmentId)">
@@ -233,7 +234,9 @@
                                                     </mat-form-field>
                                                 </td>
                                                 <td>
-                                                    <span class="material-icons delete-icon pr-2 cursor-pointer pt-3" (click)="deleteRow(shipment.shipmentId,rowId.id)" *ngIf="shipmentsToDisplay[i].shippingSpecificCost.length > 1">
+                                                    <span class="material-icons delete-icon pr-2 cursor-pointer pt-3"
+                                                     (click)="deleteRow(shipment.shipmentId,rowId.id)" 
+                                                     *ngIf="shipmentsToDisplay[i].shippingSpecificCost.length > 1 && createCaseMode !== createCaseModes.EDIT">
                                                         delete
                                                     </span>
                                                 </td>
@@ -440,7 +443,7 @@
         <div class="row pt-4" style="margin: auto">
             <div class="col-lg-12 padding-0px"  *ngIf="createCaseMode !== createCaseModes.EDIT">
                 <div class="col-lg-4">
-                    <mat-form-field appearance="fill">
+                    <mat-form-field appearance="fill" class="selectBoxShippingType">
                         <mat-label>Add Shipment Type</mat-label>
                         <mat-select (selectionChange)="handleShipmentTypeChange($event)" [compareWith]="compare"
                         [formControl]="shipmentSelectedTypeFormControl" >

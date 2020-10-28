@@ -23,20 +23,23 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: ModalService,
     private createCaseService: CreateCaseService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.createCaseService.createCaseDataSource.subscribe((data) => {
+      this.customerInfoViewModel = data.customerInfo;
+    });
     if (this.createCaseMode === CreateCaseMode.EDIT) {
       this.disabled = true;
       this.shouldShowExternalReferenceNumberBox = true;
       this.shouldShowSearchCustomerBox = false;
       this.shouldShowCustomerInfoBox = true;
-      this.createCaseService.createCaseDataSource.subscribe(data => { 
-        this.customerInfoViewModel = data.customerInfo;
-      });
     } else {
-      this.customerInfoViewModel =  {caseType: 0, customerSearchString: '', referenceNumber: ''};
+      this.customerInfoViewModel = {
+        caseType: 0,
+        customerSearchString: '',
+        referenceNumber: '',
+      };
     }
   }
 
@@ -45,7 +48,10 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   }
 
   handleReferenceNumberChange() {
-    if (this.customerInfoViewModel.referenceNumber !== '' && this.createCaseMode !== CreateCaseMode.EDIT) {
+    if (
+      this.customerInfoViewModel.referenceNumber !== '' &&
+      this.createCaseMode !== CreateCaseMode.EDIT
+    ) {
       this.shouldShowSearchCustomerBox = true;
     }
   }
@@ -68,7 +74,5 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
     this.modalService.open(modalId);
   }
 
-  ngOnDestroy(): void {
-     
-  }
+  ngOnDestroy(): void {}
 }

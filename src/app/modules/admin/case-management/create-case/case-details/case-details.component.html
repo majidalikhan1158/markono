@@ -4,10 +4,11 @@
             <div class="card card-custom example example-compact gutter-b case-details-types">
                 <div class="card-body">
                     <mat-selection-list #caseDetailTypeList [multiple]="false"  (selectionChange)="handleCaseDetailTypeChange($event)">
-                        <mat-list-option *ngFor="let types of caseDetailTypesArray"
+                        <mat-list-option *ngFor="let types of caseDetailTypesArray" class="font-14px"
                         [selected]="types.isSelected" [value]="types.enum">
                             {{types.value}}
                             <span  *ngIf="createCaseMode === createCaseModes.EDIT"
+                                (click)="redirectToSection($event, types.enum)"
                                 class="material-icons cursor-pointer font-14px float-right">
                                 edit
                             </span>

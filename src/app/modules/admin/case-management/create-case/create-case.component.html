@@ -1,28 +1,29 @@
 <mat-horizontal-stepper  #stepper="matHorizontalStepper" class="stepper-transparent">
     <mat-step  completed="false">
-      <ng-template matStepLabel>Customer Info.</ng-template>
-      <app-customer-info></app-customer-info>
+      <ng-template matStepLabel >Customer Info.</ng-template>
+      <app-customer-info ></app-customer-info>
       <div class="row">
         <div class="col-lg-12 text-right">
-          <button mat-button (click)="handleStepperNextEvent(createCaseSteps.CUSTOMER_INFO)" class="btn btn-primary stepper-next-button" >Next</button>
+          <button mat-button (click)="handleStepperNextEvent(createCaseSteps.CASE_DETAILS)" class="btn btn-primary stepper-next-button" >Next</button>
         </div>
       </div>
     </mat-step>
     <mat-step  completed="false">
       <ng-template matStepLabel>Case Details.</ng-template>
-      <app-case-details></app-case-details>
+      <app-case-details [tabToOpen]="tabToOpen"></app-case-details>
       <div class="row">
         <div class="col-lg-12 text-right">
-          <button mat-button (click)="handleStepperBackEvent(createCaseSteps.CASE_DETAILS)" class="btn btn-primary stepper-back-button mr-2">Back</button>
-          <button mat-button (click)="handleStepperNextEvent(createCaseSteps.CASE_DETAILS)" class="btn btn-primary stepper-next-button">Next</button>
+          <button mat-button (click)="handleStepperBackEvent(createCaseSteps.CUSTOMER_INFO)" class="btn btn-primary stepper-back-button mr-2">Back</button>
+          <button mat-button (click)="handleStepperNextEvent(createCaseSteps.SUMMARY)" class="btn btn-primary stepper-next-button">Next</button>
         </div>
       </div>
     </mat-step>
     <mat-step  completed="false">
       <ng-template matStepLabel>Summary</ng-template>
-      <app-summary [createCaseMode]="createCaseMode"></app-summary>
+      <app-summary [createCaseMode]="createCaseMode" (changeStepperEvent)="handleStepperChange($event)"
+      ></app-summary>
        <div class="col-lg-12 text-right">
-        <button mat-button (click)="handleStepperBackEvent(createCaseSteps.SUMMARY)" class="btn btn-primary stepper-back-button mr-2">Back</button>
+        <button mat-button (click)="handleStepperBackEvent(createCaseSteps.CASE_DETAILS)" class="btn btn-primary stepper-back-button mr-2">Back</button>
         <button mat-button class="btn btn-primary stepper-next-button">Create Case</button>
       </div>
     </mat-step>

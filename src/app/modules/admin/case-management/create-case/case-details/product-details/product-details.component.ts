@@ -5,6 +5,8 @@ import {
   Input,
   ChangeDetectorRef,
   OnDestroy,
+  SimpleChange,
+  OnChanges,
 } from '@angular/core';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/dynamic-icons';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
@@ -19,7 +21,7 @@ import { CreateCaseDataType } from 'src/app/modules/shared/enums/data-source-typ
   styleUrls: ['./product-details.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ProductDetailsComponent implements OnInit, OnDestroy {
+export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   @Input() createCaseMode: CreateCaseMode;
   createCaseModes = CreateCaseMode;
   disabled = false;
@@ -41,13 +43,9 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private createCaseService: CreateCaseService,
     private ref: ChangeDetectorRef
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-    if (this.createCaseMode === CreateCaseMode.EDIT) {
-      this.disabled = true;
-    }
     this.createCaseService.createCaseDataSource.subscribe((data) => {
       if (this.rowsToDisplay.length === 0) {
         if (data.productDetailsList && data.productDetailsList.length > 0) {
@@ -65,6 +63,22 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       }
       this.ref.detectChanges();
     });
+    this.setCreateCaseMode();
+  }
+
+  ngOnChanges(changes: { [createCaseMode: number]: SimpleChange }) {
+    if (changes['createCaseMode'].currentValue === CreateCaseMode.EDIT) {
+      this.createCaseMode = changes['createCaseMode'].currentValue;
+      this.setCreateCaseMode();
+    }
+  }
+
+  setCreateCaseMode() {
+    if (this.createCaseMode === CreateCaseMode.EDIT) {
+      this.disabled = true;
+    } else {
+      this.disabled = false;
+    }
   }
 
   showProductDetails(rowId: number) {

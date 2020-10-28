@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, SimpleChange, OnChanges } from '@angular/core';
-import { CreateCaseMode } from 'src/app/modules/shared/enums/app-constants';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { CreateCaseMode, CreateCaseSteps } from 'src/app/modules/shared/enums/app-constants';
+import { CreateCaseStepperEvent } from 'src/app/modules/shared/models/app-modal';
 
 @Component({
   selector: 'app-summary',
@@ -8,8 +9,13 @@ import { CreateCaseMode } from 'src/app/modules/shared/enums/app-constants';
 })
 export class SummaryComponent implements OnInit {
   @Input() createCaseMode: CreateCaseMode;
+  @Output() changeStepperEvent = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
-  } 
+  }
+
+  handleStepperChange(eventData: CreateCaseStepperEvent) {
+    this.changeStepperEvent.emit(eventData);
+  }
 }

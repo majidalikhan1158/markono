@@ -64,4 +64,18 @@ app-shipping-info {
     .shipping-info-card .mat-form-field-wrapper {
       padding-bottom: 0px;
     }
+
+    mat-form-field.selectBoxShippingType {
+      background: #5face2 0% 0% no-repeat padding-box;
+    }
+
+    .selectBoxShippingType .mat-form-field-label  {
+      color: white !important; 
+      font-family: 'Roboto-Regular' !important;
+    }
+  
+    .selectBoxShippingType .mat-select-arrow {
+      color: white !important;  
+    }
+  
 }

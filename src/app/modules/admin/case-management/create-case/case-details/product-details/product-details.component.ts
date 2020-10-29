@@ -51,14 +51,9 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
         if (data.productDetailsList && data.productDetailsList.length > 0) {
           this.rowsToDisplay = data.productDetailsList;
         } else {
-          this.rowsToDisplay.push({
-            id: 1,
-            isbn: '',
-            printType: 0,
-            orderQty: '',
-            margin: '',
-            sellingPrice: '',
-          });
+          if (this.rowsToDisplay.length === 0) {
+            this.addRow();
+          }
         }
       }
       this.ref.detectChanges();

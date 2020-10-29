@@ -37,11 +37,9 @@ export class SpecialInstructionsComponent implements OnInit, OnDestroy {
       if (data.specialInstructionList && data.specialInstructionList.length > 0) {
         this.rowsToDisplay = data.specialInstructionList;
       } else {
-        this.rowsToDisplay.push({
-          id: 1,
-          department: '',
-          instructions: '',
-        });
+        if (this.rowsToDisplay.length === 0) {
+          this.addRow();
+        }
       }
       this.ref.detectChanges();
     });

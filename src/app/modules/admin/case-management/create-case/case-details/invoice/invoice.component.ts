@@ -37,11 +37,9 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       if (data.invoiceList && data.invoiceList.length > 0) {
         this.rowsToDisplay = data.invoiceList;
       } else {
-        this.rowsToDisplay.push({
-          id: 1,
-          position: 0,
-          notes: '',
-        });
+        if (this.rowsToDisplay.length === 0) {
+          this.addRow();
+        }
       }
       this.ref.detectChanges();
     });

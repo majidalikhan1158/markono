@@ -53,7 +53,9 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
 
     if ( tabToOpenChange && tabToOpenChange.currentValue) {
       const selectedTab = tabToOpenChange.currentValue;
-      this.setSelectedTabInNewMode(selectedTab);
+      if (selectedTab !== CaseDetailTypes.CUSTOMER_INFO) {
+        this.setSelectedTabInNewMode(selectedTab);
+      }
     }
   }
 

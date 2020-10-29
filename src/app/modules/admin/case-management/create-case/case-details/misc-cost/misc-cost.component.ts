@@ -39,12 +39,9 @@ export class MiscCostComponent implements OnInit, OnDestroy {
       if (data.miscCostList && data.miscCostList.length > 0) {
         this.rowsToDisplay = data.miscCostList;
       } else {
-        this.rowsToDisplay.push({
-          id: 1,
-          costCategory: 0,
-          description: '',
-          subTotal: '',
-        });
+        if (this.rowsToDisplay.length === 0) {
+          this.addRow();
+        }
       }
       this.ref.detectChanges();
     });

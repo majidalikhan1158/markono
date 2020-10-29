@@ -163,7 +163,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   getShipmentObject(shipmentToBeAdded: any) {
     const totalShipments = this.shipmentsToDisplay.length;
     return {
-      shipmentId: shipmentToBeAdded,
+      shipmentId: shipmentToBeAdded.value,
       boxId: totalShipments + 1,
       shippingDetails: {
         billable: 0,

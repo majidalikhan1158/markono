@@ -29,9 +29,9 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/icons/Design/Cap-2.svg',
       submenu: [
         {
-          title: 'Product Specs',
+          title: 'Add Product',
           page: '/admin/product-management/create',
-          permission: 'accessToCreateCase'
+          permission: 'accessToCreateProduct'
         },
       ]
     },

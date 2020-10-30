@@ -22,6 +22,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { CdkColumnDef } from '@angular/cdk/table';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 // import { MatAutocompleteModule } from '@angular/material/autocomplete';
 // import { MatSliderModule } from '@angular/material/slider';
 // import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -34,9 +36,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 // import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // import { MatGridListModule } from '@angular/material/grid-list';
-// import { MatSortModule } from '@angular/material/sort';
+
 // import { MatChipsModule } from '@angular/material/chips';
-// import { MatPaginatorModule } from '@angular/material/paginator';
+
 // import { MatTreeModule } from '@angular/material/tree';
 // import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
@@ -120,6 +122,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatTableModule,
     MatDividerModule,
     MatDatepickerModule,
+    MatPaginatorModule,
+    MatSortModule,
     // MatTooltipModule,
     // MatSidenavModule,
     // MatProgressBarModule,
@@ -134,8 +138,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     // MatListModule,
     // MatSliderModule,
     // MatChipsModule,
-    // MatPaginatorModule,
-    // MatSortModule,
     // MatTreeModule,
     // MatButtonToggleModule,
   ]

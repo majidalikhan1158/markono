@@ -229,10 +229,10 @@ app-toolbar .sticky-toolbar  {
 }
 
 .btn-primary {
-  background: #5FACE2 ;
+  background: #5FACE2 !important ;
   font-size: 14px !important;
   font-family: 'Roboto-Medium' !important;
-  opacity: 0.8 !important;
+  opacity: unset !important; //0.8 !important;
 }
 
 .stepper-back-button {
@@ -441,3 +441,8 @@ mat-form-field {
 .invoice-card {
   height: calc(100% - 25px - 0px);
 }
+
+.text-upper-case {
+  text-transform: uppercase !important;
+}
+ 

@@ -42,6 +42,11 @@ export class HeaderMenuComponent implements OnInit {
         this.dynamicHeaderMenuService.setHeaderLabel(element.title);
       }
     });
+    if (current === '/admin/product-management/create') {
+      this.dynamicHeaderMenuService.displayProductSpecButton(true);
+    } else {
+      this.dynamicHeaderMenuService.displayProductSpecButton(false);
+    }
     if (!pageLabelFound) {
       this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
     }

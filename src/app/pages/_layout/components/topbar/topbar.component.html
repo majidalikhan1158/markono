@@ -225,11 +225,18 @@
 <ng-container *ngIf="extrasLanguagesDisplay">
   <app-language-selector style="margin-top: 10px;"></app-language-selector>
 </ng-container>
+<ng-container *ngIf="dynamicHeaderMenuService.shouldDisplayProductSpecButton$ | async">
+  <div class="topbar-item">
+    <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2">
+      <button class="mat-focus-indicator btn btn-primary mat-button mat-button-base text-upper-case">+ Create Product Specs</button>
+    </div>
+  </div>
+</ng-container>
 
 <ng-container *ngIf="extrasUserDisplay">
   <ng-container *ngIf="extrasUserLayout === 'offcanvas'">
     <ng-container *ngIf="user$ | async as _user">
-      <!--begin::User-->
+      <!--begin::User--> 
       <div class="topbar-item">
         <div
           class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2"

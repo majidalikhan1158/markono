@@ -72,7 +72,7 @@ export class CreateProductComponent implements OnInit, AfterViewInit {
 
   tableFilterChange(filterValue: string, filterPropType: string) {
     if (filterPropType === this.tableFilterTypes.PRINTING_TYPE) {
-      this.tableFilters.printingType = this.selectedPrintingType = filterValue;
+      this.tableFilters.printingType = this.selectedPrintingType =  this.tableFilters.printingType === filterValue ? '' : filterValue;
     }
     this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSource.filter = JSON.stringify(this.tableFilters);

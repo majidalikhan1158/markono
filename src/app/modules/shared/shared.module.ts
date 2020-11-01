@@ -22,7 +22,6 @@ import { ModalService } from './ui-services/modal.service';
     AddBlueprintModalComponent,
     CreateProductSpecModalComponent,
     ModalComponent
-  ],
-  providers: [ModalService]
+  ]
 })
 export class SharedModule { }

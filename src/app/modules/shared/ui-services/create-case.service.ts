@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CreateCaseViewModel, CustomerInfoViewModel, MiscCostViewModel, InvoiceViewModel,
    SpecialInstructionViewModel, ProductDetailsViewModel, ShippingInfoViewModel } from '../models/create-case';
-import { CreateCaseDataType } from '../enums/data-source-types';
+import { CreateCaseDataType } from '../enums/app-constants';
 
 @Injectable({
   providedIn: 'root'

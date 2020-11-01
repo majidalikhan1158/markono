@@ -1,8 +1,0 @@
-export enum CreateCaseDataType {
-    CUSTOMER_INFO,
-    PRODUCT_DETAILS,
-    SHIPPING_INFO,
-    MISC_COST,
-    INVOICE,
-    SPECIAL_INSTRUCTIONS,
-}

@@ -9,7 +9,7 @@ import {
 import { CreateCaseMode } from 'src/app/modules/shared/enums/app-constants';
 import { SpecialInstructionViewModel } from 'src/app/modules/shared/models/create-case';
 import { CreateCaseService } from 'src/app/modules/shared/ui-services/create-case.service';
-import { CreateCaseDataType } from 'src/app/modules/shared/enums/data-source-types';
+import { CreateCaseDataType } from 'src/app/modules/shared/enums/app-constants';
 
 @Component({
   selector: 'app-special-instructions',

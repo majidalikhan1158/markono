@@ -24,11 +24,13 @@ import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapte
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { NgMatSearchBarModule } from 'ng-mat-search-bar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 // import { MatAutocompleteModule } from '@angular/material/autocomplete';
 // import { MatSliderModule } from '@angular/material/slider';
-// import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 // import { MatCheckboxModule } from '@angular/material/checkbox';
-// import { MatMenuModule } from '@angular/material/menu';
 // import { MatTooltipModule } from '@angular/material/tooltip';
 // import { MatSidenavModule } from '@angular/material/sidenav';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -37,7 +39,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 
 // import { MatGridListModule } from '@angular/material/grid-list';
 
-// import { MatChipsModule } from '@angular/material/chips';
+
 
 // import { MatTreeModule } from '@angular/material/tree';
 // import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -69,6 +71,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatListModule,
     MatTableModule,
     MatDividerModule,
+    NgMatSearchBarModule,
+    MatMenuModule,
+    MatChipsModule,
+    MatSlideToggleModule,
     // MatTooltipModule,
     // MatSidenavModule,
     // MatProgressBarModule,
@@ -76,14 +82,12 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     // MatSnackBarModule,
     // MatTableModule,
     // MatGridListModule,
-    // MatSlideToggleModule,
     // MatCheckboxModule,
-    // MatMenuModule,
+    // 
     // MatDatepickerModule,
     // MatAutocompleteModule,
     // MatListModule,
     // MatSliderModule,
-    // MatChipsModule,
     // MatPaginatorModule,
     // MatDividerModule,
     // MatSortModule,
@@ -124,6 +128,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatDatepickerModule,
     MatPaginatorModule,
     MatSortModule,
+    NgMatSearchBarModule,
+    MatMenuModule,
+    MatChipsModule,
+    MatSlideToggleModule,
     // MatTooltipModule,
     // MatSidenavModule,
     // MatProgressBarModule,
@@ -133,7 +141,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     // MatSlideToggleModule,
     // MatCheckboxModule,
     // MatMenuModule,
-    
+
     // MatAutocompleteModule,
     // MatListModule,
     // MatSliderModule,

@@ -5,11 +5,13 @@ import { ModalComponent } from './ui-modals/modal/modal.component';
 import { MaterialUiModule } from '../material-ui/material-ui.module';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { AddBlueprintModalComponent } from './ui-modals/case-management/add-blueprint-modal/add-blueprint-modal.component';
+import { CreateProductSpecModalComponent } from './ui-modals/product-spec-management/create-product-spec-modal/create-product-spec-modal.component';
+import { ModalService } from './ui-services/modal.service';
 
 
 
 @NgModule({
-  declarations: [AddCustomerModalComponent, ModalComponent, AddBlueprintModalComponent],
+  declarations: [AddCustomerModalComponent, ModalComponent, AddBlueprintModalComponent, CreateProductSpecModalComponent],
   imports: [
     CommonModule,
     MaterialUiModule,
@@ -18,7 +20,9 @@ import { AddBlueprintModalComponent } from './ui-modals/case-management/add-blue
   exports: [
     AddCustomerModalComponent,
     AddBlueprintModalComponent,
+    CreateProductSpecModalComponent,
     ModalComponent
-  ]
+  ],
+  providers: [ModalService]
 })
 export class SharedModule { }

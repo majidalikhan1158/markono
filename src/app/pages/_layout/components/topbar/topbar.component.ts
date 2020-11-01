@@ -1,6 +1,9 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LayoutService, DynamicHeaderMenuService } from '../../../../_metronic/core';
+import {
+  LayoutService,
+  DynamicHeaderMenuService,
+} from '../../../../_metronic/core';
 import { AuthService } from '../../../../modules/auth/_services/auth.service';
 import { UserModel } from '../../../../modules/auth/_models/user.model';
 import KTLayoutQuickSearch from '../../../../../assets/js/layout/extended/quick-search';
@@ -11,6 +14,7 @@ import KTLayoutQuickPanel from '../../../../../assets/js/layout/extended/quick-p
 import KTLayoutQuickUser from '../../../../../assets/js/layout/extended/quick-user';
 import KTLayoutHeaderTopbar from '../../../../../assets/js/layout/base/header-topbar';
 import { KTUtil } from '../../../../../assets/js/components/util';
+import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 
 @Component({
   selector: 'app-topbar',
@@ -32,8 +36,13 @@ export class TopbarComponent implements OnInit, AfterViewInit {
   extrasLanguagesDisplay: boolean;
   extrasUserDisplay: boolean;
   extrasUserLayout: 'offcanvas' | 'dropdown';
- 
-  constructor(private layout: LayoutService, private auth: AuthService, public dynamicHeaderMenuService: DynamicHeaderMenuService) {
+
+  constructor(
+    private layout: LayoutService,
+    private auth: AuthService,
+    public dynamicHeaderMenuService: DynamicHeaderMenuService,
+    private modalService: ModalService
+  ) {
     this.user$ = this.auth.currentUserSubject.asObservable();
   }
 
@@ -107,5 +116,9 @@ export class TopbarComponent implements OnInit, AfterViewInit {
       // Init Header Topbar For Mobile Mode
       KTLayoutHeaderTopbar.init('kt_header_mobile_topbar_toggle');
     });
+  }
+
+  openCreateProductSpecModal(modalId: string) {
+    this.modalService.openModalViaObservable(modalId);
   }
 }

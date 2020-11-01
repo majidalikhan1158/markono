@@ -35,6 +35,7 @@
     "moment": "^2.27.0",
     "ng-apexcharts": "^1.5.4",
     "ng-inline-svg": "^10.1.0",
+    "ng-mat-search-bar": "^10.0.0-beta.3",
     "ngx-clipboard": "^13.0.1",
     "ngx-highlightjs": "3.0.3",
     "ngx-perfect-scrollbar": "^9.0.0",

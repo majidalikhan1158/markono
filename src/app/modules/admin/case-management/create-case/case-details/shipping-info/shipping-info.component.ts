@@ -8,11 +8,11 @@ import {
 } from '@angular/core';
 import { ShipmentTypes } from 'src/app/modules/shared/enums/shipment-types';
 import { MatSelectChange } from '@angular/material/select';
-import { ExpansionIcons } from 'src/app/modules/shared/enums/dynamic-icons';
+import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { FormControl } from '@angular/forms';
 import { CreateCaseMode } from 'src/app/modules/shared/enums/app-constants';
 import { ShippingInfoViewModel } from 'src/app/modules/shared/models/create-case';
-import { CreateCaseDataType } from 'src/app/modules/shared/enums/data-source-types';
+import { CreateCaseDataType } from 'src/app/modules/shared/enums/app-constants';
 import { CreateCaseService } from 'src/app/modules/shared/ui-services/create-case.service';
 
 export interface ShipmentTypesBox {

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ModalService } from '../../../ui-services/modal.service';
-import { UIModalID } from '../../../enums/ui-modal-ids';
+import { UIModalID } from '../../../enums/app-constants';
 
 @Component({
   selector: 'app-add-blueprint-modal',

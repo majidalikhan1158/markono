@@ -1,36 +1,198 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-export interface PeriodicElement {
-  id: number;
-  isbn: string;
-  productTitle: string;
-  dateCreated: number;
-  createdBy: string;
-  isbnOwner: string;
-  printingType: string;
-  version: string;
-}
-const ELEMENT_DATA: PeriodicElement[] = [
-  {id: 1, isbn: '8888889999990', productTitle: 'TestUATFinal_all components copy from 9783573894712', dateCreated: Date.now(), createdBy: 'John Doe', isbnOwner: 'DPE101US', printingType: 'Offset', version: 'V00001'},
-  {id: 2, isbn: '9999998888887', productTitle: 'TestUATFinal_all components copy from 9783573894712', dateCreated: Date.now(), createdBy: 'Alina Mil', isbnOwner: 'DPB073', printingType: 'Offset', version: 'V00002'},
-  {id: 3, isbn: '9999998888887', productTitle: 'Passer: Psychology 3e', dateCreated: Date.now(), createdBy: 'Milenda Cerny', isbnOwner: 'DPE082', printingType: 'Offset', version: 'V00003'},
-];
+import { ProductSpecList } from 'src/app/modules/shared/models/product-spec';
+import { ProductSpecMockDataList } from 'src/app/modules/shared/mock-data/product-spec-data-list';
+import {
+  ProductSpecFilters,
+  ProductSpecFilterTypes,
+} from 'src/app/modules/shared/models/table-filter-modals';
+import { PrintingType } from 'src/app/modules/shared/enums/product-spec';
+import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
+import { UIModalID } from 'src/app/modules/shared/enums/app-constants';
+
 @Component({
   selector: 'app-create-product',
   templateUrl: './create-product.component.html',
-  styleUrls: ['./create-product.component.scss']
+  styleUrls: ['./create-product.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class CreateProductComponent implements OnInit, AfterViewInit  {
-  displayedColumns: string[] = ['id', 'isbn', 'productTitle', 'dateCreated', 'createdBy', 'isbnOwner', 'printingType', 'version'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+export class CreateProductComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  constructor() { }
+  displayedColumns: string[] = [
+    'id',
+    'isbn',
+    'productTitle',
+    'dateCreated',
+    'createdBy',
+    'isbnOwner',
+    'printingType',
+    'version',
+  ];
+  dataArray = ProductSpecMockDataList;
+  dataSource;
+  tableFilters: ProductSpecFilters = {
+    createdDate: '',
+    printingType: '',
+    createdBy: '',
+    isbnOwner: '',
+    currentSelectedFilter: ''
+  };
+  tableFilterTypes = ProductSpecFilterTypes;
+  printingTypes = PrintingType;
+  selectedPrintingType = '';
+  globalFilter = '';
+  constructor(private modalService: ModalService) {
+    this.dataSource = new MatTableDataSource<ProductSpecList>(this.dataArray);
+  }
 
   ngOnInit(): void {
+    this.modalService.modalToBeOpen.subscribe(modalId => {
+      if (modalId && modalId === UIModalID.ADD_PRODUCT_SPEC_MODAL) {
+        this.modalService.open(modalId);
+      }
+    });
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.filterPredicate = this.customFilterPredicate();
   }
+
+  applySearch(event: Event) {
+    this.globalFilter = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = JSON.stringify(this.tableFilters);
+  }
+
+  tableFilterChange(filterValue: string, filterPropType: string) {
+    if (filterPropType === this.tableFilterTypes.PRINTING_TYPE) {
+      this.tableFilters.printingType = this.selectedPrintingType = filterValue;
+    }
+    this.tableFilters.currentSelectedFilter = filterPropType;
+    this.dataSource.filter = JSON.stringify(this.tableFilters);
+  }
+
+  removeFilter(filterPropType: string) {
+    if (filterPropType === this.tableFilterTypes.CREATED_DATE) {
+      this.tableFilters.createdDate = '';
+    } else if (filterPropType === this.tableFilterTypes.PRINTING_TYPE) {
+      this.tableFilters.printingType = this.selectedPrintingType = '';
+    } else if (filterPropType === this.tableFilterTypes.CREATED_BY) {
+      this.tableFilters.createdBy = '';
+    } else if (filterPropType === this.tableFilterTypes.ISBN_OWNER) {
+      this.tableFilters.isbnOwner = '';
+    }
+    this.dataSource.filter = JSON.stringify(this.tableFilters);
+  }
+
+  customFilterPredicate() {
+    const myFilterPredicate = (
+      data: ProductSpecList,
+      filter: string
+    ): boolean => {
+      let globalMatch = !this.globalFilter;
+      if (this.globalFilter) {
+        // search all text fields
+        globalMatch =
+          data.isbn
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.productTitle
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          new Date(data.dateCreated)
+            .toLocaleDateString()
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.createdBy
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.isbnOwner
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.printingType
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.version
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1;
+      }
+
+      if (!globalMatch) {
+        return;
+      }
+      const searchString = JSON.parse(filter) as ProductSpecFilters;
+      let matchedFilters = 0;
+      let filterCounter = 0;
+      if (this.tableFilters.createdDate !== '') {
+        filterCounter++;
+        matchedFilters = matchedFilters + (
+          new Date(data.dateCreated)
+            .toLocaleDateString()
+            .trim()
+            .indexOf(
+              new Date(searchString.createdDate).toLocaleDateString()
+            ) !== -1 ? 1 : 0
+        );
+      }
+      if (this.tableFilters.printingType !== '') {
+        filterCounter++;
+        matchedFilters = matchedFilters +  (
+          data.printingType
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.printingType.toLowerCase()) !== -1 ? 1 : 0
+        );
+      }
+      if (this.tableFilters.createdBy !== '') {
+        filterCounter++;
+        matchedFilters = matchedFilters +  (
+          data.createdBy
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.createdBy.toLowerCase()) !== -1 ? 1 : 0
+        );
+      }
+      if (this.tableFilters.isbnOwner !== '') {
+        filterCounter++;
+        matchedFilters = matchedFilters +  (
+          data.isbnOwner
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.isbnOwner.toLowerCase()) !== -1 ? 1 : 0
+        );
+      }
+
+      if (filterCounter === 0) { return true; }
+      return filterCounter === matchedFilters;
+    };
+    return myFilterPredicate;
+  }
+
+  handleAddProductSpecEvent(modalId: string) {}
+
+  handleModalRejectEvent(modalId: string) {}
 }

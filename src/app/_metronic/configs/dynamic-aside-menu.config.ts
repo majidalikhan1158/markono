@@ -30,8 +30,8 @@ export const DynamicAsideMenuConfig = {
       submenu: [
         {
           title: 'Add Product',
-          page: '/admin/product-management/create',
-          permission: 'accessToCreateProduct'
+          page: '/admin/product-management/list',
+          permission: 'accessToListProduct'
         },
       ]
     },

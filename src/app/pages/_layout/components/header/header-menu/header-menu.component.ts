@@ -42,7 +42,7 @@ export class HeaderMenuComponent implements OnInit {
         this.dynamicHeaderMenuService.setHeaderLabel(element.title);
       }
     });
-    if (current === '/admin/product-management/create') {
+    if (current === '/admin/product-management/list') {
       this.dynamicHeaderMenuService.displayProductSpecButton(true);
     } else {
       this.dynamicHeaderMenuService.displayProductSpecButton(false);

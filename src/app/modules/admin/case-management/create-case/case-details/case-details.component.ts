@@ -4,7 +4,6 @@ import {
   ViewEncapsulation,
   Input,
   OnChanges,
-  SimpleChange,
   Output,
   EventEmitter,
   ChangeDetectorRef,

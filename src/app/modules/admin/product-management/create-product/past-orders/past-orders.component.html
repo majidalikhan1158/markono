@@ -1,0 +1,34 @@
+<mat-table #table [dataSource]="dataSource" class="past-order-table">
+    <!--- Note that these columns can be defined in any order.
+				The actual rendered columns are set as a property on the row definition" -->
+    <!-- Position Column -->
+    <ng-container matColumnDef="orderDate">
+        <mat-header-cell *matHeaderCellDef> Order Date </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.orderDate | date:'shortDate'}} </mat-cell>
+    </ng-container>
+    <!-- Name Column -->
+    <ng-container matColumnDef="jobNo">
+        <mat-header-cell *matHeaderCellDef> Job No </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.jobNo }} </mat-cell>
+    </ng-container>
+    <!-- Weight Column -->
+    <ng-container matColumnDef="customer">
+        <mat-header-cell *matHeaderCellDef> Customer </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.customer}} </mat-cell>
+    </ng-container>
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="existingRefNo">
+        <mat-header-cell *matHeaderCellDef> Ext. Ref. No. </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.existingRefNo}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="quantity">
+        <mat-header-cell *matHeaderCellDef> Qty</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.quantity}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="jobType">
+        <mat-header-cell *matHeaderCellDef> Job Type</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.jobType}}</mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>

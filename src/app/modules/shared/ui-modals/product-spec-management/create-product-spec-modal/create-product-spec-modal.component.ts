@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { ModalService } from '../../../ui-services/modal.service';
 import { UIModalID } from '../../../enums/app-constants';
 
@@ -9,6 +9,7 @@ import { UIModalID } from '../../../enums/app-constants';
   encapsulation: ViewEncapsulation.None,
 })
 export class CreateProductSpecModalComponent implements OnInit {
+  @Output() acceptEvent = new EventEmitter();
   useExistingTemplate = false;
   constructor(private modalService: ModalService) { }
 
@@ -24,6 +25,6 @@ export class CreateProductSpecModalComponent implements OnInit {
   }
 
   createProductSpec() {
-    this.modalService.close(UIModalID.ADD_PRODUCT_SPEC_MODAL);
+    this.acceptEvent.emit();
   }
 }

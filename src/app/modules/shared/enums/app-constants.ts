@@ -29,4 +29,8 @@ export const UIModalID = {
     ADD_PRODUCT_SPEC_MODAL: 'ADD_PRODUCT_SPEC_MODAL',
 };
 
-
+export const CreateProductTabs = {
+    SPECIFICATIONS : 'Specifications',
+    VERSIONS: 'Versions',
+    PAST_ORDERS: 'Past Orders'
+}

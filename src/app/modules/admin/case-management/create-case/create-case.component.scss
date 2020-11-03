@@ -28,27 +28,6 @@
     padding: 0px !important;
     padding-bottom: 5px !important;
   }
-
-  .case-type-card
-    .mat-radio-button.mat-accent.mat-radio-checked
-    .mat-radio-outer-circle {
-    border-color: #5face2;
-  }
-
-  .case-type-card
-    .mat-radio-button.mat-accent.mat-radio-checked
-    .mat-radio-persistent-ripple,
-  .mat-radio-button.mat-accent .mat-radio-inner-circle,
-  .mat-radio-button.mat-accent
-    .mat-radio-ripple
-    .mat-ripple-element:not(.mat-radio-persistent-ripple),
-  .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
-    background-color: #5face2;
-  }
-
-  .case-type-card .mat-radio-label-content {
-    font: normal normal normal 14px/17px "Roboto-Medium";
-  }
  
   .reference-no-card .txtReferenceNo {
     padding-left: 10px;

@@ -1,0 +1,17 @@
+app-past-orders {
+  .past-order-table .mat-header-row {
+    min-height: 45px !important;
+  }
+
+  .past-order-table .mat-header-cell {
+    color: #afafaf !important;
+    font-size: 12px;
+    font-family: "Roboto-Regular";
+  }
+
+  .past-order-table .mat-cell {
+    color: #484848 !important;
+    font-size: 14px;
+    font-family: "Roboto-Regular";
+  }
+}

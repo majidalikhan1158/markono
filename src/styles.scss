@@ -139,6 +139,15 @@ app-toolbar .sticky-toolbar  {
 .font-14px{
   font-size: 14px !important;
 }
+
+.font-16px{
+  font-size: 16px !important;
+}
+
+.font-18px{
+  font-size: 18px !important;
+}
+
 .font-20px {
   font-size: 20px !important;
 }
@@ -422,7 +431,7 @@ input::placeholder {
  .add-icon {
   background: transparent;
   color: #5face2;
-  font-size: 22px !important; 
+  font-size: 22px; 
   vertical-align: bottom;
 } 
 
@@ -489,4 +498,31 @@ mat-form-field {
 
 .table-filter-chips {
   margin-top: 5px;
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked
+.mat-radio-outer-circle {
+border-color: #5face2;
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked
+.mat-radio-persistent-ripple,
+.mat-radio-button.mat-accent .mat-radio-inner-circle,
+.mat-radio-button.mat-accent
+.mat-radio-ripple
+.mat-ripple-element:not(.mat-radio-persistent-ripple),
+.mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
+background-color: #5face2;
+}
+
+.mat-radio-label-content {
+  font-size: 14px;
+  font-family:"Roboto-Medium";
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+  background-color: #5FACE2 !important;
+}
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+  background-color: #F2F2F2 !important;
 }

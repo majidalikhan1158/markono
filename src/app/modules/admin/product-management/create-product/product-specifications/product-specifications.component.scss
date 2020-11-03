@@ -1,0 +1,79 @@
+app-product-specifications {
+  .product-spec-types {
+    border-right: 1px solid #e6e6e6;
+    max-width: 161px;
+    height: 100%;
+  }
+
+  .product-spec-details {
+    height: 100%;
+  }
+  .product-spec-types .mat-list-option-number {
+    background-color: #afafaf;
+    color: #fff;
+    border-radius: 50%;
+    height: 18px;
+    width: 18px;
+    font-size: 10px !important;
+    flex-shrink: 0;
+    position: relative;
+    margin-right: 10px !important;
+  }
+
+  .product-spec-types .mat-list-single-selected-option .mat-list-option-number {
+    background-color: #3699ff !important;
+  }
+  .product-spec-types .mat-list-option-number-visited {
+    background-color: #7db961;
+  }
+  .product-spec-types .mat-list-option-number.visited {
+    background-color: #7db961;
+  }
+
+  .product-spec-types .mat-list-option-number-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .product-spec-types .mat-list-text {
+    display: flex !important;
+    flex-direction: row !important;
+  }
+
+  .product-spec-types .mat-list-text .material-icons {
+    color: #343434 !important;
+  }
+
+  .product-spec-types .mat-list-base {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .product-spec-types .mat-pseudo-checkbox {
+    display: none !important;
+  }
+  .product-spec-types .mat-list-item-content {
+    padding-right: 0px !important;
+  }
+  .product-spec-types .mat-list-text {
+    padding-right: 0px !important;
+    font-size: 14px;
+    color: #343434;
+    font-family: "Roboto-Regular";
+  }
+
+  .product-spec-types .mat-list-single-selected-option {
+    border-radius: 2px;
+    background: #eef6fb;
+  }
+
+  .product-spec-types .mat-list-single-selected-option .mat-list-text {
+    color: #5face2;
+    font-family: "Roboto-Bold";
+  }
+
+  .product-spec-details mat-form-field {
+    width: inherit;
+  }
+}

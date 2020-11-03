@@ -79,7 +79,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
         this.dynamicHeaderMenuService.setHeaderLabel(element.title);
       }
     });
-    if (this.currentUrl === '/admin/product-management/create') {
+    if (this.currentUrl === '/admin/product-management/list') {
       this.dynamicHeaderMenuService.displayProductSpecButton(true);
     } else {
       this.dynamicHeaderMenuService.displayProductSpecButton(false);

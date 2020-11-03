@@ -1,145 +1,19 @@
 <div class="row pt-5">
   <div class="col-lg-12 display-flex">
-    <div class="card card-custom example example-compact gutter-b product-table-card">
-      <div class="card-header pr-0">
-        <div class="row full-width">
-          <div class="col-lg-12 pt-2 pb-2 pr-0">
-            <div class="float-left display-flex">
-              <mat-chip-list #chipList class="table-filter-chips">
-                <mat-chip [removable]="true" *ngIf="tableFilters.createdDate != ''"
-                  (removed)="removeFilter(tableFilterTypes.CREATED_DATE)">
-                  {{tableFilters.createdDate | date:'shortDate' }}
-                  <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-                <mat-chip [removable]="true" *ngIf="tableFilters.printingType != ''"
-                  (removed)="removeFilter(tableFilterTypes.PRINTING_TYPE)">
-                  {{tableFilters.printingType }}
-                  <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-                <mat-chip [removable]="true" *ngIf="tableFilters.createdBy != ''"
-                  (removed)="removeFilter(tableFilterTypes.CREATED_BY)">
-                  {{tableFilters.createdBy}}
-                  <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-                <mat-chip [removable]="true" *ngIf="tableFilters.isbnOwner != ''"
-                  (removed)="removeFilter(tableFilterTypes.ISBN_OWNER)">
-                  {{tableFilters.isbnOwner}}
-                  <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-              </mat-chip-list>
-            </div>
-            <div class="float-right display-flex">
-              <mat-form-field appearance="fill" class="font-12px pr-2">
-                <mat-label>Search</mat-label>
-                <mat-icon matPrefix>search</mat-icon>
-                <input matInput placeholder="Search" (keyup)="applySearch($event)"
-                  #tableSearchInput>
-              </mat-form-field>
-              <!-- <mat-search-bar></mat-search-bar> -->
-              <button mat-icon-button [matMenuTriggerFor]="menu">
-                <mat-icon>filter_list</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu" class="filter-menu">
-                <div class="filter-menu-content" (click)="$event.stopPropagation();">
-                  <span class="filter-menu-heading pb-4">
-                    Advance Filters
-                  </span>
-                  <mat-form-field appearance="fill" class="font-12px pb-4">
-                    <mat-label>Choose Date Created Range</mat-label>
-                    <input [matDatepicker]="picker" matInput [(ngModel)]="tableFilters.createdDate"
-                      (ngModelChange)="tableFilterChange($event,tableFilterTypes.CREATED_DATE)">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                  <span class="filter-menu-heading font-14px pb-4">
-                    Printing Type
-                  </span>
-                  <div class="printing-type-options display-flex pb-4">
-                    <span
-                      [ngClass]="{'option-item-selected': selectedPrintingType == printingTypes.OFFSET, 'option-item mr-2': true}"
-                      (click)="tableFilterChange(printingTypes.OFFSET,tableFilterTypes.PRINTING_TYPE)">Offset</span>
-                    <span
-                      [ngClass]="{'option-item-selected': selectedPrintingType == printingTypes.DIGITAL, 'option-item mr-2': true}"
-                      (click)="tableFilterChange(printingTypes.DIGITAL,tableFilterTypes.PRINTING_TYPE)">Digital</span>
-                    <span
-                      [ngClass]="{'option-item-selected': selectedPrintingType == printingTypes.POD, 'option-item mr-2': true}"
-                      (click)="tableFilterChange(printingTypes.POD,tableFilterTypes.PRINTING_TYPE)">POD</span>
-                  </div>
-                  <mat-form-field appearance="fill" class="font-12px pb-4">
-                    <mat-label>Created By</mat-label>
-                    <mat-icon matPrefix>search</mat-icon>
-                    <input matInput [(ngModel)]="tableFilters.createdBy" (ngModelChange)="tableFilterChange($event,tableFilterTypes.CREATED_BY)">
-                  </mat-form-field>
-                  <mat-form-field appearance="fill" class="font-12px">
-                    <mat-label>ISBN Owner</mat-label>
-                    <mat-icon matPrefix>search</mat-icon>
-                    <input matInput [(ngModel)]="tableFilters.isbnOwner" (ngModelChange)="tableFilterChange($event,tableFilterTypes.ISBN_OWNER)">
-                  </mat-form-field>
-                </div>
-              </mat-menu>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <table mat-table [dataSource]="dataSource" class="product-spec-table">
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef> # </th>
-            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="isbn">
-            <th mat-header-cell *matHeaderCellDef> ISBN </th>
-            <td mat-cell *matCellDef="let element"> {{element.isbn}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="productTitle">
-            <th mat-header-cell *matHeaderCellDef> Product Title </th>
-            <td mat-cell *matCellDef="let element"> {{element.productTitle}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="dateCreated">
-            <th mat-header-cell *matHeaderCellDef> Date Created </th>
-            <td mat-cell *matCellDef="let element"> {{element.dateCreated | date:'shortDate'}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="createdBy">
-            <th mat-header-cell *matHeaderCellDef> Created By </th>
-            <td mat-cell *matCellDef="let element"> {{element.createdBy}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="isbnOwner">
-            <th mat-header-cell *matHeaderCellDef> ISBN Owner </th>
-            <td mat-cell *matCellDef="let element"> {{element.isbnOwner}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="printingType">
-            <th mat-header-cell *matHeaderCellDef> Printing Type </th>
-            <td mat-cell *matCellDef="let element"> {{element.printingType}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="version">
-            <th mat-header-cell *matHeaderCellDef> Version</th>
-            <td mat-cell *matCellDef="let element"> {{element.version}} </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          <!-- Row shown when there is no matching data. -->
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell text-center" colspan="8">No data matching the filter "{{tableSearchInput.value}}"</td>
-          </tr>
-        </table>
-
-        <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    <div class="card card-custom example example-compact gutter-b create-product-spec-card">
+      <div class="card-body p-0">
+        <mat-tab-group>
+          <mat-tab label="{{createProductTabs.SPECIFICATIONS}}">
+            <app-product-specifications></app-product-specifications>
+          </mat-tab>
+          <mat-tab label="{{createProductTabs.VERSIONS}}">
+            <app-product-versions></app-product-versions>
+          </mat-tab>
+          <mat-tab label="{{createProductTabs.PAST_ORDERS}}">
+            <app-past-orders></app-past-orders>
+          </mat-tab>
+        </mat-tab-group>
       </div>
     </div>
   </div>
 </div>
-
-<app-modal id="ADD_PRODUCT_SPEC_MODAL" size="modal-md">
-  <app-create-product-spec-modal
-    (acceptEvent)="handleAddProductSpecEvent('ADD_PRODUCT_SPEC_MODAL')"
-    (rejectEvent)="handleModalRejectEvent('ADD_PRODUCT_SPEC_MODAL')"
-  ></app-create-product-spec-modal>
-</app-modal>

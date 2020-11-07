@@ -1,0 +1,42 @@
+app-spec-text {
+    .spec-text .labels {
+        color: #484848;
+        font-family: 'Roboto-Regular';
+    }
+
+    .spec-text .mat-radio-label-content {
+        font-size: 12px !important;
+    }
+
+    .spec-text .mat-form-field-wrapper {
+        padding-bottom: 0px !important;
+    }
+    .spec-text .mat-radio-label-content {
+        font-size: 14px !important;
+    }
+
+    .spec-text .color-type-options .option-item{
+        width: 78px;
+        height: 50px;
+        border-radius: 6px;
+        border: 1px solid #E6E6E6;
+        color: #AFAFAF;
+        font-size: 14px;
+        font-family: "Roboto-Regular";
+        text-align: center;
+        padding-top: 13px;
+        padding-bottom: 10px;
+        cursor: pointer;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .spec-text .mat-chip-list-wrapper {
+        height: 45px;
+    }
+
+    .spec-text .mat-chip {
+        height: inherit;
+        border-radius: 25px;
+    }
+}

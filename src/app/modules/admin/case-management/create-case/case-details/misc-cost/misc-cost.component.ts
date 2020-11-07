@@ -6,11 +6,10 @@ import {
   OnDestroy,
   ChangeDetectorRef,
 } from '@angular/core';
-import { CreateCaseMode } from 'src/app/modules/shared/enums/app-constants';
-import { CostCategory } from 'src/app/modules/shared/enums/cost-category';
 import { MiscCostViewModel } from 'src/app/modules/shared/models/create-case';
-import { CreateCaseService } from 'src/app/modules/shared/ui-services/create-case.service';
-import { CreateCaseDataType } from 'src/app/modules/shared/enums/app-constants';
+import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
+import { CreateCaseMode, CreateCaseDataType } from 'src/app/modules/shared/enums/app-enums';
+import { CostCategory } from 'src/app/modules/shared/enums/case-management/case-contants';
 
 @Component({
   selector: 'app-misc-cost',
@@ -26,7 +25,7 @@ export class MiscCostComponent implements OnInit, OnDestroy {
   columnsToDisplay = ['#', 'Cost Category', 'Description', 'Sub-Total', ''];
   rowsToDisplay: MiscCostViewModel[] = [];
   constructor(
-    private createCaseService: CreateCaseService,
+    private createCaseService: CaseStore,
     private ref: ChangeDetectorRef
   ) {
   }
@@ -35,7 +34,7 @@ export class MiscCostComponent implements OnInit, OnDestroy {
     if (this.createCaseMode === CreateCaseMode.EDIT) {
       this.disabled = true;
     }
-    this.createCaseService.createCaseDataSource.subscribe((data) => {
+    this.createCaseService.createCaseStore.subscribe((data) => {
       if (data.miscCostList && data.miscCostList.length > 0) {
         this.rowsToDisplay = data.miscCostList;
       } else {

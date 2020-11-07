@@ -2,19 +2,27 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CreateCaseViewModel, CustomerInfoViewModel, MiscCostViewModel, InvoiceViewModel,
    SpecialInstructionViewModel, ProductDetailsViewModel, ShippingInfoViewModel } from '../models/create-case';
-import { CreateCaseDataType } from '../enums/app-constants';
+import { CreateCaseDataType, RecordType } from '../enums/app-enums';
+import { DDLObjectModal, DDLListModal } from '../../services/shared/classes/case-modals/case-modal';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CreateCaseService {
-  public createCaseDataSource: Observable<CreateCaseViewModel>;
-  private createCaseDataSourceSubject = new BehaviorSubject<CreateCaseViewModel>(new CreateCaseViewModel());
+export class CaseStore {
+  public createCaseStore: Observable<CreateCaseViewModel>;
+  public caseDropDownStore: Observable<DDLObjectModal>;
+  private createCaseStoreSubject = new BehaviorSubject<CreateCaseViewModel>(new CreateCaseViewModel());
+  private caseDropDownStoreSubject = new BehaviorSubject<DDLObjectModal>(new DDLObjectModal());
   private currentData: CreateCaseViewModel;
+  private currentDropDownStoreState: DDLObjectModal;
   constructor() {
-    this.createCaseDataSource = this.createCaseDataSourceSubject.asObservable();
-    this.createCaseDataSource.subscribe(data => {
+    this.createCaseStore = this.createCaseStoreSubject.asObservable();
+    this.caseDropDownStore = this.caseDropDownStoreSubject.asObservable();
+    this.createCaseStore.subscribe(data => {
       this.currentData = data;
+    });
+    this.caseDropDownStore.subscribe(data => {
+      this.currentDropDownStoreState = data;
     });
   }
 
@@ -39,7 +47,7 @@ export class CreateCaseService {
       this.currentData.id = 1;
     }
     this.currentData.customerInfo = dataSubject;
-    this.createCaseDataSourceSubject.next(this.currentData);
+    this.createCaseStoreSubject.next(this.currentData);
   }
 
   private setProductDetails(dataSubject: ProductDetailsViewModel[]) {
@@ -50,7 +58,7 @@ export class CreateCaseService {
 
     if (validRecords.length > 0) {
       this.currentData.productDetailsList = validRecords;
-      this.createCaseDataSourceSubject.next(this.currentData);
+      this.createCaseStoreSubject.next(this.currentData);
     }
   }
 
@@ -61,7 +69,7 @@ export class CreateCaseService {
     const validRecords = dataSubject?.filter(x => x.shippingDetails.billable > 0);
     if (validRecords.length > 0) {
       this.currentData.shippingInfoList = validRecords;
-      this.createCaseDataSourceSubject.next(this.currentData);
+      this.createCaseStoreSubject.next(this.currentData);
     }
   }
 
@@ -71,7 +79,7 @@ export class CreateCaseService {
     }
     const validRecords = dataSubject.filter(x => x.costCategory > 0);
     this.currentData.miscCostList = validRecords;
-    this.createCaseDataSourceSubject.next(this.currentData);
+    this.createCaseStoreSubject.next(this.currentData);
   }
 
   private setInvoice(dataSubject: InvoiceViewModel[]) {
@@ -80,7 +88,7 @@ export class CreateCaseService {
     }
     const validRecords = dataSubject.filter(x => x.position > 0);
     this.currentData.invoiceList = validRecords;
-    this.createCaseDataSourceSubject.next(this.currentData);
+    this.createCaseStoreSubject.next(this.currentData);
   }
 
   private setSpecialInstruction(dataSubject: SpecialInstructionViewModel[]) {
@@ -89,6 +97,20 @@ export class CreateCaseService {
     }
     const validRecords = dataSubject.filter(x => x.department !== '');
     this.currentData.specialInstructionList = validRecords;
-    this.createCaseDataSourceSubject.next(this.currentData);
+    this.createCaseStoreSubject.next(this.currentData);
+  }
+
+  public setCaseDropDownsDataSource(modal: DDLListModal[], recordType: RecordType) {
+    if (recordType === RecordType.GET_CASE_TYPE) {
+      this.currentDropDownStoreState.data.caseTypesList = modal;
+    } else if (recordType === RecordType.SHIPMENT_TERM) {
+      this.currentDropDownStoreState.data.shipmentTermList = modal;
+    } else if (recordType === RecordType.SHIPMENT_MODE) {
+      this.currentDropDownStoreState.data.shipmentModeList = modal;
+    } else if (recordType === RecordType.SHIPMENT_AGENT) {
+      this.currentDropDownStoreState.data.shipmentAgentList = modal;
+    }
+    this.currentDropDownStoreState.type = recordType;
+    this.caseDropDownStoreSubject.next(this.currentDropDownStoreState);
   }
 }

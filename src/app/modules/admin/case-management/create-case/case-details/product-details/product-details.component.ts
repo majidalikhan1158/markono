@@ -8,12 +8,13 @@ import {
   SimpleChange,
   OnChanges,
 } from '@angular/core';
-import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
+import { ExpansionIcons, PrintingTypesArray } from 'src/app/modules/shared/enums/app-constants';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
-import { CreateCaseMode } from 'src/app/modules/shared/enums/app-constants';
 import { ProductDetailsViewModel } from 'src/app/modules/shared/models/create-case';
-import { CreateCaseService } from 'src/app/modules/shared/ui-services/create-case.service';
-import { CreateCaseDataType } from 'src/app/modules/shared/enums/app-constants';
+import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
+import { CreateCaseMode, CreateCaseDataType } from 'src/app/modules/shared/enums/app-enums';
+import { ProductService } from 'src/app/modules/services/core/services/product.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-product-details',
@@ -39,14 +40,16 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   rowIdToExpand = 0;
   shouldShowProductDetails = false;
   ExpansionIcons = ExpansionIcons;
+  printTypeList = PrintingTypesArray;
   constructor(
     private modalService: ModalService,
-    private createCaseService: CreateCaseService,
+    private createCaseService: CaseStore,
+    private productService: ProductService,
     private ref: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.createCaseService.createCaseDataSource.subscribe((data) => {
+    this.createCaseService.createCaseStore.subscribe((data) => {
       if (this.rowsToDisplay.length === 0) {
         if (data.productDetailsList && data.productDetailsList.length > 0) {
           this.rowsToDisplay = data.productDetailsList;
@@ -107,6 +110,12 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     this.modalService.open(modalId);
   }
 
+  handlePrintTypeChange(recordId: number) {
+    const record = this.rowsToDisplay.find(x => x.id === recordId);
+    if (record && record.isbn && record.printType) {
+      this.getLiveVersion(record);
+    }
+  }
   ngOnDestroy(): void {
     /**
      * get form data here and pass to the service
@@ -115,5 +124,13 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
       this.rowsToDisplay,
       CreateCaseDataType.PRODUCT_DETAILS
     );
+  }
+
+  private getLiveVersion = (modal: ProductDetailsViewModel) => {
+    this.productService.getLiveVersion(modal).subscribe(result => {
+      console.log(result);
+    }, (err: HttpErrorResponse) => {
+      console.log(err);
+    });
   }
 }

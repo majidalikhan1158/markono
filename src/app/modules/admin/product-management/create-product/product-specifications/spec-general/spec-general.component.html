@@ -19,16 +19,14 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Product Type</mat-label>
-                <mat-select>
-                    <mat-option value="Offset">Offset</mat-option>
-                    <mat-option value="Digital">Digital</mat-option>
-                    <mat-option value="POD">POD</mat-option>  
+                <mat-select  (selectionChange)="handleProductTypeChange($event)">
+                    <mat-option [value]="item.enum" *ngFor="let item of productTypeList">{{item.text}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
-                <mat-label>Externak Part No.</mat-label>
+                <mat-label>External Part No.</mat-label>
                 <input matInput>
             </mat-form-field>
         </div>
@@ -41,19 +39,19 @@
                 <input matInput>
             </mat-form-field>
         </div>
-        <div class="col-lg-3 pr-0" *ngIf="isOpenSizeSelected">
+        <div class="col-lg-3 pr-0" *ngIf="isProductTypeJournal">
             <mat-form-field appearance="fill">
                 <mat-label>Journal Title Code</mat-label>
                 <input matInput>
             </mat-form-field>
         </div>
-        <div class="col-lg-3 pr-0" *ngIf="isOpenSizeSelected">
+        <div class="col-lg-3 pr-0" *ngIf="isProductTypeJournal">
             <mat-form-field appearance="fill">
                 <mat-label>Volume</mat-label>
                 <input matInput>
             </mat-form-field>
         </div>
-        <div class="col-lg-3 pr-0" *ngIf="isOpenSizeSelected">
+        <div class="col-lg-3 pr-0" *ngIf="isProductTypeJournal">
             <mat-form-field appearance="fill">
                 <mat-label>Issue</mat-label>
                 <input matInput>
@@ -152,13 +150,13 @@
 
     <div class="col-lg-12 display-flex pl-0">
         <div class="col-lg-3">
-            <mat-slide-toggle (change)="handleOpenSizeToggle()" labelPosition="before">Add Child ISBN</mat-slide-toggle>
+            <mat-slide-toggle (change)="handleSpecAddToggle(productSpecTypesConstant.CHILD_ISBN)" labelPosition="before">Add Child ISBN</mat-slide-toggle>
         </div>
         <div class="col-lg-3">
-            <mat-slide-toggle (change)="handleOpenSizeToggle()" labelPosition="before">Add DVD/CD</mat-slide-toggle>
+            <mat-slide-toggle (change)="handleSpecAddToggle(productSpecTypesConstant.DVD_CD)" labelPosition="before">Add DVD/CD</mat-slide-toggle>
         </div>
         <div class="col-lg-3">
-            <mat-slide-toggle (change)="handleOpenSizeToggle()" labelPosition="before">Add WebCode</mat-slide-toggle>
+            <mat-slide-toggle (change)="handleSpecAddToggle(productSpecTypesConstant.WEB_CODE)" labelPosition="before">Add WebCode</mat-slide-toggle>
         </div>
     </div>
 </div>

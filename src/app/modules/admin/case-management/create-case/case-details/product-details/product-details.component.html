@@ -27,9 +27,8 @@
                                     <td>
                                         <mat-form-field appearance="fill" class="width-100">
                                             <mat-label>Choose</mat-label>
-                                            <mat-select  [(ngModel)]="rowsToDisplay[i].printType" [disabled]="disabled">
-                                                <mat-option value="1">1</mat-option>
-                                                <mat-option value="2">2</mat-option>
+                                            <mat-select  [(ngModel)]="rowsToDisplay[i].printType" [disabled]="disabled" (selectionChange)="handlePrintTypeChange(rowsToDisplay[i].id)">
+                                                <mat-option *ngFor="let item of printTypeList" [value]="item.value">{{item.value}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </td>

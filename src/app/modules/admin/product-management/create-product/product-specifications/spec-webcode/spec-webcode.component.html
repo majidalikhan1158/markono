@@ -1,1 +1,74 @@
-<p>spec-webcode works!</p>
+<div class="row spec-web-code">
+    <div class="col-lg-12 pl-0 pr-0">
+        <table class="table table-head-custom  table-vertical-center spec-webcode-table">
+            <thead>
+                <tr class="text-left text-uppercase">
+                    <th *ngFor="let item of columnsToDisplay"> {{item}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let rowId of rowsToDisplay;let i = index;">
+                    <tr class="outer-row">
+                        <td>
+                            {{rowsToDisplay[i].id}}
+                        <td>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Choose Location</mat-label>
+                                <mat-select [(ngModel)]="rowsToDisplay[i].webcodeLocation">
+                                    <mat-option value="Location1">Location 1</mat-option>
+                                    <mat-option value="Location2">Location 2</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Choose</mat-label>
+                                <mat-select [(ngModel)]="rowsToDisplay[i].noOfWebcode">
+                                    <mat-option value="1">1</mat-option>
+                                    <mat-option value="2">2</mat-option>
+                                    <mat-option value="3">3</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field appearance="fill">
+                                <mat-label>X Coordinate</mat-label>
+                                <input [(ngModel)]="rowsToDisplay[i].xCoordinate" matInput
+                                    placeholder="0">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Y Coordinate</mat-label>
+                                <input [(ngModel)]="rowsToDisplay[i].ycoordinate" matInput
+                                    placeholder="0">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Write here</mat-label>
+                                <input [(ngModel)]="rowsToDisplay[i].ycoordinate" matInput>
+                            </mat-form-field>
+                        </td>
+                        <td class="action-column">
+                            <span class="material-icons delete-icon pr-2 cursor-pointer"
+                                (click)="deleteRow(rowsToDisplay[i].id)" *ngIf="rowsToDisplay.length > 1">
+                                delete
+                            </span>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-lg-12 pt-10">
+        <div class="sticky-bottom full-width pl-5 pb-4 product-detail-footer-row">
+            <a (click)="addRow()">
+                <span class="material-icons add-icon pr-2 cursor-pointer">
+                    add_circle_outline
+                </span>
+                <span class="font-14px blue-link ">ADD ANOTHER</span>
+            </a> 
+        </div>
+    </div>
+</div>

@@ -9,8 +9,12 @@
           <div class="card-body">
             <div>
               <mat-radio-group [(ngModel)]="customerInfoViewModel.caseType" [disabled]="disabled">
-                  <mat-radio-button [value]="caseTypes.PRINT_ORDER" (change)="handleCaseTypeChange($event)">Print Order</mat-radio-button>
-                  <mat-radio-button [value]="caseTypes.WAREHOUSE_ORDER" (change)="handleCaseTypeChange($event)">Warehouse order</mat-radio-button>
+                  <mat-radio-button 
+                  *ngFor="let item of caseTypeList"
+                    [value]="item.id" 
+                    (change)="handleCaseTypeChange($event)">
+                    {{item.attributes.description}}
+                  </mat-radio-button>
               </mat-radio-group>
             </div>
           </div>

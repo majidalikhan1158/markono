@@ -1,7 +1,7 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { ClipboardModule } from 'ngx-clipboard';
 import { TranslateModule } from '@ngx-translate/core';
@@ -20,6 +20,9 @@ import json from 'highlight.js/lib/languages/json';
 import scss from 'highlight.js/lib/languages/scss';
 import typescript from 'highlight.js/lib/languages/typescript';
 import { SplashScreenModule } from './_metronic/partials/layout/splash-screen/splash-screen.module';
+import { TokenConfigService } from './modules/services/core/services/token-config.service';
+import { JwtInterceptor } from './modules/services/core/interceptor/jwt-interceptor';
+import { CaseStore } from './modules/shared/ui-services/create-case.service';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -75,7 +78,19 @@ export function getHighlightLanguages() {
         languages: getHighlightLanguages,
       },
     },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeTokens,
+      deps: [TokenConfigService],
+      multi: true,
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    CaseStore
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
+
+export function initializeTokens(config: TokenConfigService) {
+  return () => config.init();
+}

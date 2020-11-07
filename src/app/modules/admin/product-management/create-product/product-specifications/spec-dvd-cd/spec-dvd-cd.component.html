@@ -1,1 +1,301 @@
-<p>spec-dvd-cd works!</p>
+<div class="row spec-dvd">
+    <div class="col-lg-12 pl-0 pr-0">
+        <table class="table table-head-custom  table-vertical-center spec-dvd-table">
+            <thead>
+                <tr class="text-left text-uppercase">
+                    <th *ngFor="let item of columnsToDisplay"> {{item}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let rowId of rowsToDisplay;let i = index;">
+                    <tr class="outer-row">
+                        <td style="width: 10px;">
+                            {{rowsToDisplay[i].id}}
+                        <td style="width: 150px;">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Choose</mat-label>
+                                <mat-select [(ngModel)]="rowsToDisplay[i].type">
+                                    <mat-option value="Location1">Front Lay</mat-option>
+                                    <mat-option value="Location2">Location 2</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td style="width: 150px;">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Quantity</mat-label>
+                                <input [(ngModel)]="rowsToDisplay[i].quantity" matInput
+                                    placeholder="0">
+                            </mat-form-field>
+                        </td>
+                        <td style="width: 150px;">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Choose</mat-label>
+                                <mat-select [(ngModel)]="rowsToDisplay[i].sleeveType">
+                                    <mat-option value="1">DVD Case</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        
+                        <td class="action-column pb-0 text-right">
+                            <span class="material-icons expansion-icon" (click)="showDvdDetails(rowsToDisplay[i].id)">
+                                {{ 
+                                    rowsToDisplay[i].id == rowIdToExpand ? 
+                                    ExpansionIcons.KEYBOARD_ARROW_UP : 
+                                    ExpansionIcons.KEYBOARD_ARROW_DOWN 
+                                }}
+                            </span>
+                        </td>
+                    </tr>
+                    <ng-container *ngIf="shouldShowDvdDetails && rowsToDisplay[i].id == rowIdToExpand">
+                        <tr class="expandedRow">
+                            <td class="pr-0 pl-2 pb-0" colspan="5">
+                                <div class="col-lg-4 pl-1 pr-0 pt-2">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Add Component</mat-label>
+                                        <mat-select [(ngModel)]="rowsToDisplay[i].type">
+                                            <mat-option value="Location1">Front Lay</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-12 display-flex pl-0 pt-3">
+                                    <div class="col-lg-12 display-flex-direction-column">
+                                        <span class="labels">Orientation</span>
+                                        <mat-radio-group class="pt-3">
+                                         <mat-radio-button  value="Portrait">Portrait</mat-radio-button>
+                                         <mat-radio-button  value="Landscape">Landscape</mat-radio-button>
+                                         <mat-radio-button  value="Square">Square</mat-radio-button>
+                                       </mat-radio-group>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 pt-6 pb-6">
+                                    <mat-divider></mat-divider>
+                                </div>
+                            
+                                <div class="col-lg-12 display-flex pl-0">
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Height(mm)</mat-label>
+                                            <input matInput>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Width(mm)</mat-label>
+                                            <input matInput>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 display-flex pl-0 pb-5 pt-5">
+                                    <div class="col-lg-3">
+                                        <mat-slide-toggle (change)="handleOpenSizeToggle()" labelPosition="before">Open Size</mat-slide-toggle>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 display-flex pl-0" *ngIf="isOpenSizeSelected">
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Open Size Height(mm)</mat-label>
+                                            <input matInput>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Open Size Width(mm)</mat-label>
+                                            <input matInput>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            
+                                <div class="col-lg-12 display-flex pl-0 pt-3">
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Weight(kg)</mat-label>
+                                            <input matInput>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Spine Width</mat-label>
+                                            <input matInput>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-12 pt-6 pb-6">
+                                    <mat-divider></mat-divider>
+                                </div>
+
+                                <div class="col-lg-12 display-flex pl-0 pt-2">
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Text Material Weight</mat-label>
+                                            <mat-select>
+                                                <mat-option [value]="item" *ngFor="let item of coverMaterialWeightList">{{item}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Text Material</mat-label>
+                                            <mat-select>
+                                                <mat-option value="Offset">Offset</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Material Brand</mat-label>
+                                            <mat-select >
+                                                <mat-option value="Offset">Offset</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                              
+                                <div class="col-lg-12 display-flex pl-0 pt-3">
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>No. of Colour Extent</mat-label>
+                                            <input matInput>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>No. of Mono Extent</mat-label>
+                                            <input matInput>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Total Extent</mat-label>
+                                            <input matInput>
+                                        </mat-form-field>
+                                    </div> 
+                                </div>
+                            
+                                <div class="col-lg-12 display-flex pl-0 pt-3">
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>No. of colours</mat-label>
+                                            <mat-select>
+                                                <mat-option [value]="item" *ngFor="let item of noOfColorsList">{{item}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <div class="color-type-options display-flex pb-4">
+                                            <span
+                                              class="option-item mr-2 bg-cyan text-black"
+                                              (click)="handleColorChange()">Cyan</span>
+                                              <span
+                                              class="option-item mr-2 bg-magenta text-black"
+                                              (click)="handleColorChange()">Magenta</span>
+                                              <span
+                                              class="option-item mr-2 bg-yellow text-black"
+                                              (click)="handleColorChange()">Yellow</span>
+                                              <span
+                                              class="option-item mr-2 bg-black text-white"
+                                              (click)="handleColorChange()">Black</span>
+                                          </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="col-lg-12 display-flex pl-0 pt-3">
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Pantone Colour (Optional)</mat-label>
+                                            <input matInput (keyup.enter)="addPantoneColour($event)" [(ngModel)]="pantoneColorValue">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <mat-chip-list #pantoneColourchipList class="table-filter-chips">
+                                            <mat-chip [removable]="true" 
+                                            *ngFor="let item of selectedPantoneColourList"
+                                              (removed)="removePantoneColourSelection(item)">
+                                              {{item}}
+                                              <mat-icon matChipRemove>cancel</mat-icon>
+                                            </mat-chip>
+                                          </mat-chip-list>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 pb-2">
+                                    <mat-hint class="font-10px">Add multiple pantone colour codes</mat-hint>
+                                </div>
+                            
+                                <div class="col-lg-12 display-flex pl-0 pt-3">
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Finishing</mat-label>
+                                            <mat-select multiple (selectionChange)="handleFinishingTypeChange($event)">
+                                                <mat-option [value]="item.value" *ngFor="let item of finishingTypeList">{{item.text}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <!-- class="scrollableDivX" style="width:650px !important; height: 54px;" -->
+                                        <div >
+                                            <mat-chip-list #finishingChipList class="table-filter-chips">
+                                                <mat-chip [removable]="true" 
+                                                *ngFor="let item of selectedFinishingTypes"
+                                                  (removed)="removeFinishTypeSelection(item.value)">
+                                                  {{item.text}}
+                                                  <mat-icon matChipRemove>cancel</mat-icon>
+                                                </mat-chip>
+                                            </mat-chip-list>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <mat-hint class="font-10px">You can add more than 1 type of finishing.</mat-hint>
+                                </div>
+                               
+                                <div class="col-lg-12 pt-3">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Write special instructions</mat-label>
+                                        <input matInput>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-12 pt-6 pb-6">
+                                    <mat-divider></mat-divider>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <span class="labels font-20px">Binding</span>
+                                </div>
+
+                                <div class="col-lg-12 pt-3">
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Binding Type</mat-label>
+                                            <mat-select>
+                                                <mat-option [value]="item.value" *ngFor="let item of bindingTypeList">{{item.text}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 pt-6 pb-6">
+                                    <mat-divider></mat-divider>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-lg-12 pt-10">
+        <div class="sticky-bottom full-width pl-5 pb-4 product-detail-footer-row">
+            <a (click)="addRow()">
+                <span class="material-icons add-icon pr-2 cursor-pointer">
+                    add_circle_outline
+                </span>
+                <span class="font-14px blue-link ">ADD ANOTHER</span>
+            </a> 
+        </div>
+    </div>
+</div>

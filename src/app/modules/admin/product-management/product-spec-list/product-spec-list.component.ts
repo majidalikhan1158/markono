@@ -13,10 +13,10 @@ import {
   ProductSpecFilters,
   ProductSpecFilterTypes,
 } from 'src/app/modules/shared/models/table-filter-modals';
-import { PrintingType } from 'src/app/modules/shared/enums/product-spec';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 import { UIModalID } from 'src/app/modules/shared/enums/app-constants';
 import { Router } from '@angular/router';
+import { PrintingTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
 
 @Component({
   selector: 'app-product-spec-list',
@@ -46,7 +46,7 @@ export class ProductSpecListComponent implements OnInit, AfterViewInit {
     currentSelectedFilter: ''
   };
   tableFilterTypes = ProductSpecFilterTypes;
-  printingTypes = PrintingType;
+  printingTypes = PrintingTypes;
   selectedPrintingType = '';
   globalFilter = '';
   constructor(private modalService: ModalService, private router: Router) {

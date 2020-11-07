@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CaseManagementRoutingModule } from './case-management-routing.module';
 import { MaterialUiModule } from '../../material-ui/material-ui.module';
@@ -13,7 +13,7 @@ import { MiscCostComponent } from './create-case/case-details/misc-cost/misc-cos
 import { SpecialInstructionsComponent } from './create-case/case-details/special-instructions/special-instructions.component';
 import { InvoiceComponent } from './create-case/case-details/invoice/invoice.component';
 import { SummaryComponent } from './create-case/summary/summary.component';
-import { CreateCaseService } from '../../shared/ui-services/create-case.service';
+import { CaseStore } from '../../shared/ui-services/create-case.service';
 
 @NgModule({
   declarations: [
@@ -34,6 +34,6 @@ import { CreateCaseService } from '../../shared/ui-services/create-case.service'
     MaterialUiModule,
     SharedModule
   ],
-  providers: [CreateCaseService]
+  providers: []
 })
 export class CaseManagementModule { }

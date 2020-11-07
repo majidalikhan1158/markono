@@ -128,6 +128,10 @@ app-toolbar .sticky-toolbar  {
   flex-direction: column;
 }
 
+.font-8px {
+  font-size: 8px !important;
+}
+
 .font-10px {
   font-size: 10px !important;
 }
@@ -317,6 +321,22 @@ p.info-label-value {
   color: #AFAFAF !important;
 }
 
+.scrollableDivX {
+  overflow: auto;
+  overflow-y: hidden;
+}
+.scrollableDivX::-webkit-scrollbar {
+  height: 5px;
+}
+.scrollableDivX::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: transparent !important;
+}
+.scrollableDivX::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #B7B7B7;
+}
+
 .scrollableDiv {
   overflow: auto;
   overflow-x: hidden;
@@ -324,12 +344,10 @@ p.info-label-value {
 .scrollableDiv::-webkit-scrollbar {
    width: 4px;
 }
-
 .scrollableDiv::-webkit-scrollbar-track {
    border-radius: 10px;
    background: transparent !important;
 }
-
 .scrollableDiv::-webkit-scrollbar-thumb {
    border-radius: 10px;
    background: #B7B7B7;
@@ -525,4 +543,25 @@ background-color: #5face2;
 }
 .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
   background-color: #F2F2F2 !important;
+}
+
+.mat-hint {
+  color: #AFAFAF;
+}
+
+.bg-cyan {
+  background-color: #00E1D5;
+}
+.bg-magenta {
+  background-color: #FF00FF;
+}
+.bg-yellow {
+  background-color: #FFFF00;
+}
+.bg-black {
+  background-color: #000000;
+}
+
+.text-black {
+  color: #0D171E !important; 
 }

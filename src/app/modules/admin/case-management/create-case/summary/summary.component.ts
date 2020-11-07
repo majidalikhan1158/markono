@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { CreateCaseMode, CreateCaseSteps } from 'src/app/modules/shared/enums/app-constants';
 import { CreateCaseStepperEvent } from 'src/app/modules/shared/models/app-modal';
+import { CreateCaseMode } from 'src/app/modules/shared/enums/app-enums';
 
 @Component({
   selector: 'app-summary',

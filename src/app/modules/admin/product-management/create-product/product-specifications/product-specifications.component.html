@@ -21,9 +21,9 @@
             <span class="font-12px blue-link ">OTHER COMPONENT</span>
         </a>
     </div>
-    <div class="col-lg-10 product-spec-details pt-4">
+    <div class="col-lg-10 product-spec-details pt-4 pr-0">
         <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.GENERAL">
-            <app-spec-general></app-spec-general>
+            <app-spec-general (productSpecTypeEvent)="addProductSpecType($event)"></app-spec-general>
         </ng-container>
         <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.COVER">
             <app-spec-cover></app-spec-cover>

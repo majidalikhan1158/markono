@@ -447,7 +447,7 @@
                         <mat-label>Add Shipment Type</mat-label>
                         <mat-select (selectionChange)="handleShipmentTypeChange($event)" [compareWith]="compare"
                         [formControl]="shipmentSelectedTypeFormControl" >
-                            <mat-option [value]="type.value" *ngFor="let type of shipmentTypesArray">{{type.text}}</mat-option>
+                            <mat-option  [value]="item.id"  *ngFor="let item of shipmentTermList"> {{item.attributes.description}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                   

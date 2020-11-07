@@ -10,16 +10,10 @@ import {
   ChangeDetectionStrategy,
   SimpleChanges,
 } from '@angular/core';
-import {
-  CaseDetailTypesArray,
-  CaseDetailTypes,
-} from 'src/app/modules/shared/enums/case-details-types';
 import { MatSelectionListChange } from '@angular/material/list';
-import {
-  CreateCaseMode,
-  CreateCaseSteps,
-} from 'src/app/modules/shared/enums/app-constants';
 import { CreateCaseStepperEvent } from 'src/app/modules/shared/models/app-modal';
+import { CreateCaseMode, CreateCaseSteps } from 'src/app/modules/shared/enums/app-enums';
+import { CaseDetailTypes, CaseDetailTypesArray } from 'src/app/modules/shared/enums/case-management/case-contants';
 @Component({
   selector: 'app-case-details',
   templateUrl: './case-details.component.html',

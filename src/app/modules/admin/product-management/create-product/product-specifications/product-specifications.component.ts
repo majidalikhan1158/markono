@@ -1,10 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import {
-  ProductSpecificationTypes,
-  ProductSpecificationTypesArray,
-  ProductSpecificationTypePartialArray,
-} from 'src/app/modules/shared/enums/product-specification-types';
 import { MatSelectionListChange } from '@angular/material/list';
+import { ProductSpecificationTypesArray, ProductSpecificationTypePartialArray, ProductSpecificationTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
+import { AddRemoveSpecTypeEvent } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 
 @Component({
   selector: 'app-product-specifications',
@@ -31,30 +28,7 @@ export class ProductSpecificationsComponent implements OnInit {
   }
 
   handleProductSpecChangeLogic() {
-    const selectedTypeObject = this.productSpecTypesArray.find(
-      (x) => x.enum === this.selectedProductSpecType
-    );
-    if (
-      this.selectedProductSpecType ===
-        this.productSpecTypesConstant.UNIT_PRICE &&
-      this.productSpecTypesArray.length === 5
-    ) {
-      this.addPartialOptions();
-    }
     this.setSelectedandVisitedOptions();
-  }
-
-  addPartialOptions() {
-    this.productSpecPartialTypesArray.forEach((item) => {
-      this.productSpecTypesArray.splice(
-        this.productSpecTypesArray.length - 1,
-        0,
-        item
-      );
-    });
-    this.productSpecTypesArray.find(
-      (x) => x.enum === this.productSpecTypesConstant.UNIT_PRICE
-    ).id = 8;
   }
 
   setSelectedandVisitedOptions() {
@@ -106,5 +80,25 @@ export class ProductSpecificationsComponent implements OnInit {
         ? nextSelectedTabObj.enum
         : this.selectedProductSpecType;
     this.handleProductSpecChangeLogic();
+  }
+
+  addProductSpecType(e: AddRemoveSpecTypeEvent) {
+    const obj = this.productSpecPartialTypesArray.find(x => x.enum === e.productSpecType);
+    if (!e.isAdded) {
+      this.productSpecTypesArray = this.productSpecTypesArray.filter(x => x.enum !== obj.enum);
+      this.productSpecTypesArray.forEach((item, i) => {
+        item.id = i + 1;
+      });
+    } else {
+      obj.id = this.productSpecTypesArray.length;
+      this.productSpecTypesArray.splice(
+        this.productSpecTypesArray.length - 1,
+        0,
+        obj
+      );
+      this.productSpecTypesArray.find(
+        (x) => x.enum === this.productSpecTypesConstant.UNIT_PRICE
+      ).id = this.productSpecTypesArray.length;
+    }
   }
 }

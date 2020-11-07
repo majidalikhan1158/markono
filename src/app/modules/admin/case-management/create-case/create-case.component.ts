@@ -6,12 +6,10 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-  CreateCaseSteps,
-  CreateCaseMode,
-} from 'src/app/modules/shared/enums/app-constants';
 import { MatStepper } from '@angular/material/stepper';
 import { CreateCaseStepperEvent } from 'src/app/modules/shared/models/app-modal';
+import { CreateCaseSteps, CreateCaseMode, RecordType } from 'src/app/modules/shared/enums/app-enums';
+import { CaseBaseService } from '../case-base.service';
 @Component({
   selector: 'app-create-case',
   templateUrl: './create-case.component.html',
@@ -26,9 +24,16 @@ export class CreateCaseComponent implements OnInit {
   selectedCaseStep = CreateCaseSteps.CUSTOMER_INFO;
   createCaseMode = CreateCaseMode.NEW;
   tabToOpen: string;
-  constructor(private ref: ChangeDetectorRef) {}
+  constructor(private ref: ChangeDetectorRef, private caseBaseService: CaseBaseService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    /**
+     *  Get all ddl data required in child components
+     *  Set the data in observable so that child component can access this data when required
+     *  reason: rather than calling in each child as componens constructs/destructs when user moves in stepper/mat-selection(left side)
+     */
+    this.caseBaseService.getServerData();
+  }
 
   handleStepperNextEvent(createCaseStep: CreateCaseSteps) {
     this.createCaseMode =

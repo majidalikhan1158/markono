@@ -6,14 +6,14 @@ import {
   OnDestroy,
   ChangeDetectorRef,
 } from '@angular/core';
-import { ShipmentTypes } from 'src/app/modules/shared/enums/shipment-types';
 import { MatSelectChange } from '@angular/material/select';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { FormControl } from '@angular/forms';
-import { CreateCaseMode } from 'src/app/modules/shared/enums/app-constants';
 import { ShippingInfoViewModel } from 'src/app/modules/shared/models/create-case';
-import { CreateCaseDataType } from 'src/app/modules/shared/enums/app-constants';
-import { CreateCaseService } from 'src/app/modules/shared/ui-services/create-case.service';
+import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
+import { CreateCaseMode, CreateCaseDataType, RecordType } from 'src/app/modules/shared/enums/app-enums';
+import { ShipmentTypes } from 'src/app/modules/shared/enums/case-management/case-contants';
+import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
 
 export interface ShipmentTypesBox {
   boxId: number;
@@ -34,7 +34,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   createCaseModes = CreateCaseMode;
   disabled = false;
   shipmentsToDisplay: ShippingInfoViewModel[] = [];
-  shipmentTypesArray = ShipmentTypes;
+  shipmentTermList: DDLListModal[] = [];
   ExpansionIcons = ExpansionIcons;
   shouldShowShipmentDetails = false;
   boxIdToExpand = 0;
@@ -43,7 +43,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   shipmentSelectedTypeFormControl: FormControl;
   selectedShipmentType: any;
   constructor(
-    private createCaseService: CreateCaseService,
+    private caseStore: CaseStore,
     private ref: ChangeDetectorRef
   ) {}
 
@@ -54,12 +54,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     this.shipmentSelectedTypeFormControl = new FormControl(
       this.selectedShipmentType
     );
-    this.createCaseService.createCaseDataSource.subscribe((data) => {
-      if (data.shippingInfoList && data.shippingInfoList.length > 0) {
-        this.shipmentsToDisplay = data.shippingInfoList;
-      }
-      this.ref.detectChanges();
-    });
+    this.getDropDownData();
   }
 
   addRow(shipmentId) {
@@ -100,8 +95,8 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const shipmentToBeAdded = this.shipmentTypesArray.find(
-      (x) => x.value === event.value
+    const shipmentToBeAdded = this.shipmentTermList.find(
+      (x) => x.id === event.value
     );
     if (shipmentToBeAdded) {
       this.boxIdToExpand = 0;
@@ -226,9 +221,16 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     /**
      * get form data here and pass to the service
      */
-    this.createCaseService.setCreateCaseDataSource(
+    this.caseStore.setCreateCaseDataSource(
       this.shipmentsToDisplay,
       CreateCaseDataType.SHIPPING_INFO
     );
+  }
+
+  private getDropDownData = () => {
+    this.caseStore.caseDropDownStore.subscribe(result => {
+      this.shipmentTermList = result.data.shipmentTermList;
+      this.ref.detectChanges();
+    });
   }
 }

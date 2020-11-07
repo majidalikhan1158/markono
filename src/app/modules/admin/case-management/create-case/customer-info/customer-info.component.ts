@@ -1,11 +1,15 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 import { MatRadioChange } from '@angular/material/radio';
-import { CaseTypes } from 'src/app/modules/shared/enums/case-types';
-import { CreateCaseMode } from 'src/app/modules/shared/enums/app-constants';
 import { CustomerInfoViewModel } from 'src/app/modules/shared/models/create-case';
-import { CreateCaseService } from 'src/app/modules/shared/ui-services/create-case.service';
-import { CreateCaseDataType } from 'src/app/modules/shared/enums/app-constants';
+import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
+import {
+  CreateCaseMode,
+  CreateCaseDataType,
+  RecordType,
+} from 'src/app/modules/shared/enums/app-enums';
+import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
+import { CaseTypes } from 'src/app/modules/shared/enums/case-management/case-contants';
 
 @Component({
   selector: 'app-customer-info',
@@ -15,18 +19,21 @@ import { CreateCaseDataType } from 'src/app/modules/shared/enums/app-constants';
 export class CustomerInfoComponent implements OnInit, OnDestroy {
   @Input() createCaseMode: CreateCaseMode;
   disabled = false;
-  caseTypes = CaseTypes;
+  caseTypeConstant = CaseTypes;
+  caseTypeList: DDLListModal[] = [];
   shouldShowExternalReferenceNumberBox = false;
   shouldShowSearchCustomerBox = false;
   shouldShowCustomerInfoBox = false;
   customerInfoViewModel: CustomerInfoViewModel;
   constructor(
     private modalService: ModalService,
-    private createCaseService: CreateCaseService
-  ) {}
+    private caseStore: CaseStore,
+    private ref: ChangeDetectorRef
+  ) {
+  }
 
   ngOnInit(): void {
-    this.createCaseService.createCaseDataSource.subscribe((data) => {
+    this.caseStore.createCaseStore.subscribe((data) => {
       this.customerInfoViewModel = data.customerInfo;
     });
     if (this.createCaseMode === CreateCaseMode.EDIT) {
@@ -41,6 +48,7 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
         referenceNumber: '',
       };
     }
+    this.getCaseTypes();
   }
 
   handleCaseTypeChange(event: MatRadioChange) {
@@ -59,7 +67,7 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   handleCustomerSearch() {
     if (this.customerInfoViewModel.customerSearchString !== '') {
       this.shouldShowCustomerInfoBox = true;
-      this.createCaseService.setCreateCaseDataSource(
+      this.caseStore.setCreateCaseDataSource(
         this.customerInfoViewModel,
         CreateCaseDataType.CUSTOMER_INFO
       );
@@ -75,4 +83,16 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {}
+
+  /**
+   * HTTP API CALLS
+   */
+  private getCaseTypes = () => {
+    this.caseStore.caseDropDownStore.subscribe(result => {
+      if (result != null && result.type === RecordType.GET_CASE_TYPE) {
+        this.caseTypeList = result.data.caseTypesList;
+        this.ref.detectChanges();
+      }
+    });
+  }
 }

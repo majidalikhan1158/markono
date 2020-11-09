@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { OrderService } from '../../services/core/services/order.service';
 import { CaseStore } from '../../shared/ui-services/create-case.service';
 import { DDLListModal } from '../../services/shared/classes/case-modals/case-modal';
-import { RecordType } from '../../shared/enums/app-enums';
+import { RecordType, TokenType } from '../../shared/enums/app-enums';
 import { AppAuthService } from '../../services/core/services/app-auth.service';
 
 @Injectable({
@@ -23,11 +23,15 @@ export class CaseBaseService {
         );
       }
     });
-    this.appAuth.orderToken.subscribe(resp => {
-      if (resp !== null && resp.result !== null && resp.result.token) {
-        this.getOrderServicesData();
-      }
-    });
+    if (this.appAuth.getToken(TokenType.ORDER) !== '') {
+      this.getOrderServicesData();
+    } else {
+      this.appAuth.orderToken.subscribe(resp => {
+        if (resp !== null && resp.result !== null && resp.result.token) {
+          this.getOrderServicesData();
+        }
+      });
+    }
   }
 
   getOrderServicesData() {

@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { CreateCaseViewModel, CustomerInfoViewModel, MiscCostViewModel, InvoiceViewModel,
    SpecialInstructionViewModel, ProductDetailsViewModel, ShippingInfoViewModel } from '../models/create-case';
 import { CreateCaseDataType, RecordType } from '../enums/app-enums';
-import { DDLObjectModal, DDLListModal } from '../../services/shared/classes/case-modals/case-modal';
+import { DDLObjectModal, DDLListModal, DDLObjectModalProp } from '../../services/shared/classes/case-modals/case-modal';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class CaseStore {
   public createCaseStore: Observable<CreateCaseViewModel>;
   public caseDropDownStore: Observable<DDLObjectModal>;
   private createCaseStoreSubject = new BehaviorSubject<CreateCaseViewModel>(new CreateCaseViewModel());
-  private caseDropDownStoreSubject = new BehaviorSubject<DDLObjectModal>(new DDLObjectModal());
+  private caseDropDownStoreSubject = new BehaviorSubject<DDLObjectModal>(null);
   private currentData: CreateCaseViewModel;
   private currentDropDownStoreState: DDLObjectModal;
   constructor() {
@@ -101,6 +101,10 @@ export class CaseStore {
   }
 
   public setCaseDropDownsDataSource(modal: DDLListModal[], recordType: RecordType) {
+    if (!this.currentDropDownStoreState) {
+      this.currentDropDownStoreState = {data: new DDLObjectModalProp(), type: RecordType.GET_CASE_TYPE};
+    }
+
     if (recordType === RecordType.GET_CASE_TYPE) {
       this.currentDropDownStoreState.data.caseTypesList = modal;
     } else if (recordType === RecordType.SHIPMENT_TERM) {

@@ -128,9 +128,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
 
   private getLiveVersion = (modal: ProductDetailsViewModel) => {
     this.productService.getLiveVersion(modal).subscribe(result => {
-      console.log(result);
     }, (err: HttpErrorResponse) => {
-      console.log(err);
     });
   }
 }

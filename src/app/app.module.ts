@@ -23,6 +23,7 @@ import { SplashScreenModule } from './_metronic/partials/layout/splash-screen/sp
 import { TokenConfigService } from './modules/services/core/services/token-config.service';
 import { JwtInterceptor } from './modules/services/core/interceptor/jwt-interceptor';
 import { CaseStore } from './modules/shared/ui-services/create-case.service';
+import { CaseBaseService } from './modules/admin/case-management/case-base.service';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -85,7 +86,7 @@ export function getHighlightLanguages() {
       multi: true,
     },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    CaseStore
+    CaseStore,CaseBaseService
   ],
   bootstrap: [AppComponent],
 })

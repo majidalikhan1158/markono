@@ -8,12 +8,14 @@ export interface DDLListModal {
   };
 }
 
-export class DDLObjectModal {
-  data: {
+export interface DDLObjectModal {
+  data: DDLObjectModalProp;
+  type: RecordType;
+}
+
+export class DDLObjectModalProp {
     caseTypesList: DDLListModal[];
     shipmentModeList: DDLListModal[];
     shipmentTermList: DDLListModal[];
     shipmentAgentList: DDLListModal[];
-  };
-  type: RecordType;
 }

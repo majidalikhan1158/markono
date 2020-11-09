@@ -69,7 +69,6 @@ export class SpecBindingComponent implements OnInit {
   }
 
   handleFinishingTypeChange(event: MatSelectChange) {
-    console.log(event);
     const selectedItemId = event.value as number[];
     this.selectedFinishingTypes = this.finishingTypeList.filter((x) =>
       selectedItemId.includes(x.value)

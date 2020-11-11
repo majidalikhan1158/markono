@@ -4,6 +4,7 @@ import {
   ViewEncapsulation,
   EventEmitter,
   Output,
+  OnDestroy,
 } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import {
@@ -13,6 +14,9 @@ import {
 import { ProductSpecificationTypes,
   ProductTypeList,
   ProductTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
+import { GeneralVM } from 'src/app/modules/shared/models/product-spec';
+import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
+import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 
 @Component({
   selector: 'app-spec-general',
@@ -20,7 +24,7 @@ import { ProductSpecificationTypes,
   styleUrls: ['./spec-general.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class SpecGeneralComponent implements OnInit {
+export class SpecGeneralComponent implements OnInit, OnDestroy {
   @Output() productSpecTypeEvent = new EventEmitter<AddRemoveSpecTypeEvent>();
   productSpecTypesConstant = ProductSpecificationTypes;
   additionalSpecTypes: AdditionalSpecTypes = {
@@ -30,17 +34,11 @@ export class SpecGeneralComponent implements OnInit {
   };
   productTypeList = ProductTypeList;
   productTypes = ProductTypes;
-  isOpenSizeSelected = false;
-  isProductTypeJournal = false;
-  constructor() {}
+  generalVM: GeneralVM;
+  constructor(private store: ProductSpecStore) {}
 
-  ngOnInit(): void {}
-
-  handleProductTypeChange(event: MatSelectChange) {
-    this.isProductTypeJournal = event.value === this.productTypes.JOURNALS;
-  }
-  handleOpenSizeToggle() {
-    this.isOpenSizeSelected = !this.isOpenSizeSelected;
+  ngOnInit(): void {
+    this.getDefaultRecord();
   }
 
   handleSpecAddToggle(productSpecType: string) {
@@ -56,5 +54,46 @@ export class SpecGeneralComponent implements OnInit {
         .addwebCode;
     }
     this.productSpecTypeEvent.emit({ productSpecType, isAdded });
+  }
+
+  getDefaultRecord = () => {
+    this.store.productSpecStore.subscribe(resp => {
+      if (resp && resp.generalVM && resp.generalVM.id > 0) {
+        this.generalVM = resp.generalVM;
+      } else {
+        this.generalVM = this.initialObject();
+      }
+    });
+  }
+
+  initialObject = (): GeneralVM => {
+    return {
+      id: 1,
+      productNumber: '',
+      printingType: '',
+      productType: '',
+      externalPartNo: '',
+      isbnOwner: '',
+      journalTitleCode: '',
+      volume: '',
+      issue: '',
+      productDescription: '',
+      orientationType: '',
+      fscType: '',
+      height: 0,
+      width: 0,
+      isOpenSize: false,
+      openSizeHeight: 0,
+      openSizeWidth: 0,
+      weight: 0,
+      spinWidth: 0,
+      isChildIsbnAdded: false,
+      isDvdAdded: false,
+      isWebcodeAdded: false,
+    };
+  }
+
+  ngOnDestroy(): void {
+   this.store.setProductSpecStore(this.generalVM, ProductSpecTypes.GENERAL);
   }
 }

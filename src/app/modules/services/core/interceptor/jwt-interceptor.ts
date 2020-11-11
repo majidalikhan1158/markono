@@ -27,10 +27,15 @@ export class JwtInterceptor implements HttpInterceptor {
   >(null);
   private tokenType: TokenType;
   constructor(private constants: Constants, private appAuth: AppAuthService) {}
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.tokenType = request.url.includes(this.constants.API_ENDPOINT_ORDER_SERVICES) ?
-    TokenType.ORDER :
-    TokenType.PRODUCT;
+  intercept(
+    request: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    this.tokenType = (request.url.includes(this.constants.API_ENDPOINT_ORDER_SERVICES) ||
+    request.url.includes(this.constants.API_ENDPOINT_LIVE))
+
+      ? TokenType.ORDER
+      : TokenType.PRODUCT;
     request = this.addAuthenticationToken(request, this.tokenType);
     return next.handle(request).pipe(
       catchError((err) => {
@@ -43,7 +48,7 @@ export class JwtInterceptor implements HttpInterceptor {
     );
   }
 
-  handle401Error(request: HttpRequest<any>, next: HttpHandler){
+  handle401Error(request: HttpRequest<any>, next: HttpHandler) {
     if (this.refreshTokenInProgress) {
       // If refreshTokenInProgress is true, we will wait until refreshTokenSubject has a non-null value
       // – which means the new token is ready and we can retry the request again
@@ -51,11 +56,11 @@ export class JwtInterceptor implements HttpInterceptor {
         filter((token) => token !== null),
         take(1),
         switchMap((token) => {
+          console.log(token);
           return next.handle(
             this.addAuthenticationToken(request, this.tokenType)
           );
-        }
-        )
+        })
       );
     } else {
       this.refreshTokenInProgress = true;
@@ -67,10 +72,7 @@ export class JwtInterceptor implements HttpInterceptor {
           // When the call to refreshToken completes we reset the refreshTokenInProgress to false
           // for the next time the token needs to be refreshed
           this.refreshTokenInProgress = false;
-          this.appAuth.saveToken(
-            result.body as ApiAuthToken,
-            this.tokenType
-          );
+          this.appAuth.saveToken(result.body as ApiAuthToken, this.tokenType);
           return next.handle(
             this.addAuthenticationToken(request, this.tokenType)
           );
@@ -90,15 +92,13 @@ export class JwtInterceptor implements HttpInterceptor {
     if (!userToken) {
       return request;
     }
-
     return request.clone({
-          setHeaders: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userToken}`,
-            //  'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT',
-            //  'Access-Control-Allow-Origin': '*'
-          },
-        });
-
+      setHeaders: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userToken}`,
+         'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT',
+         'Access-Control-Allow-Origin': '*'
+      },
+    });
   }
 }

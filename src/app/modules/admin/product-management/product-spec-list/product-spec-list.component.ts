@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { ProductSpecList } from 'src/app/modules/shared/models/product-spec';
+import { ProductSpecListVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecMockDataList } from 'src/app/modules/shared/mock-data/product-spec-data-list';
 import {
   ProductSpecFilters,
@@ -50,7 +50,7 @@ export class ProductSpecListComponent implements OnInit, AfterViewInit {
   selectedPrintingType = '';
   globalFilter = '';
   constructor(private modalService: ModalService, private router: Router) {
-    this.dataSource = new MatTableDataSource<ProductSpecList>(this.dataArray);
+    this.dataSource = new MatTableDataSource<ProductSpecListVM>(this.dataArray);
   }
 
   ngOnInit(): void {
@@ -94,7 +94,7 @@ export class ProductSpecListComponent implements OnInit, AfterViewInit {
 
   customFilterPredicate() {
     const myFilterPredicate = (
-      data: ProductSpecList,
+      data: ProductSpecListVM,
       filter: string
     ): boolean => {
       let globalMatch = !this.globalFilter;

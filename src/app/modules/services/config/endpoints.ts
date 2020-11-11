@@ -7,7 +7,8 @@ export const Endpoints = {
         getCaseType: 'Case/GetCaseType',
         getShipmentMode: 'ShipmentMode/GetShipmentMode',
         getShipmentTerm: 'ShippingTerms/GetShippingTerms',
-        getShipmentAgent: 'ShippingAgent/GetShippingAgent'
+        getShipmentAgent: 'ShippingAgent/GetShippingAgent',
+        getCustomerDetail: 'https://cors-anywhere.herokuapp.com/http://app.markono.com/PODUAT/Case/GetCustomerData'
     },
     product: {
         getLiveVersion: 'GetLiveVersion'

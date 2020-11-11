@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { DVDViewModel } from 'src/app/modules/shared/models/product-spec';
+import { DVDVM } from 'src/app/modules/shared/models/product-spec';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { FinishingTypeList, BindingTypeList } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
@@ -13,7 +13,7 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class SpecDvdCdComponent implements OnInit {
   columnsToDisplay = ['#', 'Type', 'Quantity', 'Sleeve Type', ];
-  rowsToDisplay: DVDViewModel[] = [];
+  rowsToDisplay: DVDVM[] = [];
   rowIdToExpand = 0;
   shouldShowDvdDetails = false;
   ExpansionIcons = ExpansionIcons;
@@ -32,13 +32,7 @@ export class SpecDvdCdComponent implements OnInit {
   }
 
   addRow() {
-    const totalRows = this.rowsToDisplay.length;
-    this.rowsToDisplay.push({
-      id: totalRows + 1,
-      type: '',
-      quantity: 0,
-      sleeveType: ''
-    });
+    this.rowsToDisplay.push(this.getDefaultRecord());
   }
 
   showDvdDetails(rowId: number) {
@@ -62,7 +56,7 @@ export class SpecDvdCdComponent implements OnInit {
   addPantoneColour(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value !== '') {
-      this.selectedPantoneColourList.push(value); 
+      this.selectedPantoneColourList.push(value);
     }
     this.pantoneColorValue = '';
   }
@@ -79,5 +73,34 @@ export class SpecDvdCdComponent implements OnInit {
 
   removeFinishTypeSelection(recordId: number) {
 
+  }
+
+  getDefaultRecord = () => {
+    const totalRows = this.rowsToDisplay.length;
+    return {
+      id: totalRows + 1,
+      type: '',
+      quantity: 0,
+      sleeveType: '',
+      componentType: '',
+      orientationType: '',
+      height: 0,
+      width: 0,
+      isOpenSize: false,
+      openSizeHeight: 0,
+      openSizeWidth: 0,
+      textMaterialWeight: '',
+      textMaterial: '',
+      materialBrand: '',
+      noOfColourExtent: 0,
+      noOfMonoExtent: 0,
+      totalExtent: 0,
+      noOfColours: 0,
+      colorType: '',
+      pantoneColour: [],
+      finishingType: [],
+      specialInstructions: '',
+      bindingType: '',
+    };
   }
 }

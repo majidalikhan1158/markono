@@ -28,6 +28,9 @@ export class ApiEndpointsService {
   public getCaseTypeUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.case.getCaseType}`
 
+  public getCustomerDetailUrl = () =>
+    `${Endpoints.case.getCustomerDetail}`
+
   public getShipmentModeUrl = () =>
   `${this.getOrderServicesEndpoint()}${Endpoints.case.getShipmentMode}`
 

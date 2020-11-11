@@ -90,6 +90,8 @@ export class ProductSpecificationsComponent implements OnInit {
         item.id = i + 1;
       });
     } else {
+      const isExistAlread = this.productSpecTypesArray.find(x => x.enum === obj.enum);
+      if (isExistAlread) { return; }
       obj.id = this.productSpecTypesArray.length;
       this.productSpecTypesArray.splice(
         this.productSpecTypesArray.length - 1,

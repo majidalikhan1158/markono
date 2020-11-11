@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   FinishingTypeList,
   BindingMethodList,
@@ -7,9 +7,13 @@ import {
   GreyboardThicknessList,
   BenchworkTypeList,
   BindingTypeList,
+  ColorTypeList,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import { MatSelectChange } from '@angular/material/select';
+import { BindingVM } from 'src/app/modules/shared/models/product-spec';
+import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
+import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 
 @Component({
   selector: 'app-spec-binding',
@@ -17,7 +21,7 @@ import { MatSelectChange } from '@angular/material/select';
   styleUrls: ['./spec-binding.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class SpecBindingComponent implements OnInit {
+export class SpecBindingComponent implements OnInit, OnDestroy {
   noOfColorsList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   coverMaterialWeightList = [
     '100gsm',
@@ -45,35 +49,79 @@ export class SpecBindingComponent implements OnInit {
   headTailBandColorTypeList = HeadTailBandColorTypeList;
   greyboardThicknessList = GreyboardThicknessList;
   benchworkTypeList = BenchworkTypeList;
-  selectedFinishingTypes: SelectionList[] = [];
-  selectedPantoneColourList: string[] = [];
-  pantoneColorValue: string;
-  constructor() {}
+  colorTypeList = ColorTypeList;
+  bindingVM: BindingVM;
+  constructor(private store: ProductSpecStore) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getDefaultRecord();
+  }
 
-  handleColorChange() {}
+  handleColorChange(color: string) {
+    this.bindingVM.colorType = color;
+  }
 
   addPantoneColour(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-    if (value !== '') {
-      this.selectedPantoneColourList.push(value);
+    if (value !== '' && this.bindingVM.pantoneColour.indexOf(value) === -1) {
+      this.bindingVM.pantoneColour.push(value);
     }
-    this.pantoneColorValue = '';
+    (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelection(item: string) {
-    this.selectedPantoneColourList = this.selectedPantoneColourList.filter(
-      (x) => x !== item
-    );
+    this.bindingVM.pantoneColour = this.bindingVM.pantoneColour.filter(x => x !== item);
   }
 
-  handleFinishingTypeChange(event: MatSelectChange) {
-    const selectedItemId = event.value as number[];
-    this.selectedFinishingTypes = this.finishingTypeList.filter((x) =>
-      selectedItemId.includes(x.value)
-    );
+  removeFinishTypeSelection = (recordId: string) => {
+    this.bindingVM.finishingType = this.bindingVM.finishingType.filter(x => x !== recordId);
   }
 
-  removeFinishTypeSelection(recordId: number) {}
+  getFinishingTypeText = (id: number) => {
+    return this.finishingTypeList.find(x => x.value === id).text;
+  }
+
+  getDefaultRecord = () => {
+    this.store.productSpecStore.subscribe((resp) => {
+      if (resp && resp.bindingVM && resp.bindingVM.id > 0) {
+        this.bindingVM = resp.bindingVM;
+      } else {
+        this.bindingVM = this.initialObject();
+      }
+    });
+  }
+
+  initialObject = (): BindingVM => {
+    return {
+      id: 1,
+      bindingType: '',
+      bindingMethod: '',
+      bookSpineType: '',
+      isHeadTailBand: false,
+      headTailBandColour: '',
+      isRibbon: false,
+      greyboardThickness: '',
+      specialInstruction1: '',
+      benchworkRequired: '',
+      specialInstruction2: '',
+      endPaperWeight: '',
+      endPaperMaterial: '',
+      materialBrand: '',
+      noOfColourExtent: 0,
+      noOfMonoExtent: 0,
+      totalExtent: 0,
+      noOfColours: 0,
+      colorType: '',
+      pantoneColour: [],
+      finishingType: [],
+      specialInstructions3: '',
+    };
+  }
+
+  ngOnDestroy(): void {
+    this.store.setProductSpecStore(
+      this.bindingVM,
+      ProductSpecTypes.BINDING
+    );
+  }
 }

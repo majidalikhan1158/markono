@@ -338,3 +338,45 @@ export const BenchworkTypeList: SelectionList[] = [
     enum: 'Others'
   },
 ];
+
+export const ColorTypes = {
+  Cyan : {
+    color: '#00E1D5',
+    text: 'Cyan',
+  },
+  Magenta : {
+    color: '#FF00FF',
+    text: 'Magenta',
+  },
+  Yellow : {
+    color: '#FFFF00',
+    text: 'Yellow',
+  },
+  Black : {
+    color: '#000000',
+    text: 'Black',
+  }
+};
+
+export const ColorTypeList = [
+  {
+    color: 'bg-cyan',
+    text: 'Cyan',
+    textColor: 'text-black'
+  },
+  {
+    color: 'bg-magenta',
+    text: 'Magenta',
+    textColor: 'text-black'
+  },
+  {
+    color: 'bg-yellow',
+    text: 'Yellow',
+    textColor: 'text-black'
+  },
+  {
+    color: 'bg-black',
+    text: 'Black',
+    textColor: 'text-white'
+  }
+];

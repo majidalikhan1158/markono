@@ -7,12 +7,12 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { FormControl } from '@angular/forms';
-import { ShippingInfoViewModel } from 'src/app/modules/shared/models/create-case';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import { CreateCaseMode, CreateCaseDataType, RecordType } from 'src/app/modules/shared/enums/app-enums';
 import { ShipmentTypes } from 'src/app/modules/shared/enums/case-management/case-contants';
+import { ShippingInfoVM } from 'src/app/modules/shared/models/create-case';
+import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
 
 export interface ShipmentTypesBox {
@@ -33,7 +33,8 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   @Input() createCaseMode: CreateCaseMode;
   createCaseModes = CreateCaseMode;
   disabled = false;
-  shipmentsToDisplay: ShippingInfoViewModel[] = [];
+  shipmentsToDisplay: ShippingInfoVM[] = [];
+  shipmentTypesArray = ShipmentTypes;
   shipmentTermList: DDLListModal[] = [];
   ExpansionIcons = ExpansionIcons;
   shouldShowShipmentDetails = false;

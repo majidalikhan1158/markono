@@ -3,13 +3,13 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>ISBN / Product No</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="generalVM.productNumber">
             </mat-form-field>
         </div>
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Printing Type</mat-label>
-                <mat-select>
+                <mat-select [(ngModel)]="generalVM.printingType">
                     <mat-option value="Offset">Offset</mat-option>
                     <mat-option value="Digital">Digital</mat-option>
                     <mat-option value="POD">POD</mat-option>  
@@ -19,7 +19,7 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Product Type</mat-label>
-                <mat-select  (selectionChange)="handleProductTypeChange($event)">
+                <mat-select [(ngModel)]="generalVM.productType">
                     <mat-option [value]="item.enum" *ngFor="let item of productTypeList">{{item.text}}</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -27,7 +27,7 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>External Part No.</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="generalVM.externalPartNo">
             </mat-form-field>
         </div>
     </div>
@@ -36,32 +36,32 @@
             <mat-form-field appearance="fill">
                 <mat-label>ISBN Owner</mat-label>
                 <mat-icon matPrefix>search</mat-icon>
-                <input matInput>
+                <input matInput [(ngModel)]="generalVM.isbnOwner">
             </mat-form-field>
         </div>
-        <div class="col-lg-3 pr-0" *ngIf="isProductTypeJournal">
+        <div class="col-lg-3 pr-0" *ngIf="generalVM.productType === productTypes.JOURNALS">
             <mat-form-field appearance="fill">
                 <mat-label>Journal Title Code</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="generalVM.journalTitleCode">
             </mat-form-field>
         </div>
-        <div class="col-lg-3 pr-0" *ngIf="isProductTypeJournal">
+        <div class="col-lg-3 pr-0" *ngIf="generalVM.productType === productTypes.JOURNALS">
             <mat-form-field appearance="fill">
                 <mat-label>Volume</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="generalVM.volume">
             </mat-form-field>
         </div>
-        <div class="col-lg-3 pr-0" *ngIf="isProductTypeJournal">
+        <div class="col-lg-3 pr-0" *ngIf="generalVM.productType === productTypes.JOURNALS">
             <mat-form-field appearance="fill">
                 <mat-label>Issue</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="generalVM.issue">
             </mat-form-field>
         </div>
     </div>
     <div class="col-lg-12 display-flex">
         <mat-form-field appearance="fill">
             <mat-label>Product Description</mat-label>
-            <input matInput>
+            <input matInput [(ngModel)]="generalVM.productDescription">
         </mat-form-field>
     </div>
 
@@ -72,7 +72,7 @@
     <div class="col-lg-12 display-flex pl-0">
         <div class="col-lg-6 display-flex-direction-column">
             <span class="labels">Orientation</span>
-            <mat-radio-group class="pt-3">
+            <mat-radio-group class="pt-3" [(ngModel)]="generalVM.orientationType">
              <mat-radio-button  value="Portrait">Portrait</mat-radio-button>
              <mat-radio-button  value="Landscape">Landscape</mat-radio-button>
              <mat-radio-button  value="Square">Square</mat-radio-button>
@@ -80,7 +80,7 @@
         </div>
         <div class="col-lg-6 display-flex-direction-column">
             <span class="labels">FSC?</span>
-            <mat-radio-group class="pt-3">
+            <mat-radio-group class="pt-3" [(ngModel)]="generalVM.fscType">
              <mat-radio-button  value="No">No</mat-radio-button>
              <mat-radio-button  value="FSC-Mix">FSC-Mix</mat-radio-button>
              <mat-radio-button  value="FSC-100%">FSC-100%</mat-radio-button>
@@ -97,34 +97,34 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Height(mm)</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="generalVM.height">
             </mat-form-field>
         </div>
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Width(mm)</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="generalVM.width">
             </mat-form-field>
         </div>
     </div>
 
     <div class="col-lg-12 display-flex pl-0 pb-5 pt-5">
         <div class="col-lg-3">
-            <mat-slide-toggle (change)="handleOpenSizeToggle()" labelPosition="before">Open Size</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="generalVM.isOpenSize" labelPosition="before">Open Size</mat-slide-toggle>
         </div>
     </div>
 
-    <div class="col-lg-12 display-flex pl-0" *ngIf="isOpenSizeSelected">
+    <div class="col-lg-12 display-flex pl-0" *ngIf="generalVM.isOpenSize">
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Open Size Height(mm)</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="generalVM.openSizeHeight">
             </mat-form-field>
         </div>
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Open Size Width(mm)</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="generalVM.openSizeWidth">
             </mat-form-field>
         </div>
     </div>
@@ -133,13 +133,13 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Weight(kg)</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="generalVM.weight">
             </mat-form-field>
         </div>
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Spine Width</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="generalVM.spinWidth">
             </mat-form-field>
         </div>
     </div>
@@ -150,13 +150,13 @@
 
     <div class="col-lg-12 display-flex pl-0">
         <div class="col-lg-3">
-            <mat-slide-toggle (change)="handleSpecAddToggle(productSpecTypesConstant.CHILD_ISBN)" labelPosition="before">Add Child ISBN</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="generalVM.isChildIsbnAdded" (change)="handleSpecAddToggle(productSpecTypesConstant.CHILD_ISBN)" labelPosition="before">Add Child ISBN</mat-slide-toggle>
         </div>
         <div class="col-lg-3">
-            <mat-slide-toggle (change)="handleSpecAddToggle(productSpecTypesConstant.DVD_CD)" labelPosition="before">Add DVD/CD</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="generalVM.isDvdAdded" (change)="handleSpecAddToggle(productSpecTypesConstant.DVD_CD)" labelPosition="before">Add DVD/CD</mat-slide-toggle>
         </div>
         <div class="col-lg-3">
-            <mat-slide-toggle (change)="handleSpecAddToggle(productSpecTypesConstant.WEB_CODE)" labelPosition="before">Add WebCode</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="generalVM.isWebcodeAdded"  (change)="handleSpecAddToggle(productSpecTypesConstant.WEB_CODE)" labelPosition="before">Add WebCode</mat-slide-toggle>
         </div>
     </div>
 </div>

@@ -10,11 +10,12 @@ import {
 } from '@angular/core';
 import { ExpansionIcons, PrintingTypesArray } from 'src/app/modules/shared/enums/app-constants';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
-import { ProductDetailsViewModel } from 'src/app/modules/shared/models/create-case';
+import {ProductDetailsVM, ProductISBNDetailVM } from 'src/app/modules/shared/models/create-case';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import { CreateCaseMode, CreateCaseDataType } from 'src/app/modules/shared/enums/app-enums';
 import { ProductService } from 'src/app/modules/services/core/services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ProductHelperService } from 'src/app/modules/shared/enums/helpers/product-helper.service';
 
 @Component({
   selector: 'app-product-details',
@@ -36,46 +37,28 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     'Selling Price',
     'Sub-Total',
   ];
-  rowsToDisplay: ProductDetailsViewModel[] = [];
+  productDetailsVMList: ProductDetailsVM[] = [];
   rowIdToExpand = 0;
   shouldShowProductDetails = false;
   ExpansionIcons = ExpansionIcons;
   printTypeList = PrintingTypesArray;
   constructor(
     private modalService: ModalService,
-    private createCaseService: CaseStore,
+    private store: CaseStore,
     private productService: ProductService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private helper: ProductHelperService
   ) {}
 
   ngOnInit(): void {
-    this.createCaseService.createCaseStore.subscribe((data) => {
-      if (this.rowsToDisplay.length === 0) {
-        if (data.productDetailsList && data.productDetailsList.length > 0) {
-          this.rowsToDisplay = data.productDetailsList;
-        } else {
-          if (this.rowsToDisplay.length === 0) {
-            this.addRow();
-          }
-        }
-      }
-      this.ref.detectChanges();
-    });
-    this.setCreateCaseMode();
+    this.getDefaultRecord();
+    this.disabled = this.createCaseMode === CreateCaseMode.EDIT;
   }
 
   ngOnChanges(changes: { [createCaseMode: number]: SimpleChange }) {
     if (changes['createCaseMode'].currentValue === CreateCaseMode.EDIT) {
       this.createCaseMode = changes['createCaseMode'].currentValue;
-      this.setCreateCaseMode();
-    }
-  }
-
-  setCreateCaseMode() {
-    if (this.createCaseMode === CreateCaseMode.EDIT) {
-      this.disabled = true;
-    } else {
-      this.disabled = false;
+      this.disabled = this.createCaseMode === CreateCaseMode.EDIT;
     }
   }
 
@@ -90,45 +73,92 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   addRow() {
-    const totalRows = this.rowsToDisplay.length;
-    this.rowsToDisplay.push({
-      id: totalRows + 1,
+    this.productDetailsVMList.push(this.initialObject());
+    this.rowIdToExpand = 0;
+  }
+
+  handlePrintTypeChange(recordId: number) {
+    const record = this.productDetailsVMList.find(x => x.id === recordId);
+    if (record && record.isbn && record.printType) {
+      this.getLiveVersion(record);
+    }
+  }
+
+  getDefaultRecord = () => {
+    this.store.createCaseStore.subscribe((resp) => {
+      if (resp && resp.productDetailsList && resp.productDetailsList.length > 0) {
+        this.productDetailsVMList = resp.productDetailsList;
+      } else {
+        if (this.productDetailsVMList.length === 0) {
+          this.productDetailsVMList.push(this.initialObject());
+        }
+      }
+    });
+  }
+
+  initialObject = (): ProductDetailsVM => {
+    return {
+      id: this.productDetailsVMList.length + 1,
       isbn: '',
       printType: 0,
       orderQty: '',
       margin: '',
       sellingPrice: '',
-    });
-    this.rowIdToExpand = 0;
+      productISBNDetail: this.getEmptyDetail()
+    };
   }
 
+  ngOnDestroy(): void {
+    /**
+     * get form data here and pass to the service
+     */
+    this.store.setCreateCaseDataSource(
+      this.productDetailsVMList,
+      CreateCaseDataType.PRODUCT_DETAILS
+    );
+  }
+
+  private getLiveVersion = (modal: ProductDetailsVM) => {
+    this.productService.getLiveVersion(modal).subscribe(resp => {
+      if (resp && resp.body && resp.body.result && resp.body.result.data.length > 0) {
+        modal.productISBNDetail = this.helper.TransToProductISBNDetailVM(resp.body.result.data[0]);
+      } else {
+        modal.productISBNDetail =  this.getEmptyDetail();
+      }
+    }, (err: HttpErrorResponse) => {
+      modal.productISBNDetail = this.getEmptyDetail();
+    });
+  }
+
+  getEmptyDetail = (): ProductISBNDetailVM => {
+    return {
+      id: '',
+    title: '',
+    totalExtent: 0,
+    bindingType: '',
+    productGroup: '',
+    samplesRequired: 0,
+    bluePrintRequired: 0,
+    specsVersionNo: '',
+    owner: '',
+    jobType: '',
+    weight: '',
+    fGRequired: 0,
+    advancesRequired: 0,
+    quoteNo: '',
+    estimatedPrice: 0,
+    additionalUnitPrice: 0,
+    };
+  }
+
+  /**
+   *  MODAL EVENTS
+   */
   handleAddBluePrintEvent(modalId: string) {}
 
   handleModalRejectEvent(modalId: string) {}
 
   openUiModal(modalId: string) {
     this.modalService.open(modalId);
-  }
-
-  handlePrintTypeChange(recordId: number) {
-    const record = this.rowsToDisplay.find(x => x.id === recordId);
-    if (record && record.isbn && record.printType) {
-      this.getLiveVersion(record);
-    }
-  }
-  ngOnDestroy(): void {
-    /**
-     * get form data here and pass to the service
-     */
-    this.createCaseService.setCreateCaseDataSource(
-      this.rowsToDisplay,
-      CreateCaseDataType.PRODUCT_DETAILS
-    );
-  }
-
-  private getLiveVersion = (modal: ProductDetailsViewModel) => {
-    this.productService.getLiveVersion(modal).subscribe(result => {
-    }, (err: HttpErrorResponse) => {
-    });
   }
 }

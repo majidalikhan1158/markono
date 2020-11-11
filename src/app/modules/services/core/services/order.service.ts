@@ -17,6 +17,9 @@ export class OrderService {
   public getCaseTypes = (): Observable<HttpResponse<ResponseModal>> =>
     this.http.get(this.endPoint.getCaseTypeUrl())
 
+  public getCustomerDetail = (request: any): Observable<HttpResponse<ResponseModal>> =>
+    this.http.post(this.endPoint.getCustomerDetailUrl(), request)
+
   public getShipmentModes = (): Observable<HttpResponse<ResponseModal>> =>
   this.http.get(this.endPoint.getShipmentModeUrl())
 

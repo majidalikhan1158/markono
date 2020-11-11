@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CreateCaseViewModel, CustomerInfoViewModel, MiscCostViewModel, InvoiceViewModel,
-   SpecialInstructionViewModel, ProductDetailsViewModel, ShippingInfoViewModel } from '../models/create-case';
+import { CreateCaseViewModel, CustomerInfoVM, MiscCostViewModel, InvoiceViewModel,
+   SpecialInstructionViewModel, ProductDetailsVM, ShippingInfoVM } from '../models/create-case';
 import { CreateCaseDataType, RecordType } from '../enums/app-enums';
 import { DDLObjectModal, DDLListModal, DDLObjectModalProp } from '../../services/shared/classes/case-modals/case-modal';
 
@@ -28,11 +28,11 @@ export class CaseStore {
 
   setCreateCaseDataSource(data: any, type: CreateCaseDataType) {
     if (type === CreateCaseDataType.CUSTOMER_INFO) {
-      this.setCustomerInfo(data as CustomerInfoViewModel);
+      this.setCustomerInfo(data as CustomerInfoVM);
     } else if (type === CreateCaseDataType.PRODUCT_DETAILS) {
-      this.setProductDetails(data as ProductDetailsViewModel[]);
+      this.setProductDetails(data as ProductDetailsVM[]);
     } else if (type === CreateCaseDataType.SHIPPING_INFO) {
-      this.setShippingInfo(data as ShippingInfoViewModel[]);
+      this.setShippingInfo(data as ShippingInfoVM[]);
     } else if (type === CreateCaseDataType.MISC_COST) {
       this.setMiscCost(data as MiscCostViewModel[]);
     } else if (type === CreateCaseDataType.INVOICE) {
@@ -42,7 +42,7 @@ export class CaseStore {
     }
   }
 
-  private setCustomerInfo(dataSubject: CustomerInfoViewModel) {
+  private setCustomerInfo(dataSubject: CustomerInfoVM) {
     if (!this.currentData.id) {
       this.currentData.id = 1;
     }
@@ -50,7 +50,7 @@ export class CaseStore {
     this.createCaseStoreSubject.next(this.currentData);
   }
 
-  private setProductDetails(dataSubject: ProductDetailsViewModel[]) {
+  private setProductDetails(dataSubject: ProductDetailsVM[]) {
     if (!this.currentData.id) {
       this.currentData.id = 1;
     }
@@ -62,7 +62,7 @@ export class CaseStore {
     }
   }
 
-  private setShippingInfo(dataSubject: ShippingInfoViewModel[]) {
+  private setShippingInfo(dataSubject: ShippingInfoVM[]) {
     if (!this.currentData.id) {
       this.currentData.id = 1;
     }

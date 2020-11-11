@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { WebCodeViewModel } from 'src/app/modules/shared/models/product-spec';
+import { WebCodeVM } from 'src/app/modules/shared/models/product-spec';
 
 @Component({
   selector: 'app-spec-webcode',
@@ -9,7 +9,7 @@ import { WebCodeViewModel } from 'src/app/modules/shared/models/product-spec';
 })
 export class SpecWebcodeComponent implements OnInit {
   columnsToDisplay = ['#', 'WebCode Location', 'No. of WebCode', 'X Coordinate', 'Y Coordinate', 'Special Instruction'];
-  rowsToDisplay: WebCodeViewModel[] = [];
+  rowsToDisplay: WebCodeVM[] = [];
   constructor() { }
 
   ngOnInit(): void {

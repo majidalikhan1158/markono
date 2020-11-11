@@ -3,7 +3,7 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Text Material Weight</mat-label>
-                <mat-select>
+                <mat-select [(ngModel)]="textVM.textMaterialWeight">
                     <mat-option [value]="item" *ngFor="let item of coverMaterialWeightList">{{item}}</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -11,7 +11,7 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Text Material</mat-label>
-                <mat-select>
+                <mat-select [(ngModel)]="textVM.textMaterial" [disabled]="textVM.textMaterialWeight === ''">
                     <mat-option value="Offset">Offset</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -19,7 +19,7 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Material Brand</mat-label>
-                <mat-select >
+                <mat-select [(ngModel)]="textVM.materialBrand" [disabled]="textVM.textMaterial === '' && textVM.textMaterialWeight === ''">
                     <mat-option value="Offset">Offset</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -36,19 +36,19 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>No. of Colour Extent</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="textVM.noOfColourExtent">
             </mat-form-field>
         </div>
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>No. of Mono Extent</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="textVM.noOfMonoExtent">
             </mat-form-field>
         </div>
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Total Extent</mat-label>
-                <input matInput>
+                <input matInput [(ngModel)]="textVM.totalExtent">
             </mat-form-field>
         </div> 
     </div>
@@ -57,7 +57,7 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>No. of colours</mat-label>
-                <mat-select>
+                <mat-select [(ngModel)]="textVM.noOfColours">
                     <mat-option [value]="item" *ngFor="let item of noOfColorsList">{{item}}</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -65,17 +65,9 @@
         <div class="col-lg-9">
             <div class="color-type-options display-flex pb-4">
                 <span
-                  class="option-item mr-2 bg-cyan text-black"
-                  (click)="handleColorChange()">Cyan</span>
-                  <span
-                  class="option-item mr-2 bg-magenta text-black"
-                  (click)="handleColorChange()">Magenta</span>
-                  <span
-                  class="option-item mr-2 bg-yellow text-black"
-                  (click)="handleColorChange()">Yellow</span>
-                  <span
-                  class="option-item mr-2 bg-black text-white"
-                  (click)="handleColorChange()">Black</span>
+                  *ngFor="let item of colorTypeList"
+                  [ngClass]="item.text === textVM.colorType ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
+                  (click)="handleColorChange(item.text)">{{item.text}}</span>
               </div>
         </div>
     </div>
@@ -84,13 +76,16 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Pantone Colour (Optional)</mat-label>
-                <input matInput (keyup.enter)="addPantoneColour($event)" [(ngModel)]="pantoneColorValue">
+                <input matInput 
+                pattern="(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)"
+                (keyup.enter)="addPantoneColour($event)">
             </mat-form-field>
         </div>
         <div class="col-lg-9">
             <mat-chip-list #pantoneColourchipList class="table-filter-chips">
                 <mat-chip [removable]="true" 
-                *ngFor="let item of selectedPantoneColourList"
+                [ngStyle]="{'background-color': item}"
+                *ngFor="let item of textVM.pantoneColour"
                   (removed)="removePantoneColourSelection(item)">
                   {{item}}
                   <mat-icon matChipRemove>cancel</mat-icon>
@@ -106,7 +101,7 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Finishing</mat-label>
-                <mat-select multiple (selectionChange)="handleFinishingTypeChange($event)">
+                <mat-select [(ngModel)]="textVM.finishingType" multiple >
                     <mat-option [value]="item.value" *ngFor="let item of finishingTypeList">{{item.text}}</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -116,9 +111,9 @@
             <div >
                 <mat-chip-list #finishingChipList class="table-filter-chips">
                     <mat-chip [removable]="true" 
-                    *ngFor="let item of selectedFinishingTypes"
-                      (removed)="removeFinishTypeSelection(item.value)">
-                      {{item.text}}
+                    *ngFor="let item of textVM.finishingType"
+                      (removed)="removeFinishTypeSelection(item)">
+                      {{getFinishingTypeText(item)}}
                       <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
                 </mat-chip-list>
@@ -140,7 +135,7 @@
     <div class="col-lg-12 pt-2">
         <mat-form-field appearance="fill">
             <mat-label>Write special instructions</mat-label>
-            <input matInput>
+            <input matInput [(ngModel)]="textVM.specialInstructions">
         </mat-form-field>
     </div>
 </div>

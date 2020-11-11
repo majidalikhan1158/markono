@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { ResponseModal } from '../../shared/classes/response-modal';
 import { QueryStringParameters } from '../../shared/classes/query-string-parameter';
-import { ProductDetailsViewModel } from 'src/app/modules/shared/models/create-case';
+import { ProductDetailsVM } from 'src/app/modules/shared/models/create-case';
 import { HelperService } from './helper.service';
 
 @Injectable({
@@ -19,7 +19,7 @@ export class ProductService {
   ) {}
 
   public getLiveVersion = (
-    modal: ProductDetailsViewModel
+    modal: ProductDetailsVM
   ): Observable<HttpResponse<ResponseModal>> => {
     const url = this.helper.createUrlWithQueryParameters(
       this.endPoint.getLiveVersion(),

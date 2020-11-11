@@ -24,6 +24,7 @@ import { TokenConfigService } from './modules/services/core/services/token-confi
 import { JwtInterceptor } from './modules/services/core/interceptor/jwt-interceptor';
 import { CaseStore } from './modules/shared/ui-services/create-case.service';
 import { CaseBaseService } from './modules/admin/case-management/case-base.service';
+import { ProductSpecStore } from './modules/shared/ui-services/product-spec.service';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -86,7 +87,7 @@ export function getHighlightLanguages() {
       multi: true,
     },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    CaseStore,CaseBaseService
+    CaseStore, CaseBaseService, ProductSpecStore
   ],
   bootstrap: [AppComponent],
 })

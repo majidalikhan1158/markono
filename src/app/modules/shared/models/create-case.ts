@@ -1,29 +1,70 @@
 export class CreateCaseViewModel {
     id: number;
-    customerInfo: CustomerInfoViewModel;
-    productDetailsList: ProductDetailsViewModel[];
-    shippingInfoList: ShippingInfoViewModel[];
+    customerInfo: CustomerInfoVM;
+    productDetailsList: ProductDetailsVM[];
+    shippingInfoList: ShippingInfoVM[];
     miscCostList: MiscCostViewModel[];
     invoiceList: InvoiceViewModel[];
     specialInstructionList: SpecialInstructionViewModel[];
 }
 
-export interface CustomerInfoViewModel {
+export interface CustomerInfoVM {
+    id: number;
     caseType: number;
     referenceNumber: string;
-    customerSearchString: string;
+    customerId: string;
+    customerDetail: CustomerDetailVM;
 }
 
-export interface ProductDetailsViewModel {
+export interface CustomerDetailVM {
+    CompanyCode: string;
+    CompanyName: string;
+    PrintFileFolder: string;
+    CurrencyCode: string;
+    Contact: string;
+    Address: string;
+    Address2: string;
+    PostCode: string;
+    City: string;
+    CountryRegionCode: string;
+    County: string;
+    PhoneNo: string;
+    State: string;
+    Email: string;
+    SalesPerson: string;
+}
+
+
+export interface ProductDetailsVM {
     id: number;
     isbn: string;
     printType: number;
     orderQty: string;
     margin: string;
     sellingPrice: string;
+    productISBNDetail: ProductISBNDetailVM;
 }
 
-export interface ShippingInfoViewModel {
+export interface ProductISBNDetailVM {
+    id: string;
+    title: string;
+    totalExtent: number;
+    bindingType: string;
+    productGroup: string;
+    samplesRequired: number;
+    bluePrintRequired: number;
+    specsVersionNo: string;
+    owner: string;
+    jobType: string;
+    weight: string;
+    fGRequired: number;
+    advancesRequired: number;
+    quoteNo: string;
+    estimatedPrice: number;
+    additionalUnitPrice: number;
+}
+
+export interface ShippingInfoVM {
     shipmentId: number;
     boxId: number;
     shippingDetails: ShipingDetailsModel;
@@ -108,4 +149,6 @@ export interface SpecialInstructionViewModel {
     department: string;
     instructions: string;
 }
+
+
 

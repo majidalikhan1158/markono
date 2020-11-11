@@ -29,3 +29,14 @@ export enum RecordType {
     SHIPMENT_TERM,
     SHIPMENT_AGENT
 }
+
+export enum ProductSpecTypes {
+    GENERAL,
+    COVER,
+    TEXT,
+    BINDING,
+    CHILD_ISBN,
+    DVD_CD,
+    WEBCODE,
+    UNIT_PRICE
+}

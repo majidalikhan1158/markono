@@ -3,7 +3,7 @@ export class CreateCaseViewModel {
     customerInfo: CustomerInfoVM;
     productDetailsList: ProductDetailsVM[];
     shippingInfoList: ShippingInfoVM[];
-    miscCostList: MiscCostViewModel[];
+    miscCostList: MiscCostVM[];
     invoiceList: InvoiceViewModel[];
     specialInstructionList: SpecialInstructionViewModel[];
 }
@@ -39,9 +39,9 @@ export interface ProductDetailsVM {
     id: number;
     isbn: string;
     printType: number;
-    orderQty: string;
-    margin: string;
-    sellingPrice: string;
+    orderQty: number;
+    margin: number;
+    sellingPrice: number;
     productISBNDetail: ProductISBNDetailVM;
 }
 
@@ -68,14 +68,14 @@ export interface ShippingInfoVM {
     shipmentId: number;
     boxId: number;
     shippingDetails: ShipingDetailsModel;
-    shippingItems: ShippingItemsModel;
+    shippingItems: ShippingItemsModel[];
     shippingSpecificCost: ShippingSpecificCostModel[];
     shipmentAddress: ShipmentToAddress;
     shipmentBillingDetails: ShipmentBillingDetails;
 }
 
 export interface ShipingDetailsModel {
-    billable: number;
+    billable: boolean;
     shippmentPromisedDate: string;
     shipmentMode: string;
     shippingTerms: string;
@@ -92,50 +92,64 @@ export interface ShippingItemsModel {
     productNumber: string;
     title: string;
     availableQty: number;
-    shipmentQty: string;
+    shipmentQty: number;
+    maximumAllowed: number;
 }
 
 export interface ShippingSpecificCostModel {
     id: number;
     costCategory: string;
     description: string;
-    subTotal: string;
+    subTotal: number;
 }
 
 export interface ShipmentToAddress {
-    attentionTo: string;
-    contactPeron: string;
-    email: string;
-    phone: string;
-    address1: string;
-    address2: string;
-    city: string;
-    postCode: string;
-    state: string;
-    country: string;
+    AttentionTo: string;
+    BillToNumber: string;
+    CompanyCode: string;
+    CompanyName: string;
+    PrintFileFolder: string;
+    CurrencyCode: string;
+    Contact: string;
+    Address: string;
+    Address2: string;
+    PostCode: string;
+    City: string;
+    CountryRegionCode: string;
+    County: string;
+    PhoneNo: string;
+    State: string;
+    Email: string;
+    SalesPerson: string;
+    Coordinator: string;
 }
 
 export interface ShipmentBillingDetails {
-    billToNumber: string;
-    attentionTo: string;
-    contactPeron: string;
-    email: string;
-    phone: string;
-    address1: string;
-    address2: string;
-    city: string;
-    postCode: string;
-    state: string;
-    country: string;
-    coordinator: string;
-    salesPerson: string;
+    AttentionTo: string;
+    BillToNumber: string;
+    CompanyCode: string;
+    CompanyName: string;
+    PrintFileFolder: string;
+    CurrencyCode: string;
+    Contact: string;
+    Address: string;
+    Address2: string;
+    PostCode: string;
+    City: string;
+    CountryRegionCode: string;
+    County: string;
+    PhoneNo: string;
+    State: string;
+    Email: string;
+    SalesPerson: string;
+    Coordinator: string;
 }
 
-export interface MiscCostViewModel {
+export interface MiscCostVM {
     id: number;
     costCategory: number;
     description: string;
-    subTotal: string;
+    subTotal: number;
 }
 
 export interface InvoiceViewModel {
@@ -150,5 +164,17 @@ export interface SpecialInstructionViewModel {
     instructions: string;
 }
 
+export interface OverAllCostVM {
+    printAndBind: number;
+    subTotal: number;
+    otherCharges: OtherCharges[];
+    discount: number;
+    tax: number;
+    total: number;
+}
 
+export interface OtherCharges {
+    type: string;
+    total: number;
+}
 

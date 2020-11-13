@@ -61,10 +61,21 @@
             <div class="col-lg-4">
               <mat-form-field appearance="outline">
                 <mat-icon matPrefix>search</mat-icon>
-                <input matInput placeholder="Search" id="txtSearchCustomer"
-                (keydown.enter)="handleCustomerSearch()"
-                [disabled]="disabled"
-                [(ngModel)]="customerInfoVM.customerId">
+                <input 
+                #trigger="matAutocompleteTrigger" 
+                [(ngModel)]="customerInfoVM.customerId"
+                matInput placeholder="Search" aria-label="State" 
+                [formControl]="searchCustomerInfo" 
+                [matAutocomplete]="auto"
+                id="txtSearchCustomer">
+                <mat-autocomplete  #auto="matAutocomplete" [displayWith]="displayFn" showPanel="true" (optionSelected)='handleSelectedCustomer($event.option.value)'>
+                  <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                  <ng-container *ngIf="!isLoading">
+                    <mat-option *ngFor="let item of customerDetailVMList" [value]="item.CompanyCode">
+                      <span><b>{{item.CompanyCode}}</b> _({{item.PrintFileFolder}})</span>
+                    </mat-option>
+                  </ng-container>
+                </mat-autocomplete>
               </mat-form-field>
             </div>
             <div class="col-lg-3 padding-0px">
@@ -173,7 +184,7 @@
             <h3 class="card-label">Billing Info.</h3>
           </div>
           <div class="card-toolbar">
-            <h6>Bill-to-No: DPC149</h6>
+            <h6>Bill-to-No: {{customerInfoVM.customerId}}</h6>
           </div>
         </div>
         <div class="card-body">

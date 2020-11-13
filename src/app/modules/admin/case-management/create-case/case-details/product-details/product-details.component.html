@@ -35,20 +35,20 @@
                                     <td>
                                         <mat-form-field appearance="fill" class="width-90">
                                             <mat-label >Order Qty</mat-label>
-                                            <input matInput  [(ngModel)]="productDetailsVMList[i].orderQty" [disabled]="disabled">
+                                            <input type="number" min="0" matInput  [(ngModel)]="productDetailsVMList[i].orderQty" [disabled]="disabled">
                                         </mat-form-field>
                                     </td>
                                     <td>0</td>
                                     <td>
                                         <mat-form-field appearance="fill" class="width-90">
                                             <mat-label >Margin</mat-label>
-                                            <input matInput  [(ngModel)]="productDetailsVMList[i].margin" [disabled]="disabled">
+                                            <input type="number" min="0" matInput  [(ngModel)]="productDetailsVMList[i].margin" [disabled]="disabled">
                                         </mat-form-field> 
                                     </td>
                                     <td>
                                         <mat-form-field appearance="fill" class="width-90">
                                             <mat-label >Selling Price</mat-label>
-                                            <input matInput  [(ngModel)]="productDetailsVMList[i].sellingPrice" [disabled]="disabled">
+                                            <input type="number" min="0" matInput  [(ngModel)]="productDetailsVMList[i].sellingPrice" [disabled]="disabled">
                                         </mat-form-field>
                                     </td>
                                     <td>0.00</td>

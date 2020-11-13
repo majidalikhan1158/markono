@@ -11,7 +11,7 @@ import { FormControl } from '@angular/forms';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import { CreateCaseMode, CreateCaseDataType, RecordType } from 'src/app/modules/shared/enums/app-enums';
 import { ShipmentTypes } from 'src/app/modules/shared/enums/case-management/case-contants';
-import { ShippingInfoVM } from 'src/app/modules/shared/models/create-case';
+import { CustomerInfoVM, ShipmentBillingDetails, ShipmentToAddress, ShippingInfoVM, ShippingItemsModel } from 'src/app/modules/shared/models/create-case';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
 
@@ -33,9 +33,13 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   @Input() createCaseMode: CreateCaseMode;
   createCaseModes = CreateCaseMode;
   disabled = false;
-  shipmentsToDisplay: ShippingInfoVM[] = [];
+  shipmentsInfoVMList: ShippingInfoVM[] = [];
   shipmentTypesArray = ShipmentTypes;
   shipmentTermList: DDLListModal[] = [];
+  shipmentModeList: DDLListModal[] = [];
+  shipmentAgentList: DDLListModal[] = [];
+  shipmentItems: ShippingItemsModel[] = [];
+  customerInfoVM: CustomerInfoVM;
   ExpansionIcons = ExpansionIcons;
   shouldShowShipmentDetails = false;
   boxIdToExpand = 0;
@@ -44,36 +48,37 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   shipmentSelectedTypeFormControl: FormControl;
   selectedShipmentType: any;
   constructor(
-    private caseStore: CaseStore,
+    private store: CaseStore,
     private ref: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    if (this.createCaseMode === CreateCaseMode.EDIT) {
-      this.disabled = true;
-    }
+    this.disabled = this.createCaseMode === CreateCaseMode.EDIT;
     this.shipmentSelectedTypeFormControl = new FormControl(
       this.selectedShipmentType
     );
+    this.getDefaultRecord();
+    this.getProductDetailsData();
+    this.getCustomerInfo();
     this.getDropDownData();
   }
 
   addRow(shipmentId) {
-    this.shipmentsToDisplay.forEach((x) => {
+    this.shipmentsInfoVMList.forEach((x) => {
       if (x.shipmentId === shipmentId) {
         const totalShipmentCosts = x.shippingSpecificCost.length;
         x.shippingSpecificCost.push({
           id: totalShipmentCosts + 1,
           costCategory: '',
           description: '',
-          subTotal: '',
+          subTotal: 0,
         });
       }
     });
   }
 
   deleteRow(shipmentId, rowId) {
-    this.shipmentsToDisplay.forEach((x) => {
+    this.shipmentsInfoVMList.forEach((x) => {
       if (x.shipmentId === shipmentId) {
         const filteredRows = x.shippingSpecificCost.filter((y) => {
           return y.id !== rowId;
@@ -87,7 +92,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   }
 
   handleShipmentTypeChange(event: MatSelectChange) {
-    const isShipmentExist = this.shipmentsToDisplay.find(
+    const isShipmentExist = this.shipmentsInfoVMList.find(
       (x) => x.shipmentId === event.value
     );
     if (isShipmentExist) {
@@ -96,21 +101,37 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const shipmentToBeAdded = this.shipmentTermList.find(
-      (x) => x.id === event.value
+    const shipmentToBeAdded = this.shipmentTypesArray.find(
+      (x) => x.value === event.value
     );
     if (shipmentToBeAdded) {
       this.boxIdToExpand = 0;
       // add new box
-      this.shipmentsToDisplay.push(this.getShipmentObject(shipmentToBeAdded));
+      const obj = this.getShipmentObject(shipmentToBeAdded);
+      this.shipmentItems.forEach((item, i) => {
+        const qty = this.getAvaiableQty(i);
+        obj.shippingItems.push({
+          id: i + 1,
+          productNumber: item.productNumber,
+          title: item.title,
+          availableQty: qty === -10000 ? item.availableQty : (qty > 0 ? qty : 0),
+          shipmentQty: 0,
+          maximumAllowed: qty === -10000 ? item.availableQty : (qty > 0 ? qty : 0),
+        });
+      });
+      obj.shipmentAddress = this.getShipmentAddressDetails('s');
+      obj.shipmentBillingDetails = this.getShipmentAddressDetails('b');
+      obj.shipmentBillingDetails.BillToNumber = this.customerInfoVM.customerId;
+      this.shipmentsInfoVMList.push(obj);
       this.shouldShowShipmentDetails = false;
       this.selectedShipmentType = null;
       this.shipmentSelectedTypeFormControl.setValue(this.selectedShipmentType);
+      this.displayShipmentDetails(obj.shipmentId);
     }
   }
 
   displayShipmentDetails(shipmentId) {
-    const shipmentToExpand = this.shipmentsToDisplay.find(
+    const shipmentToExpand = this.shipmentsInfoVMList.find(
       (x) => x.shipmentId === shipmentId
     );
     if (this.boxIdToExpand === shipmentToExpand.boxId) {
@@ -123,25 +144,27 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   }
 
   deleteShipment(shipmentId) {
-    const filteredRows = this.shipmentsToDisplay.filter(
+    const filteredRows = this.shipmentsInfoVMList.filter(
       (x) => x.shipmentId !== shipmentId
     );
     filteredRows.forEach((x, i) => {
       x.boxId = i + 1;
     });
-    this.shipmentsToDisplay = filteredRows;
+    this.shipmentsInfoVMList = filteredRows;
+    this.pushToStore();
   }
 
   handleShipmentModeChange(event: MatSelectChange, shipmentId: number) {
-    this.shipmentsToDisplay.forEach((element) => {
+    const selectedMode = this.shipmentModeList.find(x => x.id === event.value);
+    this.shipmentsInfoVMList.forEach((element) => {
       if (element.shipmentId === shipmentId) {
         if (
-          event.value === 'Internal Transfer (ML3PL)' ||
-          event.value === 'Internal Transfer (MPM3PL)'
+          selectedMode.attributes.code === 'Internal Transfer (ML whs)' ||
+          selectedMode.attributes.code === 'Internal Transfer (MPM whs)'
         ) {
           element.shippingDetails.isShipmentModeInternalTransfer = true;
           element.shippingDetails.isShipmentModeLibrary = false;
-        } else if (event.value === 'Internal Transfer (Library)') {
+        } else if (selectedMode.attributes.code === 'Internal Transfer (Library)') {
           element.shippingDetails.isShipmentModeInternalTransfer = false;
           element.shippingDetails.isShipmentModeLibrary = true;
         } else {
@@ -156,13 +179,13 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     return c1 && c2 && c1.name === c2.name;
   }
 
-  getShipmentObject(shipmentToBeAdded: any) {
-    const totalShipments = this.shipmentsToDisplay.length;
+  getShipmentObject = (shipmentToBeAdded: any): ShippingInfoVM => {
+    const totalShipments = this.shipmentsInfoVMList.length;
     return {
       shipmentId: shipmentToBeAdded.value,
       boxId: totalShipments + 1,
       shippingDetails: {
-        billable: 0,
+        billable: false,
         shippmentPromisedDate: '',
         shipmentMode: '',
         shippingTerms: '',
@@ -173,65 +196,143 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
         isShipmentModeInternalTransfer: false,
         isShipmentModeLibrary: false,
       },
-      shippingItems: {
-        id: 1,
-        productNumber: '9781760422791',
-        title: 'Passer Psychology 3e',
-        availableQty: 140,
-        shipmentQty: '',
-      },
+      shippingItems: [],
       shippingSpecificCost: [
         {
           id: 1,
           costCategory: '0',
           description: '',
-          subTotal: '',
+          subTotal: 0,
         },
       ],
-      shipmentAddress: {
-        attentionTo: 'Ariadne Pte Ltd',
-        contactPeron: 'Desmond Foo',
-        email: 'desmond@ariadne.sg',
-        phone: '',
-        address1: '50 Tagore Lane',
-        address2: '#02-10G',
-        city: 'Singapore',
-        postCode: '787494',
-        state: '',
-        country: '',
-      },
-      shipmentBillingDetails: {
-        billToNumber: 'DPA152',
-        attentionTo: 'Ariadne Pte Ltd',
-        contactPeron: 'Desmond Foo',
-        email: 'desmond@ariadne.sg',
-        phone: '',
-        address1: '50 Tagore Lane',
-        address2: '#02-10G',
-        city: 'Singapore',
-        postCode: '787494',
-        state: '',
-        country: '',
-        coordinator: '',
-        salesPerson: 'Dosmond Chew',
-      },
+      shipmentAddress: null,
+      shipmentBillingDetails: null,
     };
   }
 
-  ngOnDestroy(): void {
-    /**
-     * get form data here and pass to the service
-     */
-    this.caseStore.setCreateCaseDataSource(
-      this.shipmentsToDisplay,
-      CreateCaseDataType.SHIPPING_INFO
-    );
+  getTotalShipmentQty = (shipmentId: number): number => {
+    const shipmentRecord = this.shipmentsInfoVMList.find(x => x.shipmentId === shipmentId);
+    let totalQty = 0;
+    if (shipmentRecord) {
+      // tslint:disable-next-line: radix
+      shipmentRecord.shippingItems.forEach(item => totalQty = parseInt(totalQty.toString()) + Number.parseInt(item.shipmentQty.toString()));
+    }
+    return totalQty > 0 ? totalQty : 0;
+  }
+
+  handleShipmentQtyChange = (shipmentId: number, shipmentItemId: number, event: Event) => {
+    const value = (event.target as HTMLInputElement).value as unknown as number;
+    this.shipmentsInfoVMList.find(x => x.shipmentId === shipmentId).shippingItems.forEach(item => {
+      if (item.id === shipmentItemId) {
+        if (value > item.availableQty) {
+          (event.target as HTMLInputElement).value = '0';
+        } else {
+          item.shipmentQty = value;
+          // tslint:disable-next-line: radix
+          item.availableQty =  parseInt(item.availableQty.toString()) - parseInt(item.shipmentQty.toString());
+        }
+      }
+    });
+  }
+
+  getShipmentItemQty = (shipmentId: number, shipmentItemId: number) => {
+    return this.shipmentsInfoVMList.find(x => x.shipmentId === shipmentId).shippingItems.find(y => y.id === shipmentItemId).shipmentQty;
+  }
+
+  getAvaiableQty = (i) => {
+    let availableQty = 0;
+    const lastShipmentObj = this.shipmentsInfoVMList[this.shipmentsInfoVMList.length - 1];
+    if (lastShipmentObj && lastShipmentObj.shippingItems.length > 0) {
+      availableQty = lastShipmentObj.shippingItems[i].availableQty;
+    } else {
+      availableQty = -10000;
+    }
+    return availableQty;
+  }
+
+  handleSubTotalCost = () => {
+    this.pushToStore();
+  }
+
+  getDefaultRecord = () => {
+    this.store.createCaseStore.subscribe((resp) => {
+      if (resp && resp.shippingInfoList && resp.shippingInfoList.length > 0) {
+        this.shipmentsInfoVMList = resp.shippingInfoList;
+      }
+    });
+  }
+
+  private getShipmentAddressDetails = (type) => {
+    const obj = type === 's'
+    ? (this.customerInfoVM.customerDetail as unknown) as ShipmentToAddress
+    : (this.customerInfoVM.customerDetail as unknown) as ShipmentBillingDetails;
+    return {
+      AttentionTo: obj.CompanyName,
+      BillToNumber: obj.BillToNumber,
+      CompanyCode: obj.CompanyCode,
+      CompanyName: obj.CompanyName,
+      PrintFileFolder: obj.PrintFileFolder,
+      CurrencyCode: obj.CurrencyCode,
+      Contact: obj.Contact,
+      Address: obj.Address,
+      Address2: obj.Address2,
+      PostCode: obj.PostCode,
+      City: obj.City,
+      CountryRegionCode: obj.CountryRegionCode,
+      County: obj.County,
+      PhoneNo: obj.PhoneNo,
+      State: obj.State,
+      Email: obj.Email,
+      SalesPerson: obj.SalesPerson,
+      Coordinator: ''
+    };
+  }
+
+  private getProductDetailsData = () => {
+    this.store.createCaseStore.subscribe(data => {
+      if (data && data.productDetailsList && data.productDetailsList.length > 0) {
+        this.shipmentItems = [];
+        data.productDetailsList.forEach((item, i) => {
+          this.shipmentItems.push({
+            id: i + 1,
+            productNumber: item.isbn,
+            title: item.productISBNDetail.title,
+            availableQty: item.orderQty,
+            shipmentQty: 0,
+            maximumAllowed: item.orderQty
+          });
+        });
+      }
+    });
+  }
+
+  private getCustomerInfo = () => {
+    this.store.createCaseStore.subscribe(data => {
+      if (data && data.customerInfo && data.customerInfo.customerId) {
+        this.customerInfoVM = data.customerInfo;
+      }
+    });
   }
 
   private getDropDownData = () => {
-    this.caseStore.caseDropDownStore.subscribe(result => {
-      this.shipmentTermList = result.data.shipmentTermList;
+    this.store.caseDropDownStore.subscribe(result => {
+      if (result && result.data) {
+        this.shipmentTermList = result.data.shipmentTermList;
+        this.shipmentModeList = result.data.shipmentModeList;
+        this.shipmentAgentList = result.data.shipmentAgentList;
+      }
       this.ref.detectChanges();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.pushToStore();
+  }
+
+  pushToStore = () => {
+    this.store.setCreateCaseDataSource(
+      this.shipmentsInfoVMList,
+      CreateCaseDataType.SHIPPING_INFO
+    );
   }
 }

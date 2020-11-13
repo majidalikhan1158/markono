@@ -28,7 +28,7 @@ import { NgMatSearchBarModule } from 'ng-mat-search-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-// import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 // import { MatSliderModule } from '@angular/material/slider';
 // import { MatCheckboxModule } from '@angular/material/checkbox';
 // import { MatTooltipModule } from '@angular/material/tooltip';
@@ -75,6 +75,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatMenuModule,
     MatChipsModule,
     MatSlideToggleModule,
+    MatAutocompleteModule
     // MatTooltipModule,
     // MatSidenavModule,
     // MatProgressBarModule,
@@ -85,7 +86,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     // MatCheckboxModule,
     // 
     // MatDatepickerModule,
-    // MatAutocompleteModule,
+    // ,
     // MatListModule,
     // MatSliderModule,
     // MatPaginatorModule,
@@ -132,6 +133,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatMenuModule,
     MatChipsModule,
     MatSlideToggleModule,
+    MatAutocompleteModule
     // MatTooltipModule,
     // MatSidenavModule,
     // MatProgressBarModule,

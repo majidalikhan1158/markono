@@ -13,14 +13,14 @@
                           </tr>
                         </thead>
                         <tbody>
-                            <ng-container *ngFor="let rowId of rowsToDisplay;let i = index;">
+                            <ng-container *ngFor="let rowId of miscCostVMList;let i = index;">
                                 <tr class="outer-row">
                                     <td>
-                                        {{rowsToDisplay[i].id}}
+                                        {{miscCostVMList[i].id}}
                                     <td>
                                         <mat-form-field appearance="fill">
                                             <mat-label>Catetgory</mat-label>
-                                            <mat-select [(ngModel)]="rowsToDisplay[i].costCategory" [disabled]="disabled">
+                                            <mat-select [(ngModel)]="miscCostVMList[i].costCategory" [disabled]="disabled">
                                                 <mat-option *ngFor="let item of costCategoryArray"
                                                 [value]="item.value">{{item.text}}</mat-option>
                                             </mat-select>
@@ -30,7 +30,7 @@
                                         <mat-form-field appearance="fill">
                                             <mat-label>Description</mat-label>
                                             <input 
-                                                [(ngModel)]="rowsToDisplay[i].description"
+                                                [(ngModel)]="miscCostVMList[i].description"
                                                 matInput [disabled]="disabled"
                                                 placeholder="Write Description">
                                         </mat-form-field>
@@ -38,14 +38,15 @@
                                     <td>
                                         <mat-form-field appearance="fill">
                                             <mat-label>Sub-Total</mat-label>
-                                            <input 
-                                                [(ngModel)]="rowsToDisplay[i].subTotal"
+                                            <input type="number" min="0"
+                                                (change)="handleSubTotalChange()"
+                                                [(ngModel)]="miscCostVMList[i].subTotal"
                                                 matInput [disabled]="disabled"
                                                 placeholder="0.00">
                                         </mat-form-field>
                                     </td>
                                     <td>
-                                        <span class="material-icons delete-icon pr-2 cursor-pointer" (click)="deleteRow(rowsToDisplay[i].id)" *ngIf="rowsToDisplay.length > 1">
+                                        <span class="material-icons delete-icon pr-2 cursor-pointer" (click)="deleteRow(miscCostVMList[i].id)" *ngIf="miscCostVMList.length > 1">
                                             delete
                                         </span>
                                     </td>

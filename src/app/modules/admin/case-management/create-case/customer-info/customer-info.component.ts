@@ -11,7 +11,11 @@ import {
 import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
 import { CaseTypes } from 'src/app/modules/shared/enums/case-management/case-contants';
 import { OrderService } from 'src/app/modules/services/core/services/order.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { FormControl } from '@angular/forms';
+import { debounceTime, finalize, switchMap, tap } from 'rxjs/operators';
+import { ViewChild } from '@angular/core';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-customer-info',
@@ -21,13 +25,18 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class CustomerInfoComponent implements OnInit, OnDestroy {
   @Input() createCaseMode: CreateCaseMode;
   @Output() stepperNextEvent = new EventEmitter<CreateCaseSteps>();
+  @ViewChild('trigger') trigger: MatAutocompleteTrigger;
   modes = CreateCaseMode;
   disabled = false;
   caseTypeConstant = CaseTypes;
   caseTypeList: DDLListModal[] = [];
+  customerDetailVMList: CustomerDetailVM[] = [];
   shouldShowSearchCustomerBox = false;
   shouldShowCustomerInfoBox = false;
   customerInfoVM: CustomerInfoVM;
+  searchCustomerInfo = new FormControl();
+  isLoading = false;
+  previousValue = '';
   constructor(
     private modalService: ModalService,
     private store: CaseStore,
@@ -47,32 +56,37 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   }
 
   handleReferenceNumberChange() {
-    if (
-      this.customerInfoVM.referenceNumber !== '' &&
-      this.createCaseMode !== CreateCaseMode.EDIT
-    ) {
-      this.shouldShowSearchCustomerBox = true;
-    }
+    this.shouldShowSearchCustomerBox = this.customerInfoVM.referenceNumber !== '' && this.createCaseMode !== CreateCaseMode.EDIT;
   }
 
   handleCustomerSearch() {
-    if (this.customerInfoVM.customerId !== '') {
+    if (this.customerInfoVM.customerId !== '' && this.customerInfoVM.customerId !== this.previousValue) {
+      this.previousValue = this.customerInfoVM.customerId;
+      this.isLoading = true;
+      setTimeout(_ => this.trigger.openPanel());
       // call api to get customer results
       this.orderService.getCustomerDetail({sellToNo: this.customerInfoVM.customerId}).subscribe(resp => {
         const details = resp.body as unknown as CustomerDetailVM[];
-        if (details && details.length > 0) {
-          this.shouldShowCustomerInfoBox = true;
-          this.customerInfoVM.customerDetail = details[0];
-        } else {
-          this.shouldShowCustomerInfoBox = false;
-          // this.customerInfoVM.customerDetail = this.getEmptyDetails();
-        }
-        this.ref.detectChanges()
+        this.customerDetailVMList = details && details.length > 0 ? details : [];
+        this.isLoading = false;
+        this.ref.detectChanges();
       }, (err: HttpErrorResponse) => {
-        // this.customerInfoVM.customerDetail = this.getEmptyDetails();
-        this.shouldShowCustomerInfoBox = false;
+        this.customerDetailVMList = [];
+        this.isLoading = false;
+        this.ref.detectChanges();
       });
+
     }
+  }
+
+  handleSelectedCustomer = (customerId: string) => {
+    this.customerInfoVM.customerId = customerId;
+    this.customerInfoVM.customerDetail = this.customerDetailVMList.find(x => x.CompanyCode === customerId);
+    this.shouldShowCustomerInfoBox = true;
+  }
+
+  displayFn(info: CustomerDetailVM) {
+    if (info) { return info.CompanyCode; }
   }
 
   handleStepperNextEvent = () => {
@@ -129,7 +143,7 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
    */
   private getCaseTypes = () => {
     this.store.caseDropDownStore.subscribe(resp => {
-      if (resp != null && resp.data != null && resp.data.caseTypesList.length > 0) {
+      if (resp != null && resp.data != null && resp.data.caseTypesList && resp.data.caseTypesList.length > 0) {
         this.caseTypeList = resp.data.caseTypesList;
         this.ref.detectChanges();
       }

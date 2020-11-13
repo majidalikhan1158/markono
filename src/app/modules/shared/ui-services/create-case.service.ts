@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CreateCaseViewModel, CustomerInfoVM, MiscCostViewModel, InvoiceViewModel,
+import { CreateCaseViewModel, CustomerInfoVM, MiscCostVM, InvoiceViewModel,
    SpecialInstructionViewModel, ProductDetailsVM, ShippingInfoVM } from '../models/create-case';
 import { CreateCaseDataType, RecordType } from '../enums/app-enums';
 import { DDLObjectModal, DDLListModal, DDLObjectModalProp } from '../../services/shared/classes/case-modals/case-modal';
@@ -34,7 +34,7 @@ export class CaseStore {
     } else if (type === CreateCaseDataType.SHIPPING_INFO) {
       this.setShippingInfo(data as ShippingInfoVM[]);
     } else if (type === CreateCaseDataType.MISC_COST) {
-      this.setMiscCost(data as MiscCostViewModel[]);
+      this.setMiscCost(data as MiscCostVM[]);
     } else if (type === CreateCaseDataType.INVOICE) {
       this.setInvoice(data as InvoiceViewModel[]);
     } else if (type === CreateCaseDataType.SPECIAL_INSTRUCTIONS) {
@@ -54,7 +54,7 @@ export class CaseStore {
     if (!this.currentData.id) {
       this.currentData.id = 1;
     }
-    const validRecords = dataSubject.filter(x => x.isbn !== '');
+    const validRecords = dataSubject.filter(x => x.isbn !== '' && x.printType && x.productISBNDetail && x.productISBNDetail.id !== '');
 
     if (validRecords.length > 0) {
       this.currentData.productDetailsList = validRecords;
@@ -66,14 +66,11 @@ export class CaseStore {
     if (!this.currentData.id) {
       this.currentData.id = 1;
     }
-    const validRecords = dataSubject?.filter(x => x.shippingDetails.billable > 0);
-    if (validRecords.length > 0) {
-      this.currentData.shippingInfoList = validRecords;
-      this.createCaseStoreSubject.next(this.currentData);
-    }
+    this.currentData.shippingInfoList = dataSubject;
+    this.createCaseStoreSubject.next(this.currentData);
   }
 
-  private setMiscCost(dataSubject: MiscCostViewModel[]) {
+  private setMiscCost(dataSubject: MiscCostVM[]) {
     if (!this.currentData.id) {
       this.currentData.id = 1;
     }

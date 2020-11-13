@@ -101,27 +101,18 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
       id: this.productDetailsVMList.length + 1,
       isbn: '',
       printType: 0,
-      orderQty: '',
-      margin: '',
-      sellingPrice: '',
+      orderQty: 0,
+      margin: 0,
+      sellingPrice: 0,
       productISBNDetail: this.getEmptyDetail()
     };
-  }
-
-  ngOnDestroy(): void {
-    /**
-     * get form data here and pass to the service
-     */
-    this.store.setCreateCaseDataSource(
-      this.productDetailsVMList,
-      CreateCaseDataType.PRODUCT_DETAILS
-    );
   }
 
   private getLiveVersion = (modal: ProductDetailsVM) => {
     this.productService.getLiveVersion(modal).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.data.length > 0) {
         modal.productISBNDetail = this.helper.TransToProductISBNDetailVM(resp.body.result.data[0]);
+        this.showProductDetails(modal.id);
       } else {
         modal.productISBNDetail =  this.getEmptyDetail();
       }
@@ -149,6 +140,14 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     estimatedPrice: 0,
     additionalUnitPrice: 0,
     };
+  }
+
+  ngOnDestroy(): void {
+    /**
+     * get form data here and pass to the service
+     */
+    const actualList = this.productDetailsVMList.filter(x => x.productISBNDetail && x.productISBNDetail.id !== '');
+    this.store.setCreateCaseDataSource( actualList, CreateCaseDataType.PRODUCT_DETAILS);
   }
 
   /**

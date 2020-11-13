@@ -14,11 +14,11 @@
                             </div>
                             <div class="card-title">
                                 <span class="font-12px color-AFAFAF pr-2">Attention To: </span>
-                                <span class="font-12px card-label">Ariadne Pte Ltd</span>
+                                <span class="font-12px card-label">{{shipment.shipmentAddress.AttentionTo}}</span>
                             </div>
                             <div class="card-title">
                                 <span class="font-12px color-AFAFAF pr-2">Shipment Qty: </span>
-                                <span class="font-12px card-label">0</span>
+                                <span class="font-12px card-label">{{getTotalShipmentQty(shipment.shipmentId)}}</span>
                             </div>
                             <div class="card-toolbar">
                                 <span class="material-icons delete-icon pr-2 cursor-pointer" 
@@ -50,8 +50,8 @@
                                         <mat-form-field appearance="fill">
                                             <mat-label>Billable?</mat-label>
                                             <mat-select [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.billable" [disabled]="disabled">
-                                                <mat-option value="1">Yes</mat-option>
-                                                <mat-option value="2">No</mat-option>
+                                                <mat-option value="true">Yes</mat-option>
+                                                <mat-option value="false">No</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
@@ -69,7 +69,7 @@
                                             <mat-label>Shipment Mode</mat-label>
                                             <mat-select  (selectionChange)="handleShipmentModeChange($event,shipment.shipmentId)" 
                                                 [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shipmentMode" [disabled]="disabled">
-                                                <mat-option *ngFor="let item of shipmentModeList" value="item.id" >{{item.attributes.description}}</mat-option>
+                                                <mat-option *ngFor="let item of shipmentModeList" [value]="item.id" >{{item.attributes.description}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
@@ -77,11 +77,7 @@
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipping Terms</mat-label>
                                             <mat-select  [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingTerms" [disabled]="disabled">
-                                                <mat-option value="CIF">CIF</mat-option>
-                                                <mat-option value="DDU">DDU</mat-option>
-                                                <mat-option value="Ex-Factory">Ex-Factory</mat-option>
-                                                <mat-option value="FDB">FDB</mat-option>
-                                                <mat-option value="Self Collection">Self Collection</mat-option>
+                                                <mat-option *ngFor="let item of shipmentTermList" [value]="item.id" >{{item.attributes.description}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
@@ -101,19 +97,7 @@
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipping Agent</mat-label>
                                             <mat-select  [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingAgent" [disabled]="disabled">
-                                                <mat-option value="UPS">UPS</mat-option>
-                                                <mat-option value="SF Express">SF Express</mat-option>
-                                                <mat-option value="Hock Cheong">Hock Cheong</mat-option>
-                                                <mat-option value="Singpost">Singpost</mat-option>
-                                                <mat-option value="DHL">DHL</mat-option>
-                                                <mat-option value="Asendia">Asendia</mat-option>
-                                                <mat-option value="EES">EES</mat-option>
-                                                <mat-option value="YFE">YFE</mat-option>
-                                                <mat-option value="Publiship">Publiship</mat-option>
-                                                <mat-option value="GE Line">GE Line</mat-option>
-                                                <mat-option value="Shipco">Shipco</mat-option>
-                                                <mat-option value="Rohlig">Rohlig</mat-option>
-                                                <mat-option value="Others">Others</mat-option>
+                                                <mat-option *ngFor="let item of shipmentAgentList" [value]="item.id" >{{item.attributes.description}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
@@ -151,18 +135,24 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>9781760422791</td>
-                                                <td>Passer Psychology 3e</td>
-                                                <td>140</td>
-                                                <td>
-                                                    <mat-form-field appearance="fill" class="">
-                                                        <mat-label>Shipment Qty</mat-label>
-                                                        <input matInput [(ngModel)]="shipmentsInfoVMList[i].shippingItems.shipmentQty" [disabled]="disabled">
-                                                    </mat-form-field>
-                                                </td>
-                                            </tr>
+                                                <ng-container *ngFor="let shipmentItem of shipmentsInfoVMList[i].shippingItems;let k = index;">
+                                                    <tr>
+                                                        <td>{{shipmentItem.id}}</td>
+                                                        <td>{{shipmentItem.productNumber}}</td>
+                                                        <td>{{shipmentItem.title}}</td>
+                                                        <td>{{shipmentItem.availableQty}}</td>
+                                                        <td>
+                                                            <mat-form-field appearance="fill" class="">
+                                                                <mat-label>Shipment Qty</mat-label>
+                                                                <input matInput type="number"
+                                                                (change)="handleShipmentQtyChange(shipment.shipmentId, shipmentItem.id, $event)" 
+                                                                value="{{getShipmentItemQty(shipment.shipmentId, shipmentItem.id)}}"
+                                                                [disabled]="disabled || !(shipmentItem.maximumAllowed > 0)" 
+                                                                min="0" max="{{shipmentItem.maximumAllowed}}">
+                                                            </mat-form-field>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
                                             </tbody>
                                         </table>
                         
@@ -222,7 +212,8 @@
                                                 <td>
                                                     <mat-form-field appearance="fill">
                                                         <mat-label>Sub total</mat-label>
-                                                        <input matInput   [(ngModel)]="rowId.subTotal" [disabled]="disabled">
+                                                        <input matInput [(ngModel)]="rowId.subTotal" [disabled]="disabled"
+                                                        (change)="handleSubTotalCost()">
                                                     </mat-form-field>
                                                 </td>
                                                 <td>
@@ -261,13 +252,13 @@
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Attention To</mat-label>
-                                                <input matInput value="Ariadne Pte Ltd">
+                                                <input matInput [(ngModel)]="shipment.shipmentAddress.AttentionTo">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Contact Person</mat-label>
-                                                <input matInput value="Desmond Foo">
+                                                <input matInput [(ngModel)]="shipment.shipmentAddress.Contact">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -275,13 +266,13 @@
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Email</mat-label>
-                                                <input matInput value="desmond@ariadne.sg">
+                                                <input type="email" matInput [(ngModel)]="shipment.shipmentAddress.Email">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Phone</mat-label>
-                                                <input matInput placeholder="Phone">
+                                                <input matInput [(ngModel)]="shipment.shipmentAddress.PhoneNo">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -289,13 +280,13 @@
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Address 1</mat-label>
-                                                <input matInput value="50 Tagore Lane">
+                                                <input matInput [(ngModel)]="shipment.shipmentAddress.Address">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Address 2</mat-label>
-                                                <input matInput value="#02-10G">
+                                                <input matInput [(ngModel)]="shipment.shipmentAddress.Address2">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -303,13 +294,13 @@
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>City</mat-label>
-                                                <input matInput value="Singapore">
+                                                <input matInput [(ngModel)]="shipment.shipmentAddress.City">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Postcode</mat-label>
-                                                <input matInput value="787494">
+                                                <input matInput [(ngModel)]="shipment.shipmentAddress.PostCode">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -317,13 +308,13 @@
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>State</mat-label>
-                                                <input matInput placeholder="State">
+                                                <input matInput [(ngModel)]="shipment.shipmentAddress.State">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Country</mat-label>
-                                                <input matInput placeholder="Country">
+                                                <input matInput [(ngModel)]="shipment.shipmentAddress.CountryRegionCode">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -337,13 +328,13 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Bill-to No</mat-label>
-                                                <input matInput value="DPA152">
+                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.BillToNumber">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Attention To</mat-label>
-                                                <input matInput value="Ariadne Pte Ltd">
+                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.AttentionTo">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -351,13 +342,13 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Contact Person</mat-label>
-                                                <input matInput value="Desmond Foo">
+                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.Contact">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Email</mat-label>
-                                                <input matInput value="desmond@ariadne.sg">
+                                                <input type="email" matInput [(ngModel)]="shipment.shipmentBillingDetails.Email">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -365,13 +356,13 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Phone</mat-label>
-                                                <input matInput placeholder="Phone">
+                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.PhoneNo">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Address 1</mat-label>
-                                                <input matInput value="50 Tagore Lane">
+                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.Address">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -379,13 +370,13 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Address 2</mat-label>
-                                                <input matInput value="#02-10G">
+                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.Address2">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>City</mat-label>
-                                                <input matInput value="Singapore">
+                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.City">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -393,13 +384,13 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Postcode</mat-label>
-                                                <input matInput value="787494">
+                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.PostCode">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>State</mat-label>
-                                                <input matInput placeholder="State">
+                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.State">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -407,13 +398,13 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Country</mat-label>
-                                                <input matInput placeholder="Country">
+                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.CountryRegionCode">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Co-ordinator</mat-label>
-                                                <input matInput placeholder="Co-ordinator">
+                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.Coordinator">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -421,7 +412,7 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Sales Person</mat-label>
-                                                <input matInput value="Dosmond Chew">
+                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.SalesPerson">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -439,7 +430,7 @@
                         <mat-label>Add Shipment Type</mat-label>
                         <mat-select (selectionChange)="handleShipmentTypeChange($event)" [compareWith]="compare"
                         [formControl]="shipmentSelectedTypeFormControl" >
-                            <mat-option  [value]="item.id"  *ngFor="let item of shipmentTypesArray"> {{item.attributes.description}}</mat-option>
+                            <mat-option  [value]="item.value"  *ngFor="let item of shipmentTypesArray"> {{item.text}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                   

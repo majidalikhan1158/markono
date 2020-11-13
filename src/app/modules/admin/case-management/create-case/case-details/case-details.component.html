@@ -56,16 +56,34 @@
                             Print & Bind
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
-                            0.00
+                            {{overAllCostVM.printAndBind}}
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
-                        <span class="font-roboto-regular font-14px">
+                        <mat-expansion-panel (opened)="panelOpenState"
+                        (closed)="panelOpenState = false">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
                             Other Charges
-                        </span>
-                        <span class="font-roboto-regular font-14px float-right">
-                            0.00
-                        </span>
+                          </mat-panel-title>
+                          <mat-panel-description>
+                            <span class="font-roboto-regular font-14px float-right">
+                                
+                            </span>
+                          </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <ng-container *ngFor="let item of overAllCostVM.otherCharges">
+                           <div class="mb-2">
+                            <span class="font-roboto-regular font-14px">
+                                {{item.type}}
+                            </span>
+                            <span class="font-roboto-regular font-14px float-right">
+                                {{item.total}}
+                            </span>
+                           </div>
+                        </ng-container>
+                      </mat-expansion-panel>
+                      
                         <mat-divider class="mt-4"></mat-divider>
                     </div>
                    
@@ -74,7 +92,7 @@
                             Sub-total
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
-                            0.00
+                            {{overAllCostVM.subTotal}}
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
@@ -82,7 +100,7 @@
                             Discount (%)
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
-                            0.00
+                            {{overAllCostVM.discount}}
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
@@ -90,7 +108,7 @@
                             Tax (GST)
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
-                            0.00
+                            {{overAllCostVM.tax}}
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
@@ -98,7 +116,7 @@
                             Total
                         </span>
                         <span class="font-roboto-bold font-14px float-right">
-                            0.00
+                            {{overAllCostVM.total}}
                         </span>
                     </div>
                 </div>

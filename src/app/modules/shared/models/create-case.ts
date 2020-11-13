@@ -40,6 +40,7 @@ export interface ProductDetailsVM {
     isbn: string;
     printType: number;
     orderQty: number;
+    prodQty: number;
     margin: number;
     sellingPrice: number;
     productISBNDetail: ProductISBNDetailVM;

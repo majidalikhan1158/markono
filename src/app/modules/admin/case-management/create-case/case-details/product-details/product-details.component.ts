@@ -84,6 +84,17 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  handleOrderQuantityChange = (recordId: number) => {
+    this.productDetailsVMList.forEach(item => {
+      if (item.id === recordId) {
+        item.prodQty = item.orderQty;
+        if (item.productISBNDetail) {
+          item.sellingPrice = item.prodQty * item.productISBNDetail.estimatedPrice;
+        }
+      }
+    });
+  }
+
   getDefaultRecord = () => {
     this.store.createCaseStore.subscribe((resp) => {
       if (resp && resp.productDetailsList && resp.productDetailsList.length > 0) {
@@ -102,6 +113,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
       isbn: '',
       printType: 0,
       orderQty: 0,
+      prodQty: 0,
       margin: 0,
       sellingPrice: 0,
       productISBNDetail: this.getEmptyDetail()

@@ -18,7 +18,6 @@ export class AddSamplesModalComponent implements OnInit, OnDestroy {
   constructor(private modalService: ModalService, private store: CaseStore) { }
 
   ngOnInit(): void {
-    console.log(this.recordId);
     this.getDefaultRecord();
   }
 

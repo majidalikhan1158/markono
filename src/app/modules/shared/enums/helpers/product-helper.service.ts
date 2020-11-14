@@ -27,6 +27,8 @@ export class ProductHelperService {
       additionalUnitPrice: 0,
       sampleList: [],
       bluePrintList: [],
+      fgList: [],
+      advancesList: []
     };
   }
 }

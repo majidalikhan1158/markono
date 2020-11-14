@@ -54,6 +54,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   ExpansionIcons = ExpansionIcons;
   printTypeList = PrintingTypesArray;
   recordIdPassToModal = 0;
+  recordIdISBNPassToModal: string = '';
   constructor(
     private modalService: ModalService,
     private store: CaseStore,
@@ -103,7 +104,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
         item.prodQty = item.orderQty;
         if (item.productISBNDetail && item.productISBNDetail.samplesRequired > 0) {
           // tslint:disable-next-line: radix
-          item.prodQty = parseInt(item.orderQty.toString())  + parseInt(item.productISBNDetail.samplesRequired.toString());
+          item.prodQty = parseInt(item.orderQty.toString()) + parseInt(item.productISBNDetail.samplesRequired.toString());
         }
         item = this.calculateSubTotal(item);
       }
@@ -165,7 +166,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private getLiveVersion = (modal: ProductDetailsVM) => {
-    this.disabled = true;
+    // this.disabled = true;
     this.productService.getLiveVersion(modal).subscribe(
       (resp) => {
         if (
@@ -281,17 +282,17 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   handleAddFGRequiredEvent = (fgList: ProductDetailModals[]) => {
     let total = 0;
     if (fgList.length > 0) {
-        fgList.forEach(item => {
-          // tslint:disable-next-line: radix
-          total = parseInt(total.toString()) + parseInt(item.quantity.toString());
-        });
-        this.productDetailsVMList.forEach(item => {
+      fgList.forEach(item => {
+        // tslint:disable-next-line: radix
+        total = parseInt(total.toString()) + parseInt(item.quantity.toString());
+      });
+      this.productDetailsVMList.forEach(item => {
         if (item.id === this.recordIdPassToModal) {
           item.productISBNDetail.fgList = fgList;
           item.productISBNDetail.fGRequired = total;
         }
       });
-        this.pushToStore();
+      this.pushToStore();
     }
     this.recordIdPassToModal = 0;
     this.store.setProductDetailsId(0);
@@ -319,6 +320,31 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   openUiModal(modalId: string, recordId: number) {
     this.store.setProductDetailsId(recordId);
     this.recordIdPassToModal = recordId;
+  }
+  handleViewAllEvent = (advancesList: ProductDetailModals[]) => {
+    let total = 0;
+    if (advancesList.length > 0) {
+      // advancesList.forEach(item => {
+      //   // tslint:disable-next-line: radix
+      //   total = parseInt(total.toString()) + parseInt(item.quantity.toString());
+      // });
+      this.productDetailsVMList.forEach(item => {
+        if (item.id === this.recordIdPassToModal) {
+          item.productISBNDetail.advancesList = advancesList;
+          item.productISBNDetail.advancesRequired = total;
+          // tslint:disable-next-line: radix
+          // item.prodQty = parseInt(item.orderQty.toString()) + parseInt(total.toString());
+          // item = this.calculateSubTotal(item);
+        }
+      });
+      this.pushToStore();
+    }
+    this.recordIdPassToModal = 0;
+  }
+
+  openUiViewAllVersionsModal(modalId: string, recordId: string) {
+    this.store.setViewALLVersions(recordId);
+    this.recordIdISBNPassToModal = recordId;
     this.modalService.open(modalId);
   }
 }

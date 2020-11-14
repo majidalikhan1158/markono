@@ -12,6 +12,7 @@ import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { AddSamplesModalComponent } from './ui-modals/case-management/add-samples-modal/add-samples-modal.component';
 import { AddFgRequiredModalComponent } from './ui-modals/case-management/add-fg-required-modal/add-fg-required-modal.component';
 import { AddAdvancesModalComponent } from './ui-modals/case-management/add-advances-modal/add-advances-modal.component';
+import { ViewAllModalComponent } from './ui-modals/case-management/view-all-modal/view-all-modal.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AddAdvancesModalComponent } from './ui-modals/case-management/add-advan
     AddSamplesModalComponent,
     AddFgRequiredModalComponent,
     AddAdvancesModalComponent,
+    ViewAllModalComponent,
   ],
   imports: [CommonModule, MaterialUiModule, NgbDropdownModule, SumPipeModule],
   exports: [
@@ -32,6 +34,7 @@ import { AddAdvancesModalComponent } from './ui-modals/case-management/add-advan
     AddAdvancesModalComponent,
     CreateProductSpecModalComponent,
     ModalComponent,
+    ViewAllModalComponent
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DATA, useValue: {} },
@@ -39,4 +42,4 @@ import { AddAdvancesModalComponent } from './ui-modals/case-management/add-advan
     SnackBarService,
   ],
 })
-export class SharedModule {}
+export class SharedModule { }

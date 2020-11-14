@@ -10,6 +10,8 @@ import { SumPipeModule } from './pipe/sum.pipe';
 import { SnackBarService } from './ui-services/snack-bar.service';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { AddSamplesModalComponent } from './ui-modals/case-management/add-samples-modal/add-samples-modal.component';
+import { AddFgRequiredModalComponent } from './ui-modals/case-management/add-fg-required-modal/add-fg-required-modal.component';
+import { AddAdvancesModalComponent } from './ui-modals/case-management/add-advances-modal/add-advances-modal.component';
 
 @NgModule({
   declarations: [
@@ -18,12 +20,16 @@ import { AddSamplesModalComponent } from './ui-modals/case-management/add-sample
     AddBlueprintModalComponent,
     CreateProductSpecModalComponent,
     AddSamplesModalComponent,
+    AddFgRequiredModalComponent,
+    AddAdvancesModalComponent,
   ],
   imports: [CommonModule, MaterialUiModule, NgbDropdownModule, SumPipeModule],
   exports: [
     AddCustomerModalComponent,
     AddBlueprintModalComponent,
     AddSamplesModalComponent,
+    AddFgRequiredModalComponent,
+    AddAdvancesModalComponent,
     CreateProductSpecModalComponent,
     ModalComponent,
   ],

@@ -211,6 +211,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
       additionalUnitPrice: 0,
       sampleList: [],
       bluePrintList: [],
+      fgList: [],
+      advancesList: []
     };
   }
 
@@ -250,6 +252,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
           item = this.calculateSubTotal(item);
         }
       });
+      this.pushToStore();
     }
     this.recordIdPassToModal = 0;
   }

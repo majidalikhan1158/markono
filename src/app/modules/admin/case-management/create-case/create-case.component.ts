@@ -8,8 +8,13 @@ import {
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { CreateCaseStepperEvent } from 'src/app/modules/shared/models/app-modal';
-import { CreateCaseSteps, CreateCaseMode, RecordType } from 'src/app/modules/shared/enums/app-enums';
+import {
+  CreateCaseSteps,
+  CreateCaseMode,
+  RecordType,
+} from 'src/app/modules/shared/enums/app-enums';
 import { CaseBaseService } from '../case-base.service';
+import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 @Component({
   selector: 'app-create-case',
   templateUrl: './create-case.component.html',
@@ -24,7 +29,11 @@ export class CreateCaseComponent implements OnInit {
   selectedCaseStep = CreateCaseSteps.CUSTOMER_INFO;
   createCaseMode = CreateCaseMode.NEW;
   tabToOpen: string;
-  constructor(private ref: ChangeDetectorRef, private caseBaseService: CaseBaseService) {}
+  constructor(
+    private ref: ChangeDetectorRef,
+    private caseBaseService: CaseBaseService,
+    private store: CaseStore
+  ) {}
 
   ngOnInit() {
     /**
@@ -61,5 +70,11 @@ export class CreateCaseComponent implements OnInit {
     }
     this.tabToOpen = eventData.tabToOpen;
     this.ref.detectChanges();
+  }
+
+  createCase = () => {
+    this.store.createCaseStore.subscribe(data => {
+      console.log(data);
+    })
   }
 }

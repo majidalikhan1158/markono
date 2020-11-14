@@ -74,6 +74,8 @@ export interface ProductISBNDetailVM {
     additionalUnitPrice: number;
     sampleList: ProductDetailModals[];
     bluePrintList: ProductDetailModals[];
+    fgList: ProductDetailModals[];
+    advancesList: ProductDetailModals[];
 }
 
 export interface ShippingInfoVM {

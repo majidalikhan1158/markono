@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CreateCaseViewModel, CustomerInfoVM, MiscCostVM, InvoiceViewModel,
-   SpecialInstructionViewModel, ProductDetailsVM, ShippingInfoVM, OverAllCostVM } from '../models/create-case';
+import {
+  CreateCaseViewModel, CustomerInfoVM, MiscCostVM, InvoiceViewModel,
+  SpecialInstructionViewModel, ProductDetailsVM, ShippingInfoVM, OverAllCostVM
+} from '../models/create-case';
 import { CreateCaseDataType, RecordType } from '../enums/app-enums';
 import { DDLObjectModal, DDLListModal, DDLObjectModalProp } from '../../services/shared/classes/case-modals/case-modal';
 
@@ -17,6 +19,7 @@ export class CaseStore {
   private caseDropDownStoreSubject = new BehaviorSubject<DDLObjectModal>(null);
   private currentData: CreateCaseViewModel;
   private currentDropDownStoreState: DDLObjectModal;
+  public viewAllVersions = new BehaviorSubject<string>('');
   constructor() {
     this.createCaseStore = this.createCaseStoreSubject.asObservable();
     this.caseDropDownStore = this.caseDropDownStoreSubject.asObservable();
@@ -112,7 +115,7 @@ export class CaseStore {
 
   public setCaseDropDownsDataSource(modal: DDLListModal[], recordType: RecordType) {
     if (!this.currentDropDownStoreState) {
-      this.currentDropDownStoreState = {data: new DDLObjectModalProp(), type: RecordType.GET_CASE_TYPE};
+      this.currentDropDownStoreState = { data: new DDLObjectModalProp(), type: RecordType.GET_CASE_TYPE };
     }
 
     if (recordType === RecordType.GET_CASE_TYPE) {
@@ -130,5 +133,9 @@ export class CaseStore {
 
   setProductDetailsId = (id: number) => {
     this.productDetailsIdSubject.next(id);
+  }
+
+  setViewALLVersions = (id: string) => {
+    this.viewAllVersions.next(id);
   }
 }

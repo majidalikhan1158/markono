@@ -54,6 +54,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   ExpansionIcons = ExpansionIcons;
   printTypeList = PrintingTypesArray;
   recordIdPassToModal = 0;
+  recordIdISBNPassToModal: string = '';
   constructor(
     private modalService: ModalService,
     private store: CaseStore,
@@ -326,5 +327,11 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
       this.pushToStore();
     }
     this.recordIdPassToModal = 0;
+  }
+
+  openUiViewAllVersionsModal(modalId: string, recordId: string) {
+    this.store.setViewALLVersions(recordId);
+    this.recordIdISBNPassToModal = recordId;
+    this.modalService.open(modalId);
   }
 }

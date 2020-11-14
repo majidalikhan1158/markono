@@ -134,7 +134,7 @@
                                                     <div class="col-lg-2 pr-0 pl-1">
                                                         <p class="info-label">Specs version no.</p>
                                                         <p class="info-label-value font-12px"
-                                                            (click)="openUiModal('VIEW_ALL_MODAL',productDetailsVMList[i].isbn)">
+                                                            (click)="openUiViewAllVersionsModal('VIEW_ALL_MODAL',productDetailsVMList[i].isbn)">
                                                             {{productDetailsVMList[i].productISBNDetail.specsVersionNo}}
                                                             <span class="font-12px blue-link"
                                                                 *ngIf="createCaseMode !== createCaseModes.EDIT">VIEW
@@ -256,9 +256,7 @@
 </app-modal>
 
 <app-modal id="ADD_SAMPLES_MODAL" size="modal-lg">
-    <app-add-samples-modal
-      (acceptEvent)="handleAddSampleEvent($event)"
-    ></app-add-samples-modal>
+    <app-add-samples-modal (acceptEvent)="handleAddSampleEvent($event)"></app-add-samples-modal>
 </app-modal>
 
 <app-modal id="ADD_FG_REQUIRED_MODAL" size="modal-lg">

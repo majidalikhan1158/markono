@@ -1,0 +1,16 @@
+.cdk-overlay-container {
+    z-index: 1200 !important;
+}
+
+.add-fg-required-form .mat-form-field-wrapper {
+    padding-bottom: 10px;
+}
+
+.add-fg-required-form .mat-form-field-subscript-wrapper {
+    margin-top: 0px !important;
+}
+
+.add-fg-required-form .mat-form-field {
+    font-size: 14px !important;
+    height: 35px;
+}

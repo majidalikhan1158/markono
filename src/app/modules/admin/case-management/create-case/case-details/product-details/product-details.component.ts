@@ -61,7 +61,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     private ref: ChangeDetectorRef,
     private helper: CaseHelperService,
     private snack: SnackBarService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getDefaultRecord();
@@ -237,9 +237,9 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   /**
    *  MODAL EVENTS
    */
-  handleAddBluePrintEvent(modalId: string) {}
+  handleAddBluePrintEvent(modalId: string) { }
 
-  handleModalRejectEvent(modalId: string) {}
+  handleModalRejectEvent(modalId: string) { }
 
   handleAddSampleEvent = (sampleList: ProductDetailModals[]) => {
     let total = 0;
@@ -267,5 +267,47 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     this.store.setProductDetailsId(recordId);
     this.recordIdPassToModal = recordId;
     this.modalService.open(modalId);
+  }
+
+  handleAddFGRequiredEvent = (fgList: ProductDetailModals[]) => {
+    let total = 0;
+    if (fgList.length > 0) {
+      //   fgList.forEach(item => {
+      //     // tslint:disable-next-line: radix
+      //     total = parseInt(total.toString()) + parseInt(item.quantity.toString());
+      //   });
+      this.productDetailsVMList.forEach(item => {
+        if (item.id === this.recordIdPassToModal) {
+          item.productISBNDetail.fgList = fgList;
+          item.productISBNDetail.fGRequired = total;
+          // // tslint:disable-next-line: radix
+          // item.prodQty = parseInt(item.orderQty.toString()) + parseInt(total.toString());
+          // item = this.calculateSubTotal(item);
+        }
+      });
+      this.pushToStore();
+    }
+    this.recordIdPassToModal = 0;
+  }
+
+  handleAddAdvanceRequiredEvent = (advancesList: ProductDetailModals[]) => {
+    let total = 0;
+    if (advancesList.length > 0) {
+      // advancesList.forEach(item => {
+      //   // tslint:disable-next-line: radix
+      //   total = parseInt(total.toString()) + parseInt(item.quantity.toString());
+      // });
+      this.productDetailsVMList.forEach(item => {
+        if (item.id === this.recordIdPassToModal) {
+          item.productISBNDetail.advancesList = advancesList;
+          item.productISBNDetail.advancesRequired = total;
+          // tslint:disable-next-line: radix
+          // item.prodQty = parseInt(item.orderQty.toString()) + parseInt(total.toString());
+          // item = this.calculateSubTotal(item);
+        }
+      });
+      this.pushToStore();
+    }
+    this.recordIdPassToModal = 0;
   }
 }

@@ -134,9 +134,10 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
     State: '',
     Email: '',
     SalesPerson: '',
+    Coordinator: ''
     };
   }
-  
+
   ngOnDestroy(): void {}
 
   /**

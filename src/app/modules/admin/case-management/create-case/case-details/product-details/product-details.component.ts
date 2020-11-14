@@ -25,7 +25,7 @@ import {
 } from 'src/app/modules/shared/enums/app-enums';
 import { ProductService } from 'src/app/modules/services/core/services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ProductHelperService } from 'src/app/modules/shared/enums/helpers/product-helper.service';
+import { CaseHelperService } from 'src/app/modules/shared/enums/helpers/case-helper.service';
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 
 @Component({
@@ -59,7 +59,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     private store: CaseStore,
     private productService: ProductService,
     private ref: ChangeDetectorRef,
-    private helper: ProductHelperService,
+    private helper: CaseHelperService,
     private snack: SnackBarService
   ) {}
 
@@ -101,6 +101,10 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     this.productDetailsVMList.forEach((item) => {
       if (item.id === recordId) {
         item.prodQty = item.orderQty;
+        if (item.productISBNDetail && item.productISBNDetail.samplesRequired > 0) {
+          // tslint:disable-next-line: radix
+          item.prodQty = parseInt(item.orderQty.toString())  + parseInt(item.productISBNDetail.samplesRequired.toString());
+        }
         item = this.calculateSubTotal(item);
       }
     });
@@ -212,7 +216,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
       sampleList: [],
       bluePrintList: [],
       fgList: [],
-      advancesList: []
+      advancesList: [],
+      spineWidth: ''
     };
   }
 
@@ -255,9 +260,11 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
       this.pushToStore();
     }
     this.recordIdPassToModal = 0;
+    this.store.setProductDetailsId(0);
   }
 
   openUiModal(modalId: string, recordId: number) {
+    this.store.setProductDetailsId(recordId);
     this.recordIdPassToModal = recordId;
     this.modalService.open(modalId);
   }

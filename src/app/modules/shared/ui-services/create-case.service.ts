@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CreateCaseViewModel, CustomerInfoVM, MiscCostVM, InvoiceViewModel,
-   SpecialInstructionViewModel, ProductDetailsVM, ShippingInfoVM } from '../models/create-case';
+   SpecialInstructionViewModel, ProductDetailsVM, ShippingInfoVM, OverAllCostVM } from '../models/create-case';
 import { CreateCaseDataType, RecordType } from '../enums/app-enums';
 import { DDLObjectModal, DDLListModal, DDLObjectModalProp } from '../../services/shared/classes/case-modals/case-modal';
 
@@ -9,8 +9,10 @@ import { DDLObjectModal, DDLListModal, DDLObjectModalProp } from '../../services
   providedIn: 'root'
 })
 export class CaseStore {
+  public productDetailsId: Observable<number>;
   public createCaseStore: Observable<CreateCaseViewModel>;
   public caseDropDownStore: Observable<DDLObjectModal>;
+  public productDetailsIdSubject = new BehaviorSubject<number>(0);
   private createCaseStoreSubject = new BehaviorSubject<CreateCaseViewModel>(new CreateCaseViewModel());
   private caseDropDownStoreSubject = new BehaviorSubject<DDLObjectModal>(null);
   private currentData: CreateCaseViewModel;
@@ -18,6 +20,7 @@ export class CaseStore {
   constructor() {
     this.createCaseStore = this.createCaseStoreSubject.asObservable();
     this.caseDropDownStore = this.caseDropDownStoreSubject.asObservable();
+    this.productDetailsId = this.productDetailsIdSubject.asObservable();
     this.createCaseStore.subscribe(data => {
       this.currentData = data;
     });
@@ -39,6 +42,8 @@ export class CaseStore {
       this.setInvoice(data as InvoiceViewModel[]);
     } else if (type === CreateCaseDataType.SPECIAL_INSTRUCTIONS) {
       this.setSpecialInstruction(data as SpecialInstructionViewModel[]);
+    } else if (type === CreateCaseDataType.OVERALL_COST) {
+      this.setOverAllCost(data as OverAllCostVM);
     }
   }
 
@@ -83,7 +88,7 @@ export class CaseStore {
     if (!this.currentData.id) {
       this.currentData.id = 1;
     }
-    const validRecords = dataSubject.filter(x => x.position > 0);
+    const validRecords = dataSubject.filter(x => x.position !== '');
     this.currentData.invoiceList = validRecords;
     this.createCaseStoreSubject.next(this.currentData);
   }
@@ -94,6 +99,14 @@ export class CaseStore {
     }
     const validRecords = dataSubject.filter(x => x.department !== '');
     this.currentData.specialInstructionList = validRecords;
+    this.createCaseStoreSubject.next(this.currentData);
+  }
+
+  setOverAllCost = (dataSubject: OverAllCostVM) => {
+    if (!this.currentData.id) {
+      this.currentData.id = 1;
+    }
+    this.currentData.overallCostVM = dataSubject;
     this.createCaseStoreSubject.next(this.currentData);
   }
 
@@ -113,5 +126,9 @@ export class CaseStore {
     }
     this.currentDropDownStoreState.type = recordType;
     this.caseDropDownStoreSubject.next(this.currentDropDownStoreState);
+  }
+
+  setProductDetailsId = (id: number) => {
+    this.productDetailsIdSubject.next(id);
   }
 }

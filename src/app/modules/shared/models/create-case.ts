@@ -6,6 +6,7 @@ export class CreateCaseViewModel {
     miscCostList: MiscCostVM[];
     invoiceList: InvoiceViewModel[];
     specialInstructionList: SpecialInstructionViewModel[];
+    overallCostVM: OverAllCostVM;
 }
 
 export interface CustomerInfoVM {
@@ -32,6 +33,7 @@ export interface CustomerDetailVM {
     State: string;
     Email: string;
     SalesPerson: string;
+    Coordinator: string;
 }
 
 
@@ -76,6 +78,7 @@ export interface ProductISBNDetailVM {
     bluePrintList: ProductDetailModals[];
     fgList: ProductDetailModals[];
     advancesList: ProductDetailModals[];
+    spineWidth: string;
 }
 
 export interface ShippingInfoVM {
@@ -168,7 +171,7 @@ export interface MiscCostVM {
 
 export interface InvoiceViewModel {
     id: number;
-    position: number;
+    position: string;
     notes: string;
 }
 

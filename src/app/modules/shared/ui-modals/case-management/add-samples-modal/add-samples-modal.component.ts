@@ -11,14 +11,17 @@ import { ModalService } from '../../../ui-services/modal.service';
   styleUrls: ['./add-samples-modal.component.scss']
 })
 export class AddSamplesModalComponent implements OnInit, OnDestroy {
-  @Input() recordId: number;
+  recordId: number;
   @Output() acceptEvent = new EventEmitter<ProductDetailModals[]>();
   samplesListVM: ProductDetailModals[] = [];
   productDetailsVMList: ProductDetailsVM[] = [];
   constructor(private modalService: ModalService, private store: CaseStore) { }
 
   ngOnInit(): void {
-    this.getDefaultRecord();
+    this.store.productDetailsId.subscribe(x => {
+      this.recordId = x;
+      this.getDefaultRecord();
+    });
   }
 
   getDefaultRecord = () => {
@@ -43,6 +46,7 @@ export class AddSamplesModalComponent implements OnInit, OnDestroy {
   addSample() {
     const actualList = this.samplesListVM.filter(x => x.quantity > 0);
     this.acceptEvent.emit(actualList);
+    this.samplesListVM = [];
     this.modalService.close(UIModalID.ADD_SAMPLES_MODAL);
   }
 

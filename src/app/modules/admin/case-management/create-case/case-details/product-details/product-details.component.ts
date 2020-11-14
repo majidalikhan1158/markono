@@ -258,6 +258,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   openUiModal(modalId: string, recordId: number) {
+    console.log('recordId', recordId)
     this.recordIdPassToModal = recordId;
     this.modalService.open(modalId);
   }

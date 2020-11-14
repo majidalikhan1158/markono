@@ -13,14 +13,15 @@ import { ModalService } from '../../../ui-services/modal.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class ViewAllModalComponent implements OnInit, OnDestroy {
-  // @Input() recordId: number;
-  // @Output() acceptEvent = new EventEmitter<ProductDetailModals[]>();
+  @Input() recordId: number;
+  @Output() acceptEvent = new EventEmitter<ProductDetailModals[]>();
 
   displayedColumns = ['isSpecsInView', 'versionNo', 'dateCreated', 'createdBy', 'versionDescription', 'estimateNo'];
   dataSource = ProductVersionMockDataList;
   constructor(private modalService: ModalService, private store: CaseStore) { }
 
   ngOnInit(): void {
+    console.log('kkkkkk', this.recordId)
   }
 
   Save() {

@@ -54,7 +54,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   ExpansionIcons = ExpansionIcons;
   printTypeList = PrintingTypesArray;
   recordIdPassToModal = 0;
-  recordIdISBNPassToModal: string = '';
+  recordIdISBNPassToModal = '';
   constructor(
     private modalService: ModalService,
     private store: CaseStore,
@@ -175,7 +175,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
           resp.body.result &&
           resp.body.result.data.length > 0
         ) {
-          modal.productISBNDetail = this.helper.TransToProductISBNDetailVM(
+          modal.productISBNDetail = this.helper.transToProductISBNDetailVM(
             resp.body.result.data[0]
           );
           modal = this.calculateSubTotal(modal);
@@ -320,31 +320,17 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   openUiModal(modalId: string, recordId: number) {
     this.store.setProductDetailsId(recordId);
     this.recordIdPassToModal = recordId;
-  }
-  handleViewAllEvent = (advancesList: ProductDetailModals[]) => {
-    let total = 0;
-    if (advancesList.length > 0) {
-      // advancesList.forEach(item => {
-      //   // tslint:disable-next-line: radix
-      //   total = parseInt(total.toString()) + parseInt(item.quantity.toString());
-      // });
-      this.productDetailsVMList.forEach(item => {
-        if (item.id === this.recordIdPassToModal) {
-          item.productISBNDetail.advancesList = advancesList;
-          item.productISBNDetail.advancesRequired = total;
-          // tslint:disable-next-line: radix
-          // item.prodQty = parseInt(item.orderQty.toString()) + parseInt(total.toString());
-          // item = this.calculateSubTotal(item);
-        }
-      });
-      this.pushToStore();
-    }
-    this.recordIdPassToModal = 0;
+    this.modalService.open(modalId);
   }
 
-  openUiViewAllVersionsModal(modalId: string, recordId: string) {
-    this.store.setViewALLVersions(recordId);
-    this.recordIdISBNPassToModal = recordId;
+  openUiViewAllVersionsModal(modalId: string, isbn: string) {
+    this.store.setViewVersionISBN(isbn);
+    this.recordIdISBNPassToModal = isbn;
     this.modalService.open(modalId);
+  }
+
+  handleViewAllEvent = (data: any) => {
+    this.store.setViewVersionISBN('');
+    this.recordIdISBNPassToModal = '';
   }
 }

@@ -77,7 +77,7 @@ export class CreateCaseComponent implements OnInit {
   createCase = () => {
     this.store.createCaseStore.subscribe(data => {
       console.log(data);
-      const mappedData = this.caseHelper.TransCaseDataToCaseApiMolda(data);
+      const mappedData = this.caseHelper.transCaseDataToCaseApiModal(data);
       console.log(mappedData);
     });
   }

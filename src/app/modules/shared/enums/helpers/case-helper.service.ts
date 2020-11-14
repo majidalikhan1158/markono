@@ -1,6 +1,11 @@
-import { BindingType } from '@angular/compiler';
 import { Injectable } from '@angular/core';
-import { CreateCaseViewModel, InvoiceViewModel, ProductDetailModals, ProductISBNDetailVM, SpecialInstructionViewModel } from '../../models/create-case';
+import { CreateCaseViewModel,
+  InvoiceViewModel,
+  ProductDetailModals,
+  ProductISBNDetailVM,
+  ProductVersionVM,
+  SpecialInstructionViewModel
+} from '../../models/create-case';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +13,7 @@ import { CreateCaseViewModel, InvoiceViewModel, ProductDetailModals, ProductISBN
 export class CaseHelperService {
   constructor() {}
 
-  public TransToProductISBNDetailVM = (data: any): ProductISBNDetailVM => {
+  public transToProductISBNDetailVM = (data: any): ProductISBNDetailVM => {
     return {
       id: data.id,
       title: data.attributes['product-description'],
@@ -34,7 +39,7 @@ export class CaseHelperService {
     };
   }
 
-  public TransCaseDataToCaseApiMolda = (data: CreateCaseViewModel) => {
+  public transCaseDataToCaseApiModal = (data: CreateCaseViewModel) => {
     return {
       id: '00000000-0000-0000-0000-000000000000',
       caseNo: '000196',
@@ -193,5 +198,23 @@ export class CaseHelperService {
       });
     }
     return specialInstructions;
+  }
+
+  transProductVersionApiToProductVersionModal = (data: any[]) => {
+    const list: ProductVersionVM[] = [];
+    data.forEach(item => {
+      list.push({
+        id: item.id,
+        isSpecsInView: false,
+        isbn: item.attributes['isbn'],
+        versionNo: item.attributes['version-no'],
+        createdDate: item.attributes['created-date'],
+        createdBy: item.attributes['created-by'],
+        versionDescription: item.attributes['version-description'],
+        productDescription: item.attributes['product-description'],
+        statusDescription: item.attributes['status-description'],
+      });
+    });
+    return list;
   }
 }

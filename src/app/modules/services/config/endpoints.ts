@@ -11,6 +11,7 @@ export const Endpoints = {
         getCustomerDetail: 'https://cors-anywhere.herokuapp.com/http://app.markono.com/PODUAT/Case/GetCustomerData'
     },
     product: {
-        getLiveVersion: 'GetLiveVersion'
+        getLiveVersion: 'GetLiveVersion',
+        getProductVersions: 'GetProductVersions'
     }
 };

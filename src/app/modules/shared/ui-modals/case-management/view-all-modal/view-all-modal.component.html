@@ -1,11 +1,11 @@
 <div class="modal-header">
     <h4 class="modal-title">Versions</h4>
-    <button type="button" class="close" aria-label="Close" (click)="Save()">
+    <button type="button" class="close" aria-label="Close" (click)="save()">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="modal-body add-samples-form position-relative font-12px">
-    <mat-table #table [dataSource]="dataSource" class="view-all-table">
+<div class="modal-body add-samples-form position-relative font-12px" *ngIf="dataSource && dataSource.length > 0">
+    <mat-table #table [dataSource]="dataSource" class="view-all-table" >
         <!--- Note that these columns can be defined in any order.
                     The actual rendered columns are set as a property on the row definition" -->
         <ng-container matColumnDef="isSpecsInView">
@@ -20,9 +20,9 @@
             <mat-cell *matCellDef="let element"> {{element.versionNo}} </mat-cell>
         </ng-container>
         <!-- Name Column -->
-        <ng-container matColumnDef="dateCreated">
+        <ng-container matColumnDef="createdDate">
             <mat-header-cell *matHeaderCellDef> Date Created </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.dateCreated | date:'shortDate'}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.createdDate | date:'shortDate'}} </mat-cell>
         </ng-container>
         <!-- Weight Column -->
         <ng-container matColumnDef="createdBy">
@@ -34,17 +34,12 @@
             <mat-header-cell *matHeaderCellDef> Version Description </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.versionDescription}} </mat-cell>
         </ng-container>
-        <ng-container matColumnDef="estimateNo">
-            <mat-header-cell *matHeaderCellDef> Estimate No. </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.estimateNo}} </mat-cell>
-        </ng-container>
-
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary ui-modal-cancel-button ui-modal-action-button"
-        (click)="Save()">CANCEL</button>
-    <button type="button" class="btn btn-primary ui-modal-action-button" (click)="Save()">SAVE</button>
+        (click)="save()">CANCEL</button>
+    <button type="button" class="btn btn-primary ui-modal-action-button" (click)="save()">SAVE</button>
 </div>

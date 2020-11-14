@@ -1,10 +1,22 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
+import { ProductService } from 'src/app/modules/services/core/services/product.service';
 import { UIModalID } from '../../../enums/app-constants';
-import { CreateCaseDataType } from '../../../enums/app-enums';
+import { CaseHelperService } from '../../../enums/helpers/case-helper.service';
 import { ProductVersionMockDataList } from '../../../mock-data/product-versions-data-list';
-import { ProductDetailModals, ProductDetailsVM } from '../../../models/create-case';
+import { ProductVersionVM } from '../../../models/create-case';
 import { CaseStore } from '../../../ui-services/create-case.service';
 import { ModalService } from '../../../ui-services/modal.service';
+import { SnackBarService } from '../../../ui-services/snack-bar.service';
 
 @Component({
   selector: 'app-view-all-modal',
@@ -13,24 +25,61 @@ import { ModalService } from '../../../ui-services/modal.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class ViewAllModalComponent implements OnInit, OnDestroy {
-  @Input() recordId: number;
-  @Output() acceptEvent = new EventEmitter<ProductDetailModals[]>();
+  @Input() recordId: string;
+  @Output() acceptEvent = new EventEmitter<ProductVersionVM[]>();
 
-  displayedColumns = ['isSpecsInView', 'versionNo', 'dateCreated', 'createdBy', 'versionDescription', 'estimateNo'];
-  dataSource = ProductVersionMockDataList;
-  constructor(private modalService: ModalService, private store: CaseStore) { }
+  displayedColumns = [
+    'isSpecsInView',
+    'versionNo',
+    'createdDate',
+    'createdBy',
+    'versionDescription'
+  ];
+  dataSource: ProductVersionVM[] = [];
+  constructor(
+    private modalService: ModalService,
+    private store: CaseStore,
+    private productService: ProductService,
+    private helper: CaseHelperService,
+    private snack: SnackBarService,
+    private ref: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
-    console.log('kkkkkk', this.recordId)
+    this.store.viewVersionISBN.subscribe((x) => {
+      this.recordId = x;
+      this.getDefaultRecord();
+    });
   }
 
-  Save() {
-    // const actualList = this.samplesListVM.filter(x => x.quantity > 0);
-    // this.acceptEvent.emit(actualList);
+  save() {
     this.modalService.close(UIModalID.VIEW_ALL_MODAL);
   }
 
-  ngOnDestroy(): void {
+  getDefaultRecord = () => {
+    this.productService.getProductVersions(this.recordId).subscribe(
+      (resp) => {
+        if (
+          resp &&
+          resp.body &&
+          resp.body.result &&
+          resp.body.result.data.length > 0
+        ) {
+          this.dataSource = this.helper.transProductVersionApiToProductVersionModal(resp.body.result.data);
+          this.ref.detectChanges();
+        } else {
+          if (this.recordId !== '') {
+            this.snack.open('No versions found', '', 'top');
+          }
+        }
+      },
+      (err: HttpErrorResponse) => {
+        if (this.recordId !== '') {
+          this.snack.open('No versions found', '', 'top');
+        }
+      }
+    );
   }
-}
 
+  ngOnDestroy(): void {}
+}

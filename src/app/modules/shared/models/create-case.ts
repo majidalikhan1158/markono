@@ -195,3 +195,15 @@ export interface OtherCharges {
     total: number;
 }
 
+export interface ProductVersionVM {
+    id: string;
+    isSpecsInView: boolean;
+    isbn: string;
+    versionNo: string;
+    createdDate: string;
+    createdBy: string;
+    versionDescription: string;
+    productDescription: string;
+    statusDescription: string;
+}
+

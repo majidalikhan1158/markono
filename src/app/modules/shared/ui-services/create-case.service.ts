@@ -14,16 +14,18 @@ export class CaseStore {
   public productDetailsId: Observable<number>;
   public createCaseStore: Observable<CreateCaseViewModel>;
   public caseDropDownStore: Observable<DDLObjectModal>;
+  public viewVersionISBN: Observable<string>;
   public productDetailsIdSubject = new BehaviorSubject<number>(0);
   private createCaseStoreSubject = new BehaviorSubject<CreateCaseViewModel>(new CreateCaseViewModel());
   private caseDropDownStoreSubject = new BehaviorSubject<DDLObjectModal>(null);
+  public viewVersionIBNSubject = new BehaviorSubject<string>('');
   private currentData: CreateCaseViewModel;
   private currentDropDownStoreState: DDLObjectModal;
-  public viewAllVersions = new BehaviorSubject<string>('');
   constructor() {
     this.createCaseStore = this.createCaseStoreSubject.asObservable();
     this.caseDropDownStore = this.caseDropDownStoreSubject.asObservable();
     this.productDetailsId = this.productDetailsIdSubject.asObservable();
+    this.viewVersionISBN = this.viewVersionIBNSubject.asObservable();
     this.createCaseStore.subscribe(data => {
       this.currentData = data;
     });
@@ -135,7 +137,7 @@ export class CaseStore {
     this.productDetailsIdSubject.next(id);
   }
 
-  setViewALLVersions = (id: string) => {
-    this.viewAllVersions.next(id);
+  setViewVersionISBN = (isbn: string) => {
+    this.viewVersionIBNSubject.next(isbn);
   }
 }

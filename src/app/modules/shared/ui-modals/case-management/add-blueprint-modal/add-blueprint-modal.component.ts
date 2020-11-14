@@ -47,7 +47,7 @@ export class AddBlueprintModalComponent implements OnInit, OnDestroy {
     const actualList = this.bluePrintListVM.filter(x => x.quantity > 0);
     this.acceptEvent.emit(actualList);
     this.bluePrintListVM = [];
-    this.modalService.close(UIModalID.ADD_SAMPLES_MODAL);
+    this.modalService.close(UIModalID.ADD_BLUEPRINT_MODAL);
   }
 
   addRow() {

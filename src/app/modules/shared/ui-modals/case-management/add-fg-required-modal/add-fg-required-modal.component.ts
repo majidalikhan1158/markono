@@ -45,6 +45,7 @@ export class AddFgRequiredModalComponent implements OnInit, OnDestroy {
   addFG() {
     const actualList = this.fgRequiredListVM.filter(x => x.quantity > 0);
     this.acceptEvent.emit(actualList);
+    this.fgRequiredListVM = [];
     this.modalService.close(UIModalID.ADD_FG_REQUIRED_MODAL);
   }
 

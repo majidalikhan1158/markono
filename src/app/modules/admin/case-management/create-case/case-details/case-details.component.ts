@@ -187,7 +187,9 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       // tslint:disable-next-line: radix
       this.overAllCostVM.subTotal = parseInt(subTotal.toString()) + parseInt(this.overAllCostVM.printAndBind.toString());
       this.overAllCostVM.total = this.overAllCostVM.subTotal;
-      this.pushToStore();
+      if (data && data.overallCostVM && data.overallCostVM.subTotal !== this.overAllCostVM.subTotal) {
+        this.pushToStore();
+      }
       this.ref.detectChanges();
     });
   }

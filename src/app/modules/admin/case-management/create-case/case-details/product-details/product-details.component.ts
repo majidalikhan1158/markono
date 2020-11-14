@@ -237,9 +237,24 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   /**
    *  MODAL EVENTS
    */
-  handleAddBluePrintEvent(modalId: string) { }
-
-  handleModalRejectEvent(modalId: string) { }
+  handleAddBluePrintEvent(bluePrintList: ProductDetailModals[]) {
+    let total = 0;
+    if (bluePrintList.length > 0) {
+      bluePrintList.forEach(item => {
+        // tslint:disable-next-line: radix
+        total = parseInt(total.toString()) + parseInt(item.quantity.toString());
+      });
+      this.productDetailsVMList.forEach(item => {
+        if (item.id === this.recordIdPassToModal) {
+          item.productISBNDetail.bluePrintList = bluePrintList;
+          item.productISBNDetail.bluePrintRequired = total;
+        }
+      });
+      this.pushToStore();
+    }
+    this.recordIdPassToModal = 0;
+    this.store.setProductDetailsId(0);
+  }
 
   handleAddSampleEvent = (sampleList: ProductDetailModals[]) => {
     let total = 0;
@@ -261,12 +276,6 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     }
     this.recordIdPassToModal = 0;
     this.store.setProductDetailsId(0);
-  }
-
-  openUiModal(modalId: string, recordId: number) {
-    this.store.setProductDetailsId(recordId);
-    this.recordIdPassToModal = recordId;
-    this.modalService.open(modalId);
   }
 
   handleAddFGRequiredEvent = (fgList: ProductDetailModals[]) => {
@@ -305,5 +314,11 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     }
     this.recordIdPassToModal = 0;
     this.store.setProductDetailsId(0);
+  }
+
+  openUiModal(modalId: string, recordId: number) {
+    this.store.setProductDetailsId(recordId);
+    this.recordIdPassToModal = recordId;
+    this.modalService.open(modalId);
   }
 }

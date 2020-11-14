@@ -45,6 +45,7 @@ export class AddAdvancesModalComponent implements OnInit, OnDestroy {
   addAdvances() {
     const actualList = this.advanceListVM.filter(x => x.quantity > 0);
     this.acceptEvent.emit(actualList);
+    this.advanceListVM = [];
     this.modalService.close(UIModalID.ADD_ADVANCE_REQUIRED_MODAL);
   }
 

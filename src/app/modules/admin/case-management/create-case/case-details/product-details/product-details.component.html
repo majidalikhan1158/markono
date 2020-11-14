@@ -250,8 +250,9 @@
 
 
 <app-modal id="ADD_BLUEPRINT_MODAL" size="modal-lg">
-    <app-add-blueprint-modal (acceptEvent)="handleAddBluePrintEvent('ADD_BLUEPRINT_MODAL')"
-        (rejectEvent)="handleModalRejectEvent('ADD_BLUEPRINT_MODAL')"></app-add-blueprint-modal>
+    <app-add-blueprint-modal 
+    (acceptEvent)="handleAddBluePrintEvent($event)"
+    ></app-add-blueprint-modal>
 </app-modal>
 
 <app-modal id="ADD_SAMPLES_MODAL" size="modal-lg">

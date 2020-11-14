@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UIModalID } from '../../../enums/app-constants';
-import { CreateCaseDataType } from '../../../enums/app-enums';
 import { ProductDetailModals, ProductDetailsVM } from '../../../models/create-case';
 import { CaseStore } from '../../../ui-services/create-case.service';
 import { ModalService } from '../../../ui-services/modal.service';
@@ -11,14 +10,17 @@ import { ModalService } from '../../../ui-services/modal.service';
   styleUrls: ['./add-fg-required-modal.component.scss']
 })
 export class AddFgRequiredModalComponent implements OnInit, OnDestroy {
-  @Input() recordId: number;
+  recordId: number;
   @Output() acceptEvent = new EventEmitter<ProductDetailModals[]>();
   fgRequiredListVM: ProductDetailModals[] = [];
   productDetailsVMList: ProductDetailsVM[] = [];
   constructor(private modalService: ModalService, private store: CaseStore) { }
 
   ngOnInit(): void {
-    this.getDefaultRecord();
+    this.store.productDetailsId.subscribe(x => {
+      this.recordId = x;
+      this.getDefaultRecord();
+    });
   }
 
   getDefaultRecord = () => {
@@ -30,8 +32,8 @@ export class AddFgRequiredModalComponent implements OnInit, OnDestroy {
       ) {
         this.productDetailsVMList = resp.productDetailsList;
         const productRecord = this.productDetailsVMList.find(x => x.id === this.recordId);
-        if (productRecord && productRecord.productISBNDetail && productRecord.productISBNDetail.sampleList.length > 0) {
-          this.fgRequiredListVM = productRecord.productISBNDetail.sampleList;
+        if (productRecord && productRecord.productISBNDetail && productRecord.productISBNDetail.fgList.length > 0) {
+          this.fgRequiredListVM = productRecord.productISBNDetail.fgList;
         }
       }
       if (this.fgRequiredListVM.length === 0) {

@@ -15,6 +15,7 @@ import {
 } from 'src/app/modules/shared/enums/app-enums';
 import { CaseBaseService } from '../case-base.service';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
+import { CaseHelperService } from 'src/app/modules/shared/enums/helpers/case-helper.service';
 @Component({
   selector: 'app-create-case',
   templateUrl: './create-case.component.html',
@@ -32,7 +33,8 @@ export class CreateCaseComponent implements OnInit {
   constructor(
     private ref: ChangeDetectorRef,
     private caseBaseService: CaseBaseService,
-    private store: CaseStore
+    private store: CaseStore,
+    private caseHelper: CaseHelperService
   ) {}
 
   ngOnInit() {
@@ -75,6 +77,8 @@ export class CreateCaseComponent implements OnInit {
   createCase = () => {
     this.store.createCaseStore.subscribe(data => {
       console.log(data);
-    })
+      const mappedData = this.caseHelper.TransCaseDataToCaseApiMolda(data);
+      console.log(mappedData);
+    });
   }
 }

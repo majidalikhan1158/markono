@@ -256,17 +256,18 @@
 </app-modal>
 
 <app-modal id="ADD_SAMPLES_MODAL" size="modal-lg">
-    <app-add-samples-modal [recordId]="recordIdPassToModal" (acceptEvent)="handleAddSampleEvent($event)">
-    </app-add-samples-modal>
+    <app-add-samples-modal
+      (acceptEvent)="handleAddSampleEvent($event)"
+    ></app-add-samples-modal>
 </app-modal>
 
 <app-modal id="ADD_FG_REQUIRED_MODAL" size="modal-lg">
-    <app-add-fg-required-modal [recordId]="recordIdPassToModal" (acceptEvent)="handleAddFGRequiredEvent($event)">
+    <app-add-fg-required-modal (acceptEvent)="handleAddFGRequiredEvent($event)">
     </app-add-fg-required-modal>
 </app-modal>
 
 <app-modal id="ADD_ADVANCE_REQUIRED_MODAL" size="modal-lg">
-    <app-add-advances-modal [recordId]="recordIdPassToModal" (acceptEvent)="handleAddAdvanceRequiredEvent($event)">
+    <app-add-advances-modal (acceptEvent)="handleAddAdvanceRequiredEvent($event)">
     </app-add-advances-modal>
 </app-modal>
 

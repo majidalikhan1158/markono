@@ -13,6 +13,7 @@ import {
 import { MatSelectionListChange } from '@angular/material/list';
 import { CreateCaseStepperEvent } from 'src/app/modules/shared/models/app-modal';
 import {
+  CreateCaseDataType,
   CreateCaseMode,
   CreateCaseSteps,
 } from 'src/app/modules/shared/enums/app-enums';
@@ -186,8 +187,16 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       // tslint:disable-next-line: radix
       this.overAllCostVM.subTotal = parseInt(subTotal.toString()) + parseInt(this.overAllCostVM.printAndBind.toString());
       this.overAllCostVM.total = this.overAllCostVM.subTotal;
+      this.pushToStore();
       this.ref.detectChanges();
     });
+  }
+
+  pushToStore = () => {
+    this.store.setCreateCaseDataSource(
+      this.overAllCostVM,
+      CreateCaseDataType.OVERALL_COST
+    );
   }
 
   handleDiscountChange = () => {
@@ -195,6 +204,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       const discountedPrice = (this.overAllCostVM.total * this.overAllCostVM.discount) / 100;
       if (discountedPrice < this.overAllCostVM.total) {
         this.overAllCostVM.total = this.overAllCostVM.total - discountedPrice;
+        this.pushToStore();
       } else {
         this.snack.open('Discount is more than total cost');
       }

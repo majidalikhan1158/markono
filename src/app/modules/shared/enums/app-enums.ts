@@ -16,6 +16,7 @@ export enum CreateCaseDataType {
     MISC_COST,
     INVOICE,
     SPECIAL_INSTRUCTIONS,
+    OVERALL_COST
 }
 
 export enum TokenType {

@@ -48,7 +48,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     const totalRows = this.rowsToDisplay.length;
     this.rowsToDisplay.push({
       id: totalRows + 1,
-      position: 0,
+      position: '',
       notes: '',
     });
   }

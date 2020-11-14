@@ -18,6 +18,7 @@ export class AddSamplesModalComponent implements OnInit, OnDestroy {
   constructor(private modalService: ModalService, private store: CaseStore) { }
 
   ngOnInit(): void {
+    console.log(this.recordId);
     this.getDefaultRecord();
   }
 
@@ -41,7 +42,8 @@ export class AddSamplesModalComponent implements OnInit, OnDestroy {
   }
 
   addSample() {
-    this.acceptEvent.emit(this.samplesListVM);
+    const actualList = this.samplesListVM.filter(x => x.quantity > 0);
+    this.acceptEvent.emit(actualList);
     this.modalService.close(UIModalID.ADD_SAMPLES_MODAL);
   }
 

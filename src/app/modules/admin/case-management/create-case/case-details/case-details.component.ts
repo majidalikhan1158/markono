@@ -26,6 +26,7 @@ import {
   ShippingInfoVM,
   ShippingSpecificCostModel,
 } from 'src/app/modules/shared/models/create-case';
+import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 @Component({
   selector: 'app-case-details',
   templateUrl: './case-details.component.html',
@@ -44,7 +45,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
   panelOpenState = false;
   shipmentInfoVMList: ShippingInfoVM[];
   overAllCostVM: OverAllCostVM;
-  constructor(private ref: ChangeDetectorRef, private store: CaseStore) {}
+  constructor(private ref: ChangeDetectorRef, private store: CaseStore, private snack: SnackBarService) {}
 
   ngOnInit(): void {
     this.overAllCostVM = this.initialObject();
@@ -169,15 +170,35 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
         });
       }
 
+      if (data && data.productDetailsList && data.productDetailsList.length > 0) {
+        this.overAllCostVM.printAndBind = 0;
+        data.productDetailsList.forEach(item => {
+          this.overAllCostVM.printAndBind = +this.overAllCostVM.printAndBind + item.subTotal;
+        });
+      }
+
       if (this.overAllCostVM.otherCharges.length > 0) {
         this.overAllCostVM.otherCharges.forEach(cost => {
           // tslint:disable-next-line: radix
           subTotal =  parseInt(subTotal.toString()) + parseInt(cost.total.toString());
         });
       }
-      this.overAllCostVM.subTotal = subTotal;
+      // tslint:disable-next-line: radix
+      this.overAllCostVM.subTotal = parseInt(subTotal.toString()) + parseInt(this.overAllCostVM.printAndBind.toString());
+      this.overAllCostVM.total = this.overAllCostVM.subTotal;
       this.ref.detectChanges();
     });
+  }
+
+  handleDiscountChange = () => {
+    if (this.overAllCostVM.discount > 0) {
+      const discountedPrice = (this.overAllCostVM.total * this.overAllCostVM.discount) / 100;
+      if (discountedPrice < this.overAllCostVM.total) {
+        this.overAllCostVM.total = this.overAllCostVM.total - discountedPrice;
+      } else {
+        this.snack.open('Discount is more than total cost');
+      }
+    }
   }
 
   initialObject = (): OverAllCostVM => {
@@ -189,21 +210,5 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       tax: 0,
       total: 0,
     };
-  }
-
-  getShipmentSpecificCostSum = (costs: ShippingSpecificCostModel[]) => {
-    if (costs && costs.length > 0) {
-      let total = 0;
-      // tslint:disable-next-line: radix
-      costs.forEach(
-        (item) =>
-          (total =
-            // tslint:disable-next-line: radix
-            parseInt(total.toString()) + parseInt(item.subTotal.toString()))
-      );
-      this.panelOpenState = true;
-      return total;
-    }
-    return 0;
   }
 }

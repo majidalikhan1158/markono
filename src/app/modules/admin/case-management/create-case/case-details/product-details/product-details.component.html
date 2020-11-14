@@ -38,20 +38,20 @@
                                             <input type="number" min="0" matInput (change)="handleOrderQuantityChange(productDetailsVMList[i].id)"  [(ngModel)]="productDetailsVMList[i].orderQty" [disabled]="disabled">
                                         </mat-form-field>
                                     </td>
-                                    <td>0</td>
+                                    <td>{{productDetailsVMList[i].prodQty}}</td>
                                     <td>
                                         <mat-form-field appearance="fill" class="width-90">
                                             <mat-label >Margin</mat-label>
-                                            <input type="number" min="0" matInput  [(ngModel)]="productDetailsVMList[i].margin" [disabled]="disabled">
+                                            <input type="number" min="0" matInput (change)="handleOrderQuantityChange(productDetailsVMList[i].id)"  [(ngModel)]="productDetailsVMList[i].margin" [disabled]="disabled">
                                         </mat-form-field> 
                                     </td>
                                     <td>
                                         <mat-form-field appearance="fill" class="width-90">
                                             <mat-label >Selling Price</mat-label>
-                                            <input type="number" min="0" matInput  [(ngModel)]="productDetailsVMList[i].sellingPrice" [disabled]="disabled">
+                                            <input type="number" min="0" matInput (change)="handleOrderQuantityChange(productDetailsVMList[i].id)"  [(ngModel)]="productDetailsVMList[i].sellingPrice" [disabled]="disabled">
                                         </mat-form-field>
                                     </td>
-                                    <td>{{productDetailsVMList[i].prodQty}}</td>
+                                    <td>{{productDetailsVMList[i].subTotal}}</td>
                                     <td class="action-column pb-0">
                                         <span class="material-icons expansion-icon" (click)="showProductDetails(productDetailsVMList[i].id)">
                                             {{ 
@@ -84,7 +84,7 @@
                                                 </div>
                                                 <div class="col-lg-2 pr-0">
                                                     <p class="info-label">Samples required</p>
-                                                    <p class="info-label-value font-12px">
+                                                    <p class="info-label-value font-12px" (click)="openUiModal('ADD_SAMPLES_MODAL',productDetailsVMList[i].id)">
                                                         {{productDetailsVMList[i].productISBNDetail.samplesRequired}}
                                                         <span class="material-icons cursor-pointer font-14px" *ngIf="createCaseMode !== createCaseModes.EDIT">
                                                             edit
@@ -93,7 +93,7 @@
                                                 </div>
                                                 <div class="col-lg-2 pr-0">
                                                     <p class="info-label">BluePrint required</p>
-                                                    <p class="info-label-value font-12px" (click)="openUiModal('ADD_BLUEPRINT_MODAL')"> 
+                                                    <p class="info-label-value font-12px" (click)="openUiModal('ADD_BLUEPRINT_MODAL',productDetailsVMList[i].id)"> 
                                                         {{productDetailsVMList[i].productISBNDetail.bluePrintRequired}}
                                                         <span class="material-icons cursor-pointer font-14px" *ngIf="createCaseMode !== createCaseModes.EDIT">
                                                             edit
@@ -211,4 +211,11 @@
       (acceptEvent)="handleAddBluePrintEvent('ADD_BLUEPRINT_MODAL')"
       (rejectEvent)="handleModalRejectEvent('ADD_BLUEPRINT_MODAL')"
     ></app-add-blueprint-modal>
+</app-modal>
+
+<app-modal id="ADD_SAMPLES_MODAL" size="modal-lg">
+    <app-add-samples-modal
+        [recordId] = "recordIdPassToModal"
+      (acceptEvent)="handleAddSampleEvent($event)"
+    ></app-add-samples-modal>
 </app-modal>

@@ -6,6 +6,7 @@ export const ExpansionIcons = {
 export const UIModalID = {
   ADD_CUSTOMER_MODAL: 'ADD_CUSTOMER_MODAL',
   ADD_BLUEPRINT_MODAL: 'ADD_BLUEPRINT_MODAL',
+  ADD_SAMPLES_MODAL: 'ADD_SAMPLES_MODAL',
   ADD_PRODUCT_SPEC_MODAL: 'ADD_PRODUCT_SPEC_MODAL',
 };
 
@@ -21,7 +22,7 @@ export const StorageKeys = {
   ORDER_TOKEN_EXPIRY: 'ORDER_TOKEN_EXPIRY',
   PRODUCT_TOKEN: 'PRODUCT_TOKEN',
   PRODUCT_TOKEN_EXPIRY: 'PRODUCT_TOKEN_EXPIRY'
-}
+};
 
 export const PrintingTypesArray = [
   {
@@ -39,4 +40,17 @@ export const PrintingTypesArray = [
     value: 'POD',
     enum: 'POD'
   }
-]
+];
+
+export const SnackBarPositionX = {
+  start: 'start',
+  center: 'center',
+  end: 'end',
+  left: 'left',
+  right: 'right'
+};
+
+export const SnackBarPositionY = {
+  top: 'top',
+  bottom: 'bottom'
+};

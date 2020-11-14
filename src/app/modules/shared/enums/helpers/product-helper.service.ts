@@ -25,6 +25,8 @@ export class ProductHelperService {
       quoteNo: '',
       estimatedPrice: data.attributes['estimated-price'],
       additionalUnitPrice: 0,
+      sampleList: [],
+      bluePrintList: [],
     };
   }
 }

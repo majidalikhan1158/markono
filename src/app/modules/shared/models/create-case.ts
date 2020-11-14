@@ -43,7 +43,16 @@ export interface ProductDetailsVM {
     prodQty: number;
     margin: number;
     sellingPrice: number;
+    subTotal: number;
     productISBNDetail: ProductISBNDetailVM;
+}
+
+export interface ProductDetailModals {
+    id: number;
+    requiredDate: string;
+    forWho: string;
+    quantity: number;
+    specialInstructions: string;
 }
 
 export interface ProductISBNDetailVM {
@@ -63,6 +72,8 @@ export interface ProductISBNDetailVM {
     quoteNo: string;
     estimatedPrice: number;
     additionalUnitPrice: number;
+    sampleList: ProductDetailModals[];
+    bluePrintList: ProductDetailModals[];
 }
 
 export interface ShippingInfoVM {

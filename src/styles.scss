@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
 // Global vendors
 @import "~bootstrap/dist/css/bootstrap.css";
 // => Material
@@ -27,7 +27,6 @@
 @import "./assets/sass/themes/layout/header/menu/light.scss";
 @import "./assets/sass/themes/layout/brand/dark.scss";
 @import "./assets/sass/themes/layout/aside/dark.scss";
-
 
 // Header themes
 // .header-base-light {
@@ -66,34 +65,34 @@
 
 // hide bootstrap dropdown arrow globally
 
-
 @font-face {
-  font-family: 'Roboto-Bold';
-  src: url('./assets/fonts/Roboto-Bold.ttf') format('truetype');
+  font-family: "Roboto-Bold";
+  src: url("./assets/fonts/Roboto-Bold.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: 'Roboto-Regular';
-  src: url('./assets/fonts/Roboto-Regular.ttf') format('truetype');
+  font-family: "Roboto-Regular";
+  src: url("./assets/fonts/Roboto-Regular.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: 'Roboto-Medium';
-  src: url('./assets/fonts/Roboto-Medium.ttf') format('truetype');
+  font-family: "Roboto-Medium";
+  src: url("./assets/fonts/Roboto-Medium.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: 'Roboto-Black';
-  src: url('./assets/fonts/Roboto-Black.ttf') format('truetype');
+  font-family: "Roboto-Black";
+  src: url("./assets/fonts/Roboto-Black.ttf") format("truetype");
 }
 
-@import '~@angular/material/theming';
+@import "~@angular/material/theming";
 $custom-typography: mat-typography-config(
-  $font-family: 'Roboto-Regular',
+  $font-family: "Roboto-Regular",
 );
 
-html, body {
-  font-family: 'Roboto-Regular';
+html,
+body {
+  font-family: "Roboto-Regular";
 }
 
 .dropdown-toggle::after {
@@ -104,22 +103,22 @@ html, body {
   cursor: pointer;
 }
 
-app-toolbar .sticky-toolbar  {
+app-toolbar .sticky-toolbar {
   display: none !important;
 }
 
 .font-roboto-bold {
-  font-family: 'Roboto-Bold';
+  font-family: "Roboto-Bold";
   color: #484848;
 }
 
 .font-roboto-regular {
-  font-family: 'Roboto-Regular';
+  font-family: "Roboto-Regular";
   color: #484848;
 }
 
 .font-roboto-medium {
-  font-family: 'Roboto-Medium';
+  font-family: "Roboto-Medium";
   color: #484848;
 }
 
@@ -140,15 +139,15 @@ app-toolbar .sticky-toolbar  {
   font-size: 12px !important;
 }
 
-.font-14px{
+.font-14px {
   font-size: 14px !important;
 }
 
-.font-16px{
+.font-16px {
   font-size: 16px !important;
 }
 
-.font-18px{
+.font-18px {
   font-size: 18px !important;
 }
 
@@ -157,9 +156,9 @@ app-toolbar .sticky-toolbar  {
 }
 
 .app-label-grey {
-  color: #AFAFAF;
+  color: #afafaf;
   font-size: 12px;
-  font-family: 'Roboto-Medium';
+  font-family: "Roboto-Medium";
   padding-bottom: 5px;
 }
 
@@ -186,7 +185,7 @@ app-toolbar .sticky-toolbar  {
   padding-left: 10px;
 }
 
-.padding-left-15px{
+.padding-left-15px {
   padding-left: 15px;
 }
 
@@ -218,16 +217,16 @@ app-toolbar .sticky-toolbar  {
   padding-right: 10px !important;
 }
 
-.margin-l-20px{
-  margin-left: 20px !important; 
+.margin-l-20px {
+  margin-left: 20px !important;
 }
 
 .margin-l-30px {
-  margin-left: 30px !important; 
+  margin-left: 30px !important;
 }
 
 .margin-t-22px {
-  margin-top: 22px !important; 
+  margin-top: 22px !important;
 }
 
 .display-flex {
@@ -242,9 +241,9 @@ app-toolbar .sticky-toolbar  {
 }
 
 .btn-primary {
-  background: #5FACE2 !important ;
+  background: #5face2 !important ;
   font-size: 14px !important;
-  font-family: 'Roboto-Medium' !important;
+  font-family: "Roboto-Medium" !important;
   opacity: unset !important; //0.8 !important;
 }
 
@@ -254,71 +253,70 @@ app-toolbar .sticky-toolbar  {
 }
 
 .stepper-next-button {
-  color: #FFFFFF !important;
+  color: #ffffff !important;
 }
 
 .stepper-next-button,
 .stepper-back-button {
   min-width: 100px;
   font-size: 14px !important;
-  font-family: 'Roboto-Medium';
+  font-family: "Roboto-Medium";
   text-transform: uppercase;
 }
 
 .blue-link {
-  color: #5FACE2;
+  color: #5face2;
   cursor: pointer;
-  font-family: 'Roboto-Medium';
+  font-family: "Roboto-Medium";
 }
 
 .ui-modal-action-button {
   text-transform: uppercase !important;
-  font-size:  14px !important;
-  font-family: 'Roboto-Medium' !important;
+  font-size: 14px !important;
+  font-family: "Roboto-Medium" !important;
   width: 100px;
   letter-spacing: 1px;
   height: 36px !important;
 }
 
 .ui-modal-cancel-button {
-  background: transparent !important; 
+  background: transparent !important;
   border: none !important;
 }
 .modal .modal-header .modal-title {
-  font: normal normal bold 20px/24px 'Roboto-Bold' !important;
+  font: normal normal bold 20px/24px "Roboto-Bold" !important;
 }
 
 .modal .modal-header .close span {
   display: inline !important;
   font-size: 28px !important;
-  color: #AFAFAF !important;
+  color: #afafaf !important;
 }
 
 .span-yellow.material-icons {
-  color: #FFC916;
+  color: #ffc916;
   font-size: 10px !important;
 }
 
 p.info-title {
   font-size: 12px;
-  font-family: 'Roboto-Regular';
+  font-family: "Roboto-Regular";
 }
 
 p.info-label {
-  color: #AFAFAF;
+  color: #afafaf;
   margin-bottom: 5px;
   font-size: 12px;
-  font-family: 'Roboto-Regular'
+  font-family: "Roboto-Regular";
 }
 
 p.info-label-value {
   font-size: 14px;
-  font-family: 'Roboto-Regular'
+  font-family: "Roboto-Regular";
 }
 
-
 .mat-form-field-prefix mat-icon {
-  color: #AFAFAF !important;
+  color: #afafaf !important;
 }
 
 .scrollableDivX {
@@ -334,7 +332,7 @@ p.info-label-value {
 }
 .scrollableDivX::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background: #B7B7B7;
+  background: #b7b7b7;
 }
 
 .scrollableDiv {
@@ -342,15 +340,15 @@ p.info-label-value {
   overflow-x: hidden;
 }
 .scrollableDiv::-webkit-scrollbar {
-   width: 4px;
+  width: 4px;
 }
 .scrollableDiv::-webkit-scrollbar-track {
-   border-radius: 10px;
-   background: transparent !important;
+  border-radius: 10px;
+  background: transparent !important;
 }
 .scrollableDiv::-webkit-scrollbar-thumb {
-   border-radius: 10px;
-   background: #B7B7B7;
+  border-radius: 10px;
+  background: #b7b7b7;
 }
 
 .float-right {
@@ -386,7 +384,7 @@ p.info-label-value {
 }
 .mat-input-element {
   color: #343434 !important;
-  font-family: 'Robot-Regular';
+  font-family: "Robot-Regular";
 }
 
 .sticky-bottom {
@@ -395,16 +393,15 @@ p.info-label-value {
 }
 
 .position-relative {
-  position:relative;
+  position: relative;
 }
 
 .full-width {
   width: 100%;
 }
 
-
 input::placeholder {
-  color: #AFAFAF !important;
+  color: #afafaf !important;
 }
 
 .footer-fixed .content {
@@ -416,7 +413,7 @@ input::placeholder {
 }
 
 .card.card-custom .card-header {
-  padding-left: 15px !important; 
+  padding-left: 15px !important;
 }
 
 .card.card-custom .card-label {
@@ -424,7 +421,7 @@ input::placeholder {
 }
 
 .color-AFAFAF {
-  color: #AFAFAF !important;
+  color: #afafaf !important;
 }
 
 .delete-icon {
@@ -434,24 +431,24 @@ input::placeholder {
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
-  background: #0000000D !important;
+  background: #0000000d !important;
 }
- 
+
 .mat-form-field.mat-form-field-appearance-outline .mat-form-field-outline {
-  background: #eef0f8 ;
+  background: #eef0f8;
   border-radius: 5px;
-} 
+}
 
 .mat-form-field-label {
-  color: #AFAFAF !important
+  color: #afafaf !important;
 }
 
- .add-icon {
+.add-icon {
   background: transparent;
   color: #5face2;
-  font-size: 22px; 
+  font-size: 22px;
   vertical-align: bottom;
-} 
+}
 
 .mat-form-field-underline {
   bottom: auto;
@@ -475,7 +472,7 @@ mat-form-field {
 
 .filter-menu {
   border-radius: 6px !important;
-  box-shadow: 0px 5px 16px #7E7E7E29 !important;
+  box-shadow: 0px 5px 16px #7e7e7e29 !important;
   min-width: 384px !important;
   overflow: hidden !important;
 }
@@ -489,7 +486,7 @@ mat-form-field {
 .filter-menu .filter-menu-heading {
   color: #484848;
   font-size: 16px;
-  font-family: 'Roboto-Bold';
+  font-family: "Roboto-Bold";
   text-align: left;
 }
 
@@ -501,10 +498,10 @@ mat-form-field {
   width: 64px;
   height: 40px;
   border-radius: 6px;
-  border: 1px solid #E6E6E6;
+  border: 1px solid #e6e6e6;
   color: #484848;
   font-size: 14px;
-  font-family: 'Roboto-Regular';
+  font-family: "Roboto-Regular";
   text-align: center;
   padding-top: 8px;
   cursor: pointer;
@@ -518,50 +515,61 @@ mat-form-field {
   margin-top: 5px;
 }
 
-.mat-radio-button.mat-accent.mat-radio-checked
-.mat-radio-outer-circle {
-border-color: #5face2;
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #5face2;
 }
 
-.mat-radio-button.mat-accent.mat-radio-checked
-.mat-radio-persistent-ripple,
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
 .mat-radio-button.mat-accent .mat-radio-inner-circle,
-.mat-radio-button.mat-accent
-.mat-radio-ripple
-.mat-ripple-element:not(.mat-radio-persistent-ripple),
+.mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
 .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
-background-color: #5face2;
+  background-color: #5face2;
 }
 
 .mat-radio-label-content {
   font-size: 14px;
-  font-family:"Roboto-Medium";
+  font-family: "Roboto-Medium";
 }
 
 .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
-  background-color: #5FACE2 !important;
+  background-color: #5face2 !important;
 }
 .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
-  background-color: #F2F2F2 !important;
+  background-color: #f2f2f2 !important;
 }
 
 .mat-hint {
-  color: #AFAFAF;
+  color: #afafaf;
 }
 
 .bg-cyan {
-  background-color: #00E1D5;
+  background-color: #00e1d5;
 }
 .bg-magenta {
-  background-color: #FF00FF;
+  background-color: #ff00ff;
 }
 .bg-yellow {
-  background-color: #FFFF00;
+  background-color: #ffff00;
 }
 .bg-black {
   background-color: #000000;
 }
 
 .text-black {
-  color: #0D171E !important; 
+  color: #0d171e !important;
+}
+
+.filter-menu .status-options .option-item {
+  top: 389px;
+  left: 873px;
+  width: 98px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border: 1px solid #e6e6e6;
+  border-radius: 6px;
+  opacity: 1;
+}
+
+.filter-menu .status-options .option-item-selected {
+  background-color: #e0e0e0 !important;
 }

@@ -178,3 +178,13 @@ export interface OtherCharges {
     total: number;
 }
 
+export interface QuotationListVM {
+    id: number;
+    dateCreated: number;
+    caseNo: string;
+    customer: string;
+    salesPerson: string;
+    estNo: string;
+    quoteNo: string;
+    status: string;
+}

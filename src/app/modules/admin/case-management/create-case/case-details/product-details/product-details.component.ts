@@ -265,17 +265,17 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   handleAddFGRequiredEvent = (fgList: ProductDetailModals[]) => {
     let total = 0;
     if (fgList.length > 0) {
-      fgList.forEach(item => {
-        // tslint:disable-next-line: radix
-        total = parseInt(total.toString()) + parseInt(item.quantity.toString());
-      });
+      //   fgList.forEach(item => {
+      //     // tslint:disable-next-line: radix
+      //     total = parseInt(total.toString()) + parseInt(item.quantity.toString());
+      //   });
       this.productDetailsVMList.forEach(item => {
         if (item.id === this.recordIdPassToModal) {
           item.productISBNDetail.fgList = fgList;
-          item.productISBNDetail.samplesRequired = total;
-          // tslint:disable-next-line: radix
-          item.prodQty = parseInt(item.orderQty.toString()) + parseInt(total.toString());
-          item = this.calculateSubTotal(item);
+          item.productISBNDetail.fGRequired = total;
+          // // tslint:disable-next-line: radix
+          // item.prodQty = parseInt(item.orderQty.toString()) + parseInt(total.toString());
+          // item = this.calculateSubTotal(item);
         }
       });
       this.pushToStore();
@@ -286,17 +286,17 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   handleAddAdvanceRequiredEvent = (advancesList: ProductDetailModals[]) => {
     let total = 0;
     if (advancesList.length > 0) {
-      advancesList.forEach(item => {
-        // tslint:disable-next-line: radix
-        total = parseInt(total.toString()) + parseInt(item.quantity.toString());
-      });
+      // advancesList.forEach(item => {
+      //   // tslint:disable-next-line: radix
+      //   total = parseInt(total.toString()) + parseInt(item.quantity.toString());
+      // });
       this.productDetailsVMList.forEach(item => {
         if (item.id === this.recordIdPassToModal) {
           item.productISBNDetail.advancesList = advancesList;
-          item.productISBNDetail.samplesRequired = total;
+          item.productISBNDetail.advancesRequired = total;
           // tslint:disable-next-line: radix
-          item.prodQty = parseInt(item.orderQty.toString()) + parseInt(total.toString());
-          item = this.calculateSubTotal(item);
+          // item.prodQty = parseInt(item.orderQty.toString()) + parseInt(total.toString());
+          // item = this.calculateSubTotal(item);
         }
       });
       this.pushToStore();

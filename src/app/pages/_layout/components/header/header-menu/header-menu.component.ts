@@ -47,6 +47,11 @@ export class HeaderMenuComponent implements OnInit {
     } else {
       this.dynamicHeaderMenuService.displayProductSpecButton(false);
     }
+    if (current === '/admin/case-management/quotation-list') {
+      this.dynamicHeaderMenuService.displayAddNewQuotationButton(true);
+    } else {
+      this.dynamicHeaderMenuService.displayAddNewQuotationButton(false);
+    }
     if (!pageLabelFound) {
       this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
     }

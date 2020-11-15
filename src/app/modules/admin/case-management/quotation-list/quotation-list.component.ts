@@ -49,6 +49,7 @@ export class QuotationListComponent implements OnInit {
   statusTypes = StatusTypes;
   selectedStatus = '';
   globalFilter = '';
+  totalRecordsCount = 22;
   constructor(private modalService: ModalService, private router: Router) {
     this.dataSource = new MatTableDataSource<QuotationListVM>(this.dataArray);
   }

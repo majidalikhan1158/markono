@@ -121,4 +121,8 @@ export class TopbarComponent implements OnInit, AfterViewInit {
   openCreateProductSpecModal(modalId: string) {
     this.modalService.openModalViaObservable(modalId);
   }
+
+  openAddNewQuotationModal(modalId: string) {
+    this.modalService.openModalViaObservable(modalId);
+  }
 }

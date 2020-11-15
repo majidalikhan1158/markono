@@ -119,16 +119,10 @@ app-quotation-list {
         color: #343434;
         opacity: 1;
     }
-    .mt21 {
-        font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-bold) 10px /
-            var(--unnamed-line-spacing-16) var(--unnamed-font-family-roboto);
-        letter-spacing: var(--unnamed-character-spacing-0);
-        color: var(--unnamed-color-afafaf);
-        text-align: left;
-        font: normal normal bold 10px/16px Roboto;
-        letter-spacing: 0px;
-        color: #afafaf;
-        text-transform: uppercase;
-        opacity: 1;
+    .quotation-header-card .card-body .d-flex {
+        padding-right: 50px;
+    }
+    .quotation-header-card .card-body {
+        display: inline-flex !important;
     }
 }

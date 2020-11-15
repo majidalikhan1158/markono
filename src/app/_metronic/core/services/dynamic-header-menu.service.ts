@@ -14,15 +14,19 @@ export class DynamicHeaderMenuService {
   private headerLabelSubject = new BehaviorSubject<string>('');
   private shouldDisplayProductSpecButtonSubject = new BehaviorSubject<boolean>(false);
   private shouldHeaderDisplaySubject = new BehaviorSubject<boolean>(true);
+  private shouldDisplayAddNewQuotationButtonSubject = new BehaviorSubject<boolean>(false);
   menuConfig$: Observable<any>;
   headerLabel$: Observable<any>;
   shouldHeaderDisplay$: Observable<boolean>;
   shouldDisplayProductSpecButton$: Observable<boolean>;
+  shouldDisplayAddNewQuotationButton$: Observable<boolean>;
   constructor() {
     this.menuConfig$ = this.menuConfigSubject.asObservable();
     this.headerLabel$ = this.headerLabelSubject.asObservable();
     this.shouldHeaderDisplay$ = this.shouldHeaderDisplaySubject.asObservable();
     this.shouldDisplayProductSpecButton$ = this.shouldDisplayProductSpecButtonSubject.asObservable();
+    this.shouldDisplayAddNewQuotationButton$ = this.shouldDisplayAddNewQuotationButtonSubject.asObservable();
+
     this.loadMenu();
   }
 
@@ -50,5 +54,9 @@ export class DynamicHeaderMenuService {
 
   public setShouldHeaderDisplay(flag: boolean) {
     this.shouldHeaderDisplaySubject.next(flag);
+  }
+
+  public displayAddNewQuotationButton(flag: boolean) {
+    this.shouldDisplayAddNewQuotationButtonSubject.next(flag);
   }
 }

@@ -2,9 +2,8 @@
 <div class="row pt-5">
     <div class="col-lg-12 display-flex">
         <div class="card card-custom example example-compact gutter-b quotation-header-card">
-            <div class="card-body" style="display: inline-flex;">
-                <!--icon-->
-                <div class="d-flex justify-content-between" style="/* padding-right: 1002px; */width: 20%;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
                     <span class="symbol symbol-circle symbol-50 symbol-light-warning mr-2">
                         <span class="symbol-label">
                             <span class="svg-icon svg-icon-warning svg-icon-2x">
@@ -22,13 +21,13 @@
                         </span>
                     </span>
                     <div class="d-flex flex-column">
-                        <span class="text-dark-75 font-weight-bolder font-size-h">82</span>
+
                         <span class="text-muted font-weight-bold mt-2">Pending Estimation</span>
+                        <span class="text-dark-75 font-weight-bolder font-size-h">82</span>
                     </div>
                 </div>
-                <!--icon-->
-                <div class="d-flex justify-content-between" style=" /* padding-right: 1002px; */width: 20%;">
-                    <span class="symbol symbol-circle symbol-50 symbol-light-primary mr-2">
+                <div class="d-flex justify-content-between">
+                    <span class="symbol symbol-50 symbol-light-primary mr-2">
                         <span class="symbol-label">
                             <span class="svg-icon svg-icon-primary svg-icon-2x">
                                 <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo2/dist/../src/media/svg/icons/Home/Clock.svg--><svg
@@ -48,12 +47,12 @@
                         </span>
                     </span>
                     <div class="d-flex flex-column">
-                        <span class="text-dark-75 font-weight-bolder font-size-h">1.4h</span>
                         <span class="text-muted font-weight-bold mt-2">READY TO QUOTE</span>
+                        <span class="text-dark-75 font-weight-bolder font-size-h">1.4h</span>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between" style="/* padding-right: 1002px; */width: 20%;">
-                    <span class="symbol symbol-circle symbol-50 symbol-light-success mr-2">
+                <div class="d-flex justify-content-between">
+                    <span class="symbol symbol-50 symbol-light-success mr-2">
                         <span class="symbol-label">
                             <span class="svg-icon svg-icon-success svg-icon-2x">
                                 <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo2/dist/../src/media/svg/icons/Code/Done-circle.svg--><svg
@@ -71,12 +70,12 @@
                         </span>
                     </span>
                     <div class="d-flex flex-column">
-                        <span class="text-dark-75 font-weight-bolder font-size-h">34%</span>
                         <span class="text-muted font-weight-bold mt-2">YTD% turned to order</span>
+                        <span class="text-dark-75 font-weight-bolder font-size-h">34%</span>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between" style="/* padding-right: 1002px; */width: 20%;">
-                    <span class="symbol symbol-circle symbol-50 symbol-light-danger mr-2">
+                <div class="d-flex justify-content-between">
+                    <span class="symbol symbol-50 symbol-light-danger mr-2">
                         <span class="symbol-label">
                             <span class="svg-icon svg-icon-danger svg-icon-2x">
                                 <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo2/dist/../src/media/svg/icons/Code/Stop.svg--><svg
@@ -91,8 +90,8 @@
                                 </svg>
                                 <!--end::Svg Icon--></span></span></span>
                     <div class="d-flex flex-column">
-                        <span class="text-dark-75 font-weight-bolder font-size-h">22%</span>
                         <span class="text-muted font-weight-bold mt-2">YTD% unsuccessful</span>
+                        <span class="text-dark-75 font-weight-bolder font-size-h">22%</span>
                     </div>
                 </div>
             </div>
@@ -108,6 +107,8 @@
                 <div class="row full-width">
                     <div class="col-lg-12 pt-2 pb-2 pr-0">
                         <div class="float-left display-flex">
+                            <h3 class="card-title font-weight-bolder text-dark">Cases({{totalRecordsCount}})</h3>
+
                             <mat-chip-list #chipList class="table-filter-chips">
                                 <mat-chip [removable]="true" *ngIf="tableFilters.createdDate != ''"
                                     (removed)="removeFilter(tableFilterTypes.CREATED_DATE)">
@@ -154,22 +155,22 @@
                                         <mat-datepicker #picker></mat-datepicker>
                                     </mat-form-field>
                                     <span class="filter-menu-heading font-14px pb-4">
-                                        Printing Type
+                                        Status
                                     </span>
                                     <div class="status-options display-flex pb-4">
-                                        <span
+                                        <span class="pending-status"
                                             [ngClass]="{'option-item-selected': selectedStatus == statusTypes.PENDINGEST, 'option-item mr-2': true}"
                                             (click)="tableFilterChange(statusTypes.PENDINGEST,tableFilterTypes.STATUS)">Pending
                                             Est.</span>
-                                        <span
+                                        <span class="est-status"
                                             [ngClass]="{'option-item-selected': selectedStatus == statusTypes.ESTCOMPL, 'option-item mr-2': true}"
                                             (click)="tableFilterChange(statusTypes.ESTCOMPL,tableFilterTypes.STATUS)">Est.
                                             Compl.</span>
-                                        <span
+                                        <span class="recommit-status"
                                             [ngClass]="{'option-item-selected': selectedStatus == statusTypes.ESTRECOMMIT, 'option-item mr-2': true}"
                                             (click)="tableFilterChange(statusTypes.ESTRECOMMIT,tableFilterTypes.STATUS)">Est.
                                             Recommit.</span>
-                                        <span
+                                        <span class="quote-status"
                                             [ngClass]="{'option-item-selected': selectedStatus == statusTypes.QUOTESENT, 'option-item mr-2': true}"
                                             (click)="tableFilterChange(statusTypes.QUOTESENT,tableFilterTypes.STATUS)">Quote
                                             Sent</span>
@@ -233,13 +234,26 @@
                         <th mat-header-cell *matHeaderCellDef> Status </th>
                         <td mat-cell *matCellDef="let element">
                             <div *ngIf="element.status == 'Pending Est.'">
-                                <span style="width: 100px;">
-                                    <span class="label label-lg label-light-warning label-inline">Pending Est.</span>
+                                <span class="status-button">
+                                    <span
+                                        class="label label-lg label-light-warning label-inline">{{element.status}}</span>
                                 </span>
                             </div>
                             <div *ngIf="element.status == 'Est. Compl.'">
-                                <span style="width: 100px;">
-                                    <span class="label label-lg label-light-success label-inline">Est. Compl.</span>
+                                <span class="status-button">
+                                    <span
+                                        class="label label-lg label-light-success label-inline">{{element.status}}</span>
+                                </span>
+                            </div>
+                            <div *ngIf="element.status == 'Est. Recommit.'">
+                                <span class="status-button">
+                                    <span class="label label-lg label-light-info label-inline">{{element.status}}</span>
+                                </span>
+                            </div>
+                            <div *ngIf="element.status == 'Quote Sent'">
+                                <span class="status-button">
+                                    <span
+                                        class="label label-lg label-light-primary label-inline">{{element.status}}</span>
                                 </span>
                             </div>
                         </td>
@@ -249,7 +263,19 @@
                         <th mat-header-cell *matHeaderCellDef> Actions </th>
                         <td mat-cell *matCellDef="let element">
                             <button class="btn btn-light" (click)="Choose()">Choose
-                            </button> </td>
+                                <span class="svg-icon svg-icon-2x">
+                                    <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo2/dist/../src/media/svg/icons/Navigation/Angle-down.svg--><svg
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <polygon points="0 0 24 0 24 24 0 24" />
+                                            <path
+                                                d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z"
+                                                fill="#000000" fill-rule="nonzero"
+                                                transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999) " />
+                                        </g>
+                                    </svg>
+                                    <!--end::Svg Icon--></span></button> </td>
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -267,7 +293,7 @@
     </div>
 </div>
 
-<app-modal id="ADD_PRODUCT_SPEC_MODAL" size="modal-md">
-    <app-create-product-spec-modal (acceptEvent)="handleAddProductSpecEvent('ADD_PRODUCT_SPEC_MODAL')"
-        (rejectEvent)="handleModalRejectEvent('ADD_PRODUCT_SPEC_MODAL')"></app-create-product-spec-modal>
+<app-modal id="ADD_NEW_QOUTATION_MODAL" size="modal-md">
+    <!-- <app-create-product-spec-modal (acceptEvent)="handleAddProductSpecEvent('ADD_NEW_QOUTATION_MODAL')"
+        (rejectEvent)="handleModalRejectEvent('ADD_NEW_QOUTATION_MODAL')"></app-create-product-spec-modal> -->
 </app-modal>

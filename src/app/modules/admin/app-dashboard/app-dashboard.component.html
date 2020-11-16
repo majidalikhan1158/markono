@@ -1,0 +1,45 @@
+<div class="row url-div" *ngIf="IsClose">
+    <div class="col-xl-12">
+        <div class="container">
+            <div class="form">
+                <div class="form-group icon-div">
+                    <img src="./../../../../assets/media/logos/7295a248-78b5-42fe-b2da-e16dbccb74ac.jpg" />
+                </div>
+                <div class="form-group">
+                    <h3><b>Enter your embedded link to view</b></h3>
+                    <h3><b>your personalized dashboard</b></h3>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" [(ngModel)]="EmbeddedURL" placeholder="Enter your embedded link here" />
+                </div>
+
+                <div class="form-group ">
+                    <input type="submit" class="form-control submit-div" value="SUBMIT"
+                        (click)="SubmitUrl(EmbeddedURL)">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" *ngIf="IsDisplay">
+    <div class="col-xl-12">
+        <div class="card card-custom example example-compact gutter-b">
+            <div class="card-body">
+                <div class="form-group">
+                    <input class="form-control link-input" placeholder="Embedded Link" type="text"
+                        value="<iframe width='100' height='100' title='iframe example' src='{{iFrameValue}}'>">&nbsp;
+                    <input type="submit" class="form-control submit-input" value="SUBMIT">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" *ngIf="IsDisplay">
+    <div class="col-xl-12">
+        <div class="card card-custom example example-compact gutter-b">
+            <div class="card-body">
+                <iframe width="100%" height="100%" title="iframe example" [src]="iFrameValue"></iframe>
+            </div>
+        </div>
+    </div>
+</div>

@@ -9,11 +9,12 @@ import { ShopFloorCollectionComponent } from './shop-floor-collection/shop-floor
 import { MaterialUiModule } from '../material-ui/material-ui.module';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { PerfectScrollbarModule, PerfectScrollbarConfigInterface, PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { AppDashboardComponent } from './app-dashboard/app-dashboard.component';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };
 @NgModule({
-  declarations: [AdminComponent, ShopFloorCollectionComponent],
+  declarations: [AdminComponent, ShopFloorCollectionComponent, AppDashboardComponent],
   imports: [
     RouterModule,
     CommonModule,

@@ -78,7 +78,7 @@ export class CreateCaseComponent implements OnInit {
     this.store.createCaseStore.subscribe(data => {
       console.log(data);
       const mappedData = this.caseHelper.transCaseDataToCaseApiModal(data);
-      console.log(mappedData);
+      console.log(JSON.stringify(mappedData));
     });
   }
 }

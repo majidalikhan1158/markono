@@ -48,7 +48,9 @@ export class ViewAllModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.viewVersionISBN.subscribe((x) => {
       this.recordId = x;
-      this.getDefaultRecord();
+      if (this.recordId && this.recordId !== '') {
+        this.getDefaultRecord();
+      }
     });
   }
 

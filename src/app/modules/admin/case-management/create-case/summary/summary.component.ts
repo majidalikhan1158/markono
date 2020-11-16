@@ -9,6 +9,7 @@ import { CreateCaseMode } from 'src/app/modules/shared/enums/app-enums';
 })
 export class SummaryComponent implements OnInit {
   @Input() createCaseMode: CreateCaseMode;
+  @Input() isShippingDetails: boolean;
   @Output() changeStepperEvent = new EventEmitter();
   constructor() { }
 

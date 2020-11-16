@@ -6,17 +6,17 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./app-dashboard.component.scss']
 })
 export class AppDashboardComponent implements OnInit {
-  EmbeddedURL;
-  IsDisplay: boolean = false;
-  IsClose: boolean = true;
+  embeddedURL;
+  IsDisplay = false;
+  IsClose = true;
   iFrameValue: SafeResourceUrl;
-  constructor(private sanitizer: DomSanitizer,) { }
+  constructor(private sanitizer: DomSanitizer, ) { }
 
   ngOnInit(): void {
   }
-  SubmitUrl(EmbeddedURL) {
+  SubmitUrl() {
     this.IsClose = false;
     this.IsDisplay = true;
-    this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(EmbeddedURL);
+    this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(this.embeddedURL);
   }
 }

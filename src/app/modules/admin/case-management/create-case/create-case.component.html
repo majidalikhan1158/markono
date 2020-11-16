@@ -4,9 +4,11 @@
       <app-customer-info (stepperNextEvent)="handleStepperNextEvent($event)"></app-customer-info>
       
     </mat-step>
-    <mat-step  completed="false">
-      <ng-template matStepLabel>Case Details.</ng-template>
-      <app-case-details [tabToOpen]="tabToOpen"></app-case-details>
+    <mat-step  completed="false" >
+      <ng-template matStepLabel>{{secondStepTitle}}.</ng-template>
+      <app-case-details 
+        [tabToOpen]="tabToOpen" 
+        [isShippingDetails]="shouldShowShippingDetailsAsSecondStep"></app-case-details>
       <div class="row">
         <div class="col-lg-12 text-right">
           <button mat-button (click)="handleStepperBackEvent(createCaseSteps.CUSTOMER_INFO)" class="btn btn-primary stepper-back-button mr-2">Back</button>
@@ -16,7 +18,10 @@
     </mat-step>
     <mat-step  completed="false">
       <ng-template matStepLabel>Summary</ng-template>
-      <app-summary [createCaseMode]="createCaseMode" (changeStepperEvent)="handleStepperChange($event)"
+      <app-summary 
+        [createCaseMode]="createCaseMode" 
+        (changeStepperEvent)="handleStepperChange($event)"
+        [isShippingDetails]="shouldShowShippingDetailsAsSecondStep"
       ></app-summary>
        <div class="col-lg-12 text-right pt-5">
         <button mat-button (click)="handleStepperBackEvent(createCaseSteps.CASE_DETAILS)" class="btn btn-primary stepper-back-button mr-2">Back</button>

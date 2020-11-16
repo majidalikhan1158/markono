@@ -15,10 +15,14 @@ export class CaseStore {
   public createCaseStore: Observable<CreateCaseViewModel>;
   public caseDropDownStore: Observable<DDLObjectModal>;
   public viewVersionISBN: Observable<string>;
+  public caseType: Observable<number>;
+  public caseType2: Observable<number>;
   public productDetailsIdSubject = new BehaviorSubject<number>(0);
   private createCaseStoreSubject = new BehaviorSubject<CreateCaseViewModel>(new CreateCaseViewModel());
   private caseDropDownStoreSubject = new BehaviorSubject<DDLObjectModal>(null);
   public viewVersionIBNSubject = new BehaviorSubject<string>('');
+  public caseTypeSubject = new BehaviorSubject<number>(0);
+  public caseTypeSubject2 = new BehaviorSubject<number>(0);
   private currentData: CreateCaseViewModel;
   private currentDropDownStoreState: DDLObjectModal;
   constructor() {
@@ -26,6 +30,8 @@ export class CaseStore {
     this.caseDropDownStore = this.caseDropDownStoreSubject.asObservable();
     this.productDetailsId = this.productDetailsIdSubject.asObservable();
     this.viewVersionISBN = this.viewVersionIBNSubject.asObservable();
+    this.caseType = this.caseTypeSubject.asObservable();
+    this.caseType2 = this.caseTypeSubject2.asObservable();
     this.createCaseStore.subscribe(data => {
       this.currentData = data;
     });
@@ -139,5 +145,12 @@ export class CaseStore {
 
   setViewVersionISBN = (isbn: string) => {
     this.viewVersionIBNSubject.next(isbn);
+  }
+
+  setCaseType = (caseType) => {
+    this.caseTypeSubject.next(caseType);
+  }
+  setCaseType2 = (caseType) => {
+    this.caseTypeSubject2.next(caseType);
   }
 }

@@ -33,6 +33,8 @@ export class CreateCaseComponent implements OnInit {
   selectedCaseStep = CreateCaseSteps.CUSTOMER_INFO;
   createCaseMode = CreateCaseMode.NEW;
   tabToOpen: string;
+  secondStepTitle = 'Case Details';
+  shouldShowShippingDetailsAsSecondStep = false;
   constructor(
     private ref: ChangeDetectorRef,
     private caseBaseService: CaseBaseService,
@@ -49,6 +51,7 @@ export class CreateCaseComponent implements OnInit {
      *  reason: rather than calling in each child as componens constructs/destructs when user moves in stepper/mat-selection(left side)
      */
     this.caseBaseService.getServerData();
+    this.getSecondStepTitle();
   }
 
   handleStepperNextEvent(createCaseStep: CreateCaseSteps) {
@@ -56,6 +59,9 @@ export class CreateCaseComponent implements OnInit {
       createCaseStep === CreateCaseSteps.SUMMARY
         ? CreateCaseMode.EDIT
         : CreateCaseMode.NEW;
+    // if (createCaseStep === this.createCaseSteps.SUMMARY) {
+    //       this.getSecondStepTitle();
+    // }
     this.createCaseStepper.selected.completed = true;
     this.createCaseStepper.next();
   }
@@ -94,6 +100,26 @@ export class CreateCaseComponent implements OnInit {
       }, (err: HttpErrorResponse) => {
         this.snack.open(err.error);
       });
+    });
+  }
+
+  getSecondStepTitle = () => {
+    this.store.caseType.subscribe(x => {
+      if (x.toString() === '3' ) {
+        this.secondStepTitle = 'Shipping Details';
+      } else {
+        this.secondStepTitle = 'Case Details';
+      }
+      this.ref.detectChanges();
+    });
+
+    this.store.caseType2.subscribe(x => {
+      if (x.toString() === '3' ) {
+        this.shouldShowShippingDetailsAsSecondStep = true;
+      } else {
+        this.shouldShowShippingDetailsAsSecondStep = false;
+      }
+      this.ref.detectChanges();
     });
   }
 }

@@ -45,4 +45,7 @@ export class ApiEndpointsService {
 
   public getProductVersionUrl = () =>
   `${this.getProductServicesEndpoint()}${Endpoints.product.getProductVersions}`
+
+  public getCreateCaseUrl = () =>
+  `${this.getOrderServicesEndpoint()}${Endpoints.case.createCase}`
 }

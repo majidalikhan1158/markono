@@ -16,6 +16,9 @@ import {
 import { CaseBaseService } from '../case-base.service';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import { CaseHelperService } from 'src/app/modules/shared/enums/helpers/case-helper.service';
+import { OrderService } from 'src/app/modules/services/core/services/order.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 @Component({
   selector: 'app-create-case',
   templateUrl: './create-case.component.html',
@@ -34,7 +37,9 @@ export class CreateCaseComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private caseBaseService: CaseBaseService,
     private store: CaseStore,
-    private caseHelper: CaseHelperService
+    private caseHelper: CaseHelperService,
+    private orderService: OrderService,
+    private snack: SnackBarService
   ) {}
 
   ngOnInit() {
@@ -79,6 +84,16 @@ export class CreateCaseComponent implements OnInit {
       console.log(data);
       const mappedData = this.caseHelper.transCaseDataToCaseApiModal(data);
       console.log(JSON.stringify(mappedData));
+      this.orderService.createCase(mappedData).subscribe(resp => {
+        if (resp && resp.body.result && resp.body.result.status !== 200) {
+          const error = resp.body.result.errors ? 'One or more validation errors occurred.' : 'Unable to add case';
+          this.snack.open(error);
+        } else {
+          this.snack.open('Case added successfully');
+        }
+      }, (err: HttpErrorResponse) => {
+        this.snack.open(err.error);
+      });
     });
   }
 }

@@ -12,7 +12,6 @@ import {
 import { ProductService } from 'src/app/modules/services/core/services/product.service';
 import { UIModalID } from '../../../enums/app-constants';
 import { CaseHelperService } from '../../../enums/helpers/case-helper.service';
-import { ProductVersionMockDataList } from '../../../mock-data/product-versions-data-list';
 import { ProductVersionVM } from '../../../models/create-case';
 import { CaseStore } from '../../../ui-services/create-case.service';
 import { ModalService } from '../../../ui-services/modal.service';

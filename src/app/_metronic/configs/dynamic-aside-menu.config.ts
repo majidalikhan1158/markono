@@ -53,7 +53,6 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/icons/Design/Cap-2.svg',
       permission: 'accessToShopFloorCollection'
     },
-
   ]
 };
 

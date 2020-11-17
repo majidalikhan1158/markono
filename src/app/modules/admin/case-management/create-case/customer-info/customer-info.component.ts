@@ -16,6 +16,7 @@ import { FormControl } from '@angular/forms';
 import { debounceTime, finalize, switchMap, tap } from 'rxjs/operators';
 import { ViewChild } from '@angular/core';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
   selector: 'app-customer-info',
@@ -37,6 +38,7 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   searchCustomerInfo = new FormControl();
   isLoading = false;
   previousValue = '';
+  selectedCaseType = '';
   constructor(
     private modalService: ModalService,
     private store: CaseStore,
@@ -90,10 +92,8 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   }
 
   handleStepperNextEvent = () => {
-    this.store.setCreateCaseDataSource(
-      this.customerInfoVM,
-      CreateCaseDataType.CUSTOMER_INFO
-    );
+    this.store.setCreateCaseDataSource(this.customerInfoVM, CreateCaseDataType.CUSTOMER_INFO);
+    this.store.setCaseType2(this.selectedCaseType);
     this.stepperNextEvent.emit(CreateCaseSteps.CASE_DETAILS);
   }
 
@@ -138,8 +138,6 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
     };
   }
 
-  ngOnDestroy(): void {}
-
   /**
    * HTTP API CALLS
    */
@@ -152,9 +150,10 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * MODAL EVENTS
-   */
+  handleCaseTypeChange  = (event: MatRadioChange) => {
+    this.selectedCaseType = event.value;
+    this.store.setCaseType(this.selectedCaseType);
+  }
 
   openUiModal(modalId: string) {
     this.modalService.open(modalId);
@@ -163,4 +162,6 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   handleAddCustomerEvent(modalId: string) {}
 
   handleModalRejectEvent(modalId: string) {}
+
+  ngOnDestroy(): void {}
 }

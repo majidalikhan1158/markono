@@ -20,7 +20,10 @@
                                     <td>
                                         <mat-form-field appearance="fill">
                                             <mat-label>Choose</mat-label>
-                                            <mat-select [(ngModel)]="rowsToDisplay[i].position" [disabled]="disabled">
+                                            <mat-select
+                                             [(ngModel)]="rowsToDisplay[i].position" 
+                                             [disabled]="disabled"
+                                             (change)="handleChangeToSyncWithStore()">
                                                 <mat-option value="Top">Top</mat-option>
                                                 <mat-option value="Bottom">Bottom</mat-option>
                                             </mat-select>
@@ -32,6 +35,7 @@
                                             <input 
                                                 [(ngModel)]="rowsToDisplay[i].notes"
                                                 matInput [disabled]="disabled"
+                                                (change)="handleChangeToSyncWithStore()"
                                                 placeholder="Write Notes">
                                         </mat-form-field>
                                     </td>

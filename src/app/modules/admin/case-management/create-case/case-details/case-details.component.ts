@@ -38,6 +38,7 @@ import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.se
 export class CaseDetailsComponent implements OnInit, OnChanges {
   @Input() createCaseMode: CreateCaseMode;
   @Input() tabToOpen: number;
+  @Input() isShippingDetails = false;
   @Output() changeStepperEvent = new EventEmitter();
   createCaseModes = CreateCaseMode;
   caseDetailTypesConstant = CaseDetailTypes;
@@ -46,31 +47,62 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
   panelOpenState = false;
   shipmentInfoVMList: ShippingInfoVM[];
   overAllCostVM: OverAllCostVM;
-  constructor(private ref: ChangeDetectorRef, private store: CaseStore, private snack: SnackBarService) {}
+  constructor(
+    private ref: ChangeDetectorRef,
+    private store: CaseStore,
+    private snack: SnackBarService
+  ) {}
 
   ngOnInit(): void {
     this.overAllCostVM = this.initialObject();
     this.setCreateCaseModeData();
     this.getOverallCostData();
+    this.getIsShippingDetailsStatus();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     const createCaseModeChange = changes['createCaseMode'];
     const tabToOpenChange = changes['tabToOpen'];
+         // handle edit-disable mode
     if (
-      createCaseModeChange &&
-      createCaseModeChange.currentValue === CreateCaseMode.EDIT
-    ) {
-      this.createCaseMode = createCaseModeChange.currentValue;
-      this.setCreateCaseModeData();
-    }
-
+          createCaseModeChange &&
+          createCaseModeChange.currentValue === CreateCaseMode.EDIT
+        ) {
+          this.createCaseMode = createCaseModeChange.currentValue;
+          this.setCreateCaseModeData();
+        }
+        // handle default selection of tab being opened
     if (tabToOpenChange && tabToOpenChange.currentValue) {
-      const selectedTab = tabToOpenChange.currentValue;
-      if (selectedTab !== CaseDetailTypes.CUSTOMER_INFO) {
-        this.setSelectedTabInNewMode(selectedTab);
+          const selectedTab = tabToOpenChange.currentValue;
+          if (selectedTab !== CaseDetailTypes.CUSTOMER_INFO) {
+            this.setSelectedTabInNewMode(selectedTab);
+          }
+        }
+  }
+
+  getIsShippingDetailsStatus() {
+    this.store.caseType2.subscribe(x => {
+      if (x.toString() === 'WO') {
+        this.isShippingDetails = true;
+        this.handleIsShipmentDetailsCase();
+      } else {
+        this.isShippingDetails = false;
+        this.setCreateCaseModeData();
       }
+    });
+  }
+
+  handleIsShipmentDetailsCase() {
+    if (this.createCaseMode === CreateCaseMode.EDIT) {
+      this.caseDetailTypesArray = this.caseDetailTypesArray.filter(
+        (x) => x.enum === CaseDetailTypes.CUSTOMER_INFO ||
+        x.enum === CaseDetailTypes.SHIPPING_INFO
+      );
+      this.currentSelectedType = CaseDetailTypes.CUSTOMER_INFO;
+    } else {
+      this.currentSelectedType = CaseDetailTypes.SHIPPING_INFO;
     }
+    this.ref.detectChanges();
   }
 
   setCreateCaseModeData() {
@@ -142,15 +174,19 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       let subTotal = 0;
       this.overAllCostVM.otherCharges = [];
       if (data && data.shippingInfoList && data.shippingInfoList.length > 0) {
-        data.shippingInfoList.forEach(shipment => {
-          shipment.shippingSpecificCost.forEach(cost => {
-            // tslint:disable-next-line: radix
-            totalCost = parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
+        data.shippingInfoList.forEach((shipment) => {
+          shipment.shippingSpecificCost.forEach((cost) => {
+            if (cost && cost.subTotal) {
+              // tslint:disable-next-line: radix
+            totalCost =
+              parseInt(totalCost.toString()) +
+              parseInt(cost.subTotal.toString());
+            }
           });
           if (totalCost > 0) {
             this.overAllCostVM.otherCharges.push({
               type: `Shipment ${shipment.shipmentId} costs`,
-              total: totalCost
+              total: totalCost,
             });
           }
           totalCost = 0;
@@ -158,36 +194,51 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       }
 
       if (data && data.miscCostList && data.miscCostList.length > 0) {
-        data.miscCostList.forEach(cost => {
-          // tslint:disable-next-line: radix
-          totalCost = parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
+        data.miscCostList.forEach((cost) => {
+          if (cost && cost.subTotal) {
+            // tslint:disable-next-line: radix
+            totalCost =
+            parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
+          }
+
           if (totalCost > 0) {
             this.overAllCostVM.otherCharges.push({
               type: `Misc ${cost.id} costs`,
-              total: totalCost
+              total: totalCost,
             });
           }
           totalCost = 0;
         });
       }
 
-      if (data && data.productDetailsList && data.productDetailsList.length > 0) {
+      if (
+        data &&
+        data.productDetailsList &&
+        data.productDetailsList.length > 0
+      ) {
         this.overAllCostVM.printAndBind = 0;
-        data.productDetailsList.forEach(item => {
-          this.overAllCostVM.printAndBind = +this.overAllCostVM.printAndBind + item.subTotal;
+        data.productDetailsList.forEach((item) => {
+          this.overAllCostVM.printAndBind =
+            +this.overAllCostVM.printAndBind + item.subTotal;
         });
       }
 
       if (this.overAllCostVM.otherCharges.length > 0) {
-        this.overAllCostVM.otherCharges.forEach(cost => {
+        this.overAllCostVM.otherCharges.forEach((cost) => {
           // tslint:disable-next-line: radix
-          subTotal =  parseInt(subTotal.toString()) + parseInt(cost.total.toString());
+          subTotal =
+            parseInt(subTotal.toString()) + parseInt(cost.total.toString());
         });
       }
       // tslint:disable-next-line: radix
-      this.overAllCostVM.subTotal = parseInt(subTotal.toString()) + parseInt(this.overAllCostVM.printAndBind.toString());
+      this.overAllCostVM.subTotal =
+        parseInt(subTotal.toString()) +
+        parseInt(this.overAllCostVM.printAndBind.toString());
       this.overAllCostVM.total = this.overAllCostVM.subTotal;
-      if (data && !(data.overallCostVM) || data.overallCostVM.subTotal !== this.overAllCostVM.subTotal) {
+      if (
+        (data && !data.overallCostVM) ||
+        data.overallCostVM.subTotal !== this.overAllCostVM.subTotal
+      ) {
         this.pushToStore();
       }
       this.ref.detectChanges();
@@ -203,7 +254,8 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
 
   handleDiscountChange = () => {
     if (this.overAllCostVM.discount > 0) {
-      const discountedPrice = (this.overAllCostVM.total * this.overAllCostVM.discount) / 100;
+      const discountedPrice =
+        (this.overAllCostVM.total * this.overAllCostVM.discount) / 100;
       if (discountedPrice < this.overAllCostVM.total) {
         this.overAllCostVM.total = this.overAllCostVM.total - discountedPrice;
         this.pushToStore();

@@ -19,6 +19,7 @@ import { CaseHelperService } from 'src/app/modules/shared/enums/helpers/case-hel
 import { OrderService } from 'src/app/modules/services/core/services/order.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-create-case',
   templateUrl: './create-case.component.html',
@@ -33,6 +34,11 @@ export class CreateCaseComponent implements OnInit {
   selectedCaseStep = CreateCaseSteps.CUSTOMER_INFO;
   createCaseMode = CreateCaseMode.NEW;
   tabToOpen: string;
+  secondStepTitle = 'Case Details';
+  shouldShowShippingDetailsAsSecondStep = false;
+  shouldShowSummary = false;
+  subscription: Subscription;
+  shouldDisplayCreateCaseButton = true;
   constructor(
     private ref: ChangeDetectorRef,
     private caseBaseService: CaseBaseService,
@@ -49,6 +55,7 @@ export class CreateCaseComponent implements OnInit {
      *  reason: rather than calling in each child as componens constructs/destructs when user moves in stepper/mat-selection(left side)
      */
     this.caseBaseService.getServerData();
+    this.getSecondStepTitle();
   }
 
   handleStepperNextEvent(createCaseStep: CreateCaseSteps) {
@@ -56,6 +63,9 @@ export class CreateCaseComponent implements OnInit {
       createCaseStep === CreateCaseSteps.SUMMARY
         ? CreateCaseMode.EDIT
         : CreateCaseMode.NEW;
+    if (createCaseStep === CreateCaseSteps.SUMMARY) {
+      this.shouldShowSummary = true;
+    }
     this.createCaseStepper.selected.completed = true;
     this.createCaseStepper.next();
   }
@@ -80,20 +90,45 @@ export class CreateCaseComponent implements OnInit {
   }
 
   createCase = () => {
-    this.store.createCaseStore.subscribe(data => {
+    this.subscription = this.store.createCaseStore.subscribe(data => {
       console.log(data);
       const mappedData = this.caseHelper.transCaseDataToCaseApiModal(data);
       console.log(JSON.stringify(mappedData));
       this.orderService.createCase(mappedData).subscribe(resp => {
-        if (resp && resp.body.result && resp.body.result.status !== 200) {
-          const error = resp.body.result.errors ? 'One or more validation errors occurred.' : 'Unable to add case';
-          this.snack.open(error);
-        } else {
-          this.snack.open('Case added successfully');
+        if (resp && resp.body.result && resp.body.result) {
+          const response = resp.body.result as any;
+          if (response.message && response.message === 'Successful') {
+            this.snack.open('Case has been created successfully');
+            this.shouldDisplayCreateCaseButton = false;
+            this.ref.detectChanges();
+          } else {
+            this.snack.open(response);
+          }
+          this.subscription.unsubscribe();
         }
       }, (err: HttpErrorResponse) => {
         this.snack.open(err.error);
       });
+    });
+  }
+
+  getSecondStepTitle = () => {
+    this.store.caseType.subscribe(x => {
+      if (x.toString() === '3' ) {
+        this.secondStepTitle = 'Shipping Details';
+      } else {
+        this.secondStepTitle = 'Case Details';
+      }
+      this.ref.detectChanges();
+    });
+
+    this.store.caseType2.subscribe(x => {
+      if (x.toString() === 'WO' ) {
+        this.shouldShowShippingDetailsAsSecondStep = true;
+      } else {
+        this.shouldShowShippingDetailsAsSecondStep = false;
+      }
+      this.ref.detectChanges();
     });
   }
 }

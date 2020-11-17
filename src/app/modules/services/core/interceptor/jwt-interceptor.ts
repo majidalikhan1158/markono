@@ -56,7 +56,6 @@ export class JwtInterceptor implements HttpInterceptor {
         filter((token) => token !== null),
         take(1),
         switchMap((token) => {
-          console.log(token);
           return next.handle(
             this.addAuthenticationToken(request, this.tokenType)
           );

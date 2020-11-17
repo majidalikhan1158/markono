@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12 display-flex">
-        <div class="col-lg-2 padding-l-0px">
+        <div class="col-lg-2 padding-l-0px" [hidden]="isShippingDetails && createCaseMode !== createCaseModes.EDIT">
             <div class="card card-custom example example-compact gutter-b case-details-types">
                 <div class="card-body">
                     <mat-selection-list #caseDetailTypeList [multiple]="false"  (selectionChange)="handleCaseDetailTypeChange($event)">
@@ -17,31 +17,39 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-10 pr-0">
+        <div
+        [ngClass]="isShippingDetails && createCaseMode !== createCaseModes.EDIT ? 'col-lg-12 pr-0' : 'col-lg-10 pr-0'">
             <app-customer-info 
                 [createCaseMode]="createCaseMode" 
-                *ngIf="createCaseMode === createCaseModes.EDIT && currentSelectedType === caseDetailTypesConstant.CUSTOMER_INFO"></app-customer-info>
+                *ngIf="(createCaseMode === createCaseModes.EDIT && currentSelectedType === caseDetailTypesConstant.CUSTOMER_INFO)">
+            </app-customer-info>
             <app-product-details 
                 [createCaseMode]="createCaseMode" 
-                *ngIf="currentSelectedType === caseDetailTypesConstant.PRODUCT_DETAILS"></app-product-details>
+                *ngIf="(currentSelectedType === caseDetailTypesConstant.PRODUCT_DETAILS) && !isShippingDetails">
+            </app-product-details>
             <app-shipping-info 
                 [createCaseMode]="createCaseMode" 
-                *ngIf="currentSelectedType === caseDetailTypesConstant.SHIPPING_INFO"></app-shipping-info>
+                [isShippingDetails] = "isShippingDetails"
+                *ngIf="(currentSelectedType === caseDetailTypesConstant.SHIPPING_INFO)">
+            </app-shipping-info>
             <app-misc-cost 
                 [createCaseMode]="createCaseMode" 
-                *ngIf="currentSelectedType === caseDetailTypesConstant.MISC_COST"></app-misc-cost>
+                *ngIf="(currentSelectedType === caseDetailTypesConstant.MISC_COST) && !isShippingDetails">
+            </app-misc-cost>
             <app-special-instructions 
                 [createCaseMode]="createCaseMode" 
-                *ngIf="currentSelectedType === caseDetailTypesConstant.SPECIAL_INSTRUCTIONS"></app-special-instructions>
+                *ngIf="(currentSelectedType === caseDetailTypesConstant.SPECIAL_INSTRUCTIONS) && !isShippingDetails">
+            </app-special-instructions>
             <app-invoice 
                 [createCaseMode]="createCaseMode" 
-                *ngIf="currentSelectedType === caseDetailTypesConstant.INVOICE"></app-invoice>
+                *ngIf="(currentSelectedType === caseDetailTypesConstant.INVOICE) && !isShippingDetails">
+            </app-invoice>
         </div>
     </div>
 </div>
 
-<div class="row" *ngIf="createCaseMode !== createCaseModes.EDIT || 
-    (createCaseMode === createCaseModes.EDIT && currentSelectedType === caseDetailTypesConstant.PRODUCT_DETAILS)">
+<div class="row" *ngIf="(createCaseMode !== createCaseModes.EDIT || 
+    (createCaseMode === createCaseModes.EDIT && currentSelectedType === caseDetailTypesConstant.PRODUCT_DETAILS)) && !isShippingDetails">
     <div class="col-lg-12">
         <div class="card card-custom example example-compact gutter-b overall-cost-card">
             <div class="card-header">

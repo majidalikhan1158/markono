@@ -68,14 +68,14 @@
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
-                        <mat-expansion-panel (opened)="panelOpenState"
+                        <mat-expansion-panel (opened)="panelOpenState" class="mat-expansion-panel"
                         (closed)="panelOpenState = false">
-                        <mat-expansion-panel-header>
+                        <mat-expansion-panel-header class="mat-expansion-panel-header">
                           <mat-panel-title>
                             Other Charges
                           </mat-panel-title>
                           <mat-panel-description>
-                            <span class="font-roboto-regular font-14px float-right">
+                            <span class="font-roboto-regular font-14px float-right" style="margin-left: 95%">
                                 {{overAllCostVM.otherChargesTotal}}
                             </span>
                           </mat-panel-description>

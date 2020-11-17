@@ -218,18 +218,29 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
           this.overAllCostVM.printAndBind = +this.overAllCostVM.printAndBind + item.subTotal;
         });
       }
-
+      this.overAllCostVM.otherChargesTotal = 0;
       if (this.overAllCostVM.otherCharges.length > 0) {
         this.overAllCostVM.otherCharges.forEach((cost) => {
           // tslint:disable-next-line: radix
           subTotal = parseInt(subTotal.toString()) + parseInt(cost.total.toString());
           // tslint:disable-next-line: radix
-          this.overAllCostVM.otherChargesTotal = parseInt(subTotal.toString()) + parseInt(cost.total.toString());
+          // tslint:disable-next-line: max-line-length
+          this.overAllCostVM.otherChargesTotal = parseInt(this.overAllCostVM.otherChargesTotal.toString()) + parseInt(cost.total.toString());
         });
       }
       // tslint:disable-next-line: radix
       this.overAllCostVM.subTotal = parseInt(subTotal.toString()) + parseInt(this.overAllCostVM.printAndBind.toString());
+      // CALCULATE DISCOUNT
       this.overAllCostVM.total = this.overAllCostVM.subTotal;
+
+      if (this.overAllCostVM.discount > 0) {
+        const discountedPrice = (this.overAllCostVM.total * this.overAllCostVM.discount) / 100;
+        if (discountedPrice < this.overAllCostVM.total) {
+          // tslint:disable-next-line: radix
+          this.overAllCostVM.total = parseInt(this.overAllCostVM.total.toString()) - parseInt(discountedPrice.toString());
+        }
+      }
+
       if (
         (data && !data.overallCostVM) ||
         data.overallCostVM.subTotal !== this.overAllCostVM.subTotal
@@ -240,24 +251,27 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
     });
   }
 
-  pushToStore = () => {
-    this.store.setCreateCaseDataSource(
-      this.overAllCostVM,
-      CreateCaseDataType.OVERALL_COST
-    );
-  }
-
   handleDiscountChange = () => {
     if (this.overAllCostVM.discount > 0) {
-      const discountedPrice =
-        (this.overAllCostVM.total * this.overAllCostVM.discount) / 100;
+      const discountedPrice = (this.overAllCostVM.total * this.overAllCostVM.discount) / 100;
       if (discountedPrice < this.overAllCostVM.total) {
-        this.overAllCostVM.total = this.overAllCostVM.total - discountedPrice;
+        // tslint:disable-next-line: radix
+        this.overAllCostVM.total = parseInt(this.overAllCostVM.total.toString()) - parseInt(discountedPrice.toString());
+        this.ref.detectChanges();
         this.pushToStore();
       } else {
         this.snack.open('Discount is more than total cost');
       }
     }
+  }
+
+
+  
+  pushToStore = () => {
+    this.store.setCreateCaseDataSource(
+      this.overAllCostVM,
+      CreateCaseDataType.OVERALL_COST
+    );
   }
 
   initialObject = (): OverAllCostVM => {

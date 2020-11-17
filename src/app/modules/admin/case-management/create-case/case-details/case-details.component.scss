@@ -33,7 +33,17 @@
 .overall-cost-card .card-header {
     padding-left: 15px !important;
 }
+.overall-cost-card .mat-expansion-panel-header {
+    padding-left: 0px !important;
+    padding-right: 15px !important;
+}
+.overall-cost-card .mat-expansion-panel {
+    box-shadow: none !important;
+}
 
+.overall-cost-card .mat-expansion-panel-body {
+    padding-left: 0px !important;
+}
 .case-details-types .mat-list-base{
     padding-top: 5px;
     padding-bottom: 5px;

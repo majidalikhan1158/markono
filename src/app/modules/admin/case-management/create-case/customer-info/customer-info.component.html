@@ -70,9 +70,10 @@
                 matInput placeholder="Search" aria-label="State" 
                 [formControl]="searchCustomerInfo" 
                 [matAutocomplete]="auto"
+                (keyup)='handleCustomerSearch()'
                 id="txtSearchCustomer">
                 <mat-autocomplete  #auto="matAutocomplete" [displayWith]="displayFn" showPanel="true" (optionSelected)='handleSelectedCustomer($event.option.value)'>
-                  <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                  <mat-option *ngIf="isLoading" class="is-loading" value="0">Loading...</mat-option>
                   <ng-container *ngIf="!isLoading">
                     <mat-option *ngFor="let item of customerDetailVMList" [value]="item.CompanyCode">
                       <span><b>{{item.CompanyCode}}</b> _({{item.PrintFileFolder}})</span>
@@ -81,7 +82,7 @@
                 </mat-autocomplete>
               </mat-form-field>
             </div>
-            <div class="col-lg-3 padding-0px">
+            <div class="col-lg-3 padding-0px" *ngIf="0 > 1">
               <button class="btn btn-primary mt-3 cursor-pointer btnCustomerSearch"
               (click)="handleCustomerSearch()">SEARCH</button>
             </div>

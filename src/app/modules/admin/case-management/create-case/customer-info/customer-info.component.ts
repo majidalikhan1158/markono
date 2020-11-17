@@ -63,8 +63,10 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
 
   handleCustomerSearch() {
     if (this.customerInfoVM.customerId !== '' && this.customerInfoVM.customerId !== this.previousValue) {
+      this.customerDetailVMList = [];
       this.previousValue = this.customerInfoVM.customerId;
       this.isLoading = true;
+      this.ref.detectChanges();
       setTimeout(_ => this.trigger.openPanel());
       // call api to get customer results
       this.orderService.getCustomerDetail({sellToNo: this.customerInfoVM.customerId}).subscribe(resp => {
@@ -82,6 +84,10 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   }
 
   handleSelectedCustomer = (customerId: string) => {
+    if (customerId === '0') {
+      setTimeout(_ => this.trigger.openPanel());
+      return;
+    }
     this.customerInfoVM.customerId = customerId;
     this.customerInfoVM.customerDetail = this.customerDetailVMList.find(x => x.CompanyCode === customerId);
     this.shouldShowCustomerInfoBox = true;

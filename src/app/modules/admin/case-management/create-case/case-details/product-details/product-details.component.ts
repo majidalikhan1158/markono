@@ -91,6 +91,17 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     this.rowIdToExpand = 0;
   }
 
+  deleteProductDetails = (recordId: number) => {
+    const filteredRows = this.productDetailsVMList.filter(
+      (x) => x.id !== recordId
+    );
+    filteredRows.forEach((x, i) => {
+      x.id = i + 1;
+    });
+    this.productDetailsVMList = filteredRows;
+    this.pushToStore();
+  }
+
   handlePrintTypeChange(recordId: number) {
     const record = this.productDetailsVMList.find((x) => x.id === recordId);
     if (record && record.isbn && record.printType) {

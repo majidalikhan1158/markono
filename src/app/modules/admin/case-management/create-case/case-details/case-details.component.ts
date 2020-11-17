@@ -172,7 +172,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
     this.store.createCaseStore.subscribe((data) => {
       let totalCost = 0;
       let subTotal = 0;
-      this.overAllCostVM.otherCharges = [];
+      this.overAllCostVM = this.initialObject();
       if (data && data.shippingInfoList && data.shippingInfoList.length > 0) {
         data.shippingInfoList.forEach((shipment) => {
           shipment.shippingSpecificCost.forEach((cost) => {

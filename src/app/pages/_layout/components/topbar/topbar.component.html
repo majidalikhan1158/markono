@@ -158,20 +158,21 @@
     </div>
   </div>
 </ng-container>
-<ng-container *ngIf="dynamicHeaderMenuService.shouldDisplayEditEmbeddedLinkButton$ | async">
+<ng-container *ngIf="dynamicHeaderMenuService.shouldDisplayEditEmbeddedLink$ | async ">
   <div class="topbar-item">
     <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2">
       <button class="mat-focus-indicator btn btn-primary mat-button mat-button-base text-upper-case"
         [matMenuTriggerFor]="menu">
-        <i class="flaticon-edit"></i>Edit Embedded Link</button>
+        <span class="material-icons font-11px pr-4"> edit</span>
+        Edit Embedded Link</button>
       <mat-menu #menu="matMenu" class="filter-menu">
-        <div class="filter-menu-content">
+        <div class="filter-menu-content" (click)="$event.stopPropagation();">
           <mat-form-field appearance="fill" class="font-12px pb-4">
             <mat-label>Embedded Link</mat-label>
-            <input matInput [(ngModel)]="embeededLinkUrl">
+            <input matInput  [(ngModel)]="embededLinkModel">
           </mat-form-field>
           <button mat-button
-            class="mat-focus-indicator btn btn-primary mat-button mat-button-base text-upper-case mr-2">Update</button>
+            class="mat-focus-indicator btn btn-primary mat-button mat-button-base text-upper-case mr-2" (click)="handleEmbededLinkChange()">Update</button>
         </div>
       </mat-menu>
     </div>

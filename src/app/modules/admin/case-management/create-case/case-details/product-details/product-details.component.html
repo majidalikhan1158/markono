@@ -64,7 +64,11 @@
                                             </mat-form-field>
                                         </td>
                                         <td>{{productDetailsVMList[i].subTotal}}</td>
-                                        <td class="action-column pb-0">
+                                        <td class="action-column pb-0 ">
+                                            <span class="material-icons delete-icon pr-2 cursor-pointer" 
+                                                (click)="deleteProductDetails(productDetailsVMList[i].id)" *ngIf="createCaseMode !== createCaseModes.EDIT && productDetailsVMList.length > 1"> 
+                                                delete
+                                            </span>
                                             <span class="material-icons expansion-icon"
                                                 (click)="showProductDetails(productDetailsVMList[i].id)">
                                                 {{ 

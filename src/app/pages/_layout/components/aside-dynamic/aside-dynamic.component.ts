@@ -84,11 +84,11 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     } else {
       this.dynamicHeaderMenuService.displayProductSpecButton(false);
     }
-    if (this.currentUrl === '/admin/app-dashboard') {
-      this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(true);
-    } else {
-      this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(false);
-    }
+    // if (this.currentUrl === '/admin/app-dashboard') {
+    //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(true);
+    // } else {
+    //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(false);
+    // }
     if (!pageLabelFound) {
       this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
     }

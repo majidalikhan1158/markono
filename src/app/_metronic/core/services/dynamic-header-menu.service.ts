@@ -14,18 +14,18 @@ export class DynamicHeaderMenuService {
   private headerLabelSubject = new BehaviorSubject<string>('');
   private shouldDisplayProductSpecButtonSubject = new BehaviorSubject<boolean>(false);
   private shouldHeaderDisplaySubject = new BehaviorSubject<boolean>(true);
-  private shouldDisplayEditEmbeddedLinkButtonSubject = new BehaviorSubject<boolean>(false);
+  private shouldDisplayEditEmbeddedLinkButtonSubject = new BehaviorSubject<string>(null);
   menuConfig$: Observable<any>;
   headerLabel$: Observable<any>;
   shouldHeaderDisplay$: Observable<boolean>;
   shouldDisplayProductSpecButton$: Observable<boolean>;
-  shouldDisplayEditEmbeddedLinkButton$: Observable<boolean>;
+  shouldDisplayEditEmbeddedLink$: Observable<string>;
   constructor() {
     this.menuConfig$ = this.menuConfigSubject.asObservable();
     this.headerLabel$ = this.headerLabelSubject.asObservable();
     this.shouldHeaderDisplay$ = this.shouldHeaderDisplaySubject.asObservable();
     this.shouldDisplayProductSpecButton$ = this.shouldDisplayProductSpecButtonSubject.asObservable();
-    this.shouldDisplayEditEmbeddedLinkButton$ = this.shouldDisplayEditEmbeddedLinkButtonSubject.asObservable();
+    this.shouldDisplayEditEmbeddedLink$ = this.shouldDisplayEditEmbeddedLinkButtonSubject.asObservable();
 
     this.loadMenu();
   }
@@ -56,7 +56,7 @@ export class DynamicHeaderMenuService {
     this.shouldHeaderDisplaySubject.next(flag);
   }
 
-  public displayEditEmbeddedLinkButton(flag: boolean) {
-    this.shouldDisplayEditEmbeddedLinkButtonSubject.next(flag);
+  public setEditEmbeddedLink(link: string) {
+    this.shouldDisplayEditEmbeddedLinkButtonSubject.next(link);
   }
 }

@@ -14,9 +14,11 @@ export class AppDashboardComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
   submitUrl() {
     this.shouldDisplayIFrameForm = false;
     this.shouldDisplayIFrameContent = true;
     this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(this.embeddedURL);
   }
+
 }

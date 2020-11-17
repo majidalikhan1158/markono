@@ -27,7 +27,6 @@ import { CaseBaseService } from './modules/admin/case-management/case-base.servi
 import { ProductSpecStore } from './modules/shared/ui-services/product-spec.service';
 import { SnackBarService } from './modules/shared/ui-services/snack-bar.service';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
-
 function appInitializer(authService: AuthService) {
   return () => {
     return new Promise((resolve) => {
@@ -61,9 +60,9 @@ export function getHighlightLanguages() {
     ClipboardModule,
     environment.isMockEnabled
       ? HttpClientInMemoryWebApiModule.forRoot(FakeAPIService, {
-          passThruUnknownUrl: true,
-          dataEncapsulation: false,
-        })
+        passThruUnknownUrl: true,
+        dataEncapsulation: false,
+      })
       : [],
     AppRoutingModule,
     InlineSVGModule.forRoot(),
@@ -93,7 +92,7 @@ export function getHighlightLanguages() {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
 
 export function initializeTokens(config: TokenConfigService) {
   return () => config.init();

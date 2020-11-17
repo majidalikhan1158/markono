@@ -185,6 +185,7 @@ export interface OverAllCostVM {
     printAndBind: number;
     subTotal: number;
     otherCharges: OtherCharges[];
+    otherChargesTotal: number;
     discount: number;
     tax: number;
     total: number;

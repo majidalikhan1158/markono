@@ -178,9 +178,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
           shipment.shippingSpecificCost.forEach((cost) => {
             if (cost && cost.subTotal) {
               // tslint:disable-next-line: radix
-            totalCost =
-              parseInt(totalCost.toString()) +
-              parseInt(cost.subTotal.toString());
+            totalCost = parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
             }
           });
           if (totalCost > 0) {
@@ -197,8 +195,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
         data.miscCostList.forEach((cost) => {
           if (cost && cost.subTotal) {
             // tslint:disable-next-line: radix
-            totalCost =
-            parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
+            totalCost = parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
           }
 
           if (totalCost > 0) {
@@ -218,22 +215,20 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       ) {
         this.overAllCostVM.printAndBind = 0;
         data.productDetailsList.forEach((item) => {
-          this.overAllCostVM.printAndBind =
-            +this.overAllCostVM.printAndBind + item.subTotal;
+          this.overAllCostVM.printAndBind = +this.overAllCostVM.printAndBind + item.subTotal;
         });
       }
 
       if (this.overAllCostVM.otherCharges.length > 0) {
         this.overAllCostVM.otherCharges.forEach((cost) => {
           // tslint:disable-next-line: radix
-          subTotal =
-            parseInt(subTotal.toString()) + parseInt(cost.total.toString());
+          subTotal = parseInt(subTotal.toString()) + parseInt(cost.total.toString());
+          // tslint:disable-next-line: radix
+          this.overAllCostVM.otherChargesTotal = parseInt(subTotal.toString()) + parseInt(cost.total.toString());
         });
       }
       // tslint:disable-next-line: radix
-      this.overAllCostVM.subTotal =
-        parseInt(subTotal.toString()) +
-        parseInt(this.overAllCostVM.printAndBind.toString());
+      this.overAllCostVM.subTotal = parseInt(subTotal.toString()) + parseInt(this.overAllCostVM.printAndBind.toString());
       this.overAllCostVM.total = this.overAllCostVM.subTotal;
       if (
         (data && !data.overallCostVM) ||
@@ -270,6 +265,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       printAndBind: 0,
       subTotal: 0,
       otherCharges: [],
+      otherChargesTotal: 0,
       discount: 0,
       tax: 0,
       total: 0,

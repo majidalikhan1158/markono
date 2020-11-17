@@ -208,7 +208,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
       specsVersionNo: '',
       owner: '',
       jobType: '',
-      weight: '',
+      weight: 0,
       fGRequired: 0,
       advancesRequired: 0,
       quoteNo: '',
@@ -218,7 +218,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
       bluePrintList: [],
       fgList: [],
       advancesList: [],
-      spineWidth: ''
+      spineWidth: 0
     };
   }
 

@@ -61,13 +61,18 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.rowsToDisplay = filteredRows;
   }
 
-  ngOnDestroy(): void {
-    /**
-     * get form data here and pass to the service
-     */
+  pushToStore = () => {
     this.createCaseService.setCreateCaseDataSource(
       this.rowsToDisplay,
       CreateCaseDataType.INVOICE
     );
+  }
+  
+  ngOnDestroy(): void {
+    this.pushToStore();
+  }
+
+  handleChangeToSyncWithStore = () => {
+    this.pushToStore();
   }
 }

@@ -23,6 +23,7 @@
                                             <input 
                                                 [(ngModel)]="rowsToDisplay[i].department"
                                                 matInput [disabled]="disabled"
+                                                (change)="handleChangeToSyncWithStore()"
                                                 placeholder="Dept. Name">
                                         </mat-form-field>
                                     </td>
@@ -32,6 +33,7 @@
                                             <input 
                                                 [(ngModel)]="rowsToDisplay[i].instructions"
                                                 matInput   [disabled]="disabled"
+                                                (change)="handleChangeToSyncWithStore()"
                                                 placeholder="Write Instructions">
                                         </mat-form-field>
                                     </td>

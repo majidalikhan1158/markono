@@ -38,7 +38,7 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   searchCustomerInfo = new FormControl();
   isLoading = false;
   previousValue = '';
-  selectedCaseType = 0;
+  selectedCaseType = '';
   constructor(
     private modalService: ModalService,
     private store: CaseStore,
@@ -92,13 +92,8 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   }
 
   handleStepperNextEvent = () => {
-    this.store.setCreateCaseDataSource(
-      this.customerInfoVM,
-      CreateCaseDataType.CUSTOMER_INFO
-    );
-    if (this.selectedCaseType.toString() === '3' ) {
-      this.store.setCaseType2(this.selectedCaseType);
-    }
+    this.store.setCreateCaseDataSource(this.customerInfoVM, CreateCaseDataType.CUSTOMER_INFO);
+    this.store.setCaseType2(this.selectedCaseType);
     this.stepperNextEvent.emit(CreateCaseSteps.CASE_DETAILS);
   }
 
@@ -156,7 +151,7 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   }
 
   handleCaseTypeChange  = (event: MatRadioChange) => {
-    this.selectedCaseType = event.value as number;
+    this.selectedCaseType = event.value;
     this.store.setCaseType(this.selectedCaseType);
   }
 

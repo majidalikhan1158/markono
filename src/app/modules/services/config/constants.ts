@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
     providedIn: 'root',
   })
 export class Constants {
-    public readonly API_BASE_ADDRESS: string =  'http://192.168.254.60/';
+    // http://192.168.254.60/
+    public readonly API_BASE_ADDRESS: string =  'https://api.markono.com/';
     public readonly API_ENDPOINT_ORDER_SERVICES: string = 'OrderServicesDev/api/';
     public readonly API_ENDPOINT_PRODUCT_SERVICES: string = 'ProductServicesDev/api/';
     public readonly API_ENDPOINT_LIVE: string = 'app.markono.com';

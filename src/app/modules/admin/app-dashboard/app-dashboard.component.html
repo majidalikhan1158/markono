@@ -1,9 +1,9 @@
-<div class="row url-div" *ngIf="IsClose">
+<div class="row url-div" *ngIf="shouldCloseUrlForm">
     <div class="col-xl-12">
         <div class="container">
             <div class="form">
                 <div class="form-group icon-div">
-                    <img src="/assets/media/logos/7295a248-78b5-42fe-b2da-e16dbccb74ac.jpg" />
+                    <img src="./assets/media/logos/7295a248-78b5-42fe-b2da-e16dbccb74ac.jpg" />
                 </div>
                 <div class="form-group">
                     <h3><b>Enter your embedded link to view</b></h3>
@@ -15,13 +15,13 @@
 
                 <div class="form-group ">
                     <input type="submit" class="form-control submit-div" value="SUBMIT"
-                        (click)="SubmitUrl()">
+                        (click)="submitUrl()">
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="row" *ngIf="IsDisplay">
+<div class="row" *ngIf="shouldDisplayIFrame">
     <div class="col-xl-12">
         <div class="card card-custom example example-compact gutter-b">
             <div class="card-body">
@@ -34,7 +34,7 @@
         </div>
     </div>
 </div>
-<div class="row" *ngIf="IsDisplay">
+<div class="row" *ngIf="shouldDisplayIFrame">
     <div class="col-xl-12">
         <div class="card card-custom example example-compact gutter-b">
             <div class="card-body">

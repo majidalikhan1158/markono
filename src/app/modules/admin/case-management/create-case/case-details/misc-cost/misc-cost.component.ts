@@ -58,20 +58,6 @@ export class MiscCostComponent implements OnInit, OnDestroy {
     this.pushToStore();
   }
 
-  ngOnDestroy(): void {
-    /**
-     * get form data here and pass to the service
-     */
-   this.pushToStore();
-  }
-
-  pushToStore = () => {
-    this.store.setCreateCaseDataSource(
-      this.miscCostVMList,
-      CreateCaseDataType.MISC_COST
-    );
-  }
-
   getDefaultRecord = () => {
     this.store.createCaseStore.subscribe((resp) => {
       if (resp && resp.miscCostList && resp.miscCostList.length > 0) {
@@ -91,5 +77,19 @@ export class MiscCostComponent implements OnInit, OnDestroy {
       description: '',
       subTotal: null
     };
+  }
+  ngOnDestroy(): void {
+   this.pushToStore();
+  }
+
+  pushToStore = () => {
+    this.store.setCreateCaseDataSource(
+      this.miscCostVMList,
+      CreateCaseDataType.MISC_COST
+    );
+  }
+
+  handleChangeToSyncWithStore = () => {
+    this.pushToStore();
   }
 }

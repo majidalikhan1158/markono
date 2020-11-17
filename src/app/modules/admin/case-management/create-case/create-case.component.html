@@ -2,7 +2,6 @@
     <mat-step  completed="false">
       <ng-template matStepLabel >Customer Info.</ng-template>
       <app-customer-info (stepperNextEvent)="handleStepperNextEvent($event)"></app-customer-info>
-      
     </mat-step>
     <mat-step  completed="false" >
       <ng-template matStepLabel>{{secondStepTitle}}.</ng-template>
@@ -19,13 +18,16 @@
     <mat-step  completed="false">
       <ng-template matStepLabel>Summary</ng-template>
       <app-summary 
+        *ngIf="shouldShowSummary"
         [createCaseMode]="createCaseMode" 
         (changeStepperEvent)="handleStepperChange($event)"
         [isShippingDetails]="shouldShowShippingDetailsAsSecondStep"
       ></app-summary>
        <div class="col-lg-12 text-right pt-5">
         <button mat-button (click)="handleStepperBackEvent(createCaseSteps.CASE_DETAILS)" class="btn btn-primary stepper-back-button mr-2">Back</button>
-        <button mat-button (click)="createCase()" class="btn btn-primary stepper-next-button">Create Case</button>
+        <button mat-button 
+          *ngIf="shouldDisplayCreateCaseButton" 
+          (click)="createCase()" class="btn btn-primary stepper-next-button">Create Case</button>
       </div>
     </mat-step>
 </mat-horizontal-stepper>

@@ -57,17 +57,12 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
     this.overAllCostVM = this.initialObject();
     this.setCreateCaseModeData();
     this.getOverallCostData();
-    if (this.isShippingDetails) {
-      this.currentSelectedType = CaseDetailTypes.SHIPPING_INFO;
-      this.ref.detectChanges();
-    }
+    this.getIsShippingDetailsStatus();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     const createCaseModeChange = changes['createCaseMode'];
     const tabToOpenChange = changes['tabToOpen'];
-    const isShippingDetails = changes['isShippingDetails'];
-
          // handle edit-disable mode
     if (
           createCaseModeChange &&
@@ -83,22 +78,31 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
             this.setSelectedTabInNewMode(selectedTab);
           }
         }
+  }
 
-    if (isShippingDetails && isShippingDetails.currentValue) {
-      this.isShippingDetails = isShippingDetails.currentValue as boolean;
-      if (this.isShippingDetails) {
-        if (this.createCaseMode === CreateCaseMode.EDIT) {
-          this.caseDetailTypesArray = this.caseDetailTypesArray.filter(
-            (x) => x.enum === CaseDetailTypes.CUSTOMER_INFO ||
-            x.enum === CaseDetailTypes.SHIPPING_INFO
-          );
-          this.currentSelectedType = CaseDetailTypes.CUSTOMER_INFO;
-        } else {
-          this.currentSelectedType = CaseDetailTypes.SHIPPING_INFO;
-        }
-        this.ref.detectChanges();
+  getIsShippingDetailsStatus() {
+    this.store.caseType2.subscribe(x => {
+      if (x.toString() === 'WO') {
+        this.isShippingDetails = true;
+        this.handleIsShipmentDetailsCase();
+      } else {
+        this.isShippingDetails = false;
+        this.setCreateCaseModeData();
       }
+    });
+  }
+
+  handleIsShipmentDetailsCase() {
+    if (this.createCaseMode === CreateCaseMode.EDIT) {
+      this.caseDetailTypesArray = this.caseDetailTypesArray.filter(
+        (x) => x.enum === CaseDetailTypes.CUSTOMER_INFO ||
+        x.enum === CaseDetailTypes.SHIPPING_INFO
+      );
+      this.currentSelectedType = CaseDetailTypes.CUSTOMER_INFO;
+    } else {
+      this.currentSelectedType = CaseDetailTypes.SHIPPING_INFO;
     }
+    this.ref.detectChanges();
   }
 
   setCreateCaseModeData() {
@@ -172,10 +176,12 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       if (data && data.shippingInfoList && data.shippingInfoList.length > 0) {
         data.shippingInfoList.forEach((shipment) => {
           shipment.shippingSpecificCost.forEach((cost) => {
-            // tslint:disable-next-line: radix
+            if (cost && cost.subTotal) {
+              // tslint:disable-next-line: radix
             totalCost =
               parseInt(totalCost.toString()) +
               parseInt(cost.subTotal.toString());
+            }
           });
           if (totalCost > 0) {
             this.overAllCostVM.otherCharges.push({
@@ -189,9 +195,12 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
 
       if (data && data.miscCostList && data.miscCostList.length > 0) {
         data.miscCostList.forEach((cost) => {
-          // tslint:disable-next-line: radix
-          totalCost =
+          if (cost && cost.subTotal) {
+            // tslint:disable-next-line: radix
+            totalCost =
             parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
+          }
+
           if (totalCost > 0) {
             this.overAllCostVM.otherCharges.push({
               type: `Misc ${cost.id} costs`,

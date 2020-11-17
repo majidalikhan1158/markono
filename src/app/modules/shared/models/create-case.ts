@@ -68,7 +68,7 @@ export interface ProductISBNDetailVM {
     specsVersionNo: string;
     owner: string;
     jobType: string;
-    weight: string;
+    weight: number;
     fGRequired: number;
     advancesRequired: number;
     quoteNo: string;
@@ -78,7 +78,7 @@ export interface ProductISBNDetailVM {
     bluePrintList: ProductDetailModals[];
     fgList: ProductDetailModals[];
     advancesList: ProductDetailModals[];
-    spineWidth: string;
+    spineWidth: number;
 }
 
 export interface ShippingInfoVM {

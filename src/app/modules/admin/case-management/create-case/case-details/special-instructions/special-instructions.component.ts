@@ -62,12 +62,20 @@ export class SpecialInstructionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    /**
-     * get form data here and pass to the service
-     */
     this.createCaseService.setCreateCaseDataSource(
       this.rowsToDisplay,
       CreateCaseDataType.SPECIAL_INSTRUCTIONS
     );
+  }
+
+  pushToStore = () => {
+    this.createCaseService.setCreateCaseDataSource(
+      this.rowsToDisplay,
+      CreateCaseDataType.SPECIAL_INSTRUCTIONS
+    );
+  }
+
+  handleChangeToSyncWithStore = () => {
+    this.pushToStore();
   }
 }

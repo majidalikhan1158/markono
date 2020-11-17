@@ -41,50 +41,29 @@ export class CaseHelperService {
 
   public transCaseDataToCaseApiModal = (data: CreateCaseViewModel) => {
     return {
-      id: '00000000-0000-0000-0000-000000000000',
-      caseNo: '000196',
-      quoteNo: null,
-      orderNo: null,
+      caseNo: '',
+      quoteNo: '',
+      orderNo: '',
       printType: 'Digital',
-      productGroup: '1000',
       sellToNo: data.customerInfo.customerId,
       billToNo: data.customerInfo.customerId,
-      requestedDeliveryDate: '0001-01-01T00:00:00',
       salesPerson: data.customerInfo.customerDetail.SalesPerson,
       coordinator: data.customerInfo.customerDetail.Coordinator,
       yourReference: '',
-      weight: null,
-      custCode: null,
       specialInstructions: this.getSpecialInstructions(data.specialInstructionList),
       discount: data.overallCostVM.discount,
       tax: data.overallCostVM.tax,
       notesOnInvoiceBottom: this.getNotes(data.invoiceList , 'Bottom'),
       notesOnInvoiceTop: this.getNotes(data.invoiceList, 'Top'),
-      quoteDate: '0001-01-01T00:00:00',
-      quoteSentDate: '0001-01-01T00:00:00',
-      quoteExpireDate: '0001-01-01T00:00:00',
-      orderDate: '0001-01-01T00:00:00',
-      currentActivityId: '00000000-0000-0000-0000-000000000000',
-      createdByUser: 'CCE',
-      createdBy: null,
-      createdDateTime: null,
-      updatedByUser: 'CCE',
-      updatedBy: null,
-      updatedDateTime: null,
-      syncWMS: false,
-      syncWMSDateTime: null,
-      syncERP: false,
-      syncERPDateTime: null,
-      isDeleted: false,
-      countryCode: data.customerInfo.customerDetail.CountryRegionCode,
-      currencyCode: data.customerInfo.customerDetail.CurrencyCode,
-      companyCode: data.customerInfo.customerDetail.CompanyCode,
+      createdByUser: 'DevUI',
+      createdBy: 'DevUI',
+      updatedByUser: 'DevUI',
+      updatedBy: 'DevUI',
       companyName: data.customerInfo.customerDetail.CompanyName,
       address1: data.customerInfo.customerDetail.Address,
       address2: data.customerInfo.customerDetail.Address2,
-      currentActivityStatusName: null,
-      otherCharge: this.getOtherCharges(data),
-      caseDetail: this.getCaseDetails(data)
+      otherCharges: this.getOtherCharges(data),
+      caseDetails: this.getCaseDetails(data)
     };
   }
 
@@ -92,42 +71,38 @@ export class CaseHelperService {
     const obj = [];
     data.overallCostVM.otherCharges.forEach(item => {
       obj.push({
-        id: '00000000-0000-0000-0000-000000000000',
-        caseID: '00000000-0000-0000-0000-000000000000',
         item: item.type,
         value: item.total,
-        description: ''
+        description: 'test'
       });
     });
     obj.push({
-      id: '00000000-0000-0000-0000-000000000000',
-      caseID: '00000000-0000-0000-0000-000000000000',
       item: 'print and bind',
       value: data.overallCostVM.printAndBind,
-      description: ''
+      description: 'test'
     });
     return obj;
   }
 
   getCaseDetails = (data: CreateCaseViewModel) => {
+    if (!data.productDetailsList || data.productDetailsList.length === 0) {
+      return this.getCaseDetailsFromShippingDetails(data);
+    }
     const obj = [];
     data.productDetailsList.forEach(item => {
       obj.push({
         caseDetailNo: '',
+        type: data.customerInfo.caseType,
+        sellToNo: item.productISBNDetail.owner,
         iSBNPartNo: item.isbn,
         printType: item.printType,
         productVersion: item.productISBNDetail.specsVersionNo,
-        parentISBN: null,
-        type: data.customerInfo.caseType,
-        componentType: null,
+        parentISBN: '',
         jobType: item.productISBNDetail.jobType,
         productGroup: item.productISBNDetail.productGroup,
-        yourReference: null,
         title: item.productISBNDetail.title,
         lnNo: item.id,
         extLnNo: 0,
-        jobNo: null,
-        sellToNo: item.productISBNDetail.owner,
         bindingType: item.productISBNDetail.bindingType,
         totalExtent: item.productISBNDetail.totalExtent,
         weight: item.productISBNDetail.weight,
@@ -141,26 +116,70 @@ export class CaseHelperService {
         quotedPrice: 0.0,
         sellingPrice: item.sellingPrice,
         subTotal: item.subTotal,
-        carrierSheet: '',
         samplesRequired: item.productISBNDetail.samplesRequired,
         bluePrintRequired: item.productISBNDetail.bluePrintRequired,
         fGRequired: item.productISBNDetail.fGRequired,
         advancesRequired: item.productISBNDetail.advancesRequired,
-        isDeleted: false,
-        currentActivityId: '00000000-0000-0000-0000-000000000000',
-        createdByUser: null,
-        createdBy: null,
-        createdDateTime: null,
-        updatedByUser: null,
-        updatedBy: null,
-        updatedDateTime: null,
-        requestedDeliveryDate: '0001-01-01T00:00:00',
+        carrierSheet: '',
+        createdByUser: 'DevUI',
+        createdBy: 'DevUI',
+        updatedByUser: 'DevUI',
+        updatedBy: 'DevUI',
         samplesReq: this.getModalData(item.productISBNDetail.advancesList, 'Sample'),
         bluePrintReq: this.getModalData(item.productISBNDetail.bluePrintList, 'BluePrint'),
         fgReq:  this.getModalData(item.productISBNDetail.fgList, 'FG'),
         advancesReq: this.getModalData(item.productISBNDetail.advancesList, 'AD'),
       });
     });
+    return obj;
+  }
+
+  getCaseDetailsFromShippingDetails = (data: CreateCaseViewModel) => {
+    const obj = [];
+    if (data && data.shippingInfoList && data.shippingInfoList.length > 0) {
+      data.shippingInfoList.forEach(item => {
+        obj.push({
+          caseDetailNo: '',
+          type: data.customerInfo.caseType,
+          sellToNo: '',
+          iSBNPartNo: data.shippingInfoList[0].shippingItems[0].productNumber,
+          printType: '',
+          productVersion: '',
+          parentISBN: '',
+          jobType: '',
+          productGroup: '',
+          title: '',
+          lnNo: 0,
+          extLnNo: 0,
+          bindingType: '',
+          totalExtent: 0,
+          weight: 0,
+          spine: 0,
+          additionalUnitPrice: 0.0,
+          additionalQty: 0,
+          margin: 0,
+          orderQuantity: data.shippingInfoList[0].shippingItems[0].shipmentQty,
+          productionQuantity: 0,
+          estimatedPrice: 0,
+          quotedPrice: 0.0,
+          sellingPrice: 0,
+          subTotal: 0,
+          samplesRequired: 0,
+          bluePrintRequired: 0,
+          fGRequired: 0,
+          advancesRequired: 0,
+          carrierSheet: '',
+          createdByUser: 'DevUI',
+          createdBy: 'DevUI',
+          updatedByUser: 'DevUI',
+          updatedBy: 'DevUI',
+          samplesReq: [],
+          bluePrintReq: [],
+          fgReq:  [],
+          advancesReq: [],
+        });
+      });
+    }
     return obj;
   }
 
@@ -180,6 +199,9 @@ export class CaseHelperService {
   }
 
   getNotes = (invoicesList: InvoiceViewModel[], position: string) => {
+    if (!invoicesList || invoicesList.length === 0) {
+      return '';
+    }
     let notes = '';
     if (invoicesList && invoicesList.length > 0) {
       const note = invoicesList.find(x => x.position === position);
@@ -191,6 +213,9 @@ export class CaseHelperService {
   }
 
   getSpecialInstructions = (specialInstructionList: SpecialInstructionViewModel[]) => {
+    if (!specialInstructionList || specialInstructionList.length === 0) {
+      return '';
+    }
     let specialInstructions = '';
     if (specialInstructionList && specialInstructionList.length > 0) {
       specialInstructionList.forEach(item => {

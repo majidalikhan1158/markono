@@ -279,6 +279,10 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     this.store.createCaseStore.subscribe((resp) => {
       if (resp && resp.shippingInfoList && resp.shippingInfoList.length > 0) {
         this.shipmentsInfoVMList = resp.shippingInfoList;
+      } else {
+        if (this.isShippingDetails) {
+         // this.handleIsShipmentDetails();
+        }
       }
     });
   }

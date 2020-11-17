@@ -10,6 +10,7 @@ import { MaterialUiModule } from '../material-ui/material-ui.module';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { PerfectScrollbarModule, PerfectScrollbarConfigInterface, PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { AppDashboardComponent } from './app-dashboard/app-dashboard.component';
+import { ModalComponent } from '../shared/ui-modals/modal/modal.component';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };

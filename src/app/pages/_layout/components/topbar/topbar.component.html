@@ -158,6 +158,25 @@
     </div>
   </div>
 </ng-container>
+<ng-container *ngIf="dynamicHeaderMenuService.shouldDisplayEditEmbeddedLinkButton$ | async">
+  <div class="topbar-item">
+    <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2">
+      <button class="mat-focus-indicator btn btn-primary mat-button mat-button-base text-upper-case"
+        [matMenuTriggerFor]="menu">
+        <i class="flaticon-edit"></i>Edit Embedded Link</button>
+      <mat-menu #menu="matMenu" class="filter-menu">
+        <div class="filter-menu-content">
+          <mat-form-field appearance="fill" class="font-12px pb-4">
+            <mat-label>Embedded Link</mat-label>
+            <input matInput [(ngModel)]="embeededLinkUrl">
+          </mat-form-field>
+          <button mat-button
+            class="mat-focus-indicator btn btn-primary mat-button mat-button-base text-upper-case mr-2">Update</button>
+        </div>
+      </mat-menu>
+    </div>
+  </div>
+</ng-container>
 
 <ng-container *ngIf="extrasUserDisplay">
   <ng-container *ngIf="extrasUserLayout === 'offcanvas'">

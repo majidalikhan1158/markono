@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } fr
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { DynamicHeaderMenuService } from 'src/app/_metronic/core';
 import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
+declare let $: any;
 @Component({
   selector: 'app-app-dashboard',
   templateUrl: './app-dashboard.component.html',
@@ -11,13 +12,14 @@ import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
 export class AppDashboardComponent implements OnInit, OnDestroy {
   embeddedURL: string;
   shouldDisplayFirstScreen = true;
+  defaultYoutubeUrl: string = 'https://www.youtube.com/embed/';
   iFrameValue: SafeResourceUrl;
   constructor(
     private sanitizer: DomSanitizer,
     private dynamicHeaderMenuService: DynamicHeaderMenuService,
     private ref: ChangeDetectorRef,
     private snack: SnackBarService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.subscribeEmbededLinkChange();
@@ -28,10 +30,20 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
       this.snack.open('URL is required');
       return;
     }
-    this.shouldDisplayFirstScreen = false;
-    this.dynamicHeaderMenuService.setEditEmbeddedLink(this.embeddedURL);
-    this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(this.embeddedURL);
-    this.ref.detectChanges();
+    let temp = this.embeddedURL.includes('youtube')
+    if (temp) {
+      let temp = this.embeddedURL.split('watch?v=')[1];
+      this.embeddedURL = this.defaultYoutubeUrl + temp;
+      this.shouldDisplayFirstScreen = false;
+      this.dynamicHeaderMenuService.setEditEmbeddedLink(this.embeddedURL);
+      this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(this.embeddedURL);
+      this.ref.detectChanges();
+    } else {
+      this.shouldDisplayFirstScreen = false;
+      this.dynamicHeaderMenuService.setEditEmbeddedLink(this.embeddedURL);
+      this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(this.embeddedURL);
+      this.ref.detectChanges();
+    }
   }
 
   ngOnDestroy(): void {

@@ -169,10 +169,10 @@
         <div class="filter-menu-content" (click)="$event.stopPropagation();">
           <mat-form-field appearance="fill" class="font-12px pb-4">
             <mat-label>Embedded Link</mat-label>
-            <input matInput  [(ngModel)]="embededLinkModel">
+            <input matInput [(ngModel)]="embededLinkModel">
           </mat-form-field>
-          <button mat-button
-            class="mat-focus-indicator btn btn-primary mat-button mat-button-base text-upper-case mr-2" (click)="handleEmbededLinkChange()">Update</button>
+          <button mat-button class="mat-focus-indicator btn btn-primary mat-button mat-button-base text-upper-case mr-2"
+            (click)="handleEmbededLinkChange()">Update</button>
         </div>
       </mat-menu>
     </div>

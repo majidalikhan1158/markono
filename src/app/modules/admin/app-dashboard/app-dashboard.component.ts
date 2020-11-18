@@ -30,20 +30,15 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
       this.snack.open('URL is required');
       return;
     }
-    let temp = this.embeddedURL.includes('youtube')
+    const temp = this.embeddedURL.includes('youtube');
     if (temp) {
-      let temp = this.embeddedURL.split('watch?v=')[1];
-      this.embeddedURL = this.defaultYoutubeUrl + temp;
-      this.shouldDisplayFirstScreen = false;
-      this.dynamicHeaderMenuService.setEditEmbeddedLink(this.embeddedURL);
-      this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(this.embeddedURL);
-      this.ref.detectChanges();
-    } else {
-      this.shouldDisplayFirstScreen = false;
-      this.dynamicHeaderMenuService.setEditEmbeddedLink(this.embeddedURL);
-      this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(this.embeddedURL);
-      this.ref.detectChanges();
+      const url = this.embeddedURL.split('watch?v=')[1];
+      this.embeddedURL = this.defaultYoutubeUrl + url;
     }
+    this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(this.embeddedURL);
+    this.dynamicHeaderMenuService.setEditEmbeddedLink(this.embeddedURL);
+    this.shouldDisplayFirstScreen = false;
+    this.ref.detectChanges();
   }
 
   ngOnDestroy(): void {
@@ -54,8 +49,8 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
     this.dynamicHeaderMenuService.shouldDisplayEditEmbeddedLink$.subscribe(
       (x) => {
         if (x && x !== this.embeddedURL) {
-          this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(x);
-          this.ref.detectChanges();
+          this.embeddedURL = x;
+          this.submitUrl();
         }
       }
     );

@@ -11,6 +11,15 @@ app-special-instructions {
     overflow-x: hidden !important;
   }
 
+  
+  .special-instruction-card .mat-form-field-appearance-fill .mat-form-field-flex {
+    padding-top: 0px !important;
+  }
+
+  .special-instruction-card .mat-select-arrow-wrapper {
+    vertical-align: bottom !important;
+  }
+
   .special-instruction-table thead tr {
     background: transparent !important;
     padding-bottom: 12px !important;

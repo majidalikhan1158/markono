@@ -19,7 +19,6 @@
                                         {{rowsToDisplay[i].id}}
                                     <td>
                                         <mat-form-field appearance="fill">
-                                            <mat-label>Department</mat-label>
                                             <input 
                                                 [(ngModel)]="rowsToDisplay[i].department"
                                                 matInput [disabled]="disabled"
@@ -29,7 +28,6 @@
                                     </td>
                                     <td class="width-590">
                                         <mat-form-field appearance="fill">
-                                            <mat-label>Write Instructions</mat-label>
                                             <input 
                                                 [(ngModel)]="rowsToDisplay[i].instructions"
                                                 matInput   [disabled]="disabled"

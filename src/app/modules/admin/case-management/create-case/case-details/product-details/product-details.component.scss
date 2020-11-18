@@ -7,6 +7,13 @@ app-product-details {
     min-height: 250px;
   }
  
+  .product-datails-table .mat-form-field-appearance-fill .mat-form-field-flex {
+    padding-top: 0px !important;
+  }
+
+  .product-datails-table .mat-select-arrow-wrapper {
+    vertical-align: bottom !important;
+  }
   .product-datails-table thead tr {
     background: transparent !important; 
   }

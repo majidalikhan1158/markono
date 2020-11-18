@@ -19,7 +19,6 @@
                                         {{miscCostVMList[i].id}}
                                     <td>
                                         <mat-form-field appearance="fill">
-                                            <mat-label>Catetgory</mat-label>
                                             <mat-select 
                                                 [(ngModel)]="miscCostVMList[i].costCategory" 
                                                 [disabled]="disabled"
@@ -31,7 +30,6 @@
                                     </td>
                                     <td class="width-430">
                                         <mat-form-field appearance="fill">
-                                            <mat-label>Description</mat-label>
                                             <input 
                                                 [(ngModel)]="miscCostVMList[i].description"
                                                 matInput [disabled]="disabled"
@@ -41,7 +39,6 @@
                                     </td>
                                     <td>
                                         <mat-form-field appearance="fill">
-                                            <mat-label>Sub-Total</mat-label>
                                             <input type="number" min="0"
                                                 (change)="handleSubTotalChange()"
                                                 [(ngModel)]="miscCostVMList[i].subTotal"

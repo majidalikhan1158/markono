@@ -10,6 +10,17 @@ app-misc-cost {
   .misc-cost-card .table-responsive {
     overflow-x: hidden !important;
   }
+  
+  .misc-cost-card .mat-form-field-appearance-fill .mat-form-field-flex {
+    padding-top: 0px !important;
+  }
+
+  .misc-cost-card .mat-select-arrow-wrapper {
+    vertical-align: bottom !important;
+  }
+  .misc-cost-card thead tr {
+    background: transparent !important; 
+  }
 
   .misc-cost-table thead tr {
     background: transparent !important;

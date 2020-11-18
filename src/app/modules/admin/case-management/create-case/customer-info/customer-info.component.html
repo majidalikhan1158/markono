@@ -8,10 +8,13 @@
           </div>
           <div class="card-body">
             <div>
-              <mat-radio-group [(ngModel)]="customerInfoVM.caseType" [disabled]="disabled">
+              <mat-radio-group 
+                [(ngModel)]="customerInfoVM.caseType" 
+                [disabled]="disabled"
+                (change)="handleCaseTypeChange($event)">
                   <mat-radio-button 
                   *ngFor="let item of caseTypeList"
-                    [value]="item.id" >
+                    [value]="item.attributes.code" >
                     {{item.attributes.description}}
                   </mat-radio-button>
               </mat-radio-group>
@@ -19,7 +22,7 @@
           </div>
       </div>
     </div>
-    <div class="col-xl-4" *ngIf="customerInfoVM.caseType > 0">
+    <div class="col-xl-4" *ngIf="customerInfoVM.caseType">
       <div class="card card-custom example example-compact gutter-b reference-no-card">
           <div class="card-header">
             <div class="card-title">
@@ -43,7 +46,7 @@
     </div>
 </div>
 
-<div class="row" *ngIf="customerInfoVM.caseType > 0 && customerInfoVM.referenceNumber !== '' && createCaseMode !== modes.EDIT">
+<div class="row" *ngIf="customerInfoVM.caseType && customerInfoVM.referenceNumber !== '' && createCaseMode !== modes.EDIT">
   <div class="col-lg-12">
     <div class="card card-custom example example-compact gutter-b search-customer-card">
       <div class="card-header">
@@ -67,18 +70,19 @@
                 matInput placeholder="Search" aria-label="State" 
                 [formControl]="searchCustomerInfo" 
                 [matAutocomplete]="auto"
+                (keyup)='handleCustomerSearch()'
                 id="txtSearchCustomer">
                 <mat-autocomplete  #auto="matAutocomplete" [displayWith]="displayFn" showPanel="true" (optionSelected)='handleSelectedCustomer($event.option.value)'>
-                  <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                  <mat-option *ngIf="isLoading" class="is-loading" value="0">Loading...</mat-option>
                   <ng-container *ngIf="!isLoading">
                     <mat-option *ngFor="let item of customerDetailVMList" [value]="item.CompanyCode">
-                      <span><b>{{item.CompanyCode}}</b> _({{item.PrintFileFolder}})</span>
-                    </mat-option>
+                      <span><b>{{item.CompanyCode}}</b>_{{item.CompanyName}}</span>
+                    </mat-option> 
                   </ng-container>
                 </mat-autocomplete>
               </mat-form-field>
             </div>
-            <div class="col-lg-3 padding-0px">
+            <div class="col-lg-3 padding-0px" *ngIf="0 > 1">
               <button class="btn btn-primary mt-3 cursor-pointer btnCustomerSearch"
               (click)="handleCustomerSearch()">SEARCH</button>
             </div>

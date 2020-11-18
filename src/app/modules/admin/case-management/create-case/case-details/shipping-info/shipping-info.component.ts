@@ -31,6 +31,7 @@ export interface ShipmentTypesBox {
 })
 export class ShippingInfoComponent implements OnInit, OnDestroy {
   @Input() createCaseMode: CreateCaseMode;
+  @Input() isShippingDetails: false;
   createCaseModes = CreateCaseMode;
   disabled = false;
   shipmentsInfoVMList: ShippingInfoVM[] = [];
@@ -57,10 +58,20 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     this.shipmentSelectedTypeFormControl = new FormControl(
       this.selectedShipmentType
     );
+
     this.getDefaultRecord();
     this.getProductDetailsData();
     this.getCustomerInfo();
     this.getDropDownData();
+    if (this.isShippingDetails) {
+      this.handleIsShipmentDetails();
+    }
+  }
+
+  handleIsShipmentDetails = () => {
+    this.selectedShipmentType = 1 ;
+    this.shipmentSelectedTypeFormControl.setValue(this.selectedShipmentType);
+    this.handleShipmentTypeChange(null);
   }
 
   addRow(shipmentId) {
@@ -92,18 +103,24 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   }
 
   handleShipmentTypeChange(event: MatSelectChange) {
-    const isShipmentExist = this.shipmentsInfoVMList.find(
-      (x) => x.shipmentId === event.value
-    );
-    if (isShipmentExist) {
-      this.selectedShipmentType = null;
-      this.shipmentSelectedTypeFormControl.setValue(this.selectedShipmentType);
-      return;
+    let shipmentToBeAdded;
+    if (!this.isShippingDetails) {
+      const isShipmentExist = this.shipmentsInfoVMList.find(
+        (x) => x.shipmentId === event.value
+      );
+      if (isShipmentExist) {
+        this.selectedShipmentType = null;
+        this.shipmentSelectedTypeFormControl.setValue(this.selectedShipmentType);
+        return;
+      }
+      shipmentToBeAdded = this.shipmentTypesArray.find(
+        (x) => x.value === event.value
+      );
+    } else {
+      shipmentToBeAdded = this.shipmentTypesArray.find(
+        (x) => x.value === this.selectedShipmentType
+      );
     }
-
-    const shipmentToBeAdded = this.shipmentTypesArray.find(
-      (x) => x.value === event.value
-    );
     if (shipmentToBeAdded) {
       this.boxIdToExpand = 0;
       // add new box
@@ -224,12 +241,16 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     const value = (event.target as HTMLInputElement).value as unknown as number;
     this.shipmentsInfoVMList.find(x => x.shipmentId === shipmentId).shippingItems.forEach(item => {
       if (item.id === shipmentItemId) {
-        if (value > item.availableQty) {
-          (event.target as HTMLInputElement).value = '0';
-        } else {
+        if (this.isShippingDetails) {
           item.shipmentQty = value;
-          // tslint:disable-next-line: radix
-          item.availableQty =  parseInt(item.availableQty.toString()) - parseInt(item.shipmentQty.toString());
+        } else {
+          if (value > item.availableQty) {
+            (event.target as HTMLInputElement).value = '0';
+          } else {
+            item.shipmentQty = value;
+            // tslint:disable-next-line: radix
+            item.availableQty =  parseInt(item.availableQty.toString()) - parseInt(item.shipmentQty.toString());
+          }
         }
       }
     });
@@ -258,6 +279,10 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     this.store.createCaseStore.subscribe((resp) => {
       if (resp && resp.shippingInfoList && resp.shippingInfoList.length > 0) {
         this.shipmentsInfoVMList = resp.shippingInfoList;
+      } else {
+        if (this.isShippingDetails) {
+         // this.handleIsShipmentDetails();
+        }
       }
     });
   }
@@ -301,6 +326,15 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
             shipmentQty: 0,
             maximumAllowed: item.orderQty
           });
+        });
+      } else if (this.isShippingDetails) {
+        this.shipmentItems.push({
+          id: 1,
+          productNumber: '',
+          title: '',
+          availableQty: 0,
+          shipmentQty: 0,
+          maximumAllowed: 0
         });
       }
     });

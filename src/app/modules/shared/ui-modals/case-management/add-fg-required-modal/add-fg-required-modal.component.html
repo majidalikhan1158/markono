@@ -1,0 +1,63 @@
+<div class="modal-header">
+    <h4 class="modal-title">F&G Required</h4>
+    <button type="button" class="close" aria-label="Close" (click)="addFG()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body add-fg-required-form position-relative font-12px">
+    <ng-container *ngFor="let item of fgRequiredListVM">
+        <div class="row pb-5">
+            <div class="col-lg-12 display-flex pr-0">
+                <div class="col-lg-3 pl-0">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Required date</mat-label>
+                        <input [matDatepicker]="picker" [(ngModel)]="item.requiredDate" matInput
+                            placeholder="Required date">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-3 pl-0">
+                    <mat-form-field appearance="fill">
+                        <mat-label>For who</mat-label>
+                        <input matInput placeholder="For who" [(ngModel)]="item.forWho">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-2 pl-0 pr-0">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Quantity</mat-label>
+                        <input matInput placeholder="Quantity" type="number" min="0" [(ngModel)]="item.quantity">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-3">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Special Instructions</mat-label>
+                        <input matInput placeholder="Special Instructions" [(ngModel)]="item.specialInstructions">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-1">
+                    <span class="material-icons delete-icon pr-2 cursor-pointer pt-3" (click)="deleteRow(item.id)"
+                        *ngIf="fgRequiredListVM.length > 1">
+                        delete
+                    </span>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <br><Br>
+    <div class="row sticky-bottom full-width pl-5 pb-4">
+        <div class="col-lg-12">
+            <a (click)="addRow()">
+                <span class="material-icons add-icon pr-2 cursor-pointer">
+                    add_circle_outline
+                </span>
+                <span class="font-14px blue-link ">ADD ANOTHER</span>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary ui-modal-cancel-button ui-modal-action-button"
+        (click)="addFG()">CANCEL</button>
+    <button type="button" class="btn btn-primary ui-modal-action-button" (click)="addFG()">ADD</button>
+</div>

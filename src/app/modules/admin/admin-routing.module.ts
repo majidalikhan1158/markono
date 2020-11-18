@@ -4,6 +4,7 @@ import { AdminComponent } from './admin.component';
 import { Error404Component } from '../errors/error404/error404.component';
 import { ShopFloorCollectionComponent } from './shop-floor-collection/shop-floor-collection.component';
 import { CreateCaseComponent } from './case-management/create-case/create-case.component';
+import { AppDashboardComponent } from './app-dashboard/app-dashboard.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
       {
         path: 'shopfloor-collection',
         component: ShopFloorCollectionComponent
+      },
+      {
+        path: 'app-dashboard',
+        component: AppDashboardComponent
       },
       {
         path: '',

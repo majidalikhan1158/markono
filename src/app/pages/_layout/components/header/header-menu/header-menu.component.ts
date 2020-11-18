@@ -52,6 +52,11 @@ export class HeaderMenuComponent implements OnInit {
     } else {
       this.dynamicHeaderMenuService.displayAddNewQuotationButton(false);
     }
+    // if (current === '/admin/app-dashboard') {
+    //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(true);
+    // } else {
+    //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(false);
+    // }
     if (!pageLabelFound) {
       this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
     }

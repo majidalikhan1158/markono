@@ -36,7 +36,7 @@ export class TopbarComponent implements OnInit, AfterViewInit {
   extrasLanguagesDisplay: boolean;
   extrasUserDisplay: boolean;
   extrasUserLayout: 'offcanvas' | 'dropdown';
-
+  embededLinkModel;
   constructor(
     private layout: LayoutService,
     private auth: AuthService,
@@ -44,6 +44,11 @@ export class TopbarComponent implements OnInit, AfterViewInit {
     private modalService: ModalService
   ) {
     this.user$ = this.auth.currentUserSubject.asObservable();
+    this.dynamicHeaderMenuService.shouldDisplayEditEmbeddedLink$.subscribe(x => {
+      if (x && x !== '') {
+        this.embededLinkModel = x;
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -72,6 +77,8 @@ export class TopbarComponent implements OnInit, AfterViewInit {
     this.extrasQuickPanelDisplay = this.layout.getProp(
       'extras.quickPanel.display'
     );
+
+    this.handleEmbededLinkChange();
   }
 
   ngAfterViewInit(): void {
@@ -118,11 +125,16 @@ export class TopbarComponent implements OnInit, AfterViewInit {
     });
   }
 
-  openCreateProductSpecModal(modalId: string) {
+  openCreateProductSpecModal = (modalId: string) => {
     this.modalService.openModalViaObservable(modalId);
   }
 
   openAddNewQuotationModal(modalId: string) {
     this.modalService.openModalViaObservable(modalId);
+  }
+  handleEmbededLinkChange = () => {
+    if (this.embededLinkModel !== '') {
+      this.dynamicHeaderMenuService.setEditEmbeddedLink(this.embededLinkModel);
+    }
   }
 }

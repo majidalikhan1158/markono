@@ -30,4 +30,14 @@ export class ProductService {
     );
     return this.http.get(url);
   }
+
+  public getProductVersions = (isbn: string): Observable<HttpResponse<ResponseModal>> => {
+    const url = this.helper.createUrlWithQueryParameters(
+      this.endPoint.getProductVersionUrl(),
+      (qs: QueryStringParameters) => {
+        qs.push('isbn', isbn);
+      }
+    );
+    return this.http.get(url);
+  }
 }

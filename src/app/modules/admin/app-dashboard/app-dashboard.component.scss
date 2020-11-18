@@ -1,0 +1,51 @@
+app-app-dashboard {
+    .app-dashboard .url-div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-23%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+    
+        font-size: 20px;
+        padding: 5px;
+        z-index: 100;
+    }
+    .app-dashboard .form-control {
+        background-color: #e0e0e9;
+        border-radius: 0rem;
+        // width: 150%;
+    }
+    .app-dashboard .icon-div {
+        text-align: center;
+    }
+    .app-dashboard .submit-div {
+        background-color: #5face2;
+        color: white;
+    }
+    .app-dashboard .form-group > h3 {
+        text-align: center;
+    }
+    .app-dashboard .gutter-b .card-body .form-group {
+        display: flex;
+    }
+    .app-dashboard .link-input {
+        width: 80%;
+    }
+    .app-dashboard .submit-input {
+        width: 15%;
+        color: white;
+        background-color: #5face2;
+    }
+    .app-dashboard .form-group {
+        padding-bottom: 0px;
+    }
+    .app-dashboard .gutter-b {
+        height: 1000%;
+        width: 100%;
+    }
+    
+}
+

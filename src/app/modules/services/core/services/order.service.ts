@@ -29,4 +29,6 @@ export class OrderService {
   public getShipmentAgents = (): Observable<HttpResponse<ResponseModal>> =>
   this.http.get(this.endPoint.getShipmentAgentUrl())
 
+  public createCase = (request: any): Observable<HttpResponse<ResponseModal>> =>
+  this.http.post(this.endPoint.getCreateCaseUrl(), request)
 }

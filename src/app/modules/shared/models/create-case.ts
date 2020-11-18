@@ -6,6 +6,7 @@ export class CreateCaseViewModel {
     miscCostList: MiscCostVM[];
     invoiceList: InvoiceViewModel[];
     specialInstructionList: SpecialInstructionViewModel[];
+    overallCostVM: OverAllCostVM;
 }
 
 export interface CustomerInfoVM {
@@ -32,6 +33,7 @@ export interface CustomerDetailVM {
     State: string;
     Email: string;
     SalesPerson: string;
+    Coordinator: string;
 }
 
 
@@ -40,9 +42,19 @@ export interface ProductDetailsVM {
     isbn: string;
     printType: number;
     orderQty: number;
+    prodQty: number;
     margin: number;
     sellingPrice: number;
+    subTotal: number;
     productISBNDetail: ProductISBNDetailVM;
+}
+
+export interface ProductDetailModals {
+    id: number;
+    requiredDate: string;
+    forWho: string;
+    quantity: number;
+    specialInstructions: string;
 }
 
 export interface ProductISBNDetailVM {
@@ -56,12 +68,17 @@ export interface ProductISBNDetailVM {
     specsVersionNo: string;
     owner: string;
     jobType: string;
-    weight: string;
+    weight: number;
     fGRequired: number;
     advancesRequired: number;
     quoteNo: string;
     estimatedPrice: number;
     additionalUnitPrice: number;
+    sampleList: ProductDetailModals[];
+    bluePrintList: ProductDetailModals[];
+    fgList: ProductDetailModals[];
+    advancesList: ProductDetailModals[];
+    spineWidth: number;
 }
 
 export interface ShippingInfoVM {
@@ -154,7 +171,7 @@ export interface MiscCostVM {
 
 export interface InvoiceViewModel {
     id: number;
-    position: number;
+    position: string;
     notes: string;
 }
 
@@ -168,6 +185,7 @@ export interface OverAllCostVM {
     printAndBind: number;
     subTotal: number;
     otherCharges: OtherCharges[];
+    otherChargesTotal: number;
     discount: number;
     tax: number;
     total: number;
@@ -188,3 +206,15 @@ export interface QuotationListVM {
     quoteNo: string;
     status: string;
 }
+export interface ProductVersionVM {
+    id: string;
+    isSpecsInView: boolean;
+    isbn: string;
+    versionNo: string;
+    createdDate: string;
+    createdBy: string;
+    versionDescription: string;
+    productDescription: string;
+    statusDescription: string;
+}
+

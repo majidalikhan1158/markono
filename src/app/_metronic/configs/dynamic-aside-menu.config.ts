@@ -1,6 +1,15 @@
 export const DynamicAsideMenuConfig = {
   items: [
     {
+      title: 'Dashboard',
+      root: true,
+      bullet: 'dot',
+      page: '/admin/app-dashboard',
+      icon: 'flaticon2-browser-2',
+      svg: './assets/media/svg/icons/Design/Cap-2.svg',
+      permission: 'accessToAppDashboard'
+    },
+    {
       title: 'Case Management',
       root: true,
       bullet: 'dot',

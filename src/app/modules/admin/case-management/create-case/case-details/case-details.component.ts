@@ -13,12 +13,14 @@ import {
 import { MatSelectionListChange } from '@angular/material/list';
 import { CreateCaseStepperEvent } from 'src/app/modules/shared/models/app-modal';
 import {
+  CreateCaseDataType,
   CreateCaseMode,
   CreateCaseSteps,
 } from 'src/app/modules/shared/enums/app-enums';
 import {
   CaseDetailTypes,
   CaseDetailTypesArray,
+  CostCategory,
 } from 'src/app/modules/shared/enums/case-management/case-contants';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import {
@@ -26,6 +28,7 @@ import {
   ShippingInfoVM,
   ShippingSpecificCostModel,
 } from 'src/app/modules/shared/models/create-case';
+import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 @Component({
   selector: 'app-case-details',
   templateUrl: './case-details.component.html',
@@ -36,6 +39,7 @@ import {
 export class CaseDetailsComponent implements OnInit, OnChanges {
   @Input() createCaseMode: CreateCaseMode;
   @Input() tabToOpen: number;
+  @Input() isShippingDetails = false;
   @Output() changeStepperEvent = new EventEmitter();
   createCaseModes = CreateCaseMode;
   caseDetailTypesConstant = CaseDetailTypes;
@@ -44,31 +48,62 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
   panelOpenState = false;
   shipmentInfoVMList: ShippingInfoVM[];
   overAllCostVM: OverAllCostVM;
-  constructor(private ref: ChangeDetectorRef, private store: CaseStore) {}
+  constructor(
+    private ref: ChangeDetectorRef,
+    private store: CaseStore,
+    private snack: SnackBarService
+  ) {}
 
   ngOnInit(): void {
     this.overAllCostVM = this.initialObject();
     this.setCreateCaseModeData();
     this.getOverallCostData();
+    this.getIsShippingDetailsStatus();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     const createCaseModeChange = changes['createCaseMode'];
     const tabToOpenChange = changes['tabToOpen'];
+         // handle edit-disable mode
     if (
-      createCaseModeChange &&
-      createCaseModeChange.currentValue === CreateCaseMode.EDIT
-    ) {
-      this.createCaseMode = createCaseModeChange.currentValue;
-      this.setCreateCaseModeData();
-    }
-
+          createCaseModeChange &&
+          createCaseModeChange.currentValue === CreateCaseMode.EDIT
+        ) {
+          this.createCaseMode = createCaseModeChange.currentValue;
+          this.setCreateCaseModeData();
+        }
+        // handle default selection of tab being opened
     if (tabToOpenChange && tabToOpenChange.currentValue) {
-      const selectedTab = tabToOpenChange.currentValue;
-      if (selectedTab !== CaseDetailTypes.CUSTOMER_INFO) {
-        this.setSelectedTabInNewMode(selectedTab);
+          const selectedTab = tabToOpenChange.currentValue;
+          if (selectedTab !== CaseDetailTypes.CUSTOMER_INFO) {
+            this.setSelectedTabInNewMode(selectedTab);
+          }
+        }
+  }
+
+  getIsShippingDetailsStatus() {
+    this.store.caseType2.subscribe(x => {
+      if (x.toString() === 'WO') {
+        this.isShippingDetails = true;
+        this.handleIsShipmentDetailsCase();
+      } else {
+        this.isShippingDetails = false;
+        this.setCreateCaseModeData();
       }
+    });
+  }
+
+  handleIsShipmentDetailsCase() {
+    if (this.createCaseMode === CreateCaseMode.EDIT) {
+      this.caseDetailTypesArray = this.caseDetailTypesArray.filter(
+        (x) => x.enum === CaseDetailTypes.CUSTOMER_INFO ||
+        x.enum === CaseDetailTypes.SHIPPING_INFO
+      );
+      this.currentSelectedType = CaseDetailTypes.CUSTOMER_INFO;
+    } else {
+      this.currentSelectedType = CaseDetailTypes.SHIPPING_INFO;
     }
+    this.ref.detectChanges();
   }
 
   setCreateCaseModeData() {
@@ -138,17 +173,19 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
     this.store.createCaseStore.subscribe((data) => {
       let totalCost = 0;
       let subTotal = 0;
-      this.overAllCostVM.otherCharges = [];
+      this.overAllCostVM = this.initialObject();
       if (data && data.shippingInfoList && data.shippingInfoList.length > 0) {
-        data.shippingInfoList.forEach(shipment => {
-          shipment.shippingSpecificCost.forEach(cost => {
-            // tslint:disable-next-line: radix
+        data.shippingInfoList.forEach((shipment) => {
+          shipment.shippingSpecificCost.forEach((cost) => {
+            if (cost && cost.subTotal) {
+              // tslint:disable-next-line: radix
             totalCost = parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
+            }
           });
           if (totalCost > 0) {
             this.overAllCostVM.otherCharges.push({
               type: `Shipment ${shipment.shipmentId} costs`,
-              total: totalCost
+              total: totalCost,
             });
           }
           totalCost = 0;
@@ -156,28 +193,86 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       }
 
       if (data && data.miscCostList && data.miscCostList.length > 0) {
-        data.miscCostList.forEach(cost => {
-          // tslint:disable-next-line: radix
-          totalCost = parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
+        data.miscCostList.forEach((cost) => {
+          if (cost && cost.subTotal) {
+            // tslint:disable-next-line: radix
+            totalCost = parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
+          }
+
           if (totalCost > 0) {
             this.overAllCostVM.otherCharges.push({
-              type: `Misc ${cost.id} costs`,
-              total: totalCost
+              type: CostCategory.find(x => x.value === cost.id).text,
+              total: totalCost,
             });
           }
           totalCost = 0;
         });
       }
 
-      if (this.overAllCostVM.otherCharges.length > 0) {
-        this.overAllCostVM.otherCharges.forEach(cost => {
-          // tslint:disable-next-line: radix
-          subTotal =  parseInt(subTotal.toString()) + parseInt(cost.total.toString());
+      if (
+        data &&
+        data.productDetailsList &&
+        data.productDetailsList.length > 0
+      ) {
+        this.overAllCostVM.printAndBind = 0;
+        data.productDetailsList.forEach((item) => {
+          this.overAllCostVM.printAndBind = +this.overAllCostVM.printAndBind + item.subTotal;
         });
       }
-      this.overAllCostVM.subTotal = subTotal;
+      this.overAllCostVM.otherChargesTotal = 0;
+      if (this.overAllCostVM.otherCharges.length > 0) {
+        this.overAllCostVM.otherCharges.forEach((cost) => {
+          // tslint:disable-next-line: radix
+          subTotal = parseInt(subTotal.toString()) + parseInt(cost.total.toString());
+          // tslint:disable-next-line: radix
+          // tslint:disable-next-line: max-line-length
+          this.overAllCostVM.otherChargesTotal = parseInt(this.overAllCostVM.otherChargesTotal.toString()) + parseInt(cost.total.toString());
+        });
+      }
+      // tslint:disable-next-line: radix
+      this.overAllCostVM.subTotal = parseInt(subTotal.toString()) + parseInt(this.overAllCostVM.printAndBind.toString());
+      // CALCULATE DISCOUNT
+      this.overAllCostVM.total = this.overAllCostVM.subTotal;
+
+      if (this.overAllCostVM.discount > 0) {
+        const discountedPrice = (this.overAllCostVM.total * this.overAllCostVM.discount) / 100;
+        if (discountedPrice < this.overAllCostVM.total) {
+          // tslint:disable-next-line: radix
+          this.overAllCostVM.total = parseInt(this.overAllCostVM.total.toString()) - parseInt(discountedPrice.toString());
+        }
+      }
+
+      if (
+        (data && !data.overallCostVM) ||
+        data.overallCostVM.subTotal !== this.overAllCostVM.subTotal
+      ) {
+        this.pushToStore();
+      }
       this.ref.detectChanges();
     });
+  }
+
+  handleDiscountChange = () => {
+    if (this.overAllCostVM.discount > 0) {
+      const discountedPrice = (this.overAllCostVM.total * this.overAllCostVM.discount) / 100;
+      if (discountedPrice < this.overAllCostVM.total) {
+        // tslint:disable-next-line: radix
+        this.overAllCostVM.total = parseInt(this.overAllCostVM.total.toString()) - parseInt(discountedPrice.toString());
+        this.ref.detectChanges();
+        this.pushToStore();
+      } else {
+        this.snack.open('Discount is more than total cost');
+      }
+    }
+  }
+
+
+  
+  pushToStore = () => {
+    this.store.setCreateCaseDataSource(
+      this.overAllCostVM,
+      CreateCaseDataType.OVERALL_COST
+    );
   }
 
   initialObject = (): OverAllCostVM => {
@@ -185,25 +280,10 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       printAndBind: 0,
       subTotal: 0,
       otherCharges: [],
+      otherChargesTotal: 0,
       discount: 0,
       tax: 0,
       total: 0,
     };
-  }
-
-  getShipmentSpecificCostSum = (costs: ShippingSpecificCostModel[]) => {
-    if (costs && costs.length > 0) {
-      let total = 0;
-      // tslint:disable-next-line: radix
-      costs.forEach(
-        (item) =>
-          (total =
-            // tslint:disable-next-line: radix
-            parseInt(total.toString()) + parseInt(item.subTotal.toString()))
-      );
-      this.panelOpenState = true;
-      return total;
-    }
-    return 0;
   }
 }

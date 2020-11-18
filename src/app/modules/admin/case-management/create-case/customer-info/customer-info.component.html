@@ -76,8 +76,8 @@
                   <mat-option *ngIf="isLoading" class="is-loading" value="0">Loading...</mat-option>
                   <ng-container *ngIf="!isLoading">
                     <mat-option *ngFor="let item of customerDetailVMList" [value]="item.CompanyCode">
-                      <span><b>{{item.CompanyCode}}</b> _({{item.PrintFileFolder}})</span>
-                    </mat-option>
+                      <span><b>{{item.CompanyCode}}</b>_{{item.CompanyName}}</span>
+                    </mat-option> 
                   </ng-container>
                 </mat-autocomplete>
               </mat-form-field>

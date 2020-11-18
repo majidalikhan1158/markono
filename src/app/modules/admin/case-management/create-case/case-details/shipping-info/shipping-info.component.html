@@ -78,7 +78,7 @@
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipping Terms</mat-label>
                                             <mat-select  [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingTerms" [disabled]="disabled">
-                                                <mat-option *ngFor="let item of shipmentTermList" [value]="item.id" >{{item.attributes.description}}</mat-option>
+                                                <mat-option *ngFor="let item of shipmentTermList" [value]="item.id" >{{item.attributes.code}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>

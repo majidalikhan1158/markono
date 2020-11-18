@@ -30,9 +30,8 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
     }
     this.shouldDisplayFirstScreen = false;
     this.dynamicHeaderMenuService.setEditEmbeddedLink(this.embeddedURL);
-    this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(
-      this.embeddedURL
-    );
+    this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(this.embeddedURL);
+    this.ref.detectChanges();
   }
 
   ngOnDestroy(): void {

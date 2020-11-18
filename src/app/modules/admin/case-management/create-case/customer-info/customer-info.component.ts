@@ -64,9 +64,9 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   handleCustomerSearch() {
     if (this.customerInfoVM.customerId !== '' && this.customerInfoVM.customerId !== this.previousValue) {
       this.customerDetailVMList = [];
+      this.ref.detectChanges();
       this.previousValue = this.customerInfoVM.customerId;
       this.isLoading = true;
-      this.ref.detectChanges();
       setTimeout(_ => this.trigger.openPanel());
       // call api to get customer results
       this.orderService.getCustomerDetail({sellToNo: this.customerInfoVM.customerId}).subscribe(resp => {

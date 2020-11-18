@@ -20,6 +20,7 @@ import {
 import {
   CaseDetailTypes,
   CaseDetailTypesArray,
+  CostCategory,
 } from 'src/app/modules/shared/enums/case-management/case-contants';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import {
@@ -200,7 +201,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
 
           if (totalCost > 0) {
             this.overAllCostVM.otherCharges.push({
-              type: `Misc ${cost.id} costs`,
+              type: CostCategory.find(x => x.value === cost.id).text,
               total: totalCost,
             });
           }

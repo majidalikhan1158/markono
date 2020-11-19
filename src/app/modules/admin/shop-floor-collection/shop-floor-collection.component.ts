@@ -1,4 +1,7 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { trigger, transition, style, animate, state, query, animateChild, group } from '@angular/animations';
+import { Component, forwardRef, OnInit, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, FormControl, NgModel, NG_VALUE_ACCESSOR, DefaultValueAccessor } from '@angular/forms';
+
 import {
   ApexNonAxisChartSeries,
   ApexPlotOptions,
@@ -48,14 +51,14 @@ export type TimeLineChartOptions = {
   selector: 'app-shop-floor-collection',
   templateUrl: './shop-floor-collection.component.html',
   styleUrls: ['./shop-floor-collection.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 
 export class ShopFloorCollectionComponent implements OnInit {
   machineStatusList = [
-    {value: '1', viewValue: 'Good Production'},
-    {value: '2', viewValue: 'Off Line'},
-    {value: '3', viewValue: 'Repairing'}
+    { value: '1', viewValue: 'Good Production' },
+    { value: '2', viewValue: 'Off Line' },
+    { value: '3', viewValue: 'Repairing' }
   ];
   selected = '1';
   public oeeChartOptions: any = {};
@@ -71,6 +74,13 @@ export class ShopFloorCollectionComponent implements OnInit {
   colorsThemeLightPrimary = '';
   colorsThemeBaseSuccess = '';
   colorsThemeLightSuccess = '';
+
+  shrinkToolbar = false;
+  scrollingSubscription: any;
+  scrollTop: any;
+  searchText = '';
+  toggleSearch: boolean = false;
+
   constructor(private layout: LayoutService) {
     this.fontFamily = this.layout.getProp('js.fontFamily');
     this.colorsGrayGray500 = this.layout.getProp('js.colors.gray.gray500');
@@ -101,7 +111,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   getOEEChartOptions() {
-    return  {
+    return {
       series: [13.2],
       chart: {
         height: 150,
@@ -258,14 +268,14 @@ export class ShopFloorCollectionComponent implements OnInit {
     };
   }
 
-  getUnitsProducePerMinuteChart(){
-    return  {
+  getUnitsProducePerMinuteChart() {
+    return {
       series: [
         {
           name: 'Free Cash Flow',
           data: [35, 41, 36, 26, 45, 48, 52, 53, 41,
-                 35, 41, 36, 26, 45, 48, 52, 53, 41,
-                 35, 41, 36, 26, 45, 48, 52, 53, 41]
+            35, 41, 36, 26, 45, 48, 52, 53, 41,
+            35, 41, 36, 26, 45, 48, 52, 53, 41]
         }
       ],
       chart: {
@@ -292,7 +302,7 @@ export class ShopFloorCollectionComponent implements OnInit {
       },
       xaxis: {
         categories: [
-         '',
+          '',
         ]
       },
       yaxis: {
@@ -320,178 +330,178 @@ export class ShopFloorCollectionComponent implements OnInit {
         {
           name: '',
           data: [
-          {
-            x: '',
-            y: 10
-          },
-          {
-            x: '',
-            y: 20
-          },
-          {
-            x: '',
-            y: 30
-          },
-          {
-            x: '6:00',
-            y: 40
-          },
-          {
-            x: '',
-            y: 50
-          },
-          {
-            x: '',
-            y: 60
-          },
-          {
-            x: '8:00',
-            y: 70
-          },
-          {
-            x: '',
-            y: 80
-          },
-          {
-            x: '',
-            y: 90
-          },
-          {
-            x: '10:00',
-            y: 100
-          },
-          {
-            x: '',
-            y: 110
-          },
-          {
-            x: '',
-            y: 120
-          },
-          {
-            x: '12:00',
-            y: 130
-          },
-          {
-            x: '',
-            y: 140
-          }, {
-            x: '',
-            y: 150
-          },
-          {
-            x: '',
-            y: 160
-          },
-          {
-            x: '14:00',
-            y: 170
-          },
-          {
-            x: '',
-            y: 180
-          },
-          {
-            x: '',
-            y: 190
-          },
-          {
-            x: '16:00',
-            y: 200
-          },
-          {
-            x: '',
-            y: 210
-          },
-          {
-            x: '',
-            y: 220
-          },
-          {
-            x: '',
-            y: 230
-          },
-          {
-            x: '18:00',
-            y: 240
-          },
-          {
-            x: '',
-            y: 250
-          },
-          {
-            x: '',
-            y: 260
-          },
-          {
-            x: '',
-            y: 270
-          },
-          {
-            x: '',
-            y: 280
-          },
-          {
-            x: '20:00',
-            y: 290
-          },
-          {
-            x: '',
-            y: 300
-          },
-          {
-            x: '',
-            y: 310
-          },
-          {
-            x: '',
-            y: 320
-          },
-          {
-            x: '',
-            y: 330
-          },
-          {
-            x: '22:00',
-            y: 310
-          },
-          {
-            x: '',
-            y: 320
-          },
-          {
-            x: '',
-            y: 330
-          },
-          {
-            x: '',
-            y: 340
-          },
-          {
-            x: '',
-            y: 350
-          },
-          {
-            x: '24:00',
-            y: 360
-          },
-          {
-            x: '',
-            y: 370
-          },
-          {
-            x: '',
-            y: 380
-          },
-          {
-            x: '',
-            y: 390
-          },
-          {
-            x: '',
-            y: 400
-          },
-        ]
+            {
+              x: '',
+              y: 10
+            },
+            {
+              x: '',
+              y: 20
+            },
+            {
+              x: '',
+              y: 30
+            },
+            {
+              x: '6:00',
+              y: 40
+            },
+            {
+              x: '',
+              y: 50
+            },
+            {
+              x: '',
+              y: 60
+            },
+            {
+              x: '8:00',
+              y: 70
+            },
+            {
+              x: '',
+              y: 80
+            },
+            {
+              x: '',
+              y: 90
+            },
+            {
+              x: '10:00',
+              y: 100
+            },
+            {
+              x: '',
+              y: 110
+            },
+            {
+              x: '',
+              y: 120
+            },
+            {
+              x: '12:00',
+              y: 130
+            },
+            {
+              x: '',
+              y: 140
+            }, {
+              x: '',
+              y: 150
+            },
+            {
+              x: '',
+              y: 160
+            },
+            {
+              x: '14:00',
+              y: 170
+            },
+            {
+              x: '',
+              y: 180
+            },
+            {
+              x: '',
+              y: 190
+            },
+            {
+              x: '16:00',
+              y: 200
+            },
+            {
+              x: '',
+              y: 210
+            },
+            {
+              x: '',
+              y: 220
+            },
+            {
+              x: '',
+              y: 230
+            },
+            {
+              x: '18:00',
+              y: 240
+            },
+            {
+              x: '',
+              y: 250
+            },
+            {
+              x: '',
+              y: 260
+            },
+            {
+              x: '',
+              y: 270
+            },
+            {
+              x: '',
+              y: 280
+            },
+            {
+              x: '20:00',
+              y: 290
+            },
+            {
+              x: '',
+              y: 300
+            },
+            {
+              x: '',
+              y: 310
+            },
+            {
+              x: '',
+              y: 320
+            },
+            {
+              x: '',
+              y: 330
+            },
+            {
+              x: '22:00',
+              y: 310
+            },
+            {
+              x: '',
+              y: 320
+            },
+            {
+              x: '',
+              y: 330
+            },
+            {
+              x: '',
+              y: 340
+            },
+            {
+              x: '',
+              y: 350
+            },
+            {
+              x: '24:00',
+              y: 360
+            },
+            {
+              x: '',
+              y: 370
+            },
+            {
+              x: '',
+              y: 380
+            },
+            {
+              x: '',
+              y: 390
+            },
+            {
+              x: '',
+              y: 400
+            },
+          ]
         },
 
       ],
@@ -703,5 +713,13 @@ export class ShopFloorCollectionComponent implements OnInit {
         }
       }
     };
+  }
+
+  openSearch() {
+    this.toggleSearch = true;
+  }
+  searchClose() {
+    this.searchText = '';
+    this.toggleSearch = false;
   }
 }

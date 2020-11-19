@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CreateCaseViewModel,
+import {
+  CreateCaseViewModel,
   InvoiceViewModel,
   ProductDetailModals,
   ProductISBNDetailVM,
@@ -11,7 +12,7 @@ import { CreateCaseViewModel,
   providedIn: 'root',
 })
 export class CaseHelperService {
-  constructor() {}
+  constructor() { }
 
   public transToProductISBNDetailVM = (data: any): ProductISBNDetailVM => {
     return {
@@ -53,7 +54,7 @@ export class CaseHelperService {
       specialInstructions: this.getSpecialInstructions(data.specialInstructionList),
       discount: data.overallCostVM.discount,
       tax: data.overallCostVM.tax,
-      notesOnInvoiceBottom: this.getNotes(data.invoiceList , 'Bottom'),
+      notesOnInvoiceBottom: this.getNotes(data.invoiceList, 'Bottom'),
       notesOnInvoiceTop: this.getNotes(data.invoiceList, 'Top'),
       createdByUser: 'DevUI',
       createdBy: 'DevUI',
@@ -127,7 +128,7 @@ export class CaseHelperService {
         updatedBy: 'DevUI',
         samplesReq: this.getModalData(item.productISBNDetail.advancesList, 'Sample'),
         bluePrintReq: this.getModalData(item.productISBNDetail.bluePrintList, 'BluePrint'),
-        fgReq:  this.getModalData(item.productISBNDetail.fgList, 'FG'),
+        fgReq: this.getModalData(item.productISBNDetail.fgList, 'FG'),
         advancesReq: this.getModalData(item.productISBNDetail.advancesList, 'AD'),
       });
     });
@@ -175,7 +176,7 @@ export class CaseHelperService {
           updatedBy: 'DevUI',
           samplesReq: [],
           bluePrintReq: [],
-          fgReq:  [],
+          fgReq: [],
           advancesReq: [],
         });
       });
@@ -195,7 +196,7 @@ export class CaseHelperService {
         specialInstruction: item.specialInstructions
       });
     });
-    return obj.length > 0 ?  obj : null;
+    return obj.length > 0 ? obj : null;
   }
 
   getNotes = (invoicesList: InvoiceViewModel[], position: string) => {
@@ -241,5 +242,55 @@ export class CaseHelperService {
       });
     });
     return list;
+  }
+
+  transToCreateShipment = (data: CreateCaseViewModel) => {
+    if (!data.productDetailsList || data.productDetailsList.length === 0) {
+      return this.getCaseDetailsFromShippingDetails(data);
+    }
+    const obj = [];
+    data.productDetailsList.forEach(item => {
+      obj.push({
+        caseDetailNo: '',
+        type: data.customerInfo.caseType,
+        sellToNo: item.productISBNDetail.owner,
+        iSBNPartNo: item.isbn,
+        printType: item.printType,
+        productVersion: item.productISBNDetail.specsVersionNo,
+        parentISBN: '',
+        jobType: item.productISBNDetail.jobType,
+        productGroup: item.productISBNDetail.productGroup,
+        title: item.productISBNDetail.title,
+        lnNo: item.id,
+        extLnNo: 0,
+        bindingType: item.productISBNDetail.bindingType,
+        totalExtent: item.productISBNDetail.totalExtent,
+        weight: item.productISBNDetail.weight,
+        spine: item.productISBNDetail.spineWidth,
+        additionalUnitPrice: 0.0,
+        additionalQty: 0,
+        margin: item.margin,
+        orderQuantity: item.orderQty,
+        productionQuantity: item.prodQty,
+        estimatedPrice: item.productISBNDetail.estimatedPrice,
+        quotedPrice: 0.0,
+        sellingPrice: item.sellingPrice,
+        subTotal: item.subTotal,
+        samplesRequired: item.productISBNDetail.samplesRequired,
+        bluePrintRequired: item.productISBNDetail.bluePrintRequired,
+        fGRequired: item.productISBNDetail.fGRequired,
+        advancesRequired: item.productISBNDetail.advancesRequired,
+        carrierSheet: '',
+        createdByUser: 'DevUI',
+        createdBy: 'DevUI',
+        updatedByUser: 'DevUI',
+        updatedBy: 'DevUI',
+        samplesReq: this.getModalData(item.productISBNDetail.advancesList, 'Sample'),
+        bluePrintReq: this.getModalData(item.productISBNDetail.bluePrintList, 'BluePrint'),
+        fgReq: this.getModalData(item.productISBNDetail.fgList, 'FG'),
+        advancesReq: this.getModalData(item.productISBNDetail.advancesList, 'AD'),
+      });
+    });
+    return obj;
   }
 }

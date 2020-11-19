@@ -46,7 +46,7 @@ export class CreateCaseComponent implements OnInit {
     private caseHelper: CaseHelperService,
     private orderService: OrderService,
     private snack: SnackBarService
-  ) {}
+  ) { }
 
   ngOnInit() {
     /**
@@ -100,6 +100,7 @@ export class CreateCaseComponent implements OnInit {
           if (response.message && response.message === 'Successful') {
             this.snack.open('Case has been created successfully');
             this.shouldDisplayCreateCaseButton = false;
+            this.createShipment(data);
             this.ref.detectChanges();
           } else {
             this.snack.open(response);
@@ -114,7 +115,7 @@ export class CreateCaseComponent implements OnInit {
 
   getSecondStepTitle = () => {
     this.store.caseType.subscribe(x => {
-      if (x.toString() === '3' ) {
+      if (x.toString() === '3') {
         this.secondStepTitle = 'Shipping Details';
       } else {
         this.secondStepTitle = 'Case Details';
@@ -123,12 +124,16 @@ export class CreateCaseComponent implements OnInit {
     });
 
     this.store.caseType2.subscribe(x => {
-      if (x.toString() === 'WO' ) {
+      if (x.toString() === 'WO') {
         this.shouldShowShippingDetailsAsSecondStep = true;
       } else {
         this.shouldShowShippingDetailsAsSecondStep = false;
       }
       this.ref.detectChanges();
     });
+  }
+
+  createShipment = (data) => {
+
   }
 }

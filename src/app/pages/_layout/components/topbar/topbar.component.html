@@ -182,7 +182,19 @@
               </div>
             </mat-menu>
           </div>
-        </div>
+          [matMenuTriggerFor]="menu">
+          <span class="material-icons font-11px pr-4"> edit</span>
+          Edit Embedded Link</button>
+          <mat-menu #menu="matMenu" class="filter-menu">
+            <div class="filter-menu-content" (click)="$event.stopPropagation();">
+              <mat-form-field appearance="fill" class="font-12px pb-4">
+                <mat-label>Embedded Link</mat-label>
+                <input matInput [(ngModel)]="embededLinkModel">
+              </mat-form-field>
+              <button mat-button
+                class="mat-focus-indicator btn btn-primary mat-button mat-button-base text-upper-case mr-2"
+                (click)="handleEmbededLinkChange()">Update</button>
+            </div>
       </ng-container>
 
       <ng-container *ngIf="extrasUserDisplay">

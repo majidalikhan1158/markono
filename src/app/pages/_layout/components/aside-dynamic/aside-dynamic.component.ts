@@ -84,6 +84,11 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     } else {
       this.dynamicHeaderMenuService.displayProductSpecButton(false);
     }
+    if (this.currentUrl === '/admin/case-management/quotation-list') {
+      this.dynamicHeaderMenuService.displayAddNewQuotationButton(true);
+    } else {
+      this.dynamicHeaderMenuService.displayAddNewQuotationButton(false);
+    }
     // if (this.currentUrl === '/admin/app-dashboard') {
     //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(true);
     // } else {

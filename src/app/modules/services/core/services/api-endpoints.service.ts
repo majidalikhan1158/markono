@@ -11,7 +11,7 @@ import { UrlBuilder } from '../../shared/classes/url-builder';
 })
 // Returns the api endpoints urls to use in services in a consistent way
 export class ApiEndpointsService {
-  constructor(private constants: Constants) {}
+  constructor(private constants: Constants) { }
 
   private getOrderServicesEndpoint = () =>
     `${this.constants.API_BASE_ADDRESS}${this.constants.API_ENDPOINT_ORDER_SERVICES}`
@@ -32,20 +32,23 @@ export class ApiEndpointsService {
     `${Endpoints.case.getCustomerDetail}`
 
   public getShipmentModeUrl = () =>
-  `${this.getOrderServicesEndpoint()}${Endpoints.case.getShipmentMode}`
+    `${this.getOrderServicesEndpoint()}${Endpoints.case.getShipmentMode}`
 
   public getShipmentTermUrl = () =>
-  `${this.getOrderServicesEndpoint()}${Endpoints.case.getShipmentTerm}`
+    `${this.getOrderServicesEndpoint()}${Endpoints.case.getShipmentTerm}`
 
   public getShipmentAgentUrl = () =>
-  `${this.getOrderServicesEndpoint()}${Endpoints.case.getShipmentAgent}`
+    `${this.getOrderServicesEndpoint()}${Endpoints.case.getShipmentAgent}`
 
   public getLiveVersion = () =>
-  `${this.getProductServicesEndpoint()}${Endpoints.product.getLiveVersion}`
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getLiveVersion}`
 
   public getProductVersionUrl = () =>
-  `${this.getProductServicesEndpoint()}${Endpoints.product.getProductVersions}`
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getProductVersions}`
 
   public getCreateCaseUrl = () =>
-  `${this.getOrderServicesEndpoint()}${Endpoints.case.createCase}`
+    `${this.getOrderServicesEndpoint()}${Endpoints.case.createCase}`
+
+  public getCreateShipmentUrl = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.case.createShipment}`
 }

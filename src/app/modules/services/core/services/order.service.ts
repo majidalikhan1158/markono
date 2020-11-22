@@ -12,7 +12,7 @@ export class OrderService {
   constructor(
     private http: ApiHttpService,
     private endPoint: ApiEndpointsService
-  ) {}
+  ) { }
 
   public getCaseTypes = (): Observable<HttpResponse<ResponseModal>> =>
     this.http.get(this.endPoint.getCaseTypeUrl())
@@ -21,14 +21,17 @@ export class OrderService {
     this.http.post(this.endPoint.getCustomerDetailUrl(), request)
 
   public getShipmentModes = (): Observable<HttpResponse<ResponseModal>> =>
-  this.http.get(this.endPoint.getShipmentModeUrl())
+    this.http.get(this.endPoint.getShipmentModeUrl())
 
   public getShipmentTerms = (): Observable<HttpResponse<ResponseModal>> =>
-  this.http.get(this.endPoint.getShipmentTermUrl())
+    this.http.get(this.endPoint.getShipmentTermUrl())
 
   public getShipmentAgents = (): Observable<HttpResponse<ResponseModal>> =>
-  this.http.get(this.endPoint.getShipmentAgentUrl())
+    this.http.get(this.endPoint.getShipmentAgentUrl())
 
   public createCase = (request: any): Observable<HttpResponse<ResponseModal>> =>
-  this.http.post(this.endPoint.getCreateCaseUrl(), request)
+    this.http.post(this.endPoint.getCreateCaseUrl(), request)
+
+  public createShipment = (request: any): Observable<HttpResponse<ResponseModal>> =>
+    this.http.post(this.endPoint.getCreateShipmentUrl(), request)
 }

@@ -51,4 +51,7 @@ export class ApiEndpointsService {
 
   public getCreateShipmentUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.case.createShipment}`
+
+  public getQuotationsUrl = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.case.getQuotationsList}`
 }

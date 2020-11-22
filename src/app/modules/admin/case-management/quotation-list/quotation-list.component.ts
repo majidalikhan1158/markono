@@ -4,6 +4,7 @@ import {
   ViewChild,
   AfterViewInit,
   ViewEncapsulation,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -16,6 +17,10 @@ import { Router } from '@angular/router';
 import { QuotationDataList } from 'src/app/modules/shared/mock-data/quotation-data-list';
 import { StatusTypes } from 'src/app/modules/shared/enums/case-management/quotation-constants';
 import { QuotationListVM } from 'src/app/modules/shared/models/create-case';
+import { OrderService } from 'src/app/modules/services/core/services/order.service';
+import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
+import { Subscription } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-quotation-list',
@@ -50,16 +55,17 @@ export class QuotationListComponent implements OnInit {
   selectedStatus = '';
   globalFilter = '';
   totalRecordsCount = 22;
-  constructor(private modalService: ModalService, private router: Router) {
+  subscription: Subscription;
+  constructor(private modalService: ModalService,
+    private router: Router,
+    private orderService: OrderService,
+    private snack: SnackBarService,
+    private ref: ChangeDetectorRef,) {
     this.dataSource = new MatTableDataSource<QuotationListVM>(this.dataArray);
   }
 
   ngOnInit(): void {
-    // this.modalService.modalToBeOpen.subscribe(modalId => {
-    //   if (modalId && modalId === UIModalID.ADD_PRODUCT_SPEC_MODAL) {
-    //     this.modalService.open(modalId);
-    //   }
-    // });
+    this.getQuotations();
   }
 
   ngAfterViewInit() {
@@ -203,5 +209,22 @@ export class QuotationListComponent implements OnInit {
 
   Choose() {
 
+  }
+
+  getQuotations() {
+    this.orderService.getQuotations().subscribe(resp => {
+      if (resp && resp.body.result && resp.body.result) {
+        const response = resp.body.result as any;
+        if (response.message && response.message === 'Successful') {
+          //this.snack.open('Shipping Info has been created successfully');
+          this.ref.detectChanges();
+        } else {
+          this.snack.open(response);
+        }
+        this.subscription.unsubscribe();
+      }
+    }, (err: HttpErrorResponse) => {
+      this.snack.open(err.error);
+    });
   }
 }

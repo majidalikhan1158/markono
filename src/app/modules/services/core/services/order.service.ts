@@ -34,4 +34,7 @@ export class OrderService {
 
   public createShipment = (request: any): Observable<HttpResponse<ResponseModal>> =>
     this.http.post(this.endPoint.getCreateShipmentUrl(), request)
+
+  public getQuotations = (): Observable<HttpResponse<ResponseModal>> =>
+    this.http.get(this.endPoint.getQuotationsUrl())
 }

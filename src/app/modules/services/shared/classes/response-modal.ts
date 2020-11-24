@@ -9,3 +9,9 @@ export interface ResponseModal {
     targetUrl: string;
     unAuthorizedRequest: boolean;
 }
+
+export interface ShopFloorResponseModal {
+    data: any;
+    links: any;
+    meta: any;
+}

@@ -21,7 +21,8 @@ export enum CreateCaseDataType {
 
 export enum TokenType {
     ORDER,
-    PRODUCT
+    PRODUCT,
+    SHOPFLOOR
 }
 
 export enum RecordType {

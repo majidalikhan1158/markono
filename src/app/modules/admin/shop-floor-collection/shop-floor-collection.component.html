@@ -278,9 +278,13 @@
               </mat-toolbar-row>
             </mat-toolbar>
             <mat-form-field class="selectBoxJobSchedule">
-              <mat-select [(value)]="selected">
-                <mat-option value="1">Passion</mat-option>
-                <mat-option value="2">Bad</mat-option>
+              <mat-select [(value)]="selectedMachineCode" (selectionChange)="handleMachineChange($event)">
+                <mat-option 
+                  *ngFor="let item of machineVMList"
+                  [value]="item.machineCode"
+                  >
+                  {{item.machineName}}
+              </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -296,7 +300,7 @@
             </div>
           </div> -->
           <div class="row">
-            <div class="tab-content">
+            <div class="tab-content" style="width: 100%;">
               <!--begin::Table-->
               <div class="table-responsive scrollableDiv" style="height:467px !important">
                 <table class="table table-head-custom table-head-bg table-borderless table-vertical-center
@@ -310,217 +314,47 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr *ngIf="shouldShowScheduleLoader">
+                      <td colspan="4" class="text-center">
+                        <mat-spinner style="margin:auto !important" [strokeWidth]="5"></mat-spinner>
+                      </td>
+                    </tr>
+                    <tr *ngFor="let item of machineScheduleJobsVMList">
                       <td>
                         <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-10px">
-                          13:00
+                          {{item.scheduledTime | date:'hh:mm'}}
                         </span>
                         <span class="font-weight-bold font-12px padding-left-10px color-484848">
-                          9/14
+                          {{item.scheduledDate | date:'M/d'}}
                         </span>
                       </td>
                       <td class="row-second-column">
                         <span class="text-dark-75 font-weight-bolder d-block font-14px">
-                          #918615-1-1-1
+                          {{item.jobNo}}
                         </span>
                         <span class="font-weight-bold font-12px color-484848">
-                          Behavioural Pharmacology Cover 3c+W/Bx1c
+                          {{item.jobTitle}}
                         </span>
                       </td>
                       <td>
                         <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-15px">
-                          67
+                          {{item.estimatedDuration}}
                         </span>
                         <span class="font-weight-bold font-12px padding-left-15px color-484848">
                           mins
                         </span>
                       </td>
                       <td class="action-column">
-                        <button mat-raised-button color="primary"
+                        <button mat-raised-button color="primary" (click)="setScheduleJob(item.links.setJob)"
                           class="outline-button btnJobScheduleSelect">Select</button>
                       </td>
                     </tr>
-                    <tr>
-                      <td>
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-10px">
-                          13:00
-                        </span>
-                        <span class="font-weight-bold font-12px padding-left-10px color-484848">
-                          9/14
-                        </span>
+                    <!-- <tr *ngIf="machineScheduleJobsVMList.length == 0 && !shouldShowScheduleLoader">
+                      <td colspan="4" class="text-center">
+                        No jobs found.
                       </td>
-                      <td class="row-second-column">
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px">
-                          #918615-1-1-1
-                        </span>
-                        <span class="font-weight-bold font-12px color-484848">
-                          Behavioural Pharmacology Cover 3c+W/Bx1c
-                        </span>
-                      </td>
-                      <td>
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-15px">
-                          67
-                        </span>
-                        <span class="font-weight-bold font-12px padding-left-15px color-484848">
-                          mins
-                        </span>
-                      </td>
-                      <td class="action-column">
-                        <button mat-raised-button color="primary"
-                          class="outline-button btnJobScheduleSelect">Select</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-10px">
-                          13:00
-                        </span>
-                        <span class="font-weight-bold font-12px padding-left-10px color-484848">
-                          9/14
-                        </span>
-                      </td>
-                      <td class="row-second-column">
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px">
-                          #918615-1-1-1
-                        </span>
-                        <span class="font-weight-bold font-12px color-484848">
-                          Behavioural Pharmacology Cover 3c+W/Bx1c
-                        </span>
-                      </td>
-                      <td>
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-15px">
-                          67
-                        </span>
-                        <span class="font-weight-bold font-12px padding-left-15px color-484848">
-                          mins
-                        </span>
-                      </td>
-                      <td class="action-column">
-                        <button mat-raised-button color="primary"
-                          class="outline-button btnJobScheduleSelect">Select</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-10px">
-                          13:00
-                        </span>
-                        <span class="font-weight-bold font-12px padding-left-10px color-484848">
-                          9/14
-                        </span>
-                      </td>
-                      <td class="row-second-column">
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px">
-                          #918615-1-1-1
-                        </span>
-                        <span class="font-weight-bold font-12px color-484848">
-                          Behavioural Pharmacology Cover 3c+W/Bx1c
-                        </span>
-                      </td>
-                      <td>
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-15px">
-                          67
-                        </span>
-                        <span class="font-weight-bold font-12px padding-left-15px color-484848">
-                          mins
-                        </span>
-                      </td>
-                      <td class="action-column">
-                        <button mat-raised-button color="primary"
-                          class="outline-button btnJobScheduleSelect">Select</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-10px">
-                          13:00
-                        </span>
-                        <span class="font-weight-bold font-12px padding-left-10px color-484848">
-                          9/14
-                        </span>
-                      </td>
-                      <td class="row-second-column">
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px">
-                          #918615-1-1-1
-                        </span>
-                        <span class="font-weight-bold font-12px color-484848">
-                          Behavioural Pharmacology Cover 3c+W/Bx1c
-                        </span>
-                      </td>
-                      <td>
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-15px">
-                          67
-                        </span>
-                        <span class="font-weight-bold font-12px padding-left-15px color-484848">
-                          mins
-                        </span>
-                      </td>
-                      <td class="action-column">
-                        <button mat-raised-button color="primary"
-                          class="outline-button btnJobScheduleSelect">Select</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-10px">
-                          13:00
-                        </span>
-                        <span class="font-weight-bold font-12px padding-left-10px color-484848">
-                          9/14
-                        </span>
-                      </td>
-                      <td class="row-second-column">
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px">
-                          #918615-1-1-1
-                        </span>
-                        <span class="font-weight-bold font-12px color-484848">
-                          Behavioural Pharmacology Cover 3c+W/Bx1c
-                        </span>
-                      </td>
-                      <td>
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-15px">
-                          67
-                        </span>
-                        <span class="font-weight-bold font-12px padding-left-15px color-484848">
-                          mins
-                        </span>
-                      </td>
-                      <td class="action-column">
-                        <button mat-raised-button color="primary"
-                          class="outline-button btnJobScheduleSelect">Select</button>
-                      </td>
-                    </tr>
-                    <tr class="table-last-row">
-                      <td>
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-10px">
-                          13:00
-                        </span>
-                        <span class="font-weight-bold font-12px padding-left-10px color-484848">
-                          9/14
-                        </span>
-                      </td>
-                      <td class="row-second-column">
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px">
-                          #918615-1-1-1
-                        </span>
-                        <span class="font-weight-bold font-12px color-484848">
-                          Behavioural Pharmacology Cover 3c+W/Bx1c
-                        </span>
-                      </td>
-                      <td>
-                        <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-15px">
-                          67
-                        </span>
-                        <span class="font-weight-bold font-12px padding-left-15px color-484848">
-                          mins
-                        </span>
-                      </td>
-                      <td class="action-column">
-                        <button mat-raised-button color="primary"
-                          class="outline-button btnJobScheduleSelect">Select</button>
-                      </td>
-                    </tr>
-
+                    </tr> -->
+                    <!-- table-last-row -->
                   </tbody>
                 </table>
 

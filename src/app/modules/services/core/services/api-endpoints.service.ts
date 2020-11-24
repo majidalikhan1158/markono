@@ -3,8 +3,6 @@ import { Injectable } from '@angular/core';
 // Application Constants
 import { Constants } from 'src/app/modules/services/config/constants';
 import { Endpoints } from '../../config/endpoints';
-import { QueryStringParameters } from '../../shared/classes/query-string-parameter';
-import { UrlBuilder } from '../../shared/classes/url-builder';
 
 @Injectable({
   providedIn: 'root',
@@ -19,33 +17,43 @@ export class ApiEndpointsService {
   private getProductServicesEndpoint = () =>
     `${this.constants.API_BASE_ADDRESS}${this.constants.API_ENDPOINT_PRODUCT_SERVICES}`
 
-  public getOrderServicesTokenUrl = () =>
+  private getShopFloorServicesEndpoint = () =>
+   `${this.constants.API_BASE_ADDRESS}${this.constants.API_ENDPOINT_SHOP_FLOOR_SERVICES}`
+
+  getOrderServicesTokenUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.authentication.getOrderServicesToken}`
 
-  public getProductServicesTokenUrl = () =>
+  getProductServicesTokenUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.authentication.getProductServicesToken}`
 
-  public getCaseTypeUrl = () =>
+  getShopFloorTokenUrl = () =>
+    `https://cors-anywhere.herokuapp.com/${Endpoints.authentication.getShopFloorCollectionToken}`
+
+  getCaseTypeUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.case.getCaseType}`
 
-  public getCustomerDetailUrl = () =>
+  getCustomerDetailUrl = () =>
     `${Endpoints.case.getCustomerDetail}`
 
-  public getShipmentModeUrl = () =>
+  getShipmentModeUrl = () =>
   `${this.getOrderServicesEndpoint()}${Endpoints.case.getShipmentMode}`
 
-  public getShipmentTermUrl = () =>
+  getShipmentTermUrl = () =>
   `${this.getOrderServicesEndpoint()}${Endpoints.case.getShipmentTerm}`
 
-  public getShipmentAgentUrl = () =>
+  getShipmentAgentUrl = () =>
   `${this.getOrderServicesEndpoint()}${Endpoints.case.getShipmentAgent}`
 
-  public getLiveVersion = () =>
+  getLiveVersion = () =>
   `${this.getProductServicesEndpoint()}${Endpoints.product.getLiveVersion}`
 
-  public getProductVersionUrl = () =>
+  getProductVersionUrl = () =>
   `${this.getProductServicesEndpoint()}${Endpoints.product.getProductVersions}`
 
-  public getCreateCaseUrl = () =>
+  getCreateCaseUrl = () =>
   `${this.getOrderServicesEndpoint()}${Endpoints.case.createCase}`
+
+  getMachinesList = () =>
+  `https://cors-anywhere.herokuapp.com/${this.getShopFloorServicesEndpoint()}${Endpoints.shopFloor.getMachinesList}`
+
 }

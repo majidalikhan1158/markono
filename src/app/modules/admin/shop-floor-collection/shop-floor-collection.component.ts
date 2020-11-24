@@ -1,6 +1,9 @@
 import { trigger, transition, style, animate, state, query, animateChild, group } from '@angular/animations';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
 import { Component, forwardRef, OnInit, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgModel, NG_VALUE_ACCESSOR, DefaultValueAccessor } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 
 import {
   ApexNonAxisChartSeries,
@@ -14,9 +17,15 @@ import {
   ApexTooltip,
   ApexStroke,
   ApexLegend,
-  ApexTitleSubtitle
+  ApexTitleSubtitle,
 } from 'ng-apexcharts';
 import { LayoutService } from 'src/app/_metronic/core';
+import { AppAuthService } from '../../services/core/services/app-auth.service';
+import { ShopFloorService } from '../../services/core/services/shop-floor.service';
+import { TokenType } from '../../shared/enums/app-enums';
+import { ShopFloorHelperService } from '../../shared/enums/helpers/shop-floor-helper.service';
+import { MachineScheduleJobsVM, MachineVM } from '../../shared/models/shop-floor';
+import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -53,8 +62,15 @@ export type TimeLineChartOptions = {
   styleUrls: ['./shop-floor-collection.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-
 export class ShopFloorCollectionComponent implements OnInit {
+  // ---------------API INTEGRATION DATA------------------------//
+  machineVMList: MachineVM[] = [];
+  selectedMachineCode: string;
+  machineScheduleJobsVMList: MachineScheduleJobsVM[] = [];
+
+  // ------------------- LOADERS--------------------------//
+  shouldShowScheduleLoader = false;
+  // --------------------------------------------//
   machineStatusList = [
     { value: '1', viewValue: 'Good Production' },
     { value: '2', viewValue: 'Off Line' },
@@ -79,28 +95,17 @@ export class ShopFloorCollectionComponent implements OnInit {
   scrollingSubscription: any;
   scrollTop: any;
   searchText = '';
-  toggleSearch: boolean = false;
+  toggleSearch = false;
 
-  constructor(private layout: LayoutService) {
-    this.fontFamily = this.layout.getProp('js.fontFamily');
-    this.colorsGrayGray500 = this.layout.getProp('js.colors.gray.gray500');
-    this.colorsGrayGray200 = this.layout.getProp('js.colors.gray.gray200');
-    this.colorsGrayGray300 = this.layout.getProp('js.colors.gray.gray300');
-    this.colorsThemeBaseDanger = this.layout.getProp(
-      'js.colors.theme.base.danger'
-    );
-    this.colorsThemeBasePrimary = this.layout.getProp(
-      'js.colors.theme.base.primary'
-    );
-    this.colorsThemeLightPrimary = this.layout.getProp(
-      'js.colors.theme.light.primary'
-    );
-    this.colorsThemeBaseSuccess = this.layout.getProp(
-      'js.colors.theme.base.success'
-    );
-    this.colorsThemeLightSuccess = this.layout.getProp(
-      'js.colors.theme.light.success'
-    );
+  constructor(   private layout: LayoutService,
+                 private auth: AppAuthService,
+                 private shopFloorService: ShopFloorService,
+                 private helper: ShopFloorHelperService,
+                 private snack: SnackBarService,
+                 private ref: ChangeDetectorRef) {
+                  this.getToken();
+                  this.getMachineList();
+                  this.setStyling();
   }
 
   ngOnInit(): void {
@@ -108,6 +113,85 @@ export class ShopFloorCollectionComponent implements OnInit {
     this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart() as UnitsProducedChartOptions;
     this.chartOptions = this.getChartOptions();
     this.timeLineChartOptions = this.getTimeLineChartOptions() as TimeLineChartOptions;
+  }
+
+  getToken = () => {
+    const isTokenExist = this.auth.getToken(TokenType.SHOPFLOOR);
+    if (!isTokenExist || isTokenExist === '') {
+      this.auth.getShopFloorToken().subscribe((tokenResp) => {
+        console.log(tokenResp);
+      });
+    }
+  }
+
+  getMachineList = () => {
+    this.shopFloorService.getMachines().subscribe(
+      (resp) => {
+        if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
+          this.machineVMList = this.helper.mapToMachineModal(resp.body.data);
+          this.setSelectedMachine();
+        } else {
+          this.snack.open('No machine found');
+        }
+      },
+      (err: HttpErrorResponse) => {
+        this.snack.open('Unable to get machines');
+      }
+    );
+  }
+
+  setSelectedMachine = (machineCode: string = null) => {
+    this.machineScheduleJobsVMList = [];
+    const selectedMachine = machineCode !== null
+    ? this.machineVMList.find(x => x.machineCode === machineCode)
+    : this.machineVMList.find(x => x.active);
+    if (selectedMachine) {
+      this.selectedMachineCode = selectedMachine.machineCode;
+      this.getMachineScheduleJobsList(selectedMachine.machineLinks.jobsSchedule);
+    } else {
+      // set empty lists to machine related data
+      this.selectedMachineCode = null;
+      this.machineScheduleJobsVMList = [];
+      this.snack.open('None of the machine is active now');
+    }
+    this.ref.detectChanges();
+  }
+
+  getMachineScheduleJobsList = (jobsScheduleLink: string) => {
+    this.shouldShowScheduleLoader = true;
+    this.shopFloorService.getMachineScheduleJobs(jobsScheduleLink).subscribe(
+      (resp) => {
+        if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
+          this.machineScheduleJobsVMList = this.helper.mapToScheduleJobsModal(resp.body.data);
+        } else {
+          this.machineScheduleJobsVMList = [];
+          this.snack.open('No schedule jobs found');
+        }
+        this.shouldShowScheduleLoader = false;
+        this.ref.detectChanges();
+      },
+      (err: HttpErrorResponse) => {
+        this.shouldShowScheduleLoader = false;
+        this.machineScheduleJobsVMList = [];
+        this.snack.open('Unable to get schedule jobs');
+      }
+    );
+  }
+
+  handleMachineChange = (event: MatSelectChange) => {
+    this.setSelectedMachine(event.value);
+  }
+
+  setScheduleJob = (setJobUrl) => {
+
+  }
+
+  setStyling = () => {
+    this.fontFamily = this.layout.getProp('js.fontFamily');
+    this.colorsGrayGray500 = this.layout.getProp('js.colors.gray.gray500');
+    this.colorsGrayGray300 = this.layout.getProp('js.colors.gray.gray300');
+    this.colorsThemeBaseSuccess = this.layout.getProp('js.colors.theme.base.success');
+    this.colorsThemeLightSuccess = this.layout.getProp('js.colors.theme.light.success');
   }
 
   getOEEChartOptions() {
@@ -128,19 +212,19 @@ export class ShopFloorCollectionComponent implements OnInit {
               offsetY: 100,
               show: false,
               color: '#888',
-              fontSize: '13px'
+              fontSize: '13px',
             },
             value: {
               color: '#111',
               fontSize: '14px',
               show: true,
-              offsetY: 10
-            }
-          }
-        }
+              offsetY: 10,
+            },
+          },
+        },
       },
       colors: ['#EC5656'],
-      labels: ['']
+      labels: [''],
     };
   }
 
@@ -289,16 +373,16 @@ export class ShopFloorCollectionComponent implements OnInit {
         bar: {
           horizontal: false,
           columnWidth: '30%',
-          endingShape: 'flat'
-        }
+          endingShape: 'flat',
+        },
       },
       dataLabels: {
-        enabled: false
+        enabled: false,
       },
       stroke: {
         show: true,
         width: 7,
-        colors: ['transparent']
+        colors: ['transparent'],
       },
       xaxis: {
         categories: [
@@ -307,20 +391,20 @@ export class ShopFloorCollectionComponent implements OnInit {
       },
       yaxis: {
         title: {
-          text: ''
-        }
+          text: '',
+        },
       },
       fill: {
         opacity: 1,
-        colors: ['#5FACE2']
+        colors: ['#5FACE2'],
       },
       tooltip: {
         y: {
           formatter(val) {
             return '$ ' + val + ' thousands';
-          }
-        }
-      }
+          },
+        },
+      },
     };
   }
 
@@ -503,7 +587,6 @@ export class ShopFloorCollectionComponent implements OnInit {
             },
           ]
         },
-
       ],
       chart: {
         height: 120,
@@ -523,101 +606,101 @@ export class ShopFloorCollectionComponent implements OnInit {
                 from: 10,
                 to: 50,
                 name: 'low',
-                color: '#56EC69'
+                color: '#56EC69',
               },
               {
                 from: 51,
                 to: 80,
                 name: 'medium',
-                color: '#ECE756'
+                color: '#ECE756',
               },
               {
                 from: 81,
                 to: 100,
                 name: 'high',
-                color: '#ECC456'
+                color: '#ECC456',
               },
               {
                 from: 101,
                 to: 131,
                 name: 'extreme',
-                color: '#567EEC'
+                color: '#567EEC',
               },
               {
                 from: 132,
                 to: 160,
                 name: 'extreme',
-                color: '#EC9756'
+                color: '#EC9756',
               },
               {
                 from: 161,
                 to: 200,
                 name: 'extreme',
-                color: '#EC56B5'
+                color: '#EC56B5',
               },
               {
                 from: 201,
                 to: 246,
                 name: 'extreme',
-                color: '#EC5656'
+                color: '#EC5656',
               },
               {
                 from: 247,
                 to: 300,
                 name: 'extreme',
-                color: '#EC5656'
+                color: '#EC5656',
               },
               {
                 from: 301,
                 to: 340,
                 name: 'extreme',
-                color: '#EC5656'
+                color: '#EC5656',
               },
               {
                 from: 341,
                 to: 400,
                 name: 'extreme',
-                color: '#567EEC'
+                color: '#567EEC',
               },
               {
                 from: 401,
                 to: 450,
                 name: 'low',
-                color: '#56EC69'
+                color: '#56EC69',
               },
               {
                 from: 451,
                 to: 500,
                 name: 'medium',
-                color: '#ECE756'
+                color: '#ECE756',
               },
               {
                 from: 501,
                 to: 550,
                 name: 'extreme',
-                color: '#567EEC'
+                color: '#567EEC',
               },
               {
                 from: 551,
                 to: 600,
                 name: 'extreme',
-                color: '#EC56B5'
+                color: '#EC56B5',
               },
               {
                 from: 601,
                 to: 670,
                 name: 'low',
-                color: '#56EC69'
+                color: '#56EC69',
               },
-            ]
-          }
-        }
+            ],
+          },
+        },
       },
       dataLabels: {
-        enabled: false
+        enabled: false,
       },
       title: {
-        text: ''
+        text: '',
       },
       xaxis: {
         type: 'category',
@@ -636,7 +719,7 @@ export class ShopFloorCollectionComponent implements OnInit {
             fontSize: '10px',
             fontFamily: 'Roboto',
             fontWeight: 500,
-            cssClass: 'apexcharts-xaxis-label'
+            cssClass: 'apexcharts-xaxis-label',
           },
           offsetX: 0,
           offsetY: 0,
@@ -647,8 +730,8 @@ export class ShopFloorCollectionComponent implements OnInit {
             year: 'yyyy',
             month: 'MMM \'yy',
             day: 'dd MMM',
-            hour: 'HH:mm'
-          }
+            hour: 'HH:mm',
+          },
         },
         axisTicks: {
           show: false,
@@ -656,7 +739,7 @@ export class ShopFloorCollectionComponent implements OnInit {
           color: '#78909C',
           height: 6,
           offsetX: 0,
-          offsetY: 0
+          offsetY: 0,
         },
         tickAmount: undefined,
         tickPlacement: 'between',
@@ -674,8 +757,8 @@ export class ShopFloorCollectionComponent implements OnInit {
             fontSize: '12px',
             fontFamily: 'Helvetica, Arial, sans-serif',
             fontWeight: 600,
-            cssClass: 'apexcharts-xaxis-title'
-          }
+            cssClass: 'apexcharts-xaxis-title',
+          },
         },
         crosshairs: {
           show: true,
@@ -685,7 +768,7 @@ export class ShopFloorCollectionComponent implements OnInit {
           stroke: {
             color: '#b6b6b6',
             width: 0,
-            dashArray: 0
+            dashArray: 0,
           },
           fill: {
             type: 'solid',
@@ -695,29 +778,30 @@ export class ShopFloorCollectionComponent implements OnInit {
               colorTo: '#BED1E6',
               stops: [0, 100],
               opacityFrom: 0.4,
-              opacityTo: 0.5
-            }
+              opacityTo: 0.5,
+            },
           },
           dropShadow: {
             enabled: false,
             top: 0,
             left: 0,
             blur: 1,
-            opacity: 0.4
-          }
+            opacity: 0.4,
+          },
         },
         tooltip: {
           enabled: true,
           formatter: undefined,
-          offsetY: 0
-        }
-      }
+          offsetY: 0,
+        },
+      },
     };
   }
 
   openSearch() {
     this.toggleSearch = true;
   }
+  
   searchClose() {
     this.searchText = '';
     this.toggleSearch = false;

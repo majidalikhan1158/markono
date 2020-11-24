@@ -31,12 +31,13 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MAT_SNACK_BAR_DATA} from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // import { MatSliderModule } from '@angular/material/slider';
 // import { MatCheckboxModule } from '@angular/material/checkbox';
 // import { MatTooltipModule } from '@angular/material/tooltip';
 // import { MatSidenavModule } from '@angular/material/sidenav';
 // import { MatProgressBarModule } from '@angular/material/progress-bar';
-// import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 // import { MatGridListModule } from '@angular/material/grid-list';
 
@@ -78,6 +79,7 @@ import {MAT_SNACK_BAR_DATA} from '@angular/material/snack-bar';
     MatSlideToggleModule,
     MatAutocompleteModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule
     // MatTooltipModule,
     // MatSidenavModule,
     // MatProgressBarModule,
@@ -137,6 +139,7 @@ import {MAT_SNACK_BAR_DATA} from '@angular/material/snack-bar';
     MatSlideToggleModule,
     MatAutocompleteModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule
     // MatTooltipModule,
     // MatSidenavModule,
     // MatProgressBarModule,

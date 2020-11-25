@@ -11,7 +11,8 @@
           <div class="row">
             <div class="col-lg-12 col-12">
               <mat-form-field class="selectBoxMachineStatus">
-                <mat-select [(value)]="selectedStatusAction"  (selectionChange)="handleMachineStatusActionChange($event)">
+                <mat-select [(value)]="selectedStatusAction"
+                  (selectionChange)="handleMachineStatusActionChange($event)">
                   <mat-option value="Choose">Choose</mat-option>
                   <mat-option *ngFor="let item of machineStatusActionVM?.machineStatusActionList" [value]="item.id">
                     {{ item.status }}
@@ -30,10 +31,9 @@
                 </span>
               </div>
               <div class="col-lg-6 col-12 padding-0px text-right">
-                <button mat-raised-button 
-                (click)="openUiModal('VIEW_OPERATORS_MODAL', machineSelectedStatusAction.operators)"
-                  color="primary"
-                  data-toggle="tooltip" 
+                <button mat-raised-button
+                  (click)="openUiModal('VIEW_OPERATORS_MODAL', machineSelectedStatusAction.operators)" color="primary"
+                  data-toggle="tooltip"
                   title="{{(machineSelectedStatusAction && machineSelectedStatusAction.operators.length > 0)? '': 'No operators exist' }}"
                   [disabled]="!(machineSelectedStatusAction?.operators?.length > 0)"
                   class="outline-button btnOperators">Operators</button>
@@ -121,7 +121,8 @@
             <div class="col-lg-12 col-12 display-flex" *ngIf="machineCurrentJobVM">
               <div class="col-lg-4 padding-left-right-0px display-flex-direction-column">
                 <span class="app-label-grey">Current Job</span>
-                <span class="font-20px padding-b-5px font-roboto-bold" style="color: #5FACE2;">{{machineCurrentJobVM.jobNo}}</span>
+                <span class="font-20px padding-b-5px font-roboto-bold"
+                  style="color: #5FACE2;">{{machineCurrentJobVM.jobNo}}</span>
                 <span class="font-weight-bold font-12px color-484848">{{machineCurrentJobVM.jobTitle}}</span>
               </div>
               <div class="col-lg-5 display-flex">
@@ -135,10 +136,9 @@
                     <mat-form-field class="selectBoxJobStatus">
                       <mat-select [(value)]="selectedJobAction" (selectionChange)="handleMachineActionChange($event)">
                         <mat-option value="Choose">Choose</mat-option>
-                        <mat-option 
-                          *ngFor="let item of machineCurrentJobVM.machineJobActionsList" 
+                        <mat-option *ngFor="let item of machineCurrentJobVM.machineJobActionsList"
                           [value]="item.actionLink"> {{item.status}}
-                      </mat-option>
+                        </mat-option>
                       </mat-select>
                     </mat-form-field>
                   </span>
@@ -146,7 +146,8 @@
               </div>
               <div class="col-lg-3 padding-l-0px padding-r-0px">
                 <div class="margin-t-22px text-right">
-                  <span style="padding-right: 10px;" (click)="handleJobActionState(machineCurrentJobVM?.jobActionStop, 'stopped')">
+                  <span style="padding-right: 10px;"
+                    (click)="handleJobActionState(machineCurrentJobVM?.jobActionStop, 'stopped')">
                     <img src="./assets/media/custom-icons/stop-icon.png" />
                   </span>
                   <span (click)="handleJobActionState(machineCurrentJobVM?.jobActionPause, 'paused')">
@@ -163,7 +164,8 @@
                 <mat-tab label="Data Collection">
                   <div class="row" *ngIf="machineCurrentJobVM">
                     <div class="col-12 display-flex">
-                      <div class="col-lg-4 data-collection-box" *ngFor="let item of machineCurrentJobVM.machineSummaryList">
+                      <div class="col-lg-4 data-collection-box"
+                        *ngFor="let item of machineCurrentJobVM.machineSummaryList">
                         <div class="row">
                           <div class="col-lg-12">
                             <span class="heading">{{item.statusGrp}}</span>
@@ -200,13 +202,12 @@
               </div>
               <div class="col-lg-12 padding-0px" *ngIf="machineCurrentJobUnitsVM && unitsProducedChartOptions">
                 <div id="kt_stats_widget_11_chart" class="card-rounded-bottom units-produced-chart">
-                  <apx-chart [series]="unitsProducedChartOptions.series"
-                    [chart]="unitsProducedChartOptions.chart"
+                  <apx-chart [series]="unitsProducedChartOptions.series" [chart]="unitsProducedChartOptions.chart"
                     [dataLabels]="unitsProducedChartOptions.dataLabels"
-                    [plotOptions]="unitsProducedChartOptions.plotOptions"
-                    [yaxis]="unitsProducedChartOptions.yaxis" [legend]="unitsProducedChartOptions.legend"
-                    [fill]="unitsProducedChartOptions.fill" [stroke]="unitsProducedChartOptions.stroke"
-                    [tooltip]="unitsProducedChartOptions.tooltip" [xaxis]="unitsProducedChartOptions.xaxis">
+                    [plotOptions]="unitsProducedChartOptions.plotOptions" [yaxis]="unitsProducedChartOptions.yaxis"
+                    [legend]="unitsProducedChartOptions.legend" [fill]="unitsProducedChartOptions.fill"
+                    [stroke]="unitsProducedChartOptions.stroke" [tooltip]="unitsProducedChartOptions.tooltip"
+                    [xaxis]="unitsProducedChartOptions.xaxis">
                   </apx-chart>
                 </div>
               </div>
@@ -218,12 +219,11 @@
               </div>
               <div class="col-lg-12 padding-0px">
                 <div id="kt_stats_widget_11_chart" class="card-rounded-bottom comulative-chart">
-                  <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
-                    [xaxis]="chartOptions.xaxis" [yaxis]="chartOptions.yaxis"
-                    [dataLabels]="chartOptions.dataLabels" [stroke]="chartOptions.stroke"
+                  <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+                    [yaxis]="chartOptions.yaxis" [dataLabels]="chartOptions.dataLabels" [stroke]="chartOptions.stroke"
                     [legend]="chartOptions.legend" [fill]="chartOptions.fill" [states]="chartOptions.states"
-                    [tooltip]="chartOptions.tooltip" [colors]="chartOptions.colors"
-                    [markers]="chartOptions.markers" [plotOptions]="chartOptions.plotOptions">
+                    [tooltip]="chartOptions.tooltip" [colors]="chartOptions.colors" [markers]="chartOptions.markers"
+                    [plotOptions]="chartOptions.plotOptions">
                   </apx-chart>
                 </div>
               </div>
@@ -260,12 +260,9 @@
             </mat-toolbar>
             <mat-form-field class="selectBoxJobSchedule">
               <mat-select [(value)]="selectedMachineCode" (selectionChange)="handleMachineChange($event)">
-                <mat-option 
-                  *ngFor="let item of machineVMList"
-                  [value]="item.machineCode"
-                  >
+                <mat-option *ngFor="let item of machineVMList" [value]="item.machineCode">
                   {{item.machineName}}
-              </mat-option>
+                </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -276,7 +273,7 @@
               <mat-form-field appearance="outline" class="txtSearchWithJobNo">
                 <mat-label>Search with Job No.</mat-label>
                 <mat-icon matPrefix>search</mat-icon>
-                <input matInput placeholder="Search with Job No.">
+                <input matInput placeholder="Search with Job No." (keyup)="applySearch($event)">
               </mat-form-field>
             </div>
           </div>

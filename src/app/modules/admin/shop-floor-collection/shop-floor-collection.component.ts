@@ -104,18 +104,25 @@ export class ShopFloorCollectionComponent implements OnInit {
   scrollTop: any;
   searchText = '';
   toggleSearch = false;
+  ////-------Searching----///////
+  columns = [];
+  rows = [];
+  filteredData = [];
+  columnsWithSearch: string[] = [];
 
-  constructor(   private layout: LayoutService,
-                 private auth: AppAuthService,
-                 private shopFloorService: ShopFloorService,
-                 private helper: ShopFloorHelperService,
-                 private snack: SnackBarService,
-                 private ref: ChangeDetectorRef,
-                 private modalService: ModalService,
-                 private store: CaseStore) {
-                  this.getToken();
-                  this.getMachineList();
-                  this.setStyling();
+  constructor(private layout: LayoutService,
+    private auth: AppAuthService,
+    private shopFloorService: ShopFloorService,
+    private helper: ShopFloorHelperService,
+    private snack: SnackBarService,
+    private ref: ChangeDetectorRef,
+    private modalService: ModalService,
+    private store: CaseStore) {
+    localStorage.setItem('MARKONO_SHOP_FLOOR_TOKEN', 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJDM3VmSXVrb0N2SnZHVVhBb19fZXN0WldURjBjZk1FZDF5eVlvMjhVV1BzIn0.eyJleHAiOjE2MDYzMjQzMzIsImlhdCI6MTYwNjMyMzQzMiwianRpIjoiM2JiZDBhYjktZjdmMi00NWQ1LWI0MzMtYjcyNWYwZDg2ZTg5IiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5tYXJrb25vLmNvbS9hdXRoL3JlYWxtcy9tb29uc2hvdGRldiIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI0YzNhMzM2OS1mNTFhLTQ4M2EtODUzYy1lNTNlYzg5ZmQ3YjkiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzZiIsInNlc3Npb25fc3RhdGUiOiJlZTY5OTZiYi0zMjU2LTQxYTMtOTE0YS0zZmVmZmU4YjdkZjkiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHBzOi8vYXBpLm1hcmtvbm8uY29tIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJyb2xlX3VzZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJPcGVyYXRvciAwMSIsInByZWZlcnJlZF91c2VybmFtZSI6Im9wZXJhdG9yMSIsImdpdmVuX25hbWUiOiJPcGVyYXRvciAwMSIsImZhbWlseV9uYW1lIjoiIiwiZW1haWwiOiJpaHNhbmlseWFzNTA4QGdtYWlsLmNvbSJ9.eEFQ2RJ_nAx_4d6k0sgjSQSAp8xjrr2jYIbfEJ8qAuTSqPktUM8P-_R2fvEwlFLNmX64kHmtM6ajChPHZ1XXulAvDtz3o1d8Hz6Elmdgbuj_BQQ7B4smwlHdpGRA9j-FeUZw1oThcSbzWsPYYqiaMlLmaCrmiSoXD_BGQAQwYrHACpNKq-6FHHBTp701dYvj-WHbT7XvuI7jM7gkZLdbe_phTeY7VKmrRhKpqjJbzuVilUYeB98s0xxwQRJUyYLKsPuM3vwbHuEKlEcOD-TL6TSnY5DK3X66hJ9T_8sA4v-_C9bSzP0_caYf_yfbSK1OsUU7W6YglJAJOKbVlkp6wQ');
+    localStorage.setItem('SHOP_FLOOR_TOKEN_EXPIRY', '900');
+    this.getToken();
+    this.getMachineList();
+    this.setStyling();
   }
 
   ngOnInit(): void {
@@ -152,8 +159,8 @@ export class ShopFloorCollectionComponent implements OnInit {
   setSelectedMachine = (machineCode: string = null) => {
     this.resetMachineData();
     const selectedMachine = machineCode !== null
-    ? this.machineVMList.find(x => x.machineCode === machineCode)
-    : this.machineVMList.find(x => x.active);
+      ? this.machineVMList.find(x => x.machineCode === machineCode)
+      : this.machineVMList.find(x => x.active);
     if (selectedMachine) {
       this.selectedMachineCode = selectedMachine.machineCode;
       this.getMachineScheduleJobsList(selectedMachine.machineLinks.jobsSchedule);
@@ -163,8 +170,8 @@ export class ShopFloorCollectionComponent implements OnInit {
     } else {
       // set empty lists to machine related data
       // this.selectedMachineCode = null;
-     this.resetMachineData();
-     this.snack.open('None of the machine is active now');
+      this.resetMachineData();
+      this.snack.open('None of the machine is active now');
     }
     this.ref.detectChanges();
   }
@@ -936,5 +943,45 @@ export class ShopFloorCollectionComponent implements OnInit {
     }
     this.store.setShopFloorOperators(operators);
     this.modalService.open(modalId);
+  }
+
+  applySearch(event) {
+    const searchText = event.target.value;
+    console.log('sea', searchText)
+    this.rows = this.machineScheduleJobsVMList;
+
+    this.columnsWithSearch = Object.keys(this.rows[0]);
+    if (searchText !== '') {
+      this.machineScheduleJobsVMList = this.filterDatatable(searchText, this.rows, this.columnsWithSearch);
+    } else {
+      this.machineScheduleJobsVMList = this.rows;
+    }
+  }
+
+  filterDatatable(
+    searchText: any,
+    recordList: any[],
+    columnsWithSearch: string[]
+  ) {
+    // get the value of the key pressed and make it lowercase
+    const filter = searchText.toLowerCase();
+    // assign filtered matches to the active datatable
+    return recordList.filter((item) => {
+      // iterate through each row's column data
+      for (let i = 0; i < columnsWithSearch.length; i++) {
+        const colValue = item[columnsWithSearch[i]] as unknown;
+        // if no filter OR colvalue is NOT null AND contains the given filter
+        if (
+          !filter ||
+          (!!colValue &&
+            colValue.toString().toLowerCase().indexOf(filter) !== -1)
+        ) {
+          // found match, return true to add to result set
+          return true;
+        }
+      }
+    });
+    // TODO - whenever the filter changes, always go back to the first page
+    // this.table.offset = 0;
   }
 }

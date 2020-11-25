@@ -26,7 +26,7 @@ export class ApiEndpointsService {
   getProductServicesTokenUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.authentication.getProductServicesToken}`
 
-  getShopFloorTokenUrl = () =>
+  public getShopFloorTokenUrl = () =>
     `https://cors-anywhere.herokuapp.com/${Endpoints.authentication.getShopFloorCollectionToken}`
 
   getCaseTypeUrl = () =>

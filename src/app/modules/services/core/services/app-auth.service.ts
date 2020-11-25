@@ -45,7 +45,7 @@ export class AppAuthService {
       this.constants.AUTH_CRED_PRODUCT_TOKEN
     )
 
-  getShopFloorToken = (): Observable<HttpResponse<any>> =>
+  public getShopFloorToken = (): Observable<HttpResponse<any>> =>
     this.http.post(
       this.endPoint.getShopFloorTokenUrl(),
       this.constants.AUTH_CRED_SHOP_FLOOR_COLLECTION

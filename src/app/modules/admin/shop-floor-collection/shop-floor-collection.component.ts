@@ -1,8 +1,6 @@
-import { trigger, transition, style, animate, state, query, animateChild, group } from '@angular/animations';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core';
-import { Component, forwardRef, OnInit, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormControl, NgModel, NG_VALUE_ACCESSOR, DefaultValueAccessor } from '@angular/forms';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 
 import {
@@ -19,12 +17,16 @@ import {
   ApexLegend,
   ApexTitleSubtitle,
 } from 'ng-apexcharts';
+import { Operator } from 'rxjs';
 import { LayoutService } from 'src/app/_metronic/core';
 import { AppAuthService } from '../../services/core/services/app-auth.service';
 import { ShopFloorService } from '../../services/core/services/shop-floor.service';
 import { TokenType } from '../../shared/enums/app-enums';
 import { ShopFloorHelperService } from '../../shared/enums/helpers/shop-floor-helper.service';
-import { MachineScheduleJobsVM, MachineVM } from '../../shared/models/shop-floor';
+import { GreyboardThicknessList } from '../../shared/enums/product-management/product-constants';
+import { MachineCurrentJobUnitsVM, MachineCurrentJobVM, MachineScheduleJobsVM, MachineStatusAction, MachineStatusVM, MachineVM, Operators } from '../../shared/models/shop-floor';
+import { CaseStore } from '../../shared/ui-services/create-case.service';
+import { ModalService } from '../../shared/ui-services/modal.service';
 import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
 
 export type ChartOptions = {
@@ -67,9 +69,15 @@ export class ShopFloorCollectionComponent implements OnInit {
   machineVMList: MachineVM[] = [];
   selectedMachineCode: string;
   machineScheduleJobsVMList: MachineScheduleJobsVM[] = [];
-
+  machineCurrentJobVM: MachineCurrentJobVM;
+  machineCurrentJobUnitsVM: MachineCurrentJobUnitsVM;
+  selectedJobAction = 'Choose';
+  selectedStatusAction = 'Choose';
+  machineStatusActionVM: MachineStatusVM;
+  machineSelectedStatusAction: MachineStatusAction;
   // ------------------- LOADERS--------------------------//
   shouldShowScheduleLoader = false;
+  clickedScheduleJobButtonId = -1;
   // --------------------------------------------//
   machineStatusList = [
     { value: '1', viewValue: 'Good Production' },
@@ -102,7 +110,9 @@ export class ShopFloorCollectionComponent implements OnInit {
                  private shopFloorService: ShopFloorService,
                  private helper: ShopFloorHelperService,
                  private snack: SnackBarService,
-                 private ref: ChangeDetectorRef) {
+                 private ref: ChangeDetectorRef,
+                 private modalService: ModalService,
+                 private store: CaseStore) {
                   this.getToken();
                   this.getMachineList();
                   this.setStyling();
@@ -110,7 +120,6 @@ export class ShopFloorCollectionComponent implements OnInit {
 
   ngOnInit(): void {
     this.oeeChartOptions = this.getOEEChartOptions();
-    this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart() as UnitsProducedChartOptions;
     this.chartOptions = this.getChartOptions();
     this.timeLineChartOptions = this.getTimeLineChartOptions() as TimeLineChartOptions;
   }
@@ -141,20 +150,33 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   setSelectedMachine = (machineCode: string = null) => {
-    this.machineScheduleJobsVMList = [];
+    this.resetMachineData();
     const selectedMachine = machineCode !== null
     ? this.machineVMList.find(x => x.machineCode === machineCode)
     : this.machineVMList.find(x => x.active);
     if (selectedMachine) {
       this.selectedMachineCode = selectedMachine.machineCode;
       this.getMachineScheduleJobsList(selectedMachine.machineLinks.jobsSchedule);
+      this.getCurretnMachineJob(selectedMachine.machineLinks.currentJobLink);
+      this.getCurrentJobUnits(selectedMachine.machineLinks.currentJobUnitsPerMinute);
+      this.getMachineStatus(selectedMachine.machineLinks.machineActions);
     } else {
       // set empty lists to machine related data
-      this.selectedMachineCode = null;
-      this.machineScheduleJobsVMList = [];
-      this.snack.open('None of the machine is active now');
+      // this.selectedMachineCode = null;
+     this.resetMachineData();
+     this.snack.open('None of the machine is active now');
     }
     this.ref.detectChanges();
+  }
+
+  resetMachineData = () => {
+    this.machineScheduleJobsVMList = [];
+    this.machineCurrentJobVM = null;
+    this.machineCurrentJobUnitsVM = null;
+    this.machineStatusActionVM = null;
+    this.selectedJobAction = 'Choose';
+    this.selectedStatusAction = 'Choose';
+    this.machineSelectedStatusAction = null;
   }
 
   getMachineScheduleJobsList = (jobsScheduleLink: string) => {
@@ -182,8 +204,110 @@ export class ShopFloorCollectionComponent implements OnInit {
     this.setSelectedMachine(event.value);
   }
 
-  setScheduleJob = (setJobUrl) => {
+  getCurretnMachineJob = (machineCurrentJobLink: string) => {
+    this.shopFloorService.getCurretnMachineJob(machineCurrentJobLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.data && resp.body.data.id) {
+        this.machineCurrentJobVM = this.helper.mapToMachineCurrentJobModal(resp.body.data);
+        const activeAction = this.machineCurrentJobVM.machineJobActionsList.find(x => x.active);
+        this.selectedJobAction = activeAction ? activeAction.actionLink : 'Choose';
+      } else {
+        this.snack.open('Unable to get machine current job');
+      }
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      this.snack.open('Unable to get machine current job');
+    });
+  }
 
+  handleJobActionState = (actionStateLink: string, state: string) => {
+    this.shopFloorService.setMachineJobActionState(actionStateLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.message === 'OK') {
+        this.snack.open(`Job action has been ${state} successfully`);
+      }
+    }, (err: HttpErrorResponse) => {
+      this.snack.open(err.error.message);
+    });
+  }
+
+  getCurrentJobUnits = (currentJobUnitsLink: string) => {
+    this.shopFloorService.getCurrentJobUnits(currentJobUnitsLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
+        this.machineCurrentJobUnitsVM = this.helper.mapToMachineCurrentJobUnitsModal(resp.body.data);
+        const unitsPerMinutes = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.count);
+        this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart(unitsPerMinutes) as UnitsProducedChartOptions;
+      } else {
+        this.snack.open('Unable to get machine current job units');
+      }
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      this.snack.open('Unable to get machine current job units');
+    });
+  }
+
+  setScheduleJob = (setJobUrl, index) => {
+    this.clickedScheduleJobButtonId = index;
+    this.shopFloorService.setScheduleJob(setJobUrl).subscribe(resp => {
+      if (resp && resp.body && resp.body.message === 'OK') {
+        this.snack.open('Job has been set successfully');
+      }
+      this.clickedScheduleJobButtonId = -1;
+    }, (err: HttpErrorResponse) => {
+      this.snack.open(err.error.message);
+      this.clickedScheduleJobButtonId = -1;
+    });
+  }
+
+  handleMachineActionChange = (event: MatSelectChange) => {
+    const actionLink = event.value;
+    if (actionLink === 'Choose') {
+      return;
+    }
+    if (!actionLink) {
+      this.snack.open('Machine not have valid action');
+      return;
+    }
+    this.shopFloorService.setMachineAction(actionLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.message === 'OK') {
+        this.snack.open('Job action has been set successfully');
+      }
+    }, (err: HttpErrorResponse) => {
+      this.snack.open(err.error.message);
+    });
+  }
+
+  getMachineStatus = (machineStatusLink: string) => {
+    this.shopFloorService.getMachineStatus(machineStatusLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.data && resp.body.data.id) {
+        this.machineStatusActionVM = this.helper.mapToMachineStatusModal(resp.body.data);
+        this.machineSelectedStatusAction = this.machineStatusActionVM.machineStatusActionList.find(x => x.current);
+        this.selectedStatusAction = this.machineSelectedStatusAction ? this.machineSelectedStatusAction.id : 'Choose';
+      } else {
+        this.snack.open('Unable to get machine status action');
+      }
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      this.snack.open('Unable to get machine status action');
+    });
+  }
+
+  handleMachineStatusActionChange = (event: MatSelectChange) => {
+    this.selectedStatusAction = event.value;
+    if (this.selectedStatusAction === 'Choose') {
+      return;
+    }
+    this.machineSelectedStatusAction = this.machineStatusActionVM.machineStatusActionList.find(x => x.id === this.selectedStatusAction);
+    if (!this.machineSelectedStatusAction) {
+      this.snack.open('Machine not have valid status action link');
+      return;
+    }
+    this.shopFloorService.setMachineActionStatus(this.machineSelectedStatusAction.actionLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.message === 'OK') {
+        this.snack.open('Job status has been set successfully');
+      }
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      this.snack.open(err.error.message);
+    });
   }
 
   setStyling = () => {
@@ -352,14 +476,12 @@ export class ShopFloorCollectionComponent implements OnInit {
     };
   }
 
-  getUnitsProducePerMinuteChart() {
+  getUnitsProducePerMinuteChart(list: any[]) {
     return {
       series: [
         {
-          name: 'Free Cash Flow',
-          data: [35, 41, 36, 26, 45, 48, 52, 53, 41,
-            35, 41, 36, 26, 45, 48, 52, 53, 41,
-            35, 41, 36, 26, 45, 48, 52, 53, 41]
+          name: 'Units Produced',
+          data: list
         }
       ],
       chart: {
@@ -401,7 +523,7 @@ export class ShopFloorCollectionComponent implements OnInit {
       tooltip: {
         y: {
           formatter(val) {
-            return '$ ' + val + ' thousands';
+            return `${val}`;
           },
         },
       },
@@ -801,9 +923,18 @@ export class ShopFloorCollectionComponent implements OnInit {
   openSearch() {
     this.toggleSearch = true;
   }
-  
+
   searchClose() {
     this.searchText = '';
     this.toggleSearch = false;
+  }
+
+  openUiModal(modalId: string, operators: Operators[]) {
+    if (operators && operators.length === 0) {
+      this.snack.open('No operators exist');
+      return;
+    }
+    this.store.setShopFloorOperators(operators);
+    this.modalService.open(modalId);
   }
 }

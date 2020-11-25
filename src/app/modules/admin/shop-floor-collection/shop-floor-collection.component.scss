@@ -131,7 +131,7 @@ app-shop-floor-collection {
     width: auto !important;
     position: sticky;
     top: 0px;
-    z-index: 1000;
+    z-index: 900;
   }
 
   .table.job-schedule-table thead th:last-child {
@@ -149,18 +149,13 @@ app-shop-floor-collection {
   .job-schedule-table.table tbody tr td {
     padding-left: 0px;
     padding-right: 0px;
-    padding-top: 0px;
+    padding-top: 25px;
     padding-bottom: 25px;
     vertical-align: sub !important;
   }
 
   .job-schedule-table.table tbody tr td.action-column {
     padding-right: 10px;
-  }
-
-  .job-schedule-table.table tbody tr .row-second-column {
-    padding-top: 25px;
-    vertical-align: unset !important;
   }
 
   .job-schedule-table.table tbody tr.table-last-row {

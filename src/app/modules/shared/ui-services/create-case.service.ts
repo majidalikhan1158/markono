@@ -6,6 +6,7 @@ import {
 } from '../models/create-case';
 import { CreateCaseDataType, RecordType } from '../enums/app-enums';
 import { DDLObjectModal, DDLListModal, DDLObjectModalProp } from '../../services/shared/classes/case-modals/case-modal';
+import { Operators } from '../models/shop-floor';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class CaseStore {
   public caseType: Observable<string>;
   public caseType2: Observable<string>;
   public dashboardEmbededLink: Observable<string>;
+  public shopFloorOperators: Observable<Operators[]>;
   public productDetailsIdSubject = new BehaviorSubject<number>(0);
   private createCaseStoreSubject = new BehaviorSubject<CreateCaseViewModel>(new CreateCaseViewModel());
   private caseDropDownStoreSubject = new BehaviorSubject<DDLObjectModal>(null);
@@ -25,6 +27,7 @@ export class CaseStore {
   public caseTypeSubject = new BehaviorSubject<string>('');
   public caseTypeSubject2 = new BehaviorSubject<string>('');
   public dashboardEmbededLinkSubject = new BehaviorSubject<string>('');
+  public shopFloorOperatorsSubject = new BehaviorSubject<Operators[]>([]);
   private currentData: CreateCaseViewModel;
   private currentDropDownStoreState: DDLObjectModal;
   constructor() {
@@ -35,6 +38,7 @@ export class CaseStore {
     this.caseType = this.caseTypeSubject.asObservable();
     this.caseType2 = this.caseTypeSubject2.asObservable();
     this.dashboardEmbededLink = this.dashboardEmbededLinkSubject.asObservable();
+    this.shopFloorOperators = this.shopFloorOperatorsSubject.asObservable();
     this.createCaseStore.subscribe(data => {
       this.currentData = data;
     });
@@ -158,5 +162,9 @@ export class CaseStore {
   }
   setEditEmbeddedLinkButton = (caseType) => {
     this.dashboardEmbededLinkSubject.next(caseType);
+  }
+
+  setShopFloorOperators = (operators: Operators[]) => {
+    this.shopFloorOperatorsSubject.next(operators);
   }
 }

@@ -23,11 +23,12 @@ import { ShopFloorService } from '../../services/core/services/shop-floor.servic
 import { ShopFloorApiToken } from '../../services/shared/classes/Auth/auth-token';
 import { TokenType } from '../../shared/enums/app-enums';
 import { ShopFloorHelperService } from '../../shared/enums/helpers/shop-floor-helper.service';
-import { MachineCurrentJobUnitsVM, MachineCurrentJobVM, MachineScheduleJobsVM, 
+import { MachineCurrentJobUnitsVM, MachineCurrentJobVM, MachineScheduleJobsVM,
   MachineStatusAction, MachineStatusVM, MachineVM, Operators } from '../../shared/models/shop-floor';
 import { CaseStore } from '../../shared/ui-services/create-case.service';
 import { ModalService } from '../../shared/ui-services/modal.service';
 import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
+import { SpinnerService } from './spinner.service';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -118,12 +119,31 @@ export class ShopFloorCollectionComponent implements OnInit {
               private snack: SnackBarService,
               private ref: ChangeDetectorRef,
               private modalService: ModalService,
-              private store: CaseStore) {
+              private store: CaseStore,
+              private ui: SpinnerService) {
     this.getToken();
     this.setStyling();
   }
 
   ngOnInit(): void {
+    setTimeout(
+      () => this.ui.show(), 10000
+    );
+    setTimeout(
+      () => this.ui.show(), 2500
+    );
+
+    setTimeout(
+      () => {
+        this.ui.show();
+        this.ui.show();
+        this.ui.show();
+        this.ui.show();
+      }, 4000
+    );
+    setTimeout(
+      () => this.ui.reset(), 5000
+    );
     this.oeeChartOptions = this.getOEEChartOptions();
     this.chartOptions = this.getChartOptions();
     this.timeLineChartOptions = this.getTimeLineChartOptions() as TimeLineChartOptions;

@@ -27,6 +27,7 @@ import { CaseBaseService } from './modules/admin/case-management/case-base.servi
 import { ProductSpecStore } from './modules/shared/ui-services/product-spec.service';
 import { SnackBarService } from './modules/shared/ui-services/snack-bar.service';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
+import { OverlayModule } from '@angular/cdk/overlay';
 function appInitializer(authService: AuthService) {
   return () => {
     return new Promise((resolve) => {
@@ -67,6 +68,7 @@ export function getHighlightLanguages() {
     AppRoutingModule,
     InlineSVGModule.forRoot(),
     NgbModule,
+    OverlayModule
   ],
   providers: [
     {

@@ -12,6 +12,9 @@ import { PerfectScrollbarModule, PerfectScrollbarConfigInterface, PERFECT_SCROLL
 import { AppDashboardComponent } from './app-dashboard/app-dashboard.component';
 import { ModalComponent } from '../shared/ui-modals/modal/modal.component';
 import { SharedModule } from '../shared/shared.module';
+import { SplashScreenModule } from './../../_metronic/partials/layout/splash-screen/splash-screen.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { OverlayModule } from '@angular/cdk/overlay'
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };
@@ -25,7 +28,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ProductManagementModule,
     MaterialUiModule,
     NgApexchartsModule,
-    PerfectScrollbarModule, SharedModule
+    PerfectScrollbarModule, SharedModule, SplashScreenModule, MatProgressSpinnerModule,
+    OverlayModule
   ],
   exports: [RouterModule],
   providers: [

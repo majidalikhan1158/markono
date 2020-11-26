@@ -146,11 +146,11 @@
               </div>
               <div class="col-lg-3 padding-l-0px padding-r-0px">
                 <div class="margin-t-22px text-right">
-                  <span style="padding-right: 10px;"
+                  <span style="padding-right: 10px; cursor: pointer;"
                     (click)="handleJobActionState(machineCurrentJobVM?.jobActionStop, 'stopped')">
                     <img src="./assets/media/custom-icons/stop-icon.png" />
                   </span>
-                  <span (click)="handleJobActionState(machineCurrentJobVM?.jobActionPause, 'paused')">
+                  <span style="cursor: pointer" (click)="handleJobActionState(machineCurrentJobVM?.jobActionPause, 'paused')">
                     <img src="./assets/media/custom-icons/pause-icon.png" />
                   </span>
                 </div>
@@ -297,7 +297,7 @@
                         <mat-spinner style="margin:auto !important"  diameter="50" [strokeWidth]="10"></mat-spinner>
                       </td>
                     </tr> -->
-                    <tr *ngFor="let item of machineScheduleJobsVMList; let i=index">
+                    <tr *ngFor="let item of machineScheduleJobsFilterList; let i=index">
                       <td>
                         <span class="text-dark-75 font-weight-bolder d-block font-14px padding-left-10px">
                           {{item.scheduledTime | date:'hh:mm'}}

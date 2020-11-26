@@ -4,7 +4,7 @@ export const Endpoints = {
     authentication: {
         getOrderServicesToken: 'Authentication/GetToken',
         getProductServicesToken: 'GetToken',
-        getShopFloorCollectionToken: `https://keycloak.markono.com/auth/realms/${environment.SHOP_FLOOR_AUTH_REALM}/protocol/openid-connect/token`
+        getShopFloorCollectionToken: `https://cors-anywhere.herokuapp.com/https://keycloak.markono.com/auth/realms/${environment.SHOP_FLOOR_AUTH_REALM}/protocol/openid-connect/token`
     },
     case: {
         getCaseType: 'Case/GetCaseType',

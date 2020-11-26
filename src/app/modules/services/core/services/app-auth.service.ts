@@ -6,7 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { ApiAuthToken, ShopFloorApiToken } from '../../shared/classes/Auth/auth-token';
 import { TokenType } from 'src/app/modules/shared/enums/app-enums';
 import { StorageKeys } from 'src/app/modules/shared/enums/app-constants';
-import { HttpResponse } from '@angular/common/http';
+import { HttpParams, HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -14,10 +14,10 @@ import { HttpResponse } from '@angular/common/http';
 export class AppAuthService {
   orderToken: Observable<ApiAuthToken>;
   productToken: Observable<ApiAuthToken>;
-  shopFloorToken: Observable<string>;
+  shopFloorToken: Observable<ShopFloorApiToken>;
   private orderTokenSubject = new BehaviorSubject<ApiAuthToken>(null);
   private productTokenSubject = new BehaviorSubject<ApiAuthToken>(null);
-  private shopFloorTokenSubject = new BehaviorSubject<string>('');
+  private shopFloorTokenSubject = new BehaviorSubject<ShopFloorApiToken>(null);
   constructor(
     private http: ApiHttpService,
     private endPoint: ApiEndpointsService,
@@ -31,7 +31,9 @@ export class AppAuthService {
   getTokenFromServer = (tokenType: TokenType): Observable<HttpResponse<any>> =>
     tokenType === TokenType.ORDER
       ? this.getOrderToken()
-      : this.getProductToken()
+      : tokenType === TokenType.PRODUCT
+      ? this.getProductToken()
+      : this.getShopFloorToken()
 
   getOrderToken = (): Observable<HttpResponse<any>> =>
     this.http.post(
@@ -45,11 +47,17 @@ export class AppAuthService {
       this.constants.AUTH_CRED_PRODUCT_TOKEN
     )
 
-  public getShopFloorToken = (): Observable<HttpResponse<any>> =>
-    this.http.post(
+  getShopFloorToken = (): Observable<HttpResponse<any>> => {
+    const body = new HttpParams()
+    .set('username', 'operator1')
+    .set('password', 'AhET0@!D')
+    .set('grant_type', 'password')
+    .set('client_id', 'mpmui');
+    return this.http.post(
       this.endPoint.getShopFloorTokenUrl(),
-      this.constants.AUTH_CRED_SHOP_FLOOR_COLLECTION
-    )
+      body.toString()
+    );
+  }
 
   saveToken = (resp: any, tokenType: TokenType) => {
     if (tokenType === TokenType.ORDER) {
@@ -61,19 +69,32 @@ export class AppAuthService {
       localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.PRODUCT_TOKEN_EXPIRY}`, resp.result.expire);
       localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.PRODUCT_TOKEN}`, resp.result.token);
     } else if (tokenType === TokenType.SHOPFLOOR) {
-      const mappedResponse = resp as ShopFloorApiToken;
-      this.shopFloorTokenSubject.next(mappedResponse.token);
-      localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.SHOP_FLOOR_TOKEN}`, resp);
-      localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.SHOP_FLOOR_TOKEN_EXPIRY}`, mappedResponse.expiry);
+      const tokenObj: ShopFloorApiToken = {
+        token: resp['access_token'],
+        expiry: this.getTokenExpiryTime(resp['expires_in'])
+      };
+      this.shopFloorTokenSubject.next(tokenObj);
+      localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.SHOP_FLOOR_TOKEN}`, tokenObj.token);
+      localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.SHOP_FLOOR_TOKEN_EXPIRY}`, tokenObj.expiry.toString());
     }
+  }
+
+  private getTokenExpiryTime = (expirySeconds: number) => {
+    const t = new Date();
+    t.setMinutes(t.getMinutes() + (expirySeconds / 60));
+    return  new Date(t.toISOString());
   }
 
   getToken = (tokenType: TokenType): string => {
     const token = this.isTokenExist(tokenType);
-    // if (token && !this.isTokenExpired(tokenType)) {
-    //   return token;
-    // }
-    return token;
+    if (token && !this.isTokenExpired(tokenType)) {
+      return token;
+    }
+    return '';
+  }
+
+  private isTokenExist = (tokenType: TokenType): string => {
+    return localStorage.getItem(`${StorageKeys.SUFFIX}_${this.getTokenKey(tokenType)}`);
   }
 
   isTokenExpired = (tokenType: TokenType): boolean => {
@@ -97,10 +118,6 @@ export class AppAuthService {
       expiresAtDat = new Date(expiresAtStr);
     }
     return expiresAtDat;
-  }
-
-  private isTokenExist = (tokenType: TokenType): string => {
-    return localStorage.getItem(`${StorageKeys.SUFFIX}_${this.getTokenKey(tokenType)}`);
   }
 
   private getTokenKey = (tokenType: TokenType) => {

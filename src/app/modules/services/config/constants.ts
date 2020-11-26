@@ -22,9 +22,9 @@ export class Constants {
         password: 'webDev@prod'
     };
     public readonly AUTH_CRED_SHOP_FLOOR_COLLECTION = {
-        Username: 'operator1',
-        Password: 'AhET0@!D',
+        username: 'operator1',
+        password: 'AhET0@!D',
         grant_type: 'password',
-        client_id: 'sf'
+        client_id: 'mpmui'
     };
 }

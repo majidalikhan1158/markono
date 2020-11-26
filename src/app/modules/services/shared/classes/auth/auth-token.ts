@@ -9,5 +9,5 @@ export interface ApiAuthToken {
 
 export interface ShopFloorApiToken {
     token: string;
-    expiry: string;
+    expiry: Date;
 }

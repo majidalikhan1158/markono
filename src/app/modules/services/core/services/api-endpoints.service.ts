@@ -27,7 +27,7 @@ export class ApiEndpointsService {
     `${this.getProductServicesEndpoint()}${Endpoints.authentication.getProductServicesToken}`
 
   public getShopFloorTokenUrl = () =>
-    `https://cors-anywhere.herokuapp.com/${Endpoints.authentication.getShopFloorCollectionToken}`
+    `${Endpoints.authentication.getShopFloorCollectionToken}`
 
   getCaseTypeUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.case.getCaseType}`
@@ -54,6 +54,6 @@ export class ApiEndpointsService {
   `${this.getOrderServicesEndpoint()}${Endpoints.case.createCase}`
 
   getMachinesList = () =>
-  `https://cors-anywhere.herokuapp.com/${this.getShopFloorServicesEndpoint()}${Endpoints.shopFloor.getMachinesList}`
+  `${this.getShopFloorServicesEndpoint()}${Endpoints.shopFloor.getMachinesList}`
 
 }

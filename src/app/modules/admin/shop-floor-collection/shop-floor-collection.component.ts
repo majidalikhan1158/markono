@@ -17,14 +17,14 @@ import {
   ApexLegend,
   ApexTitleSubtitle,
 } from 'ng-apexcharts';
-import { Operator } from 'rxjs';
 import { LayoutService } from 'src/app/_metronic/core';
 import { AppAuthService } from '../../services/core/services/app-auth.service';
 import { ShopFloorService } from '../../services/core/services/shop-floor.service';
+import { ShopFloorApiToken } from '../../services/shared/classes/Auth/auth-token';
 import { TokenType } from '../../shared/enums/app-enums';
 import { ShopFloorHelperService } from '../../shared/enums/helpers/shop-floor-helper.service';
-import { GreyboardThicknessList } from '../../shared/enums/product-management/product-constants';
-import { MachineCurrentJobUnitsVM, MachineCurrentJobVM, MachineScheduleJobsVM, MachineStatusAction, MachineStatusVM, MachineVM, Operators } from '../../shared/models/shop-floor';
+import { MachineCurrentJobUnitsVM, MachineCurrentJobVM, MachineScheduleJobsVM, 
+  MachineStatusAction, MachineStatusVM, MachineVM, Operators } from '../../shared/models/shop-floor';
 import { CaseStore } from '../../shared/ui-services/create-case.service';
 import { ModalService } from '../../shared/ui-services/modal.service';
 import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
@@ -69,6 +69,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   machineVMList: MachineVM[] = [];
   selectedMachineCode: string;
   machineScheduleJobsVMList: MachineScheduleJobsVM[] = [];
+  machineScheduleJobsFilterList: MachineScheduleJobsVM[] = [];
   machineCurrentJobVM: MachineCurrentJobVM;
   machineCurrentJobUnitsVM: MachineCurrentJobUnitsVM;
   selectedJobAction = 'Choose';
@@ -104,24 +105,21 @@ export class ShopFloorCollectionComponent implements OnInit {
   scrollTop: any;
   searchText = '';
   toggleSearch = false;
-  ////-------Searching----///////
+  //// -------Searching----///////
   columns = [];
   rows = [];
   filteredData = [];
   columnsWithSearch: string[] = [];
 
   constructor(private layout: LayoutService,
-    private auth: AppAuthService,
-    private shopFloorService: ShopFloorService,
-    private helper: ShopFloorHelperService,
-    private snack: SnackBarService,
-    private ref: ChangeDetectorRef,
-    private modalService: ModalService,
-    private store: CaseStore) {
-    localStorage.setItem('MARKONO_SHOP_FLOOR_TOKEN', 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJDM3VmSXVrb0N2SnZHVVhBb19fZXN0WldURjBjZk1FZDF5eVlvMjhVV1BzIn0.eyJleHAiOjE2MDYzMjQzMzIsImlhdCI6MTYwNjMyMzQzMiwianRpIjoiM2JiZDBhYjktZjdmMi00NWQ1LWI0MzMtYjcyNWYwZDg2ZTg5IiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5tYXJrb25vLmNvbS9hdXRoL3JlYWxtcy9tb29uc2hvdGRldiIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI0YzNhMzM2OS1mNTFhLTQ4M2EtODUzYy1lNTNlYzg5ZmQ3YjkiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzZiIsInNlc3Npb25fc3RhdGUiOiJlZTY5OTZiYi0zMjU2LTQxYTMtOTE0YS0zZmVmZmU4YjdkZjkiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHBzOi8vYXBpLm1hcmtvbm8uY29tIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJyb2xlX3VzZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJPcGVyYXRvciAwMSIsInByZWZlcnJlZF91c2VybmFtZSI6Im9wZXJhdG9yMSIsImdpdmVuX25hbWUiOiJPcGVyYXRvciAwMSIsImZhbWlseV9uYW1lIjoiIiwiZW1haWwiOiJpaHNhbmlseWFzNTA4QGdtYWlsLmNvbSJ9.eEFQ2RJ_nAx_4d6k0sgjSQSAp8xjrr2jYIbfEJ8qAuTSqPktUM8P-_R2fvEwlFLNmX64kHmtM6ajChPHZ1XXulAvDtz3o1d8Hz6Elmdgbuj_BQQ7B4smwlHdpGRA9j-FeUZw1oThcSbzWsPYYqiaMlLmaCrmiSoXD_BGQAQwYrHACpNKq-6FHHBTp701dYvj-WHbT7XvuI7jM7gkZLdbe_phTeY7VKmrRhKpqjJbzuVilUYeB98s0xxwQRJUyYLKsPuM3vwbHuEKlEcOD-TL6TSnY5DK3X66hJ9T_8sA4v-_C9bSzP0_caYf_yfbSK1OsUU7W6YglJAJOKbVlkp6wQ');
-    localStorage.setItem('SHOP_FLOOR_TOKEN_EXPIRY', '900');
+              private auth: AppAuthService,
+              private shopFloorService: ShopFloorService,
+              private helper: ShopFloorHelperService,
+              private snack: SnackBarService,
+              private ref: ChangeDetectorRef,
+              private modalService: ModalService,
+              private store: CaseStore) {
     this.getToken();
-    this.getMachineList();
     this.setStyling();
   }
 
@@ -135,8 +133,13 @@ export class ShopFloorCollectionComponent implements OnInit {
     const isTokenExist = this.auth.getToken(TokenType.SHOPFLOOR);
     if (!isTokenExist || isTokenExist === '') {
       this.auth.getShopFloorToken().subscribe((tokenResp) => {
-        console.log(tokenResp);
+        if (tokenResp && tokenResp.body) {
+          this.auth.saveToken(tokenResp.body, TokenType.SHOPFLOOR);
+          this.getMachineList();
+        }
       });
+    } else {
+      this.getMachineList();
     }
   }
 
@@ -177,7 +180,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   resetMachineData = () => {
-    this.machineScheduleJobsVMList = [];
+    this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = [];
     this.machineCurrentJobVM = null;
     this.machineCurrentJobUnitsVM = null;
     this.machineStatusActionVM = null;
@@ -191,9 +194,9 @@ export class ShopFloorCollectionComponent implements OnInit {
     this.shopFloorService.getMachineScheduleJobs(jobsScheduleLink).subscribe(
       (resp) => {
         if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
-          this.machineScheduleJobsVMList = this.helper.mapToScheduleJobsModal(resp.body.data);
+          this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = this.helper.mapToScheduleJobsModal(resp.body.data);
         } else {
-          this.machineScheduleJobsVMList = [];
+          this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = [];
           this.snack.open('No schedule jobs found');
         }
         this.shouldShowScheduleLoader = false;
@@ -201,7 +204,7 @@ export class ShopFloorCollectionComponent implements OnInit {
       },
       (err: HttpErrorResponse) => {
         this.shouldShowScheduleLoader = false;
-        this.machineScheduleJobsVMList = [];
+        this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = [];
         this.snack.open('Unable to get schedule jobs');
       }
     );
@@ -227,6 +230,10 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   handleJobActionState = (actionStateLink: string, state: string) => {
+    if (!actionStateLink) {
+      this.snack.open('No action state link exist');
+      return;
+    }
     this.shopFloorService.setMachineJobActionState(actionStateLink).subscribe(resp => {
       if (resp && resp.body && resp.body.message === 'OK') {
         this.snack.open(`Job action has been ${state} successfully`);
@@ -252,10 +259,15 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   setScheduleJob = (setJobUrl, index) => {
+    if (!setJobUrl) {
+      this.snack.open('Schedule job link does not exist');
+      return;
+    }
     this.clickedScheduleJobButtonId = index;
     this.shopFloorService.setScheduleJob(setJobUrl).subscribe(resp => {
       if (resp && resp.body && resp.body.message === 'OK') {
         this.snack.open('Job has been set successfully');
+        this.setSelectedMachine();
       }
       this.clickedScheduleJobButtonId = -1;
     }, (err: HttpErrorResponse) => {
@@ -947,14 +959,13 @@ export class ShopFloorCollectionComponent implements OnInit {
 
   applySearch(event) {
     const searchText = event.target.value;
-    console.log('sea', searchText)
     this.rows = this.machineScheduleJobsVMList;
 
     this.columnsWithSearch = Object.keys(this.rows[0]);
     if (searchText !== '') {
-      this.machineScheduleJobsVMList = this.filterDatatable(searchText, this.rows, this.columnsWithSearch);
+      this.machineScheduleJobsFilterList = this.filterDatatable(searchText, this.rows, this.columnsWithSearch);
     } else {
-      this.machineScheduleJobsVMList = this.rows;
+      this.machineScheduleJobsFilterList = this.rows;
     }
   }
 

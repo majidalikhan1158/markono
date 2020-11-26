@@ -28,6 +28,7 @@ import { MachineCurrentJobUnitsVM, MachineCurrentJobVM, MachineScheduleJobsVM, M
 import { CaseStore } from '../../shared/ui-services/create-case.service';
 import { ModalService } from '../../shared/ui-services/modal.service';
 import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
+import { SpinnerService } from './spinner.service';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -117,8 +118,9 @@ export class ShopFloorCollectionComponent implements OnInit {
     private snack: SnackBarService,
     private ref: ChangeDetectorRef,
     private modalService: ModalService,
-    private store: CaseStore) {
-    localStorage.setItem('MARKONO_SHOP_FLOOR_TOKEN', 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJDM3VmSXVrb0N2SnZHVVhBb19fZXN0WldURjBjZk1FZDF5eVlvMjhVV1BzIn0.eyJleHAiOjE2MDYzMjQzMzIsImlhdCI6MTYwNjMyMzQzMiwianRpIjoiM2JiZDBhYjktZjdmMi00NWQ1LWI0MzMtYjcyNWYwZDg2ZTg5IiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5tYXJrb25vLmNvbS9hdXRoL3JlYWxtcy9tb29uc2hvdGRldiIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI0YzNhMzM2OS1mNTFhLTQ4M2EtODUzYy1lNTNlYzg5ZmQ3YjkiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzZiIsInNlc3Npb25fc3RhdGUiOiJlZTY5OTZiYi0zMjU2LTQxYTMtOTE0YS0zZmVmZmU4YjdkZjkiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHBzOi8vYXBpLm1hcmtvbm8uY29tIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJyb2xlX3VzZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJPcGVyYXRvciAwMSIsInByZWZlcnJlZF91c2VybmFtZSI6Im9wZXJhdG9yMSIsImdpdmVuX25hbWUiOiJPcGVyYXRvciAwMSIsImZhbWlseV9uYW1lIjoiIiwiZW1haWwiOiJpaHNhbmlseWFzNTA4QGdtYWlsLmNvbSJ9.eEFQ2RJ_nAx_4d6k0sgjSQSAp8xjrr2jYIbfEJ8qAuTSqPktUM8P-_R2fvEwlFLNmX64kHmtM6ajChPHZ1XXulAvDtz3o1d8Hz6Elmdgbuj_BQQ7B4smwlHdpGRA9j-FeUZw1oThcSbzWsPYYqiaMlLmaCrmiSoXD_BGQAQwYrHACpNKq-6FHHBTp701dYvj-WHbT7XvuI7jM7gkZLdbe_phTeY7VKmrRhKpqjJbzuVilUYeB98s0xxwQRJUyYLKsPuM3vwbHuEKlEcOD-TL6TSnY5DK3X66hJ9T_8sA4v-_C9bSzP0_caYf_yfbSK1OsUU7W6YglJAJOKbVlkp6wQ');
+    private store: CaseStore,
+    private ui: SpinnerService) {
+    localStorage.setItem('MARKONO_SHOP_FLOOR_TOKEN', 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJDM3VmSXVrb0N2SnZHVVhBb19fZXN0WldURjBjZk1FZDF5eVlvMjhVV1BzIn0.eyJleHAiOjE2MDY0MDExNjAsImlhdCI6MTYwNjQwMDI2MCwianRpIjoiMDg0NDAyYmEtOGRiOS00NTAzLWE0YTMtMDk0M2I3OWM5MDY1IiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5tYXJrb25vLmNvbS9hdXRoL3JlYWxtcy9tb29uc2hvdGRldiIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI0YzNhMzM2OS1mNTFhLTQ4M2EtODUzYy1lNTNlYzg5ZmQ3YjkiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzZiIsInNlc3Npb25fc3RhdGUiOiIwMjY4ODEzZS0zOTkyLTQ5MzUtOTA4My0zMDk2MWUxMzJiYTQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NDMwMCIsImh0dHBzOi8vYXBpLm1hcmtvbm8uY29tIiwiaHR0cHM6Ly9tYWppZGFsaWtoYW4xMTU4LmdpdGh1Yi5pbyJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsicm9sZV91c2VyIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiT3BlcmF0b3IgMDEiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJvcGVyYXRvcjEiLCJnaXZlbl9uYW1lIjoiT3BlcmF0b3IgMDEiLCJmYW1pbHlfbmFtZSI6IiIsImVtYWlsIjoiaWhzYW5pbHlhczUwOEBnbWFpbC5jb20ifQ.NVMJHAx9Q4m_XkoyDrlAzMCWkEmOhgwikser4wsiNIbtRMoNt1vUNoBq9STzpDKlin02fulmnh96LWpkz3QXC-kcvyBJWDVwLXDU0t03f-hZY5vlQTdgCKYBZYtWMr9mUiJuhlei9Ypd7jdTk8xXOKKbnyQnoM_IYQbIZhIB0hIOB_xIsnoXVhup-Rxh3tq5DdRVi8KDsXpMpDPX2ZQ0cGYAfaw_X2jmYnJUE4XiazhnsLAmrepraABGXmQwop9lFAOqqJZNFraZUUmrDBYa8bv7r5jAvp83U84Sx4SDbmw2Z68ktgZ4swpR8r1NFktqQYc4M7NqOkWqBdK0teTRig');
     localStorage.setItem('SHOP_FLOOR_TOKEN_EXPIRY', '900');
     this.getToken();
     this.getMachineList();
@@ -126,6 +128,24 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    setTimeout(
+      () => this.ui.show(), 10000
+    )
+    setTimeout(
+      () => this.ui.show(), 2500
+    )
+
+    setTimeout(
+      () => {
+        this.ui.show();
+        this.ui.show();
+        this.ui.show();
+        this.ui.show();
+      }, 4000
+    )
+    setTimeout(
+      () => this.ui.reset(), 5000
+    )
     this.oeeChartOptions = this.getOEEChartOptions();
     this.chartOptions = this.getChartOptions();
     this.timeLineChartOptions = this.getTimeLineChartOptions() as TimeLineChartOptions;

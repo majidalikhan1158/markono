@@ -173,7 +173,7 @@ app-toolbar .sticky-toolbar {
 .app-label-black {
   color: #343434;
   font-size: 12px;
-  font-family: 'Roboto-Regular';
+  font-family: "Roboto-Regular";
 }
 
 .padding-left-right-0px {
@@ -303,7 +303,7 @@ app-toolbar .sticky-toolbar {
 }
 
 .span-grey.material-icons {
-  color: #ECECF6;
+  color: #ececf6;
   font-size: 10px !important;
 }
 
@@ -607,4 +607,8 @@ mat-form-field {
 .status-options .quote-status {
   width: 92px !important;
   height: 40px !important;
+}
+.mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: #3f51b5;
 }

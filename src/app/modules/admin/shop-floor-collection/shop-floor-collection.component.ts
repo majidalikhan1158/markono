@@ -20,7 +20,6 @@ import {
 import { LayoutService } from 'src/app/_metronic/core';
 import { AppAuthService } from '../../services/core/services/app-auth.service';
 import { ShopFloorService } from '../../services/core/services/shop-floor.service';
-import { ShopFloorApiToken } from '../../services/shared/classes/Auth/auth-token';
 import { TokenType } from '../../shared/enums/app-enums';
 import { ShopFloorHelperService } from '../../shared/enums/helpers/shop-floor-helper.service';
 import { MachineCurrentJobUnitsVM, MachineCurrentJobVM, MachineScheduleJobsVM,
@@ -81,12 +80,6 @@ export class ShopFloorCollectionComponent implements OnInit {
   shouldShowScheduleLoader = false;
   clickedScheduleJobButtonId = -1;
   // --------------------------------------------//
-  machineStatusList = [
-    { value: '1', viewValue: 'Good Production' },
-    { value: '2', viewValue: 'Off Line' },
-    { value: '3', viewValue: 'Repairing' }
-  ];
-  selected = '1';
   public oeeChartOptions: any = {};
   public unitsProducedChartOptions: Partial<UnitsProducedChartOptions>;
   public timeLineChartOptions: Partial<TimeLineChartOptions>;
@@ -126,24 +119,6 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    setTimeout(
-      () => this.ui.show(), 10000
-    );
-    setTimeout(
-      () => this.ui.show(), 2500
-    );
-
-    setTimeout(
-      () => {
-        this.ui.show();
-        this.ui.show();
-        this.ui.show();
-        this.ui.show();
-      }, 4000
-    );
-    setTimeout(
-      () => this.ui.reset(), 5000
-    );
     this.oeeChartOptions = this.getOEEChartOptions();
     this.chartOptions = this.getChartOptions();
     this.timeLineChartOptions = this.getTimeLineChartOptions() as TimeLineChartOptions;
@@ -153,12 +128,14 @@ export class ShopFloorCollectionComponent implements OnInit {
     const isTokenExist = this.auth.getToken(TokenType.SHOPFLOOR);
     if (!isTokenExist || isTokenExist === '') {
       this.auth.getShopFloorToken().subscribe((tokenResp) => {
+        this.ui.show();
         if (tokenResp && tokenResp.body) {
           this.auth.saveToken(tokenResp.body, TokenType.SHOPFLOOR);
           this.getMachineList();
         }
       });
     } else {
+      this.ui.show();
       this.getMachineList();
     }
   }
@@ -180,6 +157,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   setSelectedMachine = (machineCode: string = null) => {
+    this.ui.show();
     this.resetMachineData();
     const selectedMachine = machineCode !== null
       ? this.machineVMList.find(x => x.machineCode === machineCode)
@@ -194,6 +172,7 @@ export class ShopFloorCollectionComponent implements OnInit {
       // set empty lists to machine related data
       // this.selectedMachineCode = null;
       this.resetMachineData();
+      this.ui.reset();
       this.snack.open('None of the machine is active now');
     }
     this.ref.detectChanges();
@@ -323,8 +302,10 @@ export class ShopFloorCollectionComponent implements OnInit {
       } else {
         this.snack.open('Unable to get machine status action');
       }
+      this.ui.reset();
       this.ref.detectChanges();
     }, (err: HttpErrorResponse) => {
+      this.ui.reset();
       this.snack.open('Unable to get machine status action');
     });
   }

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
-//cdk
+// cdk
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-//rxjs
-import { Observable, Subject } from 'rxjs'
-import { mapTo, scan, map, distinctUntilChanged } from 'rxjs/operators'
+// rxjs
+import { Subject } from 'rxjs';
+import { scan, map, distinctUntilChanged } from 'rxjs/operators';
 import { MatSpinner } from '@angular/material/progress-spinner';
 
 @Injectable({
@@ -14,7 +14,7 @@ import { MatSpinner } from '@angular/material/progress-spinner';
 export class SpinnerService {
   public spinnerTopRef: OverlayRef;
 
-  public spin$: Subject<number> = new Subject()
+  public spin$: Subject<number> = new Subject();
 
   constructor(
     private overlay: Overlay,
@@ -32,7 +32,7 @@ export class SpinnerService {
       .asObservable()
       .pipe(
         scan((acc, next) => {
-          if (!next) return 0;
+          if (!next) { return 0; }
           return (acc + next) >= 0 ? acc + next : 0;
         }, 0),
         map(val => val > 0),
@@ -41,24 +41,21 @@ export class SpinnerService {
       .subscribe(
         (res) => {
           if (res) {
-            this.spinnerTopRef.attach(new ComponentPortal(MatSpinner))
+            this.spinnerTopRef.attach(new ComponentPortal(MatSpinner));
           }
           else if (this.spinnerTopRef.hasAttached()) {
             this.spinnerTopRef.detach();
           }
         }
-      )
+      );
   }
   show() {
-    console.log("show");
     this.spin$.next(1);
   }
   hide() {
-    console.log("hide");
     this.spin$.next(-1);
   }
   reset() {
-    console.log("reset");
     this.spin$.next(0);
   }
 }

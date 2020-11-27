@@ -5,6 +5,7 @@ import {
   ProductDetailModals,
   ProductISBNDetailVM,
   ProductVersionVM,
+  QuotationListVM,
   ShippingInfoVM,
   SpecialInstructionViewModel
 } from '../../models/create-case';
@@ -381,5 +382,25 @@ export class CaseHelperService {
 
   getShippingBillingDetails = () => {
 
+  }
+
+  mapToQuotationList = (data: any[]): QuotationListVM[] => {
+    let qoutationListVM: QuotationListVM[] = [];
+    if (!data || data.length === 0) {
+      return qoutationListVM;
+    }
+    data.forEach((item) => {
+      qoutationListVM.push({
+        id: item.id,
+        dateCreated: item.attributes.createdDateTime,
+        caseNo: item.attributes.caseNo,
+        customer: '',
+        salesPerson: item.attributes.salesPerson,
+        estNo: '',
+        quoteNo: item.attributes.quoteNo,
+        status: '',
+      });
+    });
+    return qoutationListVM;
   }
 }

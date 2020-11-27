@@ -21,6 +21,9 @@ import { OrderService } from 'src/app/modules/services/core/services/order.servi
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 import { Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TokenType } from 'src/app/modules/shared/enums/app-enums';
+import { AppAuthService } from '../../../services/core/services/app-auth.service';
+import { CaseHelperService } from '../../../shared/enums/helpers/case-helper.service';
 
 @Component({
   selector: 'app-quotation-list',
@@ -41,7 +44,7 @@ export class QuotationListComponent implements OnInit {
     'status',
     'actions'
   ];
-  dataArray = QuotationDataList;
+  dataArray: QuotationListVM[] = [];
   dataSource;
   tableFilters: QuotationSpecFilters = {
     currentSelectedFilter: '',
@@ -60,17 +63,21 @@ export class QuotationListComponent implements OnInit {
     private router: Router,
     private orderService: OrderService,
     private snack: SnackBarService,
-    private ref: ChangeDetectorRef,) {
-    this.dataSource = new MatTableDataSource<QuotationListVM>(this.dataArray);
+    private ref: ChangeDetectorRef,
+    private auth: AppAuthService,
+    private helper: CaseHelperService
+  ) {
+
   }
 
   ngOnInit(): void {
+    this.getToken();
     this.getQuotations();
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.filterPredicate = this.customFilterPredicate();
+    // this.dataSource.paginator = this.paginator;
+    //this.dataSource.filterPredicate = this.customFilterPredicate();
   }
 
   applySearch(event: Event) {
@@ -213,18 +220,35 @@ export class QuotationListComponent implements OnInit {
 
   getQuotations() {
     this.orderService.getQuotations().subscribe(resp => {
-      if (resp && resp.body.result && resp.body.result) {
-        const response = resp.body.result as any;
-        if (response.message && response.message === 'Successful') {
-          //this.snack.open('Shipping Info has been created successfully');
-          this.ref.detectChanges();
-        } else {
-          this.snack.open(response);
-        }
-        this.subscription.unsubscribe();
+
+      if (resp && resp.body && resp.body.result.data && resp.body.result.data.length > 0) {
+        this.dataArray = this.helper.mapToQuotationList(resp.body.result.data);
+        this.dataSource = new MatTableDataSource<QuotationListVM>(this.dataArray);
+
+        // console.log('mapped data list', this.dataSource)
+        // if (response.message && response.message === 'Successful') {
+        //   //this.snack.open('Shipping Info has been created successfully');
+        //   this.ref.detectChanges();
+      } else {
+        this.snack.open('No Record Found');
       }
     }, (err: HttpErrorResponse) => {
       this.snack.open(err.error);
     });
   }
+
+  getToken = () => {
+    const isTokenExist = this.auth.getToken(TokenType.ORDER);
+    if (!isTokenExist || isTokenExist === '') {
+      this.auth.getOrderToken().subscribe((tokenResp) => {
+        if (tokenResp && tokenResp.body) {
+          this.auth.saveToken(tokenResp.body, TokenType.ORDER);
+          this.getQuotations();
+        }
+      });
+    } else {
+      this.getQuotations();
+    }
+  }
+
 }

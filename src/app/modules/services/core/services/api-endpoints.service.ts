@@ -3,8 +3,6 @@ import { Injectable } from '@angular/core';
 // Application Constants
 import { Constants } from 'src/app/modules/services/config/constants';
 import { Endpoints } from '../../config/endpoints';
-import { QueryStringParameters } from '../../shared/classes/query-string-parameter';
-import { UrlBuilder } from '../../shared/classes/url-builder';
 
 @Injectable({
   providedIn: 'root',
@@ -19,16 +17,22 @@ export class ApiEndpointsService {
   private getProductServicesEndpoint = () =>
     `${this.constants.API_BASE_ADDRESS}${this.constants.API_ENDPOINT_PRODUCT_SERVICES}`
 
-  public getOrderServicesTokenUrl = () =>
+  private getShopFloorServicesEndpoint = () =>
+    `${this.constants.API_BASE_ADDRESS}${this.constants.API_ENDPOINT_SHOP_FLOOR_SERVICES}`
+
+  getOrderServicesTokenUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.authentication.getOrderServicesToken}`
 
-  public getProductServicesTokenUrl = () =>
+  getProductServicesTokenUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.authentication.getProductServicesToken}`
 
-  public getCaseTypeUrl = () =>
+  public getShopFloorTokenUrl = () =>
+    `${Endpoints.authentication.getShopFloorCollectionToken}`
+
+  getCaseTypeUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.case.getCaseType}`
 
-  public getCustomerDetailUrl = () =>
+  getCustomerDetailUrl = () =>
     `${Endpoints.case.getCustomerDetail}`
 
   public getShipmentModeUrl = () =>
@@ -51,6 +55,9 @@ export class ApiEndpointsService {
 
   public getCreateShipmentUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.case.createShipment}`
+
+  public getMachinesList = () =>
+    `${this.getShopFloorServicesEndpoint()}${Endpoints.shopFloor.getMachinesList}`
 
   public getQuotationsUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.case.getQuotationsList}`

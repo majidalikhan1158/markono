@@ -12,7 +12,7 @@ import { TokenType } from 'src/app/modules/shared/enums/app-enums';
 import { Constants } from '../../config/constants';
 import { AppAuthService } from '../services/app-auth.service';
 import { Endpoints } from '../../config/endpoints';
-import { ApiAuthToken } from '../../shared/classes/Auth/auth-token';
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root',
 })
@@ -20,6 +20,7 @@ export class JwtInterceptor implements HttpInterceptor {
   private excludedApiCalls = [
     Endpoints.authentication.getOrderServicesToken,
     Endpoints.authentication.getProductServicesToken,
+    Endpoints.authentication.getShopFloorCollectionToken
   ];
   private refreshTokenInProgress = false;
   private refreshTokenSubject: BehaviorSubject<string> = new BehaviorSubject<
@@ -27,16 +28,10 @@ export class JwtInterceptor implements HttpInterceptor {
   >(null);
   private tokenType: TokenType;
   constructor(private constants: Constants, private appAuth: AppAuthService) {}
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    this.tokenType = (request.url.includes(this.constants.API_ENDPOINT_ORDER_SERVICES) ||
-    request.url.includes(this.constants.API_ENDPOINT_LIVE))
-
-      ? TokenType.ORDER
-      : TokenType.PRODUCT;
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    this.setTokenType(request);
     request = this.addAuthenticationToken(request, this.tokenType);
+
     return next.handle(request).pipe(
       catchError((err) => {
         if (err instanceof HttpErrorResponse && err.status === 401) {
@@ -49,6 +44,7 @@ export class JwtInterceptor implements HttpInterceptor {
   }
 
   handle401Error(request: HttpRequest<any>, next: HttpHandler) {
+    this.setTokenType(request);
     if (this.refreshTokenInProgress) {
       // If refreshTokenInProgress is true, we will wait until refreshTokenSubject has a non-null value
       // – which means the new token is ready and we can retry the request again
@@ -71,7 +67,7 @@ export class JwtInterceptor implements HttpInterceptor {
           // When the call to refreshToken completes we reset the refreshTokenInProgress to false
           // for the next time the token needs to be refreshed
           this.refreshTokenInProgress = false;
-          this.appAuth.saveToken(result.body as ApiAuthToken, this.tokenType);
+          this.appAuth.saveToken(result.body, this.tokenType);
           return next.handle(
             this.addAuthenticationToken(request, this.tokenType)
           );
@@ -84,20 +80,41 @@ export class JwtInterceptor implements HttpInterceptor {
     }
   }
 
-  addAuthenticationToken(request, tokenType: TokenType) {
+  addAuthenticationToken(request: HttpRequest<any>, tokenType: TokenType) {
     const userToken = this.appAuth.getToken(tokenType);
-    // If token is null this means that user is not logged in
-    // And we return the original request
-    if (!userToken) {
-      return request;
+    let contentType = 'application/json';
+    if (request.url.includes(environment.SHOP_FLOOR_AUTH_REALM)) {
+      contentType = 'application/x-www-form-urlencoded';
+      return request.clone({
+        setHeaders: {
+          'Content-Type': `${contentType}`,
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
+          'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+        },
+      });
+    } else {
+      return request.clone({
+        setHeaders: {
+          'Content-Type': `${contentType}`,
+          Authorization: `Bearer ${userToken}`,
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
+          'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+        },
+      });
     }
-    return request.clone({
-      setHeaders: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userToken}`,
-         'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT',
-         'Access-Control-Allow-Origin': '*'
-      },
-    });
+  }
+
+  setTokenType = (request: HttpRequest<any>) => {
+    const url = request.url;
+    if (url.includes(this.constants.API_ENDPOINT_ORDER_SERVICES) ||
+        url.includes(this.constants.API_ENDPOINT_LIVE) ) {
+      this.tokenType = TokenType.ORDER;
+    } else if (url.includes(this.constants.API_ENDPOINT_PRODUCT_SERVICES)) {
+      this.tokenType = TokenType.PRODUCT;
+    } else if (url.includes(this.constants.API_ENDPOINT_SHOP_FLOOR_SERVICES)) {
+      this.tokenType = TokenType.SHOPFLOOR;
+    }
   }
 }

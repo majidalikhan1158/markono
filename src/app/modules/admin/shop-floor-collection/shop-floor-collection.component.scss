@@ -48,24 +48,19 @@ app-shop-floor-collection {
     height: 7px;
   }
 
-    
   .shopFloorCollectionScreen mat-form-field.mat-form-field-type-mat-select .mat-form-field-ripple {
-  background: transparent !important;
-}
+    background: transparent !important;
+  }
 
-.shopFloorCollectionScreen mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-select-arrow {
-  color: white;
-}
+  .shopFloorCollectionScreen mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-select-arrow {
+    color: white;
+  }
 
   .card.card-custom.machine-status-card .card-body .row.last-row {
     padding-bottom: 5px;
   }
 
-  .card.card-custom.machine-status-card
-    .card-body
-    .row
-    .col-12
-    .mat-form-field {
+  .card.card-custom.machine-status-card .card-body .row .col-12 .mat-form-field {
     width: 100%;
     height: 40px !important;
     text-align: left;
@@ -111,20 +106,17 @@ app-shop-floor-collection {
     margin-bottom: 0px;
   }
 
-  mat-form-field.txtSearchWithJobNo.mat-form-field-appearance-outline
-    .mat-form-field-outline {
+  mat-form-field.txtSearchWithJobNo.mat-form-field-appearance-outline .mat-form-field-outline {
     color: #f2f2f2;
     border: 1px solid;
     border-radius: 5px;
   }
 
-  mat-form-field.txtSearchWithJobNo.mat-form-field-appearance-outline
-    .mat-form-field-outline:hover {
+  mat-form-field.txtSearchWithJobNo.mat-form-field-appearance-outline .mat-form-field-outline:hover {
     border: none;
   }
 
-  mat-form-field.txtSearchWithJobNo.mat-form-field-appearance-outline.mat-focused
-    .mat-form-field-outline-thick {
+  mat-form-field.txtSearchWithJobNo.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
     color: #3699ff;
     border: 0px solid;
   }
@@ -139,7 +131,7 @@ app-shop-floor-collection {
     width: auto !important;
     position: sticky;
     top: 0px;
-    z-index: 1000;
+    z-index: 900;
   }
 
   .table.job-schedule-table thead th:last-child {
@@ -157,18 +149,13 @@ app-shop-floor-collection {
   .job-schedule-table.table tbody tr td {
     padding-left: 0px;
     padding-right: 0px;
-    padding-top: 0px;
+    padding-top: 25px;
     padding-bottom: 25px;
     vertical-align: sub !important;
   }
 
   .job-schedule-table.table tbody tr td.action-column {
     padding-right: 10px;
-  }
-
-  .job-schedule-table.table tbody tr .row-second-column {
-    padding-top: 25px;
-    vertical-align: unset !important;
   }
 
   .job-schedule-table.table tbody tr.table-last-row {
@@ -266,9 +253,44 @@ app-shop-floor-collection {
     height: 150px;
   }
 
-  .onthe-machine-card
-    .mat-tab-header-pagination-controls-enabled
-    .mat-tab-header-pagination {
+  .onthe-machine-card .mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
     display: none !important;
   }
+  .search-block {
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 11;
+    width: 0%;
+    right: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, width 0.5s ease-in-out;
+    background: #fff;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+      0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+    &.active {
+      display: contents;
+      opacity: 1;
+      width: 60%;
+    }
+    .search-control {
+      flex: 1;
+      font-size: 16px;
+      border: 0;
+      outline: none;
+      height: 40px;
+      color: rgba(0, 0, 0, 0.87);
+    }
+    .search-icon {
+      color: rgba(0, 0, 0, 0.25);
+    }
+  }
+  .mat-toolbar-row,
+  .mat-toolbar-single-row {
+    padding: 0px;
+    display: contents;
+  }
+  // .mat-button-base {
+  //   left: 80px;
+  // }
 }

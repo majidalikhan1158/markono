@@ -12,22 +12,17 @@ export class CaseBaseService {
   constructor(
     private orderService: OrderService,
     private caseService: CaseStore,
-    private appAuth: AppAuthService
+    private auth: AppAuthService
   ) {}
 
   getServerData() {
-    this.orderService.getCaseTypes().subscribe((result) => {
-      if (result.body.success) {
-        this.caseService.setCaseDropDownsDataSource(
-          result.body.result.data as DDLListModal[], RecordType.GET_CASE_TYPE
-        );
-      }
-    });
-    if (this.appAuth.getToken(TokenType.ORDER) !== '') {
+    const isTokenExist = this.auth.getToken(TokenType.ORDER);
+    if (isTokenExist && isTokenExist !== '') {
       this.getOrderServicesData();
     } else {
-      this.appAuth.orderToken.subscribe(resp => {
-        if (resp !== null && resp.result !== null && resp.result.token) {
+      this.auth.getTokenFromServer(TokenType.ORDER).subscribe(resp => {
+        if (resp && resp.body) {
+          this.auth.saveToken(resp.body, TokenType.ORDER);
           this.getOrderServicesData();
         }
       });
@@ -35,7 +30,14 @@ export class CaseBaseService {
   }
 
   getOrderServicesData() {
-    this.orderService.getShipmentTerms().subscribe((result) => {
+     this.orderService.getCaseTypes().subscribe((result) => {
+      if (result.body.success) {
+        this.caseService.setCaseDropDownsDataSource(
+          result.body.result.data as DDLListModal[], RecordType.GET_CASE_TYPE
+        );
+      }
+    });
+     this.orderService.getShipmentTerms().subscribe((result) => {
       if (result.body.success) {
         this.caseService.setCaseDropDownsDataSource(
           result.body.result.data as DDLListModal[], RecordType.SHIPMENT_TERM
@@ -43,7 +45,7 @@ export class CaseBaseService {
       }
     });
 
-    this.orderService.getShipmentModes().subscribe((result) => {
+     this.orderService.getShipmentModes().subscribe((result) => {
       if (result.body.success) {
         this.caseService.setCaseDropDownsDataSource(
           result.body.result.data as DDLListModal[], RecordType.SHIPMENT_MODE
@@ -51,7 +53,7 @@ export class CaseBaseService {
       }
     });
 
-    this.orderService.getShipmentAgents().subscribe((result) => {
+     this.orderService.getShipmentAgents().subscribe((result) => {
       if (result.body.success) {
         this.caseService.setCaseDropDownsDataSource(
           result.body.result.data as DDLListModal[], RecordType.SHIPMENT_AGENT

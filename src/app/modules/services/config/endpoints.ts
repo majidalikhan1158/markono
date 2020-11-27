@@ -1,7 +1,10 @@
+import { environment } from 'src/environments/environment';
+
 export const Endpoints = {
     authentication: {
         getOrderServicesToken: 'Authentication/GetToken',
-        getProductServicesToken: 'GetToken'
+        getProductServicesToken: 'GetToken',
+        getShopFloorCollectionToken: `https://cors-anywhere.herokuapp.com/https://keycloak.markono.com/auth/realms/${environment.SHOP_FLOOR_AUTH_REALM}/protocol/openid-connect/token`
     },
     case: {
         getCaseType: 'Case/GetCaseType',
@@ -17,5 +20,9 @@ export const Endpoints = {
     product: {
         getLiveVersion: 'GetLiveVersion',
         getProductVersions: 'GetProductVersions'
+    },
+    shopFloor: {
+        getMachinesList: 'machines?filter[active]=true&filter[sdcFlag]=true&sort=seq'
     }
+
 };

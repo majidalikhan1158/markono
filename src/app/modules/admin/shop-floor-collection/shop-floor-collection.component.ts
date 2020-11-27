@@ -73,7 +73,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   machineCurrentJobVM: MachineCurrentJobVM;
   machineCurrentJobUnitsVM: MachineCurrentJobUnitsVM;
   selectedJobAction = 'Choose';
-  selectedStatusAction = 'Choose';
+  selectedStatusActionId = 'Choose';
   machineStatusActionVM: MachineStatusVM;
   machineSelectedStatusAction: MachineStatusAction;
   // ------------------- LOADERS--------------------------//
@@ -184,7 +184,7 @@ export class ShopFloorCollectionComponent implements OnInit {
     this.machineCurrentJobUnitsVM = null;
     this.machineStatusActionVM = null;
     this.selectedJobAction = 'Choose';
-    this.selectedStatusAction = 'Choose';
+    this.selectedStatusActionId = 'Choose';
     this.machineSelectedStatusAction = null;
   }
 
@@ -266,7 +266,7 @@ export class ShopFloorCollectionComponent implements OnInit {
     this.shopFloorService.setScheduleJob(setJobUrl).subscribe(resp => {
       if (resp && resp.body && resp.body.message === 'OK') {
         this.snack.open('Job has been set successfully');
-        this.setSelectedMachine();
+        this.setSelectedMachine(this.selectedMachineCode);
       }
       this.clickedScheduleJobButtonId = -1;
     }, (err: HttpErrorResponse) => {
@@ -298,7 +298,7 @@ export class ShopFloorCollectionComponent implements OnInit {
       if (resp && resp.body && resp.body.data && resp.body.data.id) {
         this.machineStatusActionVM = this.helper.mapToMachineStatusModal(resp.body.data);
         this.machineSelectedStatusAction = this.machineStatusActionVM.machineStatusActionList.find(x => x.current);
-        this.selectedStatusAction = this.machineSelectedStatusAction ? this.machineSelectedStatusAction.id : 'Choose';
+        this.selectedStatusActionId = this.machineSelectedStatusAction ? this.machineSelectedStatusAction.id : 'Choose';
       } else {
         this.snack.open('Unable to get machine status action');
       }
@@ -311,11 +311,11 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   handleMachineStatusActionChange = (event: MatSelectChange) => {
-    this.selectedStatusAction = event.value;
-    if (this.selectedStatusAction === 'Choose') {
+    this.selectedStatusActionId = event.value;
+    if (this.selectedStatusActionId === 'Choose') {
       return;
     }
-    this.machineSelectedStatusAction = this.machineStatusActionVM.machineStatusActionList.find(x => x.id === this.selectedStatusAction);
+    this.machineSelectedStatusAction = this.machineStatusActionVM.machineStatusActionList.find(x => x.id === this.selectedStatusActionId);
     if (!this.machineSelectedStatusAction) {
       this.snack.open('Machine not have valid status action link');
       return;
@@ -980,8 +980,9 @@ export class ShopFloorCollectionComponent implements OnInit {
     // assign filtered matches to the active datatable
     return recordList.filter((item) => {
       // iterate through each row's column data
-      for (let i = 0; i < columnsWithSearch.length; i++) {
-        const colValue = item[columnsWithSearch[i]] as unknown;
+      let col;
+      for (col of columnsWithSearch) {
+        const colValue = item[col] as unknown;
         // if no filter OR colvalue is NOT null AND contains the given filter
         if (
           !filter ||

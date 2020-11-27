@@ -244,6 +244,10 @@ app-toolbar .sticky-toolbar {
   color: #484848;
 }
 
+.color-ffba31 {
+  color: #ffba31;
+}
+
 .btn-primary {
   background: #5face2 !important ;
   font-size: 14px !important;
@@ -611,4 +615,41 @@ mat-form-field {
 .mat-progress-spinner circle,
 .mat-spinner circle {
   stroke: #3f51b5;
+}
+
+
+.shopFloorCollectionScreen .search-block {
+  display: none;
+  position: absolute;
+  top: 0;
+  z-index: 11;
+  width: 0%;
+  right: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out, width 0.5s ease-in-out;
+  background: #fff;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  &.active {
+    display: contents;
+    opacity: 1;
+    width: 60%;
+  }
+  .search-control {
+    flex: 1;
+    font-size: 16px;
+    border: 0;
+    outline: none;
+    height: 40px;
+    color: rgba(0, 0, 0, 0.87);
+  }
+  .search-icon {
+    color: rgba(0, 0, 0, 0.25);
+  }
+}
+
+.shopFloorCollectionScreen .mat-toolbar-row,
+.shopFloorCollectionScreen .mat-toolbar-single-row {
+  padding: 0px;
+  display: contents;
 }

@@ -392,7 +392,7 @@ export class CaseHelperService {
     data.forEach((item) => {
       qoutationListVM.push({
         id: item.id,
-        dateCreated: item.attributes.createdDateTime,
+        dateCreated: item.attributes.dateCreated,
         caseNo: item.attributes.caseNo,
         customer: '',
         salesPerson: item.attributes.salesPerson,
@@ -421,7 +421,6 @@ export class CaseHelperService {
         currentActivityStatusName: item.attributes.currentActivityStatusName,
         createdByUser: item.attributes.createdByUser,
         createdBy: item.attributes.createdBy,
-        createdDateTime: item.attributes.createdDateTime,
         updatedByUser: item.attributes.updatedByUser,
         updatedBy: item.attributes.updatedBy,
         updatedDateTime: item.attributes.updatedDateTime,

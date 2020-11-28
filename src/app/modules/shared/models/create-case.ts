@@ -198,13 +198,13 @@ export interface OtherCharges {
 
 export interface QuotationListVM {
     id: number;
-    dateCreated: number;
+    dateCreated: number; //in api createdDateTime
     caseNo: string;
-    customer: string;
+    customer: string; //not in api
     salesPerson: string;
-    estNo: string;
+    estNo: string; //not in api
     quoteNo: string;
-    status: string;
+    status: string; //not in api
     orderNo: string;
     printType: string;
     productGroup: string;
@@ -227,7 +227,6 @@ export interface QuotationListVM {
     currentActivityStatusName: string;
     createdByUser: string;
     createdBy: string;
-    createdDateTime: string;
     updatedByUser: string;
     updatedBy: string;
     updatedDateTime: string;

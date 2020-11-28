@@ -34,7 +34,6 @@ import { CaseHelperService } from '../../../shared/enums/helpers/case-helper.ser
 export class QuotationListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = [
-    'id',
     'dateCreated',
     'caseNo',
     'customer',
@@ -42,7 +41,7 @@ export class QuotationListComponent implements OnInit {
     'estNo',
     'quoteNo',
     'status',
-    //'actions'
+    'actions'
   ];
   dataArray: QuotationListVM[] = [];
   // dataArray: QuotationDataList;
@@ -226,7 +225,7 @@ export class QuotationListComponent implements OnInit {
         // console.log('mapped data list', this.dataSource)
         // if (response.message && response.message === 'Successful') {
         //   //this.snack.open('Shipping Info has been created successfully');
-        //   this.ref.detectChanges();
+        this.ref.detectChanges();
       } else {
         this.snack.open('No Record Found');
       }

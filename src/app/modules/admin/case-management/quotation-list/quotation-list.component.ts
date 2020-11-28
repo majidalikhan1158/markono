@@ -42,9 +42,10 @@ export class QuotationListComponent implements OnInit {
     'estNo',
     'quoteNo',
     'status',
-    'actions'
+    //'actions'
   ];
   dataArray: QuotationListVM[] = [];
+  // dataArray: QuotationDataList;
   dataSource;
   tableFilters: QuotationSpecFilters = {
     currentSelectedFilter: '',
@@ -67,7 +68,6 @@ export class QuotationListComponent implements OnInit {
     private auth: AppAuthService,
     private helper: CaseHelperService
   ) {
-
   }
 
   ngOnInit(): void {
@@ -76,8 +76,8 @@ export class QuotationListComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    // this.dataSource.paginator = this.paginator;
-    //this.dataSource.filterPredicate = this.customFilterPredicate();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.filterPredicate = this.customFilterPredicate();
   }
 
   applySearch(event: Event) {
@@ -220,11 +220,9 @@ export class QuotationListComponent implements OnInit {
 
   getQuotations() {
     this.orderService.getQuotations().subscribe(resp => {
-
       if (resp && resp.body && resp.body.result.data && resp.body.result.data.length > 0) {
         this.dataArray = this.helper.mapToQuotationList(resp.body.result.data);
         this.dataSource = new MatTableDataSource<QuotationListVM>(this.dataArray);
-
         // console.log('mapped data list', this.dataSource)
         // if (response.message && response.message === 'Successful') {
         //   //this.snack.open('Shipping Info has been created successfully');

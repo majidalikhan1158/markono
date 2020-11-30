@@ -23,6 +23,7 @@ export interface MachineScheduleJobsVM {
     estimatedDuration: number; // plannedDuration in seconds
     scheduledTime: string; // plannedStartDate
     scheduledDate: string; // plannedStartDate
+    status: string;
     links: MachineScheduleJobsLinks;
 }
 

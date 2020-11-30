@@ -83,7 +83,7 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-lg-12 col-12">
+            <div class="col-lg-12 col-12" *ngIf="machineOee && oeeChartOptions">
               <!--The content below is only a placeholder and can be replaced.-->
               <div id="kt_stats_widget_11_chart" class="card-rounded-bottom">
                 <apx-chart [series]="oeeChartOptions.series" [chart]="oeeChartOptions.chart"
@@ -312,7 +312,7 @@
                           {{item.jobTitle}}
                         </span>
                         <span class="font-weight-bold font-12px color-ffba31">
-                          Paused
+                          {{item.status}}
                         </span>
                       </td>
                       <td>

@@ -47,13 +47,13 @@ export class ShopFloorHelperService {
     return machineVMList;
   }
 
-  mapToScheduleJobsModal = (data: any): MachineScheduleJobsVM[] => {
+  mapToScheduleJobsModal = (body: any): MachineScheduleJobsVM[] => {
     const scheduleJobsVM: MachineScheduleJobsVM[] = [];
-    if (!data || data.length === 0) {
+    if (!body.data || body.data.length === 0) {
       return scheduleJobsVM;
     }
 
-    data.forEach((item) => {
+    body.data.forEach((item) => {
       scheduleJobsVM.push({
         id: item.id,
         jobNo: item.attributes.jobNo,
@@ -62,9 +62,21 @@ export class ShopFloorHelperService {
         scheduledTime: item.attributes.plannedStartDate,
         scheduledDate: item.attributes.plannedStartDate,
         links: item.links,
+        status: this.getScheduleJobStatus(body.included, item.relationships)
       });
     });
     return scheduleJobsVM;
+  }
+
+  getScheduleJobStatus = (includedItems: any[], relationShips: any): string => {
+    let itemStatus = '';
+    if (!includedItems || includedItems.length === 0 || !relationShips.taskStatus || !relationShips.taskStatus.data)  {
+      itemStatus = '';
+    }
+    const includedItem = includedItems.find(x => x.id === relationShips.taskStatus.data.id);
+    itemStatus = !includedItem ? '' : includedItem.attributes.name;
+
+    return itemStatus;
   }
 
   mapToMachineCurrentJobModal = (data: any): MachineCurrentJobVM => {

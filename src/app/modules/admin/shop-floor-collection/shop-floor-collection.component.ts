@@ -203,6 +203,9 @@ export class ShopFloorCollectionComponent implements OnInit {
     this.selectedJobAction = 'Choose';
     this.selectedStatusActionId = 'Choose';
     this.machineSelectedStatusAction = null;
+    this.machineStatusTimelineVM = null;
+    this.machineOee = null;
+    this.machineCommulativeOutputVM = null;
   }
 
   getMachineScheduleJobsList = (jobsScheduleLink: string) => {
@@ -420,10 +423,22 @@ export class ShopFloorCollectionComponent implements OnInit {
           legendLabels.push(item.machStatusGrp);
         }
         // tslint:disable-next-line: max-line-length
-        this.machineStatusTimelineVM.legendList = this.machineStatusTimelineVM.legendList.filter(x=> legendLabels.includes(x.machStatusGrp));
       }
     });
 
+    const items = this.machineStatusTimelineVM.legendList;
+    this.machineStatusTimelineVM.legendList = [];
+    legendLabels.forEach(item => {
+      const label = items.find( x => {
+        return x.machStatusGrp === item;
+      });
+      if (label) {
+        this.machineStatusTimelineVM.legendList.push(label);
+      }
+    });
+    console.log(this.machineStatusTimelineVM.legendList);
+    // tslint:disable-next-line: max-line-length
+    // this.machineStatusTimelineVM.legendList = this.machineStatusTimelineVM.legendList.filter(x => legendLabels.includes(x.machStatusGrp));
     return { seriesData, ranges };
   }
 

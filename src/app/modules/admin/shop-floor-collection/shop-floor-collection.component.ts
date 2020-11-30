@@ -22,18 +22,28 @@ import { AppAuthService } from '../../services/core/services/app-auth.service';
 import { ShopFloorService } from '../../services/core/services/shop-floor.service';
 import { TokenType } from '../../shared/enums/app-enums';
 import { ShopFloorHelperService } from '../../shared/enums/helpers/shop-floor-helper.service';
-import { MachineCurrentJobUnitsVM, MachineCurrentJobVM, MachineScheduleJobsVM,
-  MachineStatusAction, MachineStatusVM, MachineVM, Operators } from '../../shared/models/shop-floor';
+import { MachineCommulativeOutputVM, MachineCurrentJobUnitsVM, MachineCurrentJobVM, MachineScheduleJobsVM,
+  MachineStatusAction, MachineStatusTimeLineVM, MachineStatusVM, MachineVM, Operators, StatusItemVM } from '../../shared/models/shop-floor';
 import { CaseStore } from '../../shared/ui-services/create-case.service';
 import { ModalService } from '../../shared/ui-services/modal.service';
 import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
 import { SpinnerService } from './spinner.service';
 
-export type ChartOptions = {
+export type CommulativeChartOptions = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
+  dataLabels: ApexDataLabels;
   labels: string[];
   plotOptions: ApexPlotOptions;
+  yaxis: ApexYAxis;
+  xaxis: ApexXAxis;
+  fill: ApexFill;
+  tooltip: ApexTooltip;
+  stroke: ApexStroke;
+  legend: ApexLegend;
+  colors: [];
+  markers: any;
+  states: any;
 };
 
 export type UnitsProducedChartOptions = {
@@ -76,6 +86,9 @@ export class ShopFloorCollectionComponent implements OnInit {
   selectedStatusActionId = 'Choose';
   machineStatusActionVM: MachineStatusVM;
   machineSelectedStatusAction: MachineStatusAction;
+  machineStatusTimelineVM: MachineStatusTimeLineVM;
+  machineCommulativeOutputVM: MachineCommulativeOutputVM;
+  machineOee: number;
   // ------------------- LOADERS--------------------------//
   shouldShowScheduleLoader = false;
   clickedScheduleJobButtonId = -1;
@@ -83,7 +96,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   public oeeChartOptions: any = {};
   public unitsProducedChartOptions: Partial<UnitsProducedChartOptions>;
   public timeLineChartOptions: Partial<TimeLineChartOptions>;
-  chartOptions: any = {};
+  public commulativeOutputChartOptions: Partial<CommulativeChartOptions>;
   fontFamily = '';
   colorsGrayGray500 = '';
   colorsGrayGray200 = '';
@@ -119,9 +132,6 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.oeeChartOptions = this.getOEEChartOptions();
-    this.chartOptions = this.getChartOptions();
-    this.timeLineChartOptions = this.getTimeLineChartOptions() as TimeLineChartOptions;
   }
 
   getToken = () => {
@@ -167,7 +177,10 @@ export class ShopFloorCollectionComponent implements OnInit {
       this.getMachineScheduleJobsList(selectedMachine.machineLinks.jobsSchedule);
       this.getCurretnMachineJob(selectedMachine.machineLinks.currentJobLink);
       this.getCurrentJobUnits(selectedMachine.machineLinks.currentJobUnitsPerMinute);
+      this.getMachineCommulativeOutput(selectedMachine.machineLinks.commulativeOutput);
+      this.getMachineOee(selectedMachine.machineLinks.machOees);
       this.getMachineStatus(selectedMachine.machineLinks.machineActions);
+      this.getMachineStatusTimeLine(selectedMachine.machineLinks.machStatusTimelines);
     } else {
       // set empty lists to machine related data
       // this.selectedMachineCode = null;
@@ -302,10 +315,8 @@ export class ShopFloorCollectionComponent implements OnInit {
       } else {
         this.snack.open('Unable to get machine status action');
       }
-      this.ui.reset();
       this.ref.detectChanges();
     }, (err: HttpErrorResponse) => {
-      this.ui.reset();
       this.snack.open('Unable to get machine status action');
     });
   }
@@ -330,6 +341,111 @@ export class ShopFloorCollectionComponent implements OnInit {
     });
   }
 
+  getMachineCommulativeOutput = (machineCommulativeOutputLink) => {
+    this.shopFloorService.getMachineCommulativeOutput(machineCommulativeOutputLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.data) {
+        this.machineCommulativeOutputVM = this.helper.mapToMachineCommulativeOutputModal(resp.body.data);
+        // tslint:disable-next-line: max-line-length
+        this.commulativeOutputChartOptions = this.getCommulativeOutputChartOptions(this.machineCommulativeOutputVM) as unknown as CommulativeChartOptions;
+      } else {
+        this.snack.open('Unable to get machine commulative output');
+      }
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      this.snack.open('Unable to get machine commulative output');
+    });
+  }
+
+  getMachineStatusTimeLine = (machineStatusTimelineLink: string) => {
+    this.shopFloorService.getMachineStatusTimeline(machineStatusTimelineLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.data) {
+        this.machineStatusTimelineVM = this.helper.mapToMachineStatusTimelineModel(resp.body.data);
+        const {seriesData, ranges} = this.getTimelineSeriesData(this.machineStatusTimelineVM?.itemList);
+        this.timeLineChartOptions = this.getTimeLineChartOptions(seriesData, ranges) as TimeLineChartOptions;
+      } else {
+        this.snack.open('Unable to get machine status timeline');
+      }
+      this.ui.reset();
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      this.ui.reset();
+      this.snack.open('Unable to get machine status timeline');
+    });
+  }
+
+  getTimelineSeriesData = (itemList: StatusItemVM[]) => {
+    // itemList having records per 10 minutes interval
+    const recordLimiter = (12 * 60); // only get last 12 hours record
+    const timeCalculationThreshold = 120; // minutes after which we calculate x-axis time value
+    const seriesData  = [];
+    const ranges = [];
+    let xAxisValue = '';
+    let minuteInterval = 0;
+    itemList.forEach(item => {
+      const minuteLap = item.duration / 60;
+      minuteInterval = minuteInterval + minuteLap;
+      if (minuteInterval <= recordLimiter) {
+        // if minuteInterval === 60 or is divisible by 60 with 0 remainder then we calculate time
+        if (minuteInterval === 10 || minuteInterval % timeCalculationThreshold === 0) {
+          // const dateString =  new Date(item.startDate).toLocaleTimeString();
+          // xAxisValue = `${dateString.split(':')[0]} : 00`;
+          const hours =  new Date(item.startDate).getHours();
+          xAxisValue = `${hours}:00`; // this.parseMillisecondsIntoReadableTime(new Date(item.startDate).getTime());
+        } else {
+          xAxisValue = '';
+        }
+
+        seriesData.push({
+          x: xAxisValue,
+          y: minuteInterval
+        });
+        ranges.push({
+          from: minuteInterval - 10,
+          to: minuteInterval,
+          name: 'low',
+          color: item.color,
+        });
+      }
+    });
+
+    return {seriesData, ranges};
+  }
+
+  getMachineOee = (machineOeeLink: string) => {
+    this.shopFloorService.getMachineOee(machineOeeLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.data) {
+        this.machineOee = this.helper.mapToMahcineOeeModal(resp.body.data);
+        // tslint:disable-next-line: max-line-length
+        this.oeeChartOptions = this.getOEEChartOptions(this.machineOee);
+      } else {
+        this.snack.open('Unable to get machine OEE data');
+      }
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      this.snack.open('Unable to get machine OEE data');
+    });
+  }
+
+  parseMillisecondsIntoReadableTime = (milliseconds) => {
+    // Get hours from milliseconds
+    const hours = milliseconds / (1000 * 60 * 60);
+    const absoluteHours = Math.floor(hours);
+    const h = absoluteHours > 9 ? absoluteHours : '0' + absoluteHours;
+
+    // Get remainder from hours and convert to minutes
+    const minutes = (hours - absoluteHours) * 60;
+    const absoluteMinutes = Math.floor(minutes);
+    const m = absoluteMinutes > 9 ? absoluteMinutes : '0' +  absoluteMinutes;
+
+    // Get remainder from minutes and convert to seconds
+    const seconds = (minutes - absoluteMinutes) * 60;
+    const absoluteSeconds = Math.floor(seconds);
+    const s = absoluteSeconds > 9 ? absoluteSeconds : '0' + absoluteSeconds;
+
+
+    return h + ': 00' ;
+  }
+
   setStyling = () => {
     this.fontFamily = this.layout.getProp('js.fontFamily');
     this.colorsGrayGray500 = this.layout.getProp('js.colors.gray.gray500');
@@ -338,9 +454,9 @@ export class ShopFloorCollectionComponent implements OnInit {
     this.colorsThemeLightSuccess = this.layout.getProp('js.colors.theme.light.success');
   }
 
-  getOEEChartOptions() {
+  getOEEChartOptions(value: number) {
     return {
-      series: [13.2],
+      series: [value],
       chart: {
         height: 150,
         type: 'radialBar',
@@ -372,12 +488,12 @@ export class ShopFloorCollectionComponent implements OnInit {
     };
   }
 
-  getChartOptions() {
+  getCommulativeOutputChartOptions = (machineCommulativeOutputVM: MachineCommulativeOutputVM) => {
     return {
       series: [
         {
-          name: 'Net Profit',
-          data: [30, 45, 32, 70, 40],
+          name: 'UOM',
+          data: machineCommulativeOutputVM.items.map(item => item.value) as Array<number>,
         },
       ],
       chart: {
@@ -410,7 +526,7 @@ export class ShopFloorCollectionComponent implements OnInit {
         width: 3,
       },
       xaxis: {
-        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        categories: machineCommulativeOutputVM.items.map(item => item.group) as Array<string>,
         axisBorder: {
           show: false,
         },
@@ -483,7 +599,7 @@ export class ShopFloorCollectionComponent implements OnInit {
         y: {
           // tslint:disable-next-line
           formatter: function (val) {
-            return '$' + val + ' thousands';
+            return val ;
           },
         },
       },
@@ -493,6 +609,7 @@ export class ShopFloorCollectionComponent implements OnInit {
         strokeColor: [this.colorsThemeBaseSuccess],
         strokeWidth: 3,
       },
+      labels: []
     };
   }
 
@@ -550,184 +667,12 @@ export class ShopFloorCollectionComponent implements OnInit {
     };
   }
 
-  getTimeLineChartOptions() {
+  getTimeLineChartOptions = (data: any, ranges: any) => {
     return {
       series: [
         {
           name: '',
-          data: [
-            {
-              x: '',
-              y: 10
-            },
-            {
-              x: '',
-              y: 20
-            },
-            {
-              x: '',
-              y: 30
-            },
-            {
-              x: '6:00',
-              y: 40
-            },
-            {
-              x: '',
-              y: 50
-            },
-            {
-              x: '',
-              y: 60
-            },
-            {
-              x: '8:00',
-              y: 70
-            },
-            {
-              x: '',
-              y: 80
-            },
-            {
-              x: '',
-              y: 90
-            },
-            {
-              x: '10:00',
-              y: 100
-            },
-            {
-              x: '',
-              y: 110
-            },
-            {
-              x: '',
-              y: 120
-            },
-            {
-              x: '12:00',
-              y: 130
-            },
-            {
-              x: '',
-              y: 140
-            }, {
-              x: '',
-              y: 150
-            },
-            {
-              x: '',
-              y: 160
-            },
-            {
-              x: '14:00',
-              y: 170
-            },
-            {
-              x: '',
-              y: 180
-            },
-            {
-              x: '',
-              y: 190
-            },
-            {
-              x: '16:00',
-              y: 200
-            },
-            {
-              x: '',
-              y: 210
-            },
-            {
-              x: '',
-              y: 220
-            },
-            {
-              x: '',
-              y: 230
-            },
-            {
-              x: '18:00',
-              y: 240
-            },
-            {
-              x: '',
-              y: 250
-            },
-            {
-              x: '',
-              y: 260
-            },
-            {
-              x: '',
-              y: 270
-            },
-            {
-              x: '',
-              y: 280
-            },
-            {
-              x: '20:00',
-              y: 290
-            },
-            {
-              x: '',
-              y: 300
-            },
-            {
-              x: '',
-              y: 310
-            },
-            {
-              x: '',
-              y: 320
-            },
-            {
-              x: '',
-              y: 330
-            },
-            {
-              x: '22:00',
-              y: 310
-            },
-            {
-              x: '',
-              y: 320
-            },
-            {
-              x: '',
-              y: 330
-            },
-            {
-              x: '',
-              y: 340
-            },
-            {
-              x: '',
-              y: 350
-            },
-            {
-              x: '24:00',
-              y: 360
-            },
-            {
-              x: '',
-              y: 370
-            },
-            {
-              x: '',
-              y: 380
-            },
-            {
-              x: '',
-              y: 390
-            },
-            {
-              x: '',
-              y: 400
-            },
-          ]
+          data
         },
       ],
       chart: {
@@ -743,98 +688,7 @@ export class ShopFloorCollectionComponent implements OnInit {
           shadeIntensity: 0.0,
           enableShades: false,
           colorScale: {
-            ranges: [
-              {
-                from: 10,
-                to: 50,
-                name: 'low',
-                color: '#56EC69',
-              },
-              {
-                from: 51,
-                to: 80,
-                name: 'medium',
-                color: '#ECE756',
-              },
-              {
-                from: 81,
-                to: 100,
-                name: 'high',
-                color: '#ECC456',
-              },
-              {
-                from: 101,
-                to: 131,
-                name: 'extreme',
-                color: '#567EEC',
-              },
-              {
-                from: 132,
-                to: 160,
-                name: 'extreme',
-                color: '#EC9756',
-              },
-              {
-                from: 161,
-                to: 200,
-                name: 'extreme',
-                color: '#EC56B5',
-              },
-              {
-                from: 201,
-                to: 246,
-                name: 'extreme',
-                color: '#EC5656',
-              },
-              {
-                from: 247,
-                to: 300,
-                name: 'extreme',
-                color: '#EC5656',
-              },
-              {
-                from: 301,
-                to: 340,
-                name: 'extreme',
-                color: '#EC5656',
-              },
-              {
-                from: 341,
-                to: 400,
-                name: 'extreme',
-                color: '#567EEC',
-              },
-              {
-                from: 401,
-                to: 450,
-                name: 'low',
-                color: '#56EC69',
-              },
-              {
-                from: 451,
-                to: 500,
-                name: 'medium',
-                color: '#ECE756',
-              },
-              {
-                from: 501,
-                to: 550,
-                name: 'extreme',
-                color: '#567EEC',
-              },
-              {
-                from: 551,
-                to: 600,
-                name: 'extreme',
-                color: '#EC56B5',
-              },
-              {
-                from: 601,
-                to: 670,
-                name: 'low',
-                color: '#56EC69',
-              },
-            ],
+            ranges
           },
         },
       },

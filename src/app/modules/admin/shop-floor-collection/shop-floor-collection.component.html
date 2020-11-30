@@ -1,4 +1,4 @@
-<div class="shopFloorCollectionScreen">
+<div class="shopFloorCollectionScreen" *ngIf="counter>=8">
   <div class="row">
     <div class="col-lg-3 col-12">
       <div class="card card-custom example example-compact gutter-b machine-status-card">
@@ -124,7 +124,8 @@
                   <span class="app-label-grey padding-b-5px">Choose Job Status</span>
                   <span>
                     <mat-form-field class="selectBoxJobStatus">
-                      <mat-select [(value)]="selectedJobAction" (selectionChange)="handleMachineActionChange($event)" [disabled] ="machineCurrentJobVM.jobReadOnly">
+                      <mat-select [(value)]="selectedJobAction" (selectionChange)="handleMachineActionChange($event)"
+                        [disabled]="machineCurrentJobVM.jobReadOnly">
                         <mat-option value="Choose">Choose</mat-option>
                         <mat-option *ngFor="let item of machineCurrentJobVM.machineJobActionsList"
                           [value]="item.actionLink"> {{item.status}}
@@ -137,11 +138,12 @@
               <div class="col-lg-3 padding-l-0px padding-r-0px">
                 <div class="margin-t-22px text-right">
                   <button style="padding-right: 10px; background: transparent; border: none;"
-                    (click)="handleJobActionState(machineCurrentJobVM?.jobActionStop, 'stopped')" [disabled]="machineCurrentJobVM?.jobReadOnly">
+                    (click)="handleJobActionState(machineCurrentJobVM?.jobActionStop, 'stopped')"
+                    [disabled]="machineCurrentJobVM?.jobReadOnly">
                     <img src="./assets/media/custom-icons/stop-icon.png" />
                   </button>
-                  <button (click)="handleJobActionState(machineCurrentJobVM?.jobActionPause, 'paused')"  [disabled]="machineCurrentJobVM?.jobReadOnly"
-                  style=" background: transparent; border: none;">
+                  <button (click)="handleJobActionState(machineCurrentJobVM?.jobActionPause, 'paused')"
+                    [disabled]="machineCurrentJobVM?.jobReadOnly" style=" background: transparent; border: none;">
                     <img src="./assets/media/custom-icons/pause-icon.png" />
                   </button>
                 </div>
@@ -206,14 +208,19 @@
             <div class="col-lg-4 padding-0px">
               <div class="col-lg-12 display-flex padding-0px">
                 <span class="font-14px font-roboto-bold">Cumulative Output</span>
-                <span class="font-12px font-roboto-bold" style="float:right; margin: auto">{{machineCommulativeOutputVM?.totalVal}}</span>
+                <span class="font-12px font-roboto-bold"
+                  style="float:right; margin: auto">{{machineCommulativeOutputVM?.totalVal}}</span>
               </div>
               <div class="col-lg-12 padding-0px" *ngIf="machineCommulativeOutputVM && commulativeOutputChartOptions">
                 <div id="kt_stats_widget_11_chart" class="card-rounded-bottom comulative-chart">
-                  <apx-chart [series]="commulativeOutputChartOptions.series" [chart]="commulativeOutputChartOptions.chart" [xaxis]="commulativeOutputChartOptions.xaxis"
-                    [yaxis]="commulativeOutputChartOptions.yaxis" [dataLabels]="commulativeOutputChartOptions.dataLabels" [stroke]="commulativeOutputChartOptions.stroke"
-                    [legend]="commulativeOutputChartOptions.legend" [fill]="commulativeOutputChartOptions.fill" [states]="commulativeOutputChartOptions.states"
-                    [tooltip]="commulativeOutputChartOptions.tooltip" [colors]="commulativeOutputChartOptions.colors" [markers]="commulativeOutputChartOptions.markers"
+                  <apx-chart [series]="commulativeOutputChartOptions.series"
+                    [chart]="commulativeOutputChartOptions.chart" [xaxis]="commulativeOutputChartOptions.xaxis"
+                    [yaxis]="commulativeOutputChartOptions.yaxis"
+                    [dataLabels]="commulativeOutputChartOptions.dataLabels"
+                    [stroke]="commulativeOutputChartOptions.stroke" [legend]="commulativeOutputChartOptions.legend"
+                    [fill]="commulativeOutputChartOptions.fill" [states]="commulativeOutputChartOptions.states"
+                    [tooltip]="commulativeOutputChartOptions.tooltip" [colors]="commulativeOutputChartOptions.colors"
+                    [markers]="commulativeOutputChartOptions.markers"
                     [plotOptions]="commulativeOutputChartOptions.plotOptions">
                   </apx-chart>
                 </div>

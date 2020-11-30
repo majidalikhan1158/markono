@@ -22,8 +22,10 @@ import { AppAuthService } from '../../services/core/services/app-auth.service';
 import { ShopFloorService } from '../../services/core/services/shop-floor.service';
 import { TokenType } from '../../shared/enums/app-enums';
 import { ShopFloorHelperService } from '../../shared/enums/helpers/shop-floor-helper.service';
-import { MachineCommulativeOutputVM, MachineCurrentJobUnitsVM, MachineCurrentJobVM, MachineScheduleJobsVM,
-  MachineStatusAction, MachineStatusTimeLineVM, MachineStatusVM, MachineVM, Operators, StatusItemVM } from '../../shared/models/shop-floor';
+import {
+  MachineCommulativeOutputVM, MachineCurrentJobUnitsVM, MachineCurrentJobVM, MachineScheduleJobsVM,
+  MachineStatusAction, MachineStatusTimeLineVM, MachineStatusVM, MachineVM, Operators, StatusItemVM
+} from '../../shared/models/shop-floor';
 import { CaseStore } from '../../shared/ui-services/create-case.service';
 import { ModalService } from '../../shared/ui-services/modal.service';
 import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
@@ -117,16 +119,16 @@ export class ShopFloorCollectionComponent implements OnInit {
   rows = [];
   filteredData = [];
   columnsWithSearch: string[] = [];
-
+  counter = 0;
   constructor(private layout: LayoutService,
-              private auth: AppAuthService,
-              private shopFloorService: ShopFloorService,
-              private helper: ShopFloorHelperService,
-              private snack: SnackBarService,
-              private ref: ChangeDetectorRef,
-              private modalService: ModalService,
-              private store: CaseStore,
-              private ui: SpinnerService) {
+    private auth: AppAuthService,
+    private shopFloorService: ShopFloorService,
+    private helper: ShopFloorHelperService,
+    private snack: SnackBarService,
+    private ref: ChangeDetectorRef,
+    private modalService: ModalService,
+    private store: CaseStore,
+    private ui: SpinnerService) {
     this.getToken();
     this.setStyling();
   }
@@ -138,6 +140,7 @@ export class ShopFloorCollectionComponent implements OnInit {
     const isTokenExist = this.auth.getToken(TokenType.SHOPFLOOR);
     if (!isTokenExist || isTokenExist === '') {
       this.auth.getShopFloorToken().subscribe((tokenResp) => {
+        this.counter++;
         this.ui.show();
         if (tokenResp && tokenResp.body) {
           this.auth.saveToken(tokenResp.body, TokenType.SHOPFLOOR);
@@ -154,6 +157,7 @@ export class ShopFloorCollectionComponent implements OnInit {
     this.shopFloorService.getMachines().subscribe(
       (resp) => {
         if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
+          this.counter++;
           this.machineVMList = this.helper.mapToMachineModal(resp.body.data);
           this.setSelectedMachine();
         } else {
@@ -206,6 +210,7 @@ export class ShopFloorCollectionComponent implements OnInit {
     this.shopFloorService.getMachineScheduleJobs(jobsScheduleLink).subscribe(
       (resp) => {
         if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
+          this.counter++;
           this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = this.helper.mapToScheduleJobsModal(resp.body.data);
         } else {
           this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = [];
@@ -229,6 +234,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   getCurretnMachineJob = (machineCurrentJobLink: string) => {
     this.shopFloorService.getCurretnMachineJob(machineCurrentJobLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data && resp.body.data.id) {
+        this.counter++;
         this.machineCurrentJobVM = this.helper.mapToMachineCurrentJobModal(resp.body.data);
         const activeAction = this.machineCurrentJobVM.machineJobActionsList.find(x => x.active);
         this.selectedJobAction = activeAction ? activeAction.actionLink : 'Choose';
@@ -258,6 +264,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   getCurrentJobUnits = (currentJobUnitsLink: string) => {
     this.shopFloorService.getCurrentJobUnits(currentJobUnitsLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
+        this.counter++;
         this.machineCurrentJobUnitsVM = this.helper.mapToMachineCurrentJobUnitsModal(resp.body.data);
         const unitsPerMinutes = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.count);
         this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart(unitsPerMinutes) as UnitsProducedChartOptions;
@@ -309,6 +316,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   getMachineStatus = (machineStatusLink: string) => {
     this.shopFloorService.getMachineStatus(machineStatusLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data && resp.body.data.id) {
+        this.counter++;
         this.machineStatusActionVM = this.helper.mapToMachineStatusModal(resp.body.data);
         this.machineSelectedStatusAction = this.machineStatusActionVM.machineStatusActionList.find(x => x.current);
         this.selectedStatusActionId = this.machineSelectedStatusAction ? this.machineSelectedStatusAction.id : 'Choose';
@@ -344,6 +352,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   getMachineCommulativeOutput = (machineCommulativeOutputLink) => {
     this.shopFloorService.getMachineCommulativeOutput(machineCommulativeOutputLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data) {
+        this.counter++;
         this.machineCommulativeOutputVM = this.helper.mapToMachineCommulativeOutputModal(resp.body.data);
         // tslint:disable-next-line: max-line-length
         this.commulativeOutputChartOptions = this.getCommulativeOutputChartOptions(this.machineCommulativeOutputVM) as unknown as CommulativeChartOptions;
@@ -359,8 +368,9 @@ export class ShopFloorCollectionComponent implements OnInit {
   getMachineStatusTimeLine = (machineStatusTimelineLink: string) => {
     this.shopFloorService.getMachineStatusTimeline(machineStatusTimelineLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data) {
+        this.counter++;
         this.machineStatusTimelineVM = this.helper.mapToMachineStatusTimelineModel(resp.body.data);
-        const {seriesData, ranges} = this.getTimelineSeriesData(this.machineStatusTimelineVM?.itemList);
+        const { seriesData, ranges } = this.getTimelineSeriesData(this.machineStatusTimelineVM?.itemList);
         this.timeLineChartOptions = this.getTimeLineChartOptions(seriesData, ranges) as TimeLineChartOptions;
       } else {
         this.snack.open('Unable to get machine status timeline');
@@ -377,7 +387,7 @@ export class ShopFloorCollectionComponent implements OnInit {
     // itemList having records per 10 minutes interval
     const recordLimiter = (12 * 60); // only get last 12 hours record
     const timeCalculationThreshold = 120; // minutes after which we calculate x-axis time value
-    const seriesData  = [];
+    const seriesData = [];
     const ranges = [];
     let xAxisValue = '';
     let minuteInterval = 0;
@@ -389,7 +399,7 @@ export class ShopFloorCollectionComponent implements OnInit {
         if (minuteInterval === 10 || minuteInterval % timeCalculationThreshold === 0) {
           // const dateString =  new Date(item.startDate).toLocaleTimeString();
           // xAxisValue = `${dateString.split(':')[0]} : 00`;
-          const hours =  new Date(item.startDate).getHours();
+          const hours = new Date(item.startDate).getHours();
           xAxisValue = `${hours}:00`; // this.parseMillisecondsIntoReadableTime(new Date(item.startDate).getTime());
         } else {
           xAxisValue = '';
@@ -408,12 +418,13 @@ export class ShopFloorCollectionComponent implements OnInit {
       }
     });
 
-    return {seriesData, ranges};
+    return { seriesData, ranges };
   }
 
   getMachineOee = (machineOeeLink: string) => {
     this.shopFloorService.getMachineOee(machineOeeLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data) {
+        this.counter++;
         this.machineOee = this.helper.mapToMahcineOeeModal(resp.body.data);
         // tslint:disable-next-line: max-line-length
         this.oeeChartOptions = this.getOEEChartOptions(this.machineOee);
@@ -435,7 +446,7 @@ export class ShopFloorCollectionComponent implements OnInit {
     // Get remainder from hours and convert to minutes
     const minutes = (hours - absoluteHours) * 60;
     const absoluteMinutes = Math.floor(minutes);
-    const m = absoluteMinutes > 9 ? absoluteMinutes : '0' +  absoluteMinutes;
+    const m = absoluteMinutes > 9 ? absoluteMinutes : '0' + absoluteMinutes;
 
     // Get remainder from minutes and convert to seconds
     const seconds = (minutes - absoluteMinutes) * 60;
@@ -443,7 +454,7 @@ export class ShopFloorCollectionComponent implements OnInit {
     const s = absoluteSeconds > 9 ? absoluteSeconds : '0' + absoluteSeconds;
 
 
-    return h + ': 00' ;
+    return h + ': 00';
   }
 
   setStyling = () => {
@@ -599,7 +610,7 @@ export class ShopFloorCollectionComponent implements OnInit {
         y: {
           // tslint:disable-next-line
           formatter: function (val) {
-            return val ;
+            return val;
           },
         },
       },

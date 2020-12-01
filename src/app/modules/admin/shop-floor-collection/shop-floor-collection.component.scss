@@ -47,7 +47,7 @@ app-shop-floor-collection {
     width: 12px;
     height: 7px;
   }
-  
+
   .shopFloorCollectionScreen mat-form-field.mat-form-field-type-mat-select .mat-form-field-ripple {
     background: transparent !important;
   }
@@ -267,7 +267,7 @@ app-shop-floor-collection {
   }
 
   .onthe-machine-card .job-status-action-buttons {
-    background: transparent !important; 
+    background: transparent !important;
     border: none !important;
   }
 
@@ -284,5 +284,13 @@ app-shop-floor-collection {
   .selectBoxJobStatus .mat-select-disabled .mat-select-trigger {
     cursor: not-allowed !important;
     opacity: 0.8;
+  }
+  .scroll-bar {
+    overflow: auto !important;
+    //padding: 4px;
+  }
+  ::-webkit-scrollbar {
+    height: 6px;
+    background-color: #b7b7b7;
   }
 }

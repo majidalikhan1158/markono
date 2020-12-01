@@ -128,14 +128,14 @@ export class ShopFloorCollectionComponent implements OnInit {
   columnsWithSearch: string[] = [];
   counter = 0;
   constructor(private layout: LayoutService,
-              private auth: AppAuthService,
-              private shopFloorService: ShopFloorService,
-              private helper: ShopFloorHelperService,
-              private snack: SnackBarService,
-              private ref: ChangeDetectorRef,
-              private modalService: ModalService,
-              private store: CaseStore,
-              private ui: SpinnerService) {
+    private auth: AppAuthService,
+    private shopFloorService: ShopFloorService,
+    private helper: ShopFloorHelperService,
+    private snack: SnackBarService,
+    private ref: ChangeDetectorRef,
+    private modalService: ModalService,
+    private store: CaseStore,
+    private ui: SpinnerService) {
     this.getToken();
     this.setStyling();
   }
@@ -324,6 +324,13 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   getMachineStatus = (machineStatusLink: string) => {
+    this.seIntervalMachineStatus(machineStatusLink);
+    setInterval(() => {
+      this.seIntervalMachineStatus(machineStatusLink);
+    }, 5000);
+  }
+
+  seIntervalMachineStatus = (machineStatusLink: string) => {
     this.shopFloorService.getMachineStatus(machineStatusLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data && resp.body.data.id) {
         this.machineStatusActionVM = this.helper.mapToMachineStatusModal(resp.body.data);
@@ -442,7 +449,7 @@ export class ShopFloorCollectionComponent implements OnInit {
     const items = this.machineStatusTimelineVM.legendList;
     this.machineStatusTimelineVM.legendList = [];
     legendLabels.forEach(item => {
-      const label = items.find( x => {
+      const label = items.find(x => {
         return x.machStatusGrp === item;
       });
       if (label) {

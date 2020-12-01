@@ -68,6 +68,12 @@ export type TimeLineChartOptions = {
   title: ApexTitleSubtitle;
   plotOptions: ApexPlotOptions;
   xaxis: ApexXAxis;
+  tooltip: ApexTooltip;
+};
+
+export type TimelineStatusLabel = {
+  label: string;
+  value: number;
 };
 
 @Component({
@@ -91,6 +97,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   machineStatusTimelineVM: MachineStatusTimeLineVM;
   machineCommulativeOutputVM: MachineCommulativeOutputVM;
   machineOee: number;
+  timeLineLabelsList: TimelineStatusLabel[] = [];
   // ------------------- LOADERS--------------------------//
   shouldShowScheduleLoader = false;
   clickedScheduleJobButtonId = -1;
@@ -399,26 +406,32 @@ export class ShopFloorCollectionComponent implements OnInit {
       const minuteLap = item.duration / 60;
       minuteInterval = minuteInterval + minuteLap;
       if (minuteInterval <= recordLimiter) {
+        const hours = new Date(item.startDate).getHours();
         // if minuteInterval === 60 or is divisible by 60 with 0 remainder then we calculate time
         if (minuteInterval === 10 || minuteInterval % timeCalculationThreshold === 0) {
-          // const dateString =  new Date(item.startDate).toLocaleTimeString();
-          // xAxisValue = `${dateString.split(':')[0]} : 00`;
-          const hours = new Date(item.startDate).getHours();
-          xAxisValue = `${hours}:00`; // this.parseMillisecondsIntoReadableTime(new Date(item.startDate).getTime());
+          xAxisValue = `${hours}:00`;
         } else {
           xAxisValue = '';
         }
 
         seriesData.push({
           x: xAxisValue,
-          y: minuteInterval
+          y: minuteInterval,
+          description: `${hours}:00 - ${item.machStatusGrp}`,
         });
+
         ranges.push({
           from: minuteInterval - 10,
           to: minuteInterval,
           name: 'low',
           color: item.color,
         });
+
+        // this.timeLineLabelsList.push({
+        //   label: `${hours}:00 - ${item.machStatusGrp}`,
+        //   value: minuteInterval
+        // });
+
         if (!legendLabels.includes(item.machStatusGrp)) {
           legendLabels.push(item.machStatusGrp);
         }
@@ -436,9 +449,6 @@ export class ShopFloorCollectionComponent implements OnInit {
         this.machineStatusTimelineVM.legendList.push(label);
       }
     });
-    console.log(this.machineStatusTimelineVM.legendList);
-    // tslint:disable-next-line: max-line-length
-    // this.machineStatusTimelineVM.legendList = this.machineStatusTimelineVM.legendList.filter(x => legendLabels.includes(x.machStatusGrp));
     return { seriesData, ranges };
   }
 
@@ -819,11 +829,30 @@ export class ShopFloorCollectionComponent implements OnInit {
         },
         tooltip: {
           enabled: true,
-          formatter: undefined,
           offsetY: 0,
         },
       },
+      tooltip: {
+        custom(opts) {
+          const desc =
+            opts.ctx.w.config.series[opts.seriesIndex].data[
+              opts.dataPointIndex
+            ].description;
+
+          const value = opts.series[opts.seriesIndex][opts.dataPointIndex];
+
+          return `${desc}`;
+        }
+      },
     };
+  }
+
+  getLabel = (val: any) => {
+    const obj = this.timeLineLabelsList.find(x => x.value === val);
+    if (obj) {
+      return obj.label;
+    }
+    return '';
   }
 
   openSearch() {

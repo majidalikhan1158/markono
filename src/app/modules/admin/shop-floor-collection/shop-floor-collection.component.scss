@@ -293,4 +293,8 @@ app-shop-floor-collection {
     height: 6px;
     background-color: #b7b7b7;
   }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #9a9898;
+  }
 }

@@ -127,28 +127,29 @@ export class ShopFloorCollectionComponent implements OnInit {
   filteredData = [];
   columnsWithSearch: string[] = [];
   counter = 0;
+  intervalId;
   constructor(private layout: LayoutService,
-    private auth: AppAuthService,
-    private shopFloorService: ShopFloorService,
-    private helper: ShopFloorHelperService,
-    private snack: SnackBarService,
-    private ref: ChangeDetectorRef,
-    private modalService: ModalService,
-    private store: CaseStore,
-    private ui: SpinnerService) {
-    this.getToken();
+              private auth: AppAuthService,
+              private shopFloorService: ShopFloorService,
+              private helper: ShopFloorHelperService,
+              private snack: SnackBarService,
+              private ref: ChangeDetectorRef,
+              private modalService: ModalService,
+              private store: CaseStore,
+              private ui: SpinnerService) {
     this.setStyling();
   }
 
   ngOnInit(): void {
+    this.getToken();
   }
 
   getToken = () => {
     const isTokenExist = this.auth.getToken(TokenType.SHOPFLOOR);
     if (!isTokenExist || isTokenExist === '') {
+      this.ui.show();
       this.auth.getShopFloorToken().subscribe((tokenResp) => {
         this.counter++;
-        this.ui.show();
         if (tokenResp && tokenResp.body) {
           this.auth.saveToken(tokenResp.body, TokenType.SHOPFLOOR);
           this.getMachineList();
@@ -238,6 +239,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   handleMachineChange = (event: MatSelectChange) => {
+    clearInterval(this.intervalId);
     this.setSelectedMachine(event.value);
   }
 
@@ -324,13 +326,11 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   getMachineStatus = (machineStatusLink: string) => {
-    this.seIntervalMachineStatus(machineStatusLink);
-    setInterval(() => {
-      this.seIntervalMachineStatus(machineStatusLink);
-    }, 5000);
+    this.callToMachineStatusSubscription(machineStatusLink);
+    this.setMachineStatusAPIPing(machineStatusLink);
   }
 
-  seIntervalMachineStatus = (machineStatusLink: string) => {
+  callToMachineStatusSubscription = (machineStatusLink: string) => {
     this.shopFloorService.getMachineStatus(machineStatusLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data && resp.body.data.id) {
         this.machineStatusActionVM = this.helper.mapToMachineStatusModal(resp.body.data);
@@ -344,6 +344,12 @@ export class ShopFloorCollectionComponent implements OnInit {
     }, (err: HttpErrorResponse) => {
       this.snack.open('Unable to get machine status action');
     });
+  }
+
+  setMachineStatusAPIPing = (machineStatusLink: string) => {
+    this.intervalId = setInterval(() => {
+      this.callToMachineStatusSubscription(machineStatusLink);
+    }, 5000);
   }
 
   handleMachineStatusActionChange = (event: MatSelectChange) => {

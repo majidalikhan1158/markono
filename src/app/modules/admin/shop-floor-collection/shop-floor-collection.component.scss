@@ -265,4 +265,24 @@ app-shop-floor-collection {
   .onthe-machine-card .mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
     display: none !important;
   }
+
+  .onthe-machine-card .job-status-action-buttons {
+    background: transparent !important; 
+    border: none !important;
+  }
+
+  .onthe-machine-card .job-status-action-buttons:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.8;
+  }
+
+  mat-form-field.selectBoxJobStatus:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.8;
+  }
+
+  .selectBoxJobStatus .mat-select-disabled .mat-select-trigger {
+    cursor: not-allowed !important;
+    opacity: 0.8;
+  }
 }

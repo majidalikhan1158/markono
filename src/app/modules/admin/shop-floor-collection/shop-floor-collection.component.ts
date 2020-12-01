@@ -417,7 +417,7 @@ export class ShopFloorCollectionComponent implements OnInit {
         seriesData.push({
           x: xAxisValue,
           y: minuteInterval,
-          description: `${hours}:00 - ${item.machStatusGrp}`,
+          description: `${hours}:00 - ${item.machStatus}`,
         });
 
         ranges.push({

@@ -125,6 +125,7 @@
                   <span>
                     <mat-form-field class="selectBoxJobStatus">
                       <mat-select [(value)]="selectedJobAction" (selectionChange)="handleMachineActionChange($event)"
+                      [ngStyle]="{'cursor: not-allowed': machineCurrentJobVM?.jobReadOnly}"
                         [disabled]="machineCurrentJobVM.jobReadOnly">
                         <mat-option value="Choose">Choose</mat-option>
                         <mat-option *ngFor="let item of machineCurrentJobVM.machineJobActionsList"
@@ -137,13 +138,15 @@
               </div>
               <div class="col-lg-3 padding-l-0px padding-r-0px">
                 <div class="margin-t-22px text-right">
-                  <button style="padding-right: 10px; background: transparent; border: none;"
+                  <button 
+                  class="pr-2 job-status-action-buttons"
                     (click)="handleJobActionState(machineCurrentJobVM?.jobActionStop, 'stopped')"
                     [disabled]="machineCurrentJobVM?.jobReadOnly">
                     <img src="./assets/media/custom-icons/stop-icon.png" />
                   </button>
-                  <button (click)="handleJobActionState(machineCurrentJobVM?.jobActionPause, 'paused')"
-                    [disabled]="machineCurrentJobVM?.jobReadOnly" style=" background: transparent; border: none;">
+                  <button class="job-status-action-buttons"
+                     (click)="handleJobActionState(machineCurrentJobVM?.jobActionPause, 'paused')"
+                    [disabled]="machineCurrentJobVM?.jobReadOnly">
                     <img src="./assets/media/custom-icons/pause-icon.png" />
                   </button>
                 </div>

@@ -10,6 +10,9 @@ export interface MachineLinks {
     currentJobUnitsPerMinute: string;
     machineActions: string;
     jobsSchedule: string;
+    machStatusTimelines: string;
+    commulativeOutput: string;
+    machOees: string;
     self: string;
 }
 
@@ -20,6 +23,7 @@ export interface MachineScheduleJobsVM {
     estimatedDuration: number; // plannedDuration in seconds
     scheduledTime: string; // plannedStartDate
     scheduledDate: string; // plannedStartDate
+    status: string;
     links: MachineScheduleJobsLinks;
 }
 
@@ -35,6 +39,7 @@ export interface MachineCurrentJobVM {
     jobTitle: string;
     jobActionPause: string;
     jobActionStop: string;
+    jobReadOnly: boolean;
     machineSummaryList: MachineJobSummaryVM[];
     machineJobActionsList: MachineJobActionsVM[];
 }
@@ -95,4 +100,38 @@ export interface MachineStatusAction {
 export interface Operators {
     id: string;
     fullName: string;
+}
+
+export interface MachineStatusTimeLineVM {
+    itemList: StatusItemVM[];
+    legendList: StatusLegendVM[];
+}
+
+export interface StatusItemVM {
+    color: string;
+    duration: number;
+    endDate: Date;
+    machStatus: string;
+    machStatusGrp: string;
+    startDate: string;
+}
+
+export interface StatusLegendVM {
+    color: string;
+    machStatus: string;
+    machStatusGrp: string;
+    seq: number;
+}
+
+export interface MachineCommulativeOutputVM {
+    jobNo: string;
+    machineId: string;
+    totalVal: number;
+    items: CommulativeOutputDataVM[];
+}
+
+export interface CommulativeOutputDataVM {
+    group: string;
+    uom: string;
+    value: number;
 }

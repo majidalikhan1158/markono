@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import {
+  MachineCommulativeOutputVM,
   MachineCurrentJobUnitsVM,
   MachineCurrentJobVM,
   MachineJobActionsVM,
   MachineJobSummaryVM,
   MachineScheduleJobsVM,
   MachineStatusAction,
+  MachineStatusTimeLineVM,
   MachineStatusVM,
   MachineVM,
+  StatusItemVM,
+  StatusLegendVM,
   UnitsPerMinutesList,
 } from '../../models/shop-floor';
 
@@ -33,6 +37,9 @@ export class ShopFloorHelperService {
           currentJobUnitsPerMinute: item.links.jobCurrUnitsPerMin,
           machineActions: item.links.machActions,
           jobsSchedule: item.links.tasksToDo,
+          machStatusTimelines: item.links.machStatusTimelines,
+          commulativeOutput: item.links.jobOutputs,
+          machOees: item.links.machOees,
           self: item.links.self,
         },
       });
@@ -40,13 +47,13 @@ export class ShopFloorHelperService {
     return machineVMList;
   }
 
-  mapToScheduleJobsModal = (data: any) => {
+  mapToScheduleJobsModal = (body: any): MachineScheduleJobsVM[] => {
     const scheduleJobsVM: MachineScheduleJobsVM[] = [];
-    if (!data || data.length === 0) {
+    if (!body.data || body.data.length === 0) {
       return scheduleJobsVM;
     }
 
-    data.forEach((item) => {
+    body.data.forEach((item) => {
       scheduleJobsVM.push({
         id: item.id,
         jobNo: item.attributes.jobNo,
@@ -55,9 +62,21 @@ export class ShopFloorHelperService {
         scheduledTime: item.attributes.plannedStartDate,
         scheduledDate: item.attributes.plannedStartDate,
         links: item.links,
+        status: this.getScheduleJobStatus(body.included, item.relationships)
       });
     });
     return scheduleJobsVM;
+  }
+
+  getScheduleJobStatus = (includedItems: any[], relationShips: any): string => {
+    let itemStatus = '';
+    if (!includedItems || includedItems.length === 0 || !relationShips.taskStatus || !relationShips.taskStatus.data)  {
+      itemStatus = '';
+    }
+    const includedItem = includedItems.find(x => x.id === relationShips.taskStatus.data.id);
+    itemStatus = !includedItem ? '' : includedItem.attributes.name;
+
+    return itemStatus;
   }
 
   mapToMachineCurrentJobModal = (data: any): MachineCurrentJobVM => {
@@ -73,6 +92,7 @@ export class ShopFloorHelperService {
       jobTitle: item.jobTitle,
       jobActionPause: item.jobActionPause,
       jobActionStop: item.jobActionStop,
+      jobReadOnly: item.jobReadOnly,
       machineSummaryList: this.getMachineSummaries(item.jobSummaries),
       machineJobActionsList: this.getMachineActions(item.jobActions),
     };
@@ -116,7 +136,7 @@ export class ShopFloorHelperService {
     return machineJobActionsVMList;
   }
 
-  mapToMachineCurrentJobUnitsModal = (data: any) => {
+  mapToMachineCurrentJobUnitsModal = (data: any): MachineCurrentJobUnitsVM => {
     let currentJobUnitsVM: MachineCurrentJobUnitsVM;
     if (!data || data.length === 0) {
       return currentJobUnitsVM;
@@ -176,9 +196,67 @@ export class ShopFloorHelperService {
         status: item.status,
         statusGrp: item.statusGrp,
         statusGrpSeq: item.statusGrpSeq,
-        statusSeq: item.statusSeq
+        statusSeq: item.statusSeq,
       });
     });
     return machineStatusActionVMList;
+  }
+
+  mapToMachineStatusTimelineModel = (data: any): MachineStatusTimeLineVM => {
+    let machineStatusTimeLineVM: MachineStatusTimeLineVM;
+    if (!data) {
+      return machineStatusTimeLineVM;
+    }
+    const item = data.attributes;
+    machineStatusTimeLineVM = {
+      itemList: this.getItems(item.items),
+      legendList: this.getLegends(item.legends),
+    };
+    return machineStatusTimeLineVM;
+  }
+
+  getItems = (itemList: any): StatusItemVM[] => {
+    const statusItemVMList: StatusItemVM[] = [];
+    if (!itemList || itemList.length === 0) {
+      return statusItemVMList;
+    }
+    itemList.forEach((item) => {
+      statusItemVMList.push(item);
+    });
+    return statusItemVMList;
+  }
+
+  getLegends = (legendList: any): StatusLegendVM[] => {
+    const statusLegendVMList: StatusLegendVM[] = [];
+    if (!legendList || legendList.length === 0) {
+      return statusLegendVMList;
+    }
+    legendList.forEach((item) => {
+      statusLegendVMList.push(item);
+    });
+    return statusLegendVMList;
+  }
+
+  mapToMachineCommulativeOutputModal = (data: any): MachineCommulativeOutputVM => {
+    let machineCommulativeOutputVM: MachineCommulativeOutputVM;
+    if (!data || data.length === 0) {
+      return machineCommulativeOutputVM;
+    }
+    const item = data.attributes;
+    machineCommulativeOutputVM = {
+      jobNo: item.jobNo,
+      machineId: item.machineId,
+      totalVal: item.totalVal,
+      items: item.items
+    };
+    return machineCommulativeOutputVM;
+  }
+
+  mapToMahcineOeeModal = (data: any): number => {
+    if (!data || !data.attributes || !data.attributes.percentage) {
+      return 0;
+    }
+
+    return data.attributes.percentage;
   }
 }

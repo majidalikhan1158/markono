@@ -43,7 +43,7 @@ app-shop-floor-collection {
   }
 
   .shopFloorCollectionScreen .mat-select-arrow {
-    color: white;
+    color: white !important;
     width: 12px;
     height: 7px;
   }
@@ -54,6 +54,11 @@ app-shop-floor-collection {
 
   .shopFloorCollectionScreen mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-select-arrow {
     color: white;
+  }
+
+  .shopFloorCollectionScreen .mat-form-field-appearance-legacy.mat-form-field-disabled .mat-form-field-underline {
+    background-image: none !important;
+    border: none !important;
   }
 
   .card.card-custom.machine-status-card .card-body .row.last-row {
@@ -188,6 +193,10 @@ app-shop-floor-collection {
     min-width: 100% !important;
   }
 
+  .apexcharts-tooltip {
+    padding: 10px !important;
+  }
+
   .color-box {
     width: 10px;
     height: 10px;
@@ -256,41 +265,36 @@ app-shop-floor-collection {
   .onthe-machine-card .mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
     display: none !important;
   }
-  .search-block {
-    display: none;
-    position: absolute;
-    top: 0;
-    z-index: 11;
-    width: 0%;
-    right: 0;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, width 0.5s ease-in-out;
-    background: #fff;
-    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14),
-      0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-    &.active {
-      display: contents;
-      opacity: 1;
-      width: 60%;
-    }
-    .search-control {
-      flex: 1;
-      font-size: 16px;
-      border: 0;
-      outline: none;
-      height: 40px;
-      color: rgba(0, 0, 0, 0.87);
-    }
-    .search-icon {
-      color: rgba(0, 0, 0, 0.25);
-    }
+
+  .onthe-machine-card .job-status-action-buttons {
+    background: transparent !important;
+    border: none !important;
   }
-  .mat-toolbar-row,
-  .mat-toolbar-single-row {
-    padding: 0px;
-    display: contents;
+
+  .onthe-machine-card .job-status-action-buttons:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.8;
   }
-  // .mat-button-base {
-  //   left: 80px;
-  // }
+
+  mat-form-field.selectBoxJobStatus:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.8;
+  }
+
+  .selectBoxJobStatus .mat-select-disabled .mat-select-trigger {
+    cursor: not-allowed !important;
+    opacity: 0.8;
+  }
+  .scroll-bar {
+    overflow: auto !important;
+    //padding: 4px;
+  }
+  ::-webkit-scrollbar {
+    height: 6px;
+    background-color: #b7b7b7;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #9a9898;
+  }
 }

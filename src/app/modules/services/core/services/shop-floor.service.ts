@@ -42,4 +42,13 @@ export class ShopFloorService {
 
   setMachineJobActionState = (endPoint: string): Observable<HttpResponse<any>> =>
   this.http.post(endPoint, null)
+
+  getMachineStatusTimeline = (endPoint: string): Observable<HttpResponse<ShopFloorResponseModal>> =>
+  this.http.get(endPoint)
+
+  getMachineCommulativeOutput = (endPoint: string): Observable<HttpResponse<ShopFloorResponseModal>> =>
+  this.http.get(endPoint)
+
+  getMachineOee = (endPoint: string): Observable<HttpResponse<ShopFloorResponseModal>> =>
+  this.http.get(endPoint)
 }

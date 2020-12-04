@@ -9,8 +9,6 @@ import {
   BindingTypeList,
   ColorTypeList,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
-import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
-import { MatSelectChange } from '@angular/material/select';
 import { BindingVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
@@ -50,7 +48,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   greyboardThicknessList = GreyboardThicknessList;
   benchworkTypeList = BenchworkTypeList;
   colorTypeList = ColorTypeList;
-  bindingVM: BindingVM;
+  viewModal: BindingVM;
   constructor(private store: ProductSpecStore) {}
 
   ngOnInit(): void {
@@ -58,23 +56,23 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   }
 
   handleColorChange(color: string) {
-    this.bindingVM.colorType = color;
+    this.viewModal.caseBound.colorType = color;
   }
 
   addPantoneColour(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-    if (value !== '' && this.bindingVM.pantoneColour.indexOf(value) === -1) {
-      this.bindingVM.pantoneColour.push(value);
+    if (value !== '' && this.viewModal.caseBound.pantoneColour.indexOf(value) === -1) {
+      this.viewModal.caseBound.pantoneColour.push(value);
     }
     (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelection(item: string) {
-    this.bindingVM.pantoneColour = this.bindingVM.pantoneColour.filter(x => x !== item);
+    this.viewModal.caseBound.pantoneColour = this.viewModal.caseBound.pantoneColour.filter(x => x !== item);
   }
 
   removeFinishTypeSelection = (recordId: string) => {
-    this.bindingVM.finishingType = this.bindingVM.finishingType.filter(x => x !== recordId);
+    this.viewModal.caseBound.finishingType = this.viewModal.caseBound.finishingType.filter(x => x !== recordId);
   }
 
   getFinishingTypeText = (id: number) => {
@@ -84,9 +82,9 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   getDefaultRecord = () => {
     this.store.productSpecStore.subscribe((resp) => {
       if (resp && resp.bindingVM && resp.bindingVM.id > 0) {
-        this.bindingVM = resp.bindingVM;
+        this.viewModal = resp.bindingVM;
       } else {
-        this.bindingVM = this.initialObject();
+        this.viewModal = this.initialObject();
       }
     });
   }
@@ -95,6 +93,17 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     return {
       id: 1,
       bindingType: '',
+      caseBound: this.getCaseBoundType(),
+      folding: null,
+      paperBack: null,
+      saddleStich: null,
+      spiralBound: null,
+      wireoBinding: null
+    };
+  }
+
+  getCaseBoundType = () => {
+     return {
       bindingMethod: '',
       bookSpineType: '',
       isHeadTailBand: false,
@@ -115,12 +124,12 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
       pantoneColour: [],
       finishingType: [],
       specialInstructions3: '',
-    };
+     };
   }
 
   ngOnDestroy(): void {
     this.store.setProductSpecStore(
-      this.bindingVM,
+      this.viewModal,
       ProductSpecTypes.BINDING
     );
   }

@@ -13,7 +13,7 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class SpecDvdCdComponent implements OnInit {
   columnsToDisplay = ['#', 'Type', 'Quantity', 'Sleeve Type', ];
-  rowsToDisplay: DVDVM[] = [];
+  viewModal: DVDVM[] = [];
   rowIdToExpand = 0;
   shouldShowDvdDetails = false;
   ExpansionIcons = ExpansionIcons;
@@ -32,7 +32,7 @@ export class SpecDvdCdComponent implements OnInit {
   }
 
   addRow() {
-    this.rowsToDisplay.push(this.getDefaultRecord());
+    this.viewModal.push(this.getDefaultRecord());
   }
 
   showDvdDetails(rowId: number) {
@@ -76,7 +76,7 @@ export class SpecDvdCdComponent implements OnInit {
   }
 
   getDefaultRecord = () => {
-    const totalRows = this.rowsToDisplay.length;
+    const totalRows = this.viewModal.length;
     return {
       id: totalRows + 1,
       type: '',
@@ -102,5 +102,15 @@ export class SpecDvdCdComponent implements OnInit {
       specialInstructions: '',
       bindingType: '',
     };
+  }
+
+  deleteRecord = (recordId: number) => {
+    const filteredRows = this.viewModal.filter(
+      (x) => x.id !== recordId
+    );
+    filteredRows.forEach((x, i) => {
+      x.id = i + 1;
+    });
+    this.viewModal = filteredRows;
   }
 }

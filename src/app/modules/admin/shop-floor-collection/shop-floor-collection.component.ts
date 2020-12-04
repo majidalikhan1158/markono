@@ -128,15 +128,16 @@ export class ShopFloorCollectionComponent implements OnInit {
   columnsWithSearch: string[] = [];
   counter = 0;
   intervalId;
+  intervalCurrentJobId;
   constructor(private layout: LayoutService,
-              private auth: AppAuthService,
-              private shopFloorService: ShopFloorService,
-              private helper: ShopFloorHelperService,
-              private snack: SnackBarService,
-              private ref: ChangeDetectorRef,
-              private modalService: ModalService,
-              private store: CaseStore,
-              private ui: SpinnerService) {
+    private auth: AppAuthService,
+    private shopFloorService: ShopFloorService,
+    private helper: ShopFloorHelperService,
+    private snack: SnackBarService,
+    private ref: ChangeDetectorRef,
+    private modalService: ModalService,
+    private store: CaseStore,
+    private ui: SpinnerService) {
     this.setStyling();
   }
 
@@ -240,23 +241,13 @@ export class ShopFloorCollectionComponent implements OnInit {
 
   handleMachineChange = (event: MatSelectChange) => {
     clearInterval(this.intervalId);
+    clearInterval(this.intervalCurrentJobId);
     this.setSelectedMachine(event.value);
   }
 
   getCurretnMachineJob = (machineCurrentJobLink: string) => {
-    this.shopFloorService.getCurretnMachineJob(machineCurrentJobLink).subscribe(resp => {
-      if (resp && resp.body && resp.body.data && resp.body.data.id) {
-        this.machineCurrentJobVM = this.helper.mapToMachineCurrentJobModal(resp.body.data);
-        const activeAction = this.machineCurrentJobVM.machineJobActionsList.find(x => x.active);
-        this.selectedJobAction = activeAction ? activeAction.actionLink : 'Choose';
-      } else {
-        this.snack.open('Unable to get machine current job');
-      }
-      this.counter++;
-      this.ref.detectChanges();
-    }, (err: HttpErrorResponse) => {
-      this.snack.open('Unable to get machine current job');
-    });
+    this.callToCurretnMachineJobSubscription(machineCurrentJobLink);
+    this.setCurretnMachineJobAPIPing(machineCurrentJobLink);
   }
 
   handleJobActionState = (actionStateLink: string, state: string) => {
@@ -925,4 +916,28 @@ export class ShopFloorCollectionComponent implements OnInit {
     // TODO - whenever the filter changes, always go back to the first page
     // this.table.offset = 0;
   }
+
+  callToCurretnMachineJobSubscription = (machineCurrentJobLink: string) => {
+    this.shopFloorService.getCurretnMachineJob(machineCurrentJobLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.data && resp.body.data.id) {
+        this.machineCurrentJobVM = this.helper.mapToMachineCurrentJobModal(resp.body.data);
+        const activeAction = this.machineCurrentJobVM.machineJobActionsList.find(x => x.active);
+        this.selectedJobAction = activeAction ? activeAction.actionLink : 'Choose';
+      } else {
+        this.snack.open('Unable to get machine current job');
+      }
+      this.counter++;
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      this.snack.open('Unable to get machine current job');
+    });
+  }
+
+  setCurretnMachineJobAPIPing = (machineCurrentJobLink: string) => {
+    this.intervalCurrentJobId = setInterval(() => {
+      this.callToCurretnMachineJobSubscription(machineCurrentJobLink);
+    }, 5000);
+  }
+
+
 }

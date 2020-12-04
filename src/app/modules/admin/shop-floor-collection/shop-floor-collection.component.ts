@@ -240,8 +240,8 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   handleMachineChange = (event: MatSelectChange) => {
-    clearInterval(this.intervalId);
-    clearInterval(this.intervalCurrentJobId);
+    // clearInterval(this.intervalId);
+    // clearInterval(this.intervalCurrentJobId);
     this.setSelectedMachine(event.value);
   }
 

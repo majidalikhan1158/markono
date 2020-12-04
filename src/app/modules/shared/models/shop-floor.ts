@@ -114,6 +114,7 @@ export interface StatusItemVM {
     machStatus: string;
     machStatusGrp: string;
     startDate: string;
+    remark: string;
 }
 
 export interface StatusLegendVM {

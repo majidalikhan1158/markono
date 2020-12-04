@@ -120,9 +120,11 @@ app-quotation-list {
         opacity: 1;
     }
     .quotation-header-card .card-body .d-flex {
-        padding-right: 50px;
+        //   padding-right: 27px;
+        width: 250px;
     }
     .quotation-header-card .card-body {
         display: inline-flex !important;
+        padding-top: 17px !important;
     }
 }

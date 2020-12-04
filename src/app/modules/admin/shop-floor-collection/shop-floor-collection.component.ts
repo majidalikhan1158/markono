@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 
@@ -17,6 +17,7 @@ import {
   ApexLegend,
   ApexTitleSubtitle,
 } from 'ng-apexcharts';
+import { Subscription } from 'rxjs';
 import { LayoutService } from 'src/app/_metronic/core';
 import { AppAuthService } from '../../services/core/services/app-auth.service';
 import { ShopFloorService } from '../../services/core/services/shop-floor.service';
@@ -82,7 +83,7 @@ export type TimelineStatusLabel = {
   styleUrls: ['./shop-floor-collection.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ShopFloorCollectionComponent implements OnInit {
+export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   // ---------------API INTEGRATION DATA------------------------//
   machineVMList: MachineVM[] = [];
   selectedMachineCode: string;
@@ -128,6 +129,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   columnsWithSearch: string[] = [];
   counter = 0;
   intervalIdList = [];
+  subscriptions: Subscription;
   constructor(private layout: LayoutService,
               private auth: AppAuthService,
               private shopFloorService: ShopFloorService,
@@ -139,6 +141,10 @@ export class ShopFloorCollectionComponent implements OnInit {
               private ui: SpinnerService) {
     this.setStyling();
   }
+  ngOnDestroy(): void {
+    this.clearIntervals();
+    this.subscriptions.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.getToken();
@@ -148,7 +154,7 @@ export class ShopFloorCollectionComponent implements OnInit {
     const isTokenExist = this.auth.getToken(TokenType.SHOPFLOOR);
     if (!isTokenExist || isTokenExist === '') {
       this.ui.show();
-      this.auth.getShopFloorToken().subscribe((tokenResp) => {
+      this.subscriptions = this.auth.getShopFloorToken().subscribe((tokenResp) => {
         this.counter++;
         if (tokenResp && tokenResp.body) {
           this.auth.saveToken(tokenResp.body, TokenType.SHOPFLOOR);
@@ -162,7 +168,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   getMachineList = () => {
-    this.shopFloorService.getMachines().subscribe(
+    this.subscriptions = this.shopFloorService.getMachines().subscribe(
       (resp) => {
         if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
           this.counter++;
@@ -204,6 +210,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   resetMachineData = () => {
+    this.clearIntervals();
     this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = [];
     this.machineCurrentJobVM = null;
     this.machineCurrentJobUnitsVM = null;
@@ -222,10 +229,14 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   handleMachineChange = (event: MatSelectChange) => {
+    this.clearIntervals();
+    this.setSelectedMachine(event.value);
+  }
+
+  clearIntervals = () => {
     this.intervalIdList.forEach(element => {
       clearInterval(element);
     });
-    this.setSelectedMachine(event.value);
   }
 
   getCurretnMachineJob = (machineCurrentJobLink: string) => {
@@ -238,7 +249,7 @@ export class ShopFloorCollectionComponent implements OnInit {
       this.snack.open('No action state link exist');
       return;
     }
-    this.shopFloorService.setMachineJobActionState(actionStateLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.setMachineJobActionState(actionStateLink).subscribe(resp => {
       if (resp && resp.body && resp.body.message === 'OK') {
         this.snack.open(`Job action has been ${state} successfully`);
       }
@@ -263,7 +274,7 @@ export class ShopFloorCollectionComponent implements OnInit {
       return;
     }
     this.clickedScheduleJobButtonId = index;
-    this.shopFloorService.setScheduleJob(setJobUrl).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.setScheduleJob(setJobUrl).subscribe(resp => {
       if (resp && resp.body && resp.body.message === 'OK') {
         this.snack.open('Job has been set successfully');
         this.setSelectedMachine(this.selectedMachineCode);
@@ -299,7 +310,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   callToMachineStatusSubscription = (machineStatusLink: string, showMessage = false) => {
-    this.shopFloorService.getMachineStatus(machineStatusLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.getMachineStatus(machineStatusLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data && resp.body.data.id) {
         this.machineStatusActionVM = this.helper.mapToMachineStatusModal(resp.body.data);
         this.machineSelectedStatusAction = this.machineStatusActionVM.machineStatusActionList.find(x => x.current);
@@ -315,7 +326,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   callToCurrentMachineSubscription = (machineCurrentJobLink: string,  showMessage = false) => {
-    this.shopFloorService.getCurretnMachineJob(machineCurrentJobLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.getCurretnMachineJob(machineCurrentJobLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data && resp.body.data.id) {
         this.machineCurrentJobVM = this.helper.mapToMachineCurrentJobModal(resp.body.data);
         const activeAction = this.machineCurrentJobVM.machineJobActionsList.find(x => x.active);
@@ -331,7 +342,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   callToCommulativeOutputSubscription = (machineCommulativeOutputLink: string, showMessage = false) => {
-    this.shopFloorService.getMachineCommulativeOutput(machineCommulativeOutputLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.getMachineCommulativeOutput(machineCommulativeOutputLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data) {
         this.machineCommulativeOutputVM = this.helper.mapToMachineCommulativeOutputModal(resp.body.data);
         // tslint:disable-next-line: max-line-length
@@ -347,7 +358,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   callToUnitsProducedSubscription = (currentJobUnitsLink: string, showMessage = false) => {
-    this.shopFloorService.getCurrentJobUnits(currentJobUnitsLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.getCurrentJobUnits(currentJobUnitsLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
         this.machineCurrentJobUnitsVM = this.helper.mapToMachineCurrentJobUnitsModal(resp.body.data);
         const unitsPerMinutes = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.count);
@@ -364,7 +375,7 @@ export class ShopFloorCollectionComponent implements OnInit {
 
   callToScheduleJobsSubscription = (jobsScheduleLink: string, showMessage = false) => {
     this.shouldShowScheduleLoader = showMessage;
-    this.shopFloorService.getMachineScheduleJobs(jobsScheduleLink).subscribe(
+    this.subscriptions = this.shopFloorService.getMachineScheduleJobs(jobsScheduleLink).subscribe(
       (resp) => {
         if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
           this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = this.helper.mapToScheduleJobsModal(resp.body);
@@ -385,7 +396,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   callToMachineStatusTimelineSubscription = (machineStatusTimelineLink: string, showMessage = false) => {
-    this.shopFloorService.getMachineStatusTimeline(machineStatusTimelineLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.getMachineStatusTimeline(machineStatusTimelineLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data) {
         this.machineStatusTimelineVM = this.helper.mapToMachineStatusTimelineModel(resp.body.data);
         const { seriesData, ranges } = this.getTimelineSeriesData(this.machineStatusTimelineVM?.itemList);
@@ -455,7 +466,7 @@ export class ShopFloorCollectionComponent implements OnInit {
       this.snack.open('Machine not have valid status action link');
       return;
     }
-    this.shopFloorService.setMachineActionStatus(this.machineSelectedStatusAction.actionLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.setMachineActionStatus(this.machineSelectedStatusAction.actionLink).subscribe(resp => {
       if (resp && resp.body && resp.body.message === 'OK') {
         this.snack.open('Job status has been set successfully');
       }
@@ -530,7 +541,7 @@ export class ShopFloorCollectionComponent implements OnInit {
   }
 
   getMachineOee = (machineOeeLink: string) => {
-    this.shopFloorService.getMachineOee(machineOeeLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.getMachineOee(machineOeeLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data) {
         this.machineOee = this.helper.mapToMahcineOeeModal(resp.body.data);
         // tslint:disable-next-line: max-line-length

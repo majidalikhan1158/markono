@@ -52,6 +52,15 @@ export interface TextVM {
 export interface BindingVM {
   id: number;
   bindingType: string;
+  caseBound: BindingTypeCaseBound;
+  folding: BindingTypeFolding;
+  paperBack: BindingTypePaperBack;
+  saddleStich: BindingTypeStichType;
+  spiralBound: BindingTypeSpiralBound;
+  wireoBinding: BindingTypeWireoBinding;
+}
+
+export interface BindingTypeCaseBound {
   bindingMethod: string;
   bookSpineType: string;
   isHeadTailBand: boolean;
@@ -72,6 +81,40 @@ export interface BindingVM {
   pantoneColour: string[];
   finishingType: string[];
   specialInstructions3: string;
+}
+
+export interface BindingTypeFolding {
+  specialInstructions1: string;
+  benchworkRequired: string[];
+  specialInstructions2: string;
+}
+
+export interface BindingTypePaperBack {
+  bindingMethod: string;
+  specialInstructions1: string;
+  benchworkRequired: string[];
+  specialInstructions2: string;
+}
+
+export interface BindingTypeStichType {
+  stichType: string;
+  specialInstructions1: string;
+  benchworkRequired: string[];
+  specialInstructions2: string;
+}
+
+export interface BindingTypeSpiralBound {
+  coilColour: string;
+  specialInstructions1: string;
+  benchworkRequired: string[];
+  specialInstructions2: string;
+}
+
+export interface BindingTypeWireoBinding {
+  wireColour: string;
+  specialInstructions1: string;
+  benchworkRequired: string[];
+  specialInstructions2: string;
 }
 
 export interface ChildIsbnVM {

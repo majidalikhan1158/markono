@@ -617,6 +617,178 @@ mat-form-field {
   stroke: #3f51b5;
 }
 
+/*
+SHOP-FLOOR-STYLES-START
+*/
+
+ 
+
+.card.card-custom.machine-status-card .card-body .row.last-row {
+  padding-bottom: 5px;
+}
+
+.card.card-custom.machine-status-card .card-body .row .col-12 .mat-form-field {
+  width: 100%;
+  height: 40px !important;
+  text-align: left;
+  font: normal normal normal 14px/17px Roboto;
+  letter-spacing: 0px;
+  background: #5face2 0% 0% no-repeat padding-box;
+  border-radius: 2px;
+  opacity: 1;
+}
+
+mat-form-field.selectBoxJobStatus {
+  width: 106px;
+  height: 40px !important;
+  background: #5face2 0% 0% no-repeat padding-box;
+  border-radius: 2px;
+  opacity: 1;
+  text-align: left;
+  font: normal normal normal 14px/17px Roboto;
+  letter-spacing: 0px;
+}
+
+mat-form-field.selectBoxJobSchedule {
+  width: 151px;
+  height: 40px !important;
+  background: #5face2 0% 0% no-repeat padding-box;
+  border-radius: 2px;
+  opacity: 1;
+  text-align: left;
+  font: normal normal normal 14px/17px Roboto;
+  letter-spacing: 0px;
+  float: right;
+  margin: auto;
+  margin-right: 0px;
+  margin-top: 3px;
+}
+
+mat-form-field.txtSearchWithJobNo {
+  width: 100%;
+}
+
+mat-form-field.txtSearchWithJobNo .mat-form-field-wrapper {
+  padding-bottom: 5px;
+  margin-bottom: 0px;
+}
+
+mat-form-field.txtSearchWithJobNo.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #f2f2f2;
+  border: 1px solid;
+  border-radius: 5px;
+}
+
+mat-form-field.txtSearchWithJobNo.mat-form-field-appearance-outline .mat-form-field-outline:hover {
+  border: none;
+}
+
+mat-form-field.txtSearchWithJobNo.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: #3699ff;
+  border: 0px solid;
+}
+
+mat-form-field.txtSearchWithJobNo .mat-form-field-infix {
+  border-top-width: 8px !important;
+  padding-top: 1em !important;
+}
+
+.table.job-schedule-table thead tr th {
+  background-color: #f2f2f2;
+  width: auto !important;
+  position: sticky;
+  top: 0px;
+  z-index: 900;
+}
+
+.table.job-schedule-table thead th:last-child {
+  z-index: 100;
+}
+
+table.job-schedule-table {
+  height: 506px;
+}
+
+.job-schedule-table.table tbody tr {
+  border-bottom: 1px solid #e6e6e6 !important;
+}
+
+.job-schedule-table.table tbody tr td {
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  vertical-align: sub !important;
+}
+
+.job-schedule-table.table tbody tr td.action-column {
+  padding-right: 10px;
+}
+
+.job-schedule-table.table tbody tr.table-last-row {
+  border: none !important;
+}
+
+.equipment-timeline-card .card-rounded-bottom {
+  height: 120px;
+  margin-top: -23px;
+}
+
+.equipment-timeline-card .timeline-chart-label-row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.oee-card .card-rounded-bottom {
+  max-height: 130px;
+  margin-top: -4px;
+}
+
+.oee-card .apexcharts-inner.apexcharts-graphical {
+  transform: translate(6px, -6px);
+}
+
+.data-collection-box {
+  margin-right: 5px;
+  padding-top: 10px;
+  padding-bottom: 25px;
+  background: #f2f2f2 0% 0% no-repeat padding-box;
+}
+
+.data-collection-box .heading {
+  font: normal normal bold 14px/17px Roboto;
+  color: #484848;
+}
+
+.data-collection-box .heading-title-value {
+  font: normal normal normal 16px Roboto;
+  color: #484848;
+  padding-bottom: 10px;
+}
+
+.data-collection-box .heading-title-label {
+  font: normal normal normal 12px Roboto;
+  color: #afafaf;
+}
+
+.onthe-machine-card .card-rounded-bottom.units-produced-chart,
+.onthe-machine-card .card-rounded-bottom.comulative-chart {
+  height: 150px;
+}
+
+.onthe-machine-card .mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
+  display: none !important;
+}
+
+.onthe-machine-card .job-status-action-buttons {
+  background: transparent !important;
+  border: none !important;
+}
+
+.onthe-machine-card .job-status-action-buttons:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.8;
+}
 
 .shopFloorCollectionScreen .search-block {
   display: none;
@@ -681,3 +853,18 @@ mat-form-field {
   width: auto;
   padding-right: 20px;
 }
+
+.shopFloorCollectionScreen mat-form-field.mat-form-field-type-mat-select .mat-form-field-ripple {
+  background: transparent !important;
+}
+
+.shopFloorCollectionScreen mat-form-field.mat-form-field-type-mat-select.mat-focused.mat-primary .mat-select-arrow {
+  color: white;
+}
+
+.shopFloorCollectionScreen .mat-form-field-appearance-legacy.mat-form-field-disabled .mat-form-field-underline {
+  background-image: none !important;
+  border: none !important;
+}
+
+/*SHOP-FLOOR-STYLES-END*/

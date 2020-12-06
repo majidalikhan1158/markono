@@ -34,7 +34,7 @@ export class JwtInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((err) => {
-        if (err instanceof HttpErrorResponse && (err.status === 401 || err.status === 302)) {
+        if (err instanceof HttpErrorResponse && err.status === 401) {
           return this.handle401Error(request, next);
         } else {
           return throwError(err);
@@ -67,7 +67,6 @@ export class JwtInterceptor implements HttpInterceptor {
           // When the call to refreshToken completes we reset the refreshTokenInProgress to false
           // for the next time the token needs to be refreshed
           this.refreshTokenInProgress = false;
-          this.refreshTokenSubject.next('true');
           this.appAuth.saveToken(result.body, this.tokenType);
           return next.handle(
             this.addAuthenticationToken(request, this.tokenType)
@@ -95,26 +94,35 @@ export class JwtInterceptor implements HttpInterceptor {
         },
       });
     } else {
-      if (userToken) {
-        return request.clone({
-          setHeaders: {
-            'Content-Type': `${contentType}`,
-            Authorization: `Bearer ${userToken}`,
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
-            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-          },
-        });
-      } else {
-        return request.clone({
-          setHeaders: {
-            'Content-Type': `${contentType}`,
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
-            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-          },
-        });
-      }
+      return request.clone({
+        setHeaders: {
+          'Content-Type': `${contentType}`,
+          Authorization: `Bearer ${userToken}`,
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
+          'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+        },
+      });
+      // if (userToken) {
+      //   return request.clone({
+      //     setHeaders: {
+      //       'Content-Type': `${contentType}`,
+      //       Authorization: `Bearer ${userToken}`,
+      //       'Access-Control-Allow-Origin': '*',
+      //       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
+      //       'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+      //     },
+      //   });
+      // } else {
+      //   return request.clone({
+      //     setHeaders: {
+      //       'Content-Type': `${contentType}`,
+      //       'Access-Control-Allow-Origin': '*',
+      //       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
+      //       'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+      //     },
+      //   });
+      // }
     }
   }
 

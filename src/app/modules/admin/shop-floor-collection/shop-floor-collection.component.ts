@@ -590,6 +590,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       chart: {
         height: 150,
         type: 'radialBar',
+        animations: { enabled: false },
       },
       plotOptions: {
         radialBar: {
@@ -629,6 +630,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       chart: {
         type: 'area',
         height: 150,
+        animations: { enabled: false },
         toolbar: {
           show: false,
         },
@@ -754,6 +756,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       chart: {
         type: 'bar',
         height: 185,
+        animations: { enabled: false },
         toolbar: {
           show: false,
         },
@@ -809,6 +812,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
         height: 120,
         width: '100%',
         type: 'heatmap',
+        animations: { enabled: false },
         toolbar: {
           show: false,
         },

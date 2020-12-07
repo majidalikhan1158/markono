@@ -1,7 +1,7 @@
 app-spec-text {
     .spec-text .labels {
         color: #484848;
-        font-family: 'Roboto-Regular';
+        font-family: "Roboto-Regular";
     }
 
     .spec-text .mat-radio-label-content {
@@ -15,12 +15,12 @@ app-spec-text {
         font-size: 14px !important;
     }
 
-    .spec-text .color-type-options .option-item{
+    .spec-text .color-type-options .option-item {
         width: 78px;
         height: 50px;
         border-radius: 6px;
-        border: 1px solid #E6E6E6;
-        color: #AFAFAF;
+        border: 1px solid #e6e6e6;
+        color: #afafaf;
         font-size: 14px;
         font-family: "Roboto-Regular";
         text-align: center;
@@ -34,9 +34,20 @@ app-spec-text {
     .spec-text .mat-chip-list-wrapper {
         height: 45px;
     }
-
+    .mat-chip-list-wrapper {
+        overflow: auto;
+        flex-wrap: nowrap;
+    }
     .spec-text .mat-chip {
-        height: inherit;
+        //height: inherit;
         border-radius: 25px;
+    }
+    ::-webkit-scrollbar {
+        height: 6px;
+        background-color: #b7b7b7;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: #9a9898;
     }
 }

@@ -103,6 +103,26 @@ export class JwtInterceptor implements HttpInterceptor {
           'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
         },
       });
+      // if (userToken) {
+      //   return request.clone({
+      //     setHeaders: {
+      //       'Content-Type': `${contentType}`,
+      //       Authorization: `Bearer ${userToken}`,
+      //       'Access-Control-Allow-Origin': '*',
+      //       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
+      //       'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+      //     },
+      //   });
+      // } else {
+      //   return request.clone({
+      //     setHeaders: {
+      //       'Content-Type': `${contentType}`,
+      //       'Access-Control-Allow-Origin': '*',
+      //       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
+      //       'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+      //     },
+      //   });
+      // }
     }
   }
 

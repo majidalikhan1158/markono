@@ -128,8 +128,8 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   filteredData = [];
   columnsWithSearch: string[] = [];
   counter = 0;
-  intervalId;
-  subscription: Subscription;
+  intervalIdList = [];
+  subscriptions: Subscription;
   constructor(private layout: LayoutService,
               private auth: AppAuthService,
               private shopFloorService: ShopFloorService,
@@ -142,9 +142,8 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
     this.setStyling();
   }
   ngOnDestroy(): void {
-    if (this.subscription) {
-    this.subscription.unsubscribe();
-    }
+    this.clearIntervals();
+    this.subscriptions.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -155,7 +154,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
     const isTokenExist = this.auth.getToken(TokenType.SHOPFLOOR);
     if (!isTokenExist || isTokenExist === '') {
       this.ui.show();
-      this.subscription = this.auth.getShopFloorToken().subscribe((tokenResp) => {
+      this.subscriptions = this.auth.getShopFloorToken().subscribe((tokenResp) => {
         this.counter++;
         if (tokenResp && tokenResp.body) {
           this.auth.saveToken(tokenResp.body, TokenType.SHOPFLOOR);
@@ -169,7 +168,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   }
 
   getMachineList = () => {
-    this.subscription =  this.shopFloorService.getMachines().subscribe(
+    this.subscriptions = this.shopFloorService.getMachines().subscribe(
       (resp) => {
         if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
           this.counter++;
@@ -195,7 +194,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       this.selectedMachineCode = selectedMachine.machineCode;
       this.getMachineScheduleJobsList(selectedMachine.machineLinks.jobsSchedule);
       this.getCurretnMachineJob(selectedMachine.machineLinks.currentJobLink);
-      this.getCurrentJobUnits(selectedMachine.machineLinks.currentJobUnitsPerMinute);
+      this.getMachineCurrentJobUnits(selectedMachine.machineLinks.currentJobUnitsPerMinute);
       this.getMachineCommulativeOutput(selectedMachine.machineLinks.commulativeOutput);
       this.getMachineOee(selectedMachine.machineLinks.machOees);
       this.getMachineStatus(selectedMachine.machineLinks.machineActions);
@@ -211,6 +210,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   }
 
   resetMachineData = () => {
+    this.clearIntervals();
     this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = [];
     this.machineCurrentJobVM = null;
     this.machineCurrentJobUnitsVM = null;
@@ -224,46 +224,24 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   }
 
   getMachineScheduleJobsList = (jobsScheduleLink: string) => {
-    this.shouldShowScheduleLoader = true;
-    this.subscription = this.shopFloorService.getMachineScheduleJobs(jobsScheduleLink).subscribe(
-      (resp) => {
-        if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
-          this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = this.helper.mapToScheduleJobsModal(resp.body);
-        } else {
-          this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = [];
-          this.snack.open('No schedule jobs found');
-        }
-        this.counter++;
-        this.shouldShowScheduleLoader = false;
-        this.ref.detectChanges();
-      },
-      (err: HttpErrorResponse) => {
-        this.shouldShowScheduleLoader = false;
-        this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = [];
-        this.snack.open('Unable to get schedule jobs');
-      }
-    );
+    this.callToScheduleJobsSubscription(jobsScheduleLink, true);
+    this.setJobSceduleAPIPing(jobsScheduleLink);
   }
 
   handleMachineChange = (event: MatSelectChange) => {
-    clearInterval(this.intervalId);
+    this.clearIntervals();
     this.setSelectedMachine(event.value);
   }
 
-  getCurretnMachineJob = (machineCurrentJobLink: string) => {
-    this.subscription = this.shopFloorService.getCurretnMachineJob(machineCurrentJobLink).subscribe(resp => {
-      if (resp && resp.body && resp.body.data && resp.body.data.id) {
-        this.machineCurrentJobVM = this.helper.mapToMachineCurrentJobModal(resp.body.data);
-        const activeAction = this.machineCurrentJobVM.machineJobActionsList.find(x => x.active);
-        this.selectedJobAction = activeAction ? activeAction.actionLink : 'Choose';
-      } else {
-        this.snack.open('Unable to get machine current job');
-      }
-      this.counter++;
-      this.ref.detectChanges();
-    }, (err: HttpErrorResponse) => {
-      this.snack.open('Unable to get machine current job');
+  clearIntervals = () => {
+    this.intervalIdList.forEach(element => {
+      clearInterval(element);
     });
+  }
+
+  getCurretnMachineJob = (machineCurrentJobLink: string) => {
+    this.callToCurrentMachineSubscription(machineCurrentJobLink, true);
+    this.setCurrentMachineAPIPing(machineCurrentJobLink);
   }
 
   handleJobActionState = (actionStateLink: string, state: string) => {
@@ -271,7 +249,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       this.snack.open('No action state link exist');
       return;
     }
-    this.subscription = this.shopFloorService.setMachineJobActionState(actionStateLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.setMachineJobActionState(actionStateLink).subscribe(resp => {
       if (resp && resp.body && resp.body.message === 'OK') {
         this.snack.open(`Job action has been ${state} successfully`);
       }
@@ -280,20 +258,14 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
     });
   }
 
-  getCurrentJobUnits = (currentJobUnitsLink: string) => {
-    this.subscription = this.shopFloorService.getCurrentJobUnits(currentJobUnitsLink).subscribe(resp => {
-      if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
-        this.machineCurrentJobUnitsVM = this.helper.mapToMachineCurrentJobUnitsModal(resp.body.data);
-        const unitsPerMinutes = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.count);
-        this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart(unitsPerMinutes) as UnitsProducedChartOptions;
-      } else {
-        this.snack.open('Unable to get machine current job units');
-      }
-      this.counter++;
-      this.ref.detectChanges();
-    }, (err: HttpErrorResponse) => {
-      this.snack.open('Unable to get machine current job units');
-    });
+  getMachineCurrentJobUnits = (currentJobUnitsLink: string) => {
+    this.callToUnitsProducedSubscription(currentJobUnitsLink, true);
+    this.setUnitsProducedAPIPing(currentJobUnitsLink);
+  }
+
+  getMachineCommulativeOutput = (machineCommulativeOutputLink: string) => {
+    this.callToCommulativeOutputSubscription(machineCommulativeOutputLink, true);
+    this.setCommulativeOutputAPIPing(machineCommulativeOutputLink);
   }
 
   setScheduleJob = (setJobUrl, index) => {
@@ -302,7 +274,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       return;
     }
     this.clickedScheduleJobButtonId = index;
-    this.subscription = this.shopFloorService.setScheduleJob(setJobUrl).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.setScheduleJob(setJobUrl).subscribe(resp => {
       if (resp && resp.body && resp.body.message === 'OK') {
         this.snack.open('Job has been set successfully');
         this.setSelectedMachine(this.selectedMachineCode);
@@ -323,7 +295,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       this.snack.open('Machine not have valid action');
       return;
     }
-    this.subscription = this.shopFloorService.setMachineAction(actionLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.setMachineAction(actionLink).subscribe(resp => {
       if (resp && resp.body && resp.body.message === 'OK') {
         this.snack.open('Job action has been set successfully');
       }
@@ -333,31 +305,156 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   }
 
   getMachineStatus = (machineStatusLink: string) => {
-    this.callToMachineStatusSubscription(machineStatusLink);
+    this.callToMachineStatusSubscription(machineStatusLink, true);
     this.setMachineStatusAPIPing(machineStatusLink);
   }
 
-  callToMachineStatusSubscription = (machineStatusLink: string) => {
-    this.subscription = this.shopFloorService.getMachineStatus(machineStatusLink).subscribe(resp => {
+  callToMachineStatusSubscription = (machineStatusLink: string, showMessage = false) => {
+    this.subscriptions = this.shopFloorService.getMachineStatus(machineStatusLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data && resp.body.data.id) {
         this.machineStatusActionVM = this.helper.mapToMachineStatusModal(resp.body.data);
         this.machineSelectedStatusAction = this.machineStatusActionVM.machineStatusActionList.find(x => x.current);
         this.selectedStatusActionId = this.machineSelectedStatusAction ? this.machineSelectedStatusAction.id : 'Choose';
       } else {
-        this.snack.open('Unable to get machine status action');
+        showMessage ? this.snack.open('Unable to get machine status action') : '';
       }
       this.counter++;
       this.ref.detectChanges();
     }, (err: HttpErrorResponse) => {
-      this.snack.open('Unable to get machine status action');
+      showMessage ? this.snack.open('Unable to get machine status action') : '';
+    });
+  }
+
+  callToCurrentMachineSubscription = (machineCurrentJobLink: string,  showMessage = false) => {
+    this.subscriptions = this.shopFloorService.getCurretnMachineJob(machineCurrentJobLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.data && resp.body.data.id) {
+        this.machineCurrentJobVM = this.helper.mapToMachineCurrentJobModal(resp.body.data);
+        const activeAction = this.machineCurrentJobVM.machineJobActionsList.find(x => x.active);
+        this.selectedJobAction = activeAction ? activeAction.actionLink : 'Choose';
+      } else {
+        showMessage ? this.snack.open('Unable to get machine current job') : '';
+      }
+      this.counter++;
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      showMessage ? this.snack.open('Unable to get machine current job') : '';
+    });
+  }
+
+  callToCommulativeOutputSubscription = (machineCommulativeOutputLink: string, showMessage = false) => {
+    this.subscriptions = this.shopFloorService.getMachineCommulativeOutput(machineCommulativeOutputLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.data) {
+        this.machineCommulativeOutputVM = this.helper.mapToMachineCommulativeOutputModal(resp.body.data);
+        // tslint:disable-next-line: max-line-length
+        this.commulativeOutputChartOptions = this.getCommulativeOutputChartOptions(this.machineCommulativeOutputVM) as unknown as CommulativeChartOptions;
+      } else {
+        showMessage ? this.snack.open('Unable to get machine commulative output') : '';
+      }
+      this.counter++;
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      showMessage ? this.snack.open('Unable to get machine commulative output') : '';
+    });
+  }
+
+  callToUnitsProducedSubscription = (currentJobUnitsLink: string, showMessage = false) => {
+    this.subscriptions = this.shopFloorService.getCurrentJobUnits(currentJobUnitsLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
+        this.machineCurrentJobUnitsVM = this.helper.mapToMachineCurrentJobUnitsModal(resp.body.data);
+        const unitsPerMinutes = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.count);
+        this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart(unitsPerMinutes) as UnitsProducedChartOptions;
+      } else {
+        showMessage ? this.snack.open('Unable to get machine current job units') : '';
+      }
+      this.counter++;
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      showMessage ? this.snack.open('Unable to get machine current job units') : '';
+    });
+  }
+
+  callToScheduleJobsSubscription = (jobsScheduleLink: string, showMessage = false) => {
+    this.shouldShowScheduleLoader = showMessage;
+    this.subscriptions = this.shopFloorService.getMachineScheduleJobs(jobsScheduleLink).subscribe(
+      (resp) => {
+        if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
+          this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = this.helper.mapToScheduleJobsModal(resp.body);
+        } else {
+          this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = [];
+          showMessage ? this.snack.open('No schedule jobs found') : '';
+        }
+        this.counter++;
+        this.shouldShowScheduleLoader = false;
+        this.ref.detectChanges();
+      },
+      (err: HttpErrorResponse) => {
+        this.shouldShowScheduleLoader = false;
+        this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = [];
+        showMessage ? this.snack.open('No schedule jobs found') : '';
+      }
+    );
+  }
+
+  callToMachineStatusTimelineSubscription = (machineStatusTimelineLink: string, showMessage = false) => {
+    this.subscriptions = this.shopFloorService.getMachineStatusTimeline(machineStatusTimelineLink).subscribe(resp => {
+      if (resp && resp.body && resp.body.data) {
+        this.machineStatusTimelineVM = this.helper.mapToMachineStatusTimelineModel(resp.body.data);
+        const { seriesData, ranges } = this.getTimelineSeriesData(this.machineStatusTimelineVM?.itemList);
+        this.timeLineChartOptions = this.getTimeLineChartOptions(seriesData, ranges) as TimeLineChartOptions;
+      } else {
+        showMessage ? this.snack.open('Unable to get machine status timeline') : '';
+      }
+      this.counter++;
+      showMessage ? this.ui.reset() : '';
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      showMessage ? this.ui.reset() : '';
+      showMessage ? this.snack.open('Unable to get machine status timeline') : '';
     });
   }
 
   setMachineStatusAPIPing = (machineStatusLink: string) => {
-    this.intervalId = setInterval(() => {
-      this.callToMachineStatusSubscription(machineStatusLink);
+    const intervalId = setInterval(() => {
+      this.callToMachineStatusSubscription(machineStatusLink, false);
     }, 5000);
+    this.intervalIdList.push(intervalId);
   }
+
+  setCurrentMachineAPIPing = (machineCurrentJobLink: string) => {
+    const intervalId = setInterval(() => {
+      this.callToCurrentMachineSubscription(machineCurrentJobLink, false);
+    }, 5000);
+    this.intervalIdList.push(intervalId);
+  }
+
+  setCommulativeOutputAPIPing = (machineCommulativeOutputLink: string) => {
+    const intervalId = setInterval(() => {
+      this.callToCommulativeOutputSubscription(machineCommulativeOutputLink, false);
+    }, 5000);
+    this.intervalIdList.push(intervalId);
+  }
+
+  setUnitsProducedAPIPing = (currentJobUnitsLink: string) => {
+    const intervalId = setInterval(() => {
+      this.callToUnitsProducedSubscription(currentJobUnitsLink, false);
+    }, 5000);
+    this.intervalIdList.push(intervalId);
+  }
+
+  setJobSceduleAPIPing = (jobsScheduleLink: string) => {
+    const intervalId = setInterval(() => {
+      this.callToScheduleJobsSubscription(jobsScheduleLink, false);
+    }, 5000);
+    this.intervalIdList.push(intervalId);
+  }
+
+  setMachineStatusTimelineAPIPing = (machineStatusTimelineLink: string) => {
+    const intervalId = setInterval(() => {
+      this.callToMachineStatusTimelineSubscription(machineStatusTimelineLink, false);
+    }, 5000);
+    this.intervalIdList.push(intervalId);
+  }
+
 
   handleMachineStatusActionChange = (event: MatSelectChange) => {
     this.selectedStatusActionId = event.value;
@@ -369,7 +466,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       this.snack.open('Machine not have valid status action link');
       return;
     }
-    this.subscription = this.shopFloorService.setMachineActionStatus(this.machineSelectedStatusAction.actionLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.setMachineActionStatus(this.machineSelectedStatusAction.actionLink).subscribe(resp => {
       if (resp && resp.body && resp.body.message === 'OK') {
         this.snack.open('Job status has been set successfully');
       }
@@ -379,38 +476,9 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
     });
   }
 
-  getMachineCommulativeOutput = (machineCommulativeOutputLink) => {
-    this.subscription = this.shopFloorService.getMachineCommulativeOutput(machineCommulativeOutputLink).subscribe(resp => {
-      if (resp && resp.body && resp.body.data) {
-        this.machineCommulativeOutputVM = this.helper.mapToMachineCommulativeOutputModal(resp.body.data);
-        // tslint:disable-next-line: max-line-length
-        this.commulativeOutputChartOptions = this.getCommulativeOutputChartOptions(this.machineCommulativeOutputVM) as unknown as CommulativeChartOptions;
-      } else {
-        this.snack.open('Unable to get machine commulative output');
-      }
-      this.counter++;
-      this.ref.detectChanges();
-    }, (err: HttpErrorResponse) => {
-      this.snack.open('Unable to get machine commulative output');
-    });
-  }
-
   getMachineStatusTimeLine = (machineStatusTimelineLink: string) => {
-    this.subscription = this.shopFloorService.getMachineStatusTimeline(machineStatusTimelineLink).subscribe(resp => {
-      if (resp && resp.body && resp.body.data) {
-        this.machineStatusTimelineVM = this.helper.mapToMachineStatusTimelineModel(resp.body.data);
-        const { seriesData, ranges } = this.getTimelineSeriesData(this.machineStatusTimelineVM?.itemList);
-        this.timeLineChartOptions = this.getTimeLineChartOptions(seriesData, ranges) as TimeLineChartOptions;
-      } else {
-        this.snack.open('Unable to get machine status timeline');
-      }
-      this.counter++;
-      this.ui.reset();
-      this.ref.detectChanges();
-    }, (err: HttpErrorResponse) => {
-      this.ui.reset();
-      this.snack.open('Unable to get machine status timeline');
-    });
+    this.callToMachineStatusTimelineSubscription(machineStatusTimelineLink, true);
+    this.setMachineStatusTimelineAPIPing(machineStatusTimelineLink);
   }
 
   getTimelineSeriesData = (itemList: StatusItemVM[]) => {
@@ -427,7 +495,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       minuteInterval = minuteInterval + minuteLap;
       if (minuteInterval <= recordLimiter) {
         const hours = new Date(item.startDate).getHours();
-        // if minuteInterval === 60 or is divisible by 60 with 0 remainder then we calculate time
+        // if minuteInterval === 10 means first record or is divisible by 60 with 0 remainder then we calculate time
         if (minuteInterval === 10 || minuteInterval % timeCalculationThreshold === 0) {
           xAxisValue = `${hours}:00`;
         } else {
@@ -437,7 +505,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
         seriesData.push({
           x: xAxisValue,
           y: minuteInterval,
-          description: `${hours}:00 - ${item.machStatus}`,
+          description: `${item.remark}`,
         });
 
         ranges.push({
@@ -473,7 +541,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   }
 
   getMachineOee = (machineOeeLink: string) => {
-    this.shopFloorService.getMachineOee(machineOeeLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.getMachineOee(machineOeeLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data) {
         this.machineOee = this.helper.mapToMahcineOeeModal(resp.body.data);
         // tslint:disable-next-line: max-line-length
@@ -522,6 +590,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       chart: {
         height: 150,
         type: 'radialBar',
+        animations: { enabled: false },
       },
       plotOptions: {
         radialBar: {
@@ -561,6 +630,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       chart: {
         type: 'area',
         height: 150,
+        animations: { enabled: false },
         toolbar: {
           show: false,
         },
@@ -686,6 +756,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       chart: {
         type: 'bar',
         height: 185,
+        animations: { enabled: false },
         toolbar: {
           show: false,
         },
@@ -741,6 +812,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
         height: 120,
         width: '100%',
         type: 'heatmap',
+        animations: { enabled: false },
         toolbar: {
           show: false,
         },

@@ -97,6 +97,7 @@ app-spec-dvd-cd {
   .spec-dvd-table .mat-chip-list-wrapper {
     height: auto;
     margin: auto;
+    width: max-content !important;
     flex-wrap: nowrap;
     padding-top: 5px;
   }

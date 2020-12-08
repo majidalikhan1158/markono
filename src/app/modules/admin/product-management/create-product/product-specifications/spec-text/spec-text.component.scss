@@ -33,7 +33,9 @@ app-spec-text {
 
     .spec-text .mat-chip-list-wrapper {
         height: auto;
+        display: flex;
         margin: auto;
+        width: max-content !important;
         flex-wrap: nowrap;
         padding-top: 5px;
     }

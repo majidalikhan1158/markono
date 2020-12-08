@@ -12,6 +12,8 @@ import {
 import { BindingVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
+import { BindingType } from 'src/app/modules/shared/enums/product-management/product-enums';
+import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
 
 @Component({
   selector: 'app-spec-binding',
@@ -49,10 +51,17 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   benchworkTypeList = BenchworkTypeList;
   colorTypeList = ColorTypeList;
   viewModal: BindingVM;
-  constructor(private store: ProductSpecStore) {}
+  constructor(private store: ProductSpecStore, private helper: ProductSpecHelperService) {}
 
   ngOnInit(): void {
     this.getDefaultRecord();
+  }
+
+  handleBindingTypeChange = () => {
+    if(this.viewModal && this.viewModal.bindingType) {
+      const bindingType = this.bindingTypeList.find(x => x.value === this.viewModal.bindingType);
+      this.initializeObject(bindingType.enum);
+    }
   }
 
   handleColorChange(color: string) {
@@ -92,8 +101,8 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   initialObject = (): BindingVM => {
     return {
       id: 1,
-      bindingType: '',
-      caseBound: this.getCaseBoundType(),
+      bindingType: 0,
+      caseBound: null,
       folding: null,
       paperBack: null,
       saddleStich: null,
@@ -102,29 +111,21 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     };
   }
 
-  getCaseBoundType = () => {
-     return {
-      bindingMethod: '',
-      bookSpineType: '',
-      isHeadTailBand: false,
-      headTailBandColour: '',
-      isRibbon: false,
-      greyboardThickness: '',
-      specialInstruction1: '',
-      benchworkRequired: '',
-      specialInstruction2: '',
-      endPaperWeight: '',
-      endPaperMaterial: '',
-      materialBrand: '',
-      noOfColourExtent: 0,
-      noOfMonoExtent: 0,
-      totalExtent: 0,
-      noOfColours: 0,
-      colorType: '',
-      pantoneColour: [],
-      finishingType: [],
-      specialInstructions3: '',
-     };
+  initializeObject =  (bindingTypeEnum) => {
+    if(bindingTypeEnum === BindingType.CASEBOUND) {
+      this.viewModal.caseBound = this.helper.getCaseBoundTypeObject();
+      console.log(this.viewModal)
+    } else if(bindingTypeEnum === BindingType.FOLDING) {
+      this.viewModal.folding = this.helper.getFoldingTypeObject();
+    } else if(bindingTypeEnum === BindingType.SADDLESTITCH) {
+      this.viewModal.saddleStich = this.helper.getSaddleStitchTypeObject();
+    } else if(bindingTypeEnum === BindingType.WIREOBINDING) {
+      this.viewModal.wireoBinding = this.helper.getWireOBindingTypeObject();
+    } else if(bindingTypeEnum === BindingType.SPIRALBOUND) {
+      this.viewModal.spiralBound = this.helper.getSpiralBoundTypeObject();
+    } else if(bindingTypeEnum === BindingType.PAPERBACK) {
+      this.viewModal.paperBack = this.helper.getPaperBackTypeObject();
+    }
   }
 
   ngOnDestroy(): void {

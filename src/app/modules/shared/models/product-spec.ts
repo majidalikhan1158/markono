@@ -51,7 +51,7 @@ export interface TextVM {
 
 export interface BindingVM {
   id: number;
-  bindingType: string;
+  bindingType: number;
   caseBound: BindingTypeCaseBound;
   folding: BindingTypeFolding;
   paperBack: BindingTypePaperBack;

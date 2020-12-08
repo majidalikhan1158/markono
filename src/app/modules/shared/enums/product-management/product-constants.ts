@@ -179,52 +179,52 @@ export const BindingTypeList: SelectionList[] = [
   {
     value: 1,
     text: 'Case Bound',
-    enum: 'Case Bound'
+    enum: 'CASEBOUND'
   },
   {
     value: 2,
     text: 'Flexi Bound',
-    enum: 'Flexi Bound'
+    enum: 'FLEXIBOUND'
   },
   {
     value: 3,
     text: 'Folding',
-    enum: 'Folding'
+    enum: 'FOLDING'
   },
   {
     value: 4,
     text: 'Full Canadian Wire-O',
-    enum: 'Full Canadian Wire-O'
+    enum: 'FULLCANADIANWIROO'
   },
   {
     value: 5,
     text: 'Half Canadian Wire-O',
-    enum: 'Half Canadian Wire-O'
+    enum: 'HALFCANADIANWIROO'
   },
   {
     value: 6,
     text: 'Paper Back',
-    enum: 'Paper Back'
+    enum: 'PAPERBACK'
   },
   {
     value: 7,
     text: 'Saddle Stitch',
-    enum: 'Saddle Stitch'
+    enum: 'SADDLESTITCH'
   },
   {
     value: 8,
     text: 'Spiral Bound',
-    enum: 'Spiral Bound'
+    enum: 'SPIRALBOUND'
   },
   {
     value: 9,
     text: 'Trim to size',
-    enum: 'Trim to size'
+    enum: 'TRIMTOSIZE'
   },
   {
     value: 10,
     text: 'Wire-O Binding',
-    enum: 'Wire-O Binding'
+    enum: 'WIREOBINDING'
   },
 ];
 

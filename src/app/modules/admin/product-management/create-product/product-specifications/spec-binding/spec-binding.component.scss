@@ -34,26 +34,12 @@ app-spec-binding {
     .spec-binding .mat-chip-list-wrapper {
         height: auto;
         margin: auto;
+        flex-wrap: nowrap;
+        padding-top: 5px;
     }
 
     .spec-binding .mat-chip {
         // height: inherit;
         border-radius: 25px;
-    }
-    .scroll-bar {
-        overflow: auto !important;
-        //padding: 4px;
-    }
-    .mat-chip-list-wrapper {
-        overflow: auto;
-        flex-wrap: nowrap;
-    }
-    ::-webkit-scrollbar {
-        height: 6px;
-        background-color: #b7b7b7;
-    }
-    ::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background: #9a9898;
     }
 }

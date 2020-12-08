@@ -52,12 +52,12 @@ app-spec-dvd-cd {
   }
 
   .spec-dvd-table .expandedRow {
-      background-color: #FBFBFB;
-      border-bottom: 1px solid #E6E6E6;
+    background-color: #fbfbfb;
+    border-bottom: 1px solid #e6e6e6;
   }
 
   .spec-dvd-table tbody tr.expandedRow td {
-    background-color: #FBFBFB !important;
+    background-color: #fbfbfb !important;
   }
   .spec-dvd-table .expansion-icon {
     width: 26px;
@@ -71,19 +71,19 @@ app-spec-dvd-cd {
 
   .spec-dvd-table .labels {
     color: #484848;
-    font-family: 'Roboto-Regular';
-}
+    font-family: "Roboto-Regular";
+  }
 
-.spec-dvd-table .mat-radio-label-content {
+  .spec-dvd-table .mat-radio-label-content {
     font-size: 12px !important;
-} 
+  }
 
-.spec-dvd-table .color-type-options .option-item{
+  .spec-dvd-table .color-type-options .option-item {
     width: 78px;
     height: 50px;
     border-radius: 6px;
-    border: 1px solid #E6E6E6;
-    color: #AFAFAF;
+    border: 1px solid #e6e6e6;
+    color: #afafaf;
     font-size: 14px;
     font-family: "Roboto-Regular";
     text-align: center;
@@ -92,14 +92,17 @@ app-spec-dvd-cd {
     cursor: pointer;
     padding-left: 10px;
     padding-right: 10px;
-}
+  }
 
-.spec-dvd-table .mat-chip-list-wrapper {
-    height: 45px;
-}
+  .spec-dvd-table .mat-chip-list-wrapper {
+    height: auto;
+    margin: auto;
+    flex-wrap: nowrap;
+    padding-top: 5px;
+  }
 
-.spec-dvd-table .mat-chip {
-    height: inherit;
+  .spec-dvd-table .mat-chip {
+    //height: inherit;
     border-radius: 25px;
-}
+  }
 }

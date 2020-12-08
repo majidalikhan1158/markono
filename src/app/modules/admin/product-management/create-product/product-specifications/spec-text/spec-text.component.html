@@ -19,7 +19,8 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Material Brand</mat-label>
-                <mat-select [(ngModel)]="textVM.materialBrand" [disabled]="textVM.textMaterial === '' && textVM.textMaterialWeight === ''">
+                <mat-select [(ngModel)]="textVM.materialBrand"
+                    [disabled]="textVM.textMaterial === '' && textVM.textMaterialWeight === ''">
                     <mat-option value="Offset">Offset</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -50,7 +51,7 @@
                 <mat-label>Total Extent</mat-label>
                 <input matInput [(ngModel)]="textVM.totalExtent">
             </mat-form-field>
-        </div> 
+        </div>
     </div>
 
     <div class="col-lg-12 display-flex pl-0">
@@ -64,11 +65,10 @@
         </div>
         <div class="col-lg-9">
             <div class="color-type-options display-flex pb-4">
-                <span
-                  *ngFor="let item of colorTypeList"
-                  [ngClass]="item.text === textVM.colorType ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
-                  (click)="handleColorChange(item.text)">{{item.text}}</span>
-              </div>
+                <span *ngFor="let item of colorTypeList"
+                    [ngClass]="item.text === textVM.colorType ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
+                    (click)="handleColorChange(item.text)">{{item.text}}</span>
+            </div>
         </div>
     </div>
 
@@ -76,21 +76,20 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Pantone Colour (Optional)</mat-label>
-                <input matInput 
-                pattern="(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)"
-                (keyup.enter)="addPantoneColour($event)">
+                <input matInput pattern="(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)"
+                    (keyup.enter)="addPantoneColour($event)">
             </mat-form-field>
         </div>
         <div class="col-lg-9">
-            <mat-chip-list #pantoneColourchipList class="table-filter-chips">
-                <mat-chip [removable]="true" 
-                [ngStyle]="{'background-color': item}"
-                *ngFor="let item of textVM.pantoneColour"
-                  (removed)="removePantoneColourSelection(item)">
-                  {{item}}
-                  <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-              </mat-chip-list>
+            <div class="scroll-bar">
+                <mat-chip-list #pantoneColourchipList class="table-filter-chips">
+                    <mat-chip [removable]="true" [ngStyle]="{'background-color': item}"
+                        *ngFor="let item of textVM.pantoneColour" (removed)="removePantoneColourSelection(item)">
+                        {{item}}
+                        <mat-icon matChipRemove>cancel</mat-icon>
+                    </mat-chip>
+                </mat-chip-list>
+            </div>
         </div>
     </div>
     <div class="col-lg-12 pb-2">
@@ -101,20 +100,19 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Finishing</mat-label>
-                <mat-select [(ngModel)]="textVM.finishingType" multiple >
+                <mat-select [(ngModel)]="textVM.finishingType" multiple>
                     <mat-option [value]="item.value" *ngFor="let item of finishingTypeList">{{item.text}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
         <div class="col-lg-9">
             <!-- class="scrollableDivX" style="width:650px !important; height: 54px;" -->
-            <div >
+            <div>
                 <mat-chip-list #finishingChipList class="table-filter-chips">
-                    <mat-chip [removable]="true" 
-                    *ngFor="let item of textVM.finishingType"
-                      (removed)="removeFinishTypeSelection(item)">
-                      {{getFinishingTypeText(item)}}
-                      <mat-icon matChipRemove>cancel</mat-icon>
+                    <mat-chip [removable]="true" *ngFor="let item of textVM.finishingType"
+                        (removed)="removeFinishTypeSelection(item)">
+                        {{getFinishingTypeText(item)}}
+                        <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
                 </mat-chip-list>
             </div>

@@ -32,22 +32,13 @@ app-spec-text {
     }
 
     .spec-text .mat-chip-list-wrapper {
-        height: 45px;
-    }
-    .mat-chip-list-wrapper {
-        overflow: auto;
+        height: auto;
+        margin: auto;
         flex-wrap: nowrap;
+        padding-top: 5px;
     }
     .spec-text .mat-chip {
         //height: inherit;
         border-radius: 25px;
-    }
-    ::-webkit-scrollbar {
-        height: 6px;
-        background-color: #b7b7b7;
-    }
-    ::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background: #9a9898;
     }
 }

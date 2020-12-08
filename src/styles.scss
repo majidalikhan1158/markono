@@ -621,8 +621,6 @@ mat-form-field {
 SHOP-FLOOR-STYLES-START
 */
 
- 
-
 .card.card-custom.machine-status-card .card-body .row.last-row {
   padding-bottom: 5px;
 }
@@ -868,3 +866,18 @@ table.job-schedule-table {
 }
 
 /*SHOP-FLOOR-STYLES-END*/
+
+/*Horizontal scrollbar styles-Start*/
+
+.scroll-bar {
+  overflow: auto;
+}
+.scroll-bar::-webkit-scrollbar {
+  height: 6px;
+  background-color: #b7b7b7;
+}
+.scroll-bar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #9a9898;
+}
+/* Horizontal scrollbar styles-End*/

@@ -207,14 +207,14 @@
                                     </div>
 
                                     <div class="col-lg-12 display-flex pl-0 pt-3">
-                                        <div class="col-lg-3 pr-0">
+                                        <div class="col-lg-3 pr-0 chip">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Pantone Colour (Optional)</mat-label>
                                                 <input matInput (keyup.enter)="addPantoneColour($event)"
                                                     [(ngModel)]="pantoneColorValue">
                                             </mat-form-field>
                                         </div>
-                                        <div class="col-lg-9">
+                                        <div class="col-lg-9" style="width: 45px;">
                                             <div class="scroll-bar">
                                                 <mat-chip-list #pantoneColourchipList class="table-filter-chips">
                                                     <mat-chip [removable]="true"
@@ -232,7 +232,7 @@
                                     </div>
 
                                     <div class="col-lg-12 display-flex pl-0 pt-3">
-                                        <div class="col-lg-3 pr-0">
+                                        <div class="col-lg-3 pr-0 chip">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Finishing</mat-label>
                                                 <mat-select multiple
@@ -243,7 +243,7 @@
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
-                                        <div class="col-lg-9">
+                                        <div class="col-lg-9" style="width: 45px;">
                                             <!-- class="scrollableDivX" style="width:650px !important; height: 54px;" -->
                                             <div class="scroll-bar">
                                                 <mat-chip-list #finishingChipList class="table-filter-chips">

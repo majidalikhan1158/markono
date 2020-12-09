@@ -1,4 +1,14 @@
 app-spec-dvd-cd {
+  // .col-lg-3 {
+  //   width: auto !important;
+  //   flex: 0 0 15% !important;
+  //   max-width: 15% !important;
+  // }
+  // .col-lg-9 {
+  //   width: auto !important;
+  //   flex: 0 0 40% !important;
+  //   max-width: 40% !important;
+  // }
   .spec-dvd .mat-form-field-wrapper {
     padding-bottom: 0px;
   }
@@ -96,9 +106,10 @@ app-spec-dvd-cd {
 
   .spec-dvd-table .mat-chip-list-wrapper {
     height: auto;
+    display: flex;
     margin: auto;
     width: max-content !important;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     padding-top: 5px;
   }
 

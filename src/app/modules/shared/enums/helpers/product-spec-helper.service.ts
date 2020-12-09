@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
-import { BindingTypeCaseBound, BindingTypeFolding, BindingTypePaperBack, BindingTypeSpiralBound, BindingTypeStichType, BindingTypeWireoBinding } from '../../models/product-spec';
+import {
+  BindingTypeCaseBound,
+  BindingTypeFolding,
+  BindingTypePaperBack,
+  BindingTypeSpiralBound,
+  BindingTypeStichType,
+  BindingTypeWireoBinding,
+} from '../../models/product-spec';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductSpecHelperService {
-
-  constructor() { }
+  constructor() {}
 
   getCaseBoundTypeObject = (): BindingTypeCaseBound => {
     return {

@@ -380,3 +380,63 @@ export const ColorTypeList = [
     textColor: 'text-white'
   }
 ];
+
+
+export const StitchTypeList: SelectionList[] = [
+  {
+    value: 1,
+    text: '2-side stitch',
+    enum: '2SIDESTITCH'
+  },
+  {
+    value: 2,
+    text: '3-side stitch',
+    enum: '3SIDESTITCH'
+  },
+  {
+    value: 3,
+    text: '4-side stitch',
+    enum: '4SIDESTITCH'
+  },
+];
+
+export const WireOColorList: SelectionList[] = [
+  {
+    value: 1,
+    text: 'Black',
+    enum: 'BLACK'
+  },
+  {
+    value: 2,
+    text: 'White',
+    enum: 'WHITE'
+  },
+  {
+    value: 3,
+    text: 'Silver',
+    enum: 'SILVER'
+  },
+  {
+    value: 4,
+    text: 'Others',
+    enum: 'OTHERS'
+  },
+];
+
+export const CoilColorList: SelectionList[] = [
+  {
+    value: 1,
+    text: 'Black',
+    enum: 'BLACK'
+  },
+  {
+    value: 2,
+    text: 'White',
+    enum: 'WHITE'
+  },
+  {
+    value: 3,
+    text: 'Others',
+    enum: 'OTHERS'
+  },
+];

@@ -8,12 +8,16 @@ import {
   BenchworkTypeList,
   BindingTypeList,
   ColorTypeList,
+  StitchTypeList,
+  WireOColorList,
+  CoilColorList,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { BindingVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { BindingType } from 'src/app/modules/shared/enums/product-management/product-enums';
 import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
+import { SelectionList } from '../../../../../shared/enums/product-management/product-interfaces';
 
 @Component({
   selector: 'app-spec-binding',
@@ -50,6 +54,9 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   greyboardThicknessList = GreyboardThicknessList;
   benchworkTypeList = BenchworkTypeList;
   colorTypeList = ColorTypeList;
+  stitchTypeList = StitchTypeList;
+  wireOColorList = WireOColorList;
+  coilColorList = CoilColorList;
   viewModal: BindingVM;
   constructor(private store: ProductSpecStore, private helper: ProductSpecHelperService) {}
 
@@ -58,9 +65,9 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   }
 
   handleBindingTypeChange = () => {
-    if(this.viewModal && this.viewModal.bindingType) {
+    if (this.viewModal && this.viewModal.bindingType) {
       const bindingType = this.bindingTypeList.find(x => x.value === this.viewModal.bindingType);
-      this.initializeObject(bindingType.enum);
+      this.initializeObject(bindingType);
     }
   }
 
@@ -84,8 +91,26 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     this.viewModal.caseBound.finishingType = this.viewModal.caseBound.finishingType.filter(x => x !== recordId);
   }
 
+  removeBenchworkSelection = (recordId: string, type: string) => {
+    if (type === BindingType.FOLDING) {
+      this.viewModal.folding.benchworkRequired = this.viewModal.folding.benchworkRequired.filter(x => x !== recordId);
+    } else if (type === BindingType.SADDLESTITCH) {
+      this.viewModal.saddleStich.benchworkRequired = this.viewModal.saddleStich.benchworkRequired.filter(x => x !== recordId);
+    } else if (type === BindingType.WIREOBINDING) {
+      this.viewModal.wireoBinding.benchworkRequired = this.viewModal.wireoBinding.benchworkRequired.filter(x => x !== recordId);
+    } else if (type === BindingType.SPIRALBOUND) {
+      this.viewModal.spiralBound.benchworkRequired = this.viewModal.spiralBound.benchworkRequired.filter(x => x !== recordId);
+    } else if (type === BindingType.PAPERBACK) {
+      this.viewModal.paperBack.benchworkRequired = this.viewModal.paperBack.benchworkRequired.filter(x => x !== recordId);
+    }
+  }
+
   getFinishingTypeText = (id: number) => {
     return this.finishingTypeList.find(x => x.value === id).text;
+  }
+
+  getBenchworkText = (id: number) => {
+    return this.benchworkTypeList.find(x => x.value === id).text;
   }
 
   getDefaultRecord = () => {
@@ -111,19 +136,20 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     };
   }
 
-  initializeObject =  (bindingTypeEnum) => {
-    if(bindingTypeEnum === BindingType.CASEBOUND) {
+  initializeObject =  (bindingType: SelectionList) => {
+    this.viewModal = this.initialObject();
+    this.viewModal.bindingType = bindingType.value;
+    if (bindingType.enum === BindingType.CASEBOUND) {
       this.viewModal.caseBound = this.helper.getCaseBoundTypeObject();
-      console.log(this.viewModal)
-    } else if(bindingTypeEnum === BindingType.FOLDING) {
+    } else if (bindingType.enum === BindingType.FOLDING) {
       this.viewModal.folding = this.helper.getFoldingTypeObject();
-    } else if(bindingTypeEnum === BindingType.SADDLESTITCH) {
+    } else if (bindingType.enum === BindingType.SADDLESTITCH) {
       this.viewModal.saddleStich = this.helper.getSaddleStitchTypeObject();
-    } else if(bindingTypeEnum === BindingType.WIREOBINDING) {
+    } else if (bindingType.enum === BindingType.WIREOBINDING) {
       this.viewModal.wireoBinding = this.helper.getWireOBindingTypeObject();
-    } else if(bindingTypeEnum === BindingType.SPIRALBOUND) {
+    } else if (bindingType.enum === BindingType.SPIRALBOUND) {
       this.viewModal.spiralBound = this.helper.getSpiralBoundTypeObject();
-    } else if(bindingTypeEnum === BindingType.PAPERBACK) {
+    } else if (bindingType.enum === BindingType.PAPERBACK) {
       this.viewModal.paperBack = this.helper.getPaperBackTypeObject();
     }
   }

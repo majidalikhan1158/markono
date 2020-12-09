@@ -242,4 +242,294 @@
             </mat-form-field>
         </div>
     </ng-container>
+
+    <ng-container *ngIf="viewModal.folding">
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-12 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Special Instruction</mat-label>
+                    <input matInput [(ngModel)]="viewModal.folding.specialInstructions1">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="col-lg-12 pt-6 pb-6">
+            <mat-divider></mat-divider>
+        </div>
+
+        <div class="col-lg-12 display-flex pl-0">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Benchwork Required</mat-label>
+                    <mat-select multiple [(ngModel)]="viewModal.folding.benchworkRequired" >
+                        <mat-option [value]="item.value" *ngFor="let item of benchworkTypeList">{{item.text}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-9">
+                <div class="scroll-bar">
+                    <mat-chip-list #finishingChipList class="table-filter-chips">
+                        <mat-chip [removable]="true" *ngFor="let item of viewModal.folding.benchworkRequired"
+                            (removed)="removeBenchworkSelection(item, 'FOLDING')">
+                            {{getBenchworkText(item)}}
+                            <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <mat-hint class="font-10px">You can add more than 1 type of benchwork.</mat-hint>
+        </div>
+
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-12 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Special Instruction</mat-label>
+                    <input matInput [(ngModel)]="viewModal.folding.specialInstructions2">
+                </mat-form-field>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="viewModal.saddleStich">
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Type of Stitch</mat-label>
+                    <mat-select [(ngModel)]="viewModal.saddleStich.stichType">
+                        <mat-option [value]="item.value" *ngFor="let item of stitchTypeList">{{item.text}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-12 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Special Instruction</mat-label>
+                    <input matInput [(ngModel)]="viewModal.saddleStich.specialInstructions1">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="col-lg-12 pt-6 pb-6">
+            <mat-divider></mat-divider>
+        </div>
+
+        <div class="col-lg-12 display-flex pl-0">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Benchwork Required</mat-label>
+                    <mat-select multiple [(ngModel)]="viewModal.saddleStich.benchworkRequired" >
+                        <mat-option [value]="item.value" *ngFor="let item of benchworkTypeList">{{item.text}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-9">
+                <div class="scroll-bar">
+                    <mat-chip-list #finishingChipList class="table-filter-chips">
+                        <mat-chip [removable]="true" *ngFor="let item of viewModal.saddleStich.benchworkRequired"
+                            (removed)="removeBenchworkSelection(item, 'SADDLESTITCH')">
+                            {{getBenchworkText(item)}}
+                            <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <mat-hint class="font-10px">You can add more than 1 type of benchwork.</mat-hint>
+        </div>
+
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-12 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Special Instruction</mat-label>
+                    <input matInput [(ngModel)]="viewModal.saddleStich.specialInstructions2">
+                </mat-form-field>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="viewModal.wireoBinding">
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Wire Colour</mat-label>
+                    <mat-select [(ngModel)]="viewModal.wireoBinding.wireColour">
+                        <mat-option [value]="item.value" *ngFor="let item of wireOColorList">{{item.text}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-12 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Special Instruction</mat-label>
+                    <input matInput [(ngModel)]="viewModal.wireoBinding.specialInstructions1">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="col-lg-12 pt-6 pb-6">
+            <mat-divider></mat-divider>
+        </div>
+
+        <div class="col-lg-12 display-flex pl-0">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Benchwork Required</mat-label>
+                    <mat-select multiple [(ngModel)]="viewModal.wireoBinding.benchworkRequired" >
+                        <mat-option [value]="item.value" *ngFor="let item of benchworkTypeList">{{item.text}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-9">
+                <div class="scroll-bar">
+                    <mat-chip-list #finishingChipList class="table-filter-chips">
+                        <mat-chip [removable]="true" *ngFor="let item of viewModal.wireoBinding.benchworkRequired"
+                            (removed)="removeBenchworkSelection(item, 'WIREOBINDING')">
+                            {{getBenchworkText(item)}}
+                            <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <mat-hint class="font-10px">You can add more than 1 type of benchwork.</mat-hint>
+        </div>
+
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-12 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Special Instruction</mat-label>
+                    <input matInput [(ngModel)]="viewModal.wireoBinding.specialInstructions2">
+                </mat-form-field>
+            </div>
+        </div>
+    </ng-container>
+    
+    <ng-container *ngIf="viewModal.spiralBound">
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Coil Colour</mat-label>
+                    <mat-select [(ngModel)]="viewModal.spiralBound.coilColour">
+                        <mat-option [value]="item.value" *ngFor="let item of coilColorList">{{item.text}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-12 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Special Instruction</mat-label>
+                    <input matInput [(ngModel)]="viewModal.spiralBound.specialInstructions1">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="col-lg-12 pt-6 pb-6">
+            <mat-divider></mat-divider>
+        </div>
+
+        <div class="col-lg-12 display-flex pl-0">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Benchwork Required</mat-label>
+                    <mat-select multiple [(ngModel)]="viewModal.spiralBound.benchworkRequired" >
+                        <mat-option [value]="item.value" *ngFor="let item of benchworkTypeList">{{item.text}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-9">
+                <div class="scroll-bar">
+                    <mat-chip-list #finishingChipList class="table-filter-chips">
+                        <mat-chip [removable]="true" *ngFor="let item of viewModal.spiralBound.benchworkRequired"
+                            (removed)="removeBenchworkSelection(item, 'SPIRALBOUND')">
+                            {{getBenchworkText(item)}}
+                            <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <mat-hint class="font-10px">You can add more than 1 type of benchwork.</mat-hint>
+        </div>
+
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-12 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Special Instruction</mat-label>
+                    <input matInput [(ngModel)]="viewModal.spiralBound.specialInstructions2">
+                </mat-form-field>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="viewModal.paperBack">
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Binding Method</mat-label>
+                    <mat-select [(ngModel)]="viewModal.paperBack.bindingMethod">
+                        <mat-option [value]="item.value" *ngFor="let item of bindingMethodList">{{item.text}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-12 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Special Instruction</mat-label>
+                    <input matInput [(ngModel)]="viewModal.paperBack.specialInstructions1">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="col-lg-12 pt-6 pb-6">
+            <mat-divider></mat-divider>
+        </div>
+
+        <div class="col-lg-12 display-flex pl-0">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Benchwork Required</mat-label>
+                    <mat-select multiple [(ngModel)]="viewModal.paperBack.benchworkRequired" >
+                        <mat-option [value]="item.value" *ngFor="let item of benchworkTypeList">{{item.text}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-9">
+                <div class="scroll-bar">
+                    <mat-chip-list #finishingChipList class="table-filter-chips">
+                        <mat-chip [removable]="true" *ngFor="let item of viewModal.paperBack.benchworkRequired"
+                            (removed)="removeBenchworkSelection(item, 'PAPERBACK')">
+                            {{getBenchworkText(item)}}
+                            <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <mat-hint class="font-10px">You can add more than 1 type of benchwork.</mat-hint>
+        </div>
+
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-12 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Special Instruction</mat-label>
+                    <input matInput [(ngModel)]="viewModal.paperBack.specialInstructions2">
+                </mat-form-field>
+            </div>
+        </div>
+    </ng-container>
 </div>

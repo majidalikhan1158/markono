@@ -129,6 +129,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   columnsWithSearch: string[] = [];
   counter = 0;
   intervalIdList = [];
+  tokenIntervalId: any;
   subscriptions: Subscription;
   constructor(private layout: LayoutService,
               private auth: AppAuthService,
@@ -143,28 +144,34 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.clearIntervals();
+    clearInterval(this.tokenIntervalId);
     this.subscriptions.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.getToken();
+    this.subscriptions = this.auth.shopFloorToken.subscribe(tokenObj => {
+      console.log(tokenObj)
+      const isTokenExist = this.auth.getToken(TokenType.SHOPFLOOR);
+      if (tokenObj && isTokenExist && isTokenExist !== '') {
+        this.ui.show();
+        this.getMachineList();
+      } else {
+        // call token api every 12 minutes
+        this.getToken();
+        this.tokenIntervalId = setInterval(() => {
+          this.getToken();
+        }, 720000);
+      }
+    });
   }
 
   getToken = () => {
-    const isTokenExist = this.auth.getToken(TokenType.SHOPFLOOR);
-    if (!isTokenExist || isTokenExist === '') {
-      this.ui.show();
-      this.subscriptions = this.auth.getShopFloorToken().subscribe((tokenResp) => {
-        this.counter++;
-        if (tokenResp && tokenResp.body) {
-          this.auth.saveToken(tokenResp.body, TokenType.SHOPFLOOR);
-          this.getMachineList();
-        }
-      });
-    } else {
-      this.ui.show();
-      this.getMachineList();
-    }
+    this.subscriptions = this.auth.getShopFloorToken().subscribe((tokenResp) => {
+      this.counter++;
+      if (tokenResp && tokenResp.body) {
+        this.auth.saveToken(tokenResp.body, TokenType.SHOPFLOOR);
+      }
+    });
   }
 
   getMachineList = () => {

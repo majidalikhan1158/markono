@@ -166,7 +166,7 @@ export interface DVDVM {
   pantoneColour: string[];
   finishingType: string[];
   specialInstructions: string;
-  bindingType: string;
+  bindingVM: BindingVM;
 }
 
 export interface UnitPriceVM {
@@ -183,4 +183,5 @@ export class ProductSpecStoreVM {
   textVM: TextVM;
   childIsbnVM: ChildIsbnVM;
   bindingVM: BindingVM;
+  dvdCdVM: DVDVM[];
 }

@@ -278,7 +278,7 @@
                                     </div>
 
                                     <div class="col-lg-12 pt-3">
-                                        <div class="col-lg-3 pr-0 pl-0">
+                                        <!-- <div class="col-lg-3 pr-0 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Binding Type</mat-label>
                                                 <mat-select>
@@ -286,7 +286,9 @@
                                                         *ngFor="let item of bindingTypeList">{{item.text}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
-                                        </div>
+                                        </div> -->
+                                        <app-spec-binding [parentComponent]="productSpecTypes.DVD_CD" [parentComponentId]="" 
+                                        (childComponentDataBindingType)="catchChildComponentDataBindingType($event)"></app-spec-binding>
                                     </div>
 
                                     <div class="col-lg-12 pt-6 pb-6">

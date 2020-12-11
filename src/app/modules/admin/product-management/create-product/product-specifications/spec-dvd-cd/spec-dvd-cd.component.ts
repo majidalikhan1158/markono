@@ -4,6 +4,8 @@ import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { FinishingTypeList, BindingTypeList } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import { MatSelectChange } from '@angular/material/select';
+import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
+import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 
 @Component({
   selector: 'app-spec-dvd-cd',
@@ -12,6 +14,7 @@ import { MatSelectChange } from '@angular/material/select';
   encapsulation: ViewEncapsulation.None,
 })
 export class SpecDvdCdComponent implements OnInit {
+  productSpecTypes = ProductSpecTypes;
   columnsToDisplay = ['#', 'Type', 'Quantity', 'Sleeve Type', ];
   viewModal: DVDVM[] = [];
   rowIdToExpand = 0;
@@ -25,7 +28,7 @@ export class SpecDvdCdComponent implements OnInit {
   bindingTypeList = BindingTypeList;
   selectedPantoneColourList: string[] = [];
   pantoneColorValue: string;
-  constructor() { }
+  constructor(private store: ProductSpecStore) { }
 
   ngOnInit(): void {
     this.addRow();
@@ -100,7 +103,7 @@ export class SpecDvdCdComponent implements OnInit {
       pantoneColour: [],
       finishingType: [],
       specialInstructions: '',
-      bindingType: '',
+      bindingVM: null
     };
   }
 
@@ -112,5 +115,17 @@ export class SpecDvdCdComponent implements OnInit {
       x.id = i + 1;
     });
     this.viewModal = filteredRows;
+  
+  }
+
+  catchChildComponentDataBindingType = ($event) => {
+    console.log($event);
+  }
+
+  ngOnDestroy(): void {
+    this.store.setProductSpecStore(
+      this.viewModal,
+      ProductSpecTypes.DVD_CD
+    );
   }
 }

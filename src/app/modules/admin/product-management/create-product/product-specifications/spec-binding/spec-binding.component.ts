@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output, ViewEncapsulation, EventEmitter } from '@angular/core';
 import {
   FinishingTypeList,
   BindingMethodList,
@@ -26,6 +26,9 @@ import { SelectionList } from '../../../../../shared/enums/product-management/pr
   encapsulation: ViewEncapsulation.None,
 })
 export class SpecBindingComponent implements OnInit, OnDestroy {
+  @Input() parentComponent: ProductSpecTypes;
+  @Input() parentComponentId: number;
+  @Output() childComponentDataBindingType = new EventEmitter();
   noOfColorsList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   coverMaterialWeightList = [
     '100gsm',
@@ -58,9 +61,11 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   wireOColorList = WireOColorList;
   coilColorList = CoilColorList;
   viewModal: BindingVM;
+  isDvdCDComponent = false;
   constructor(private store: ProductSpecStore, private helper: ProductSpecHelperService) {}
 
   ngOnInit(): void {
+    this.isDvdCDComponent = this.parentComponent === ProductSpecTypes.DVD_CD;
     this.getDefaultRecord();
   }
 
@@ -115,7 +120,10 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
 
   getDefaultRecord = () => {
     this.store.productSpecStore.subscribe((resp) => {
-      if (resp && resp.bindingVM && resp.bindingVM.id > 0) {
+      if (resp && resp.bindingVM && resp.bindingVM.id > 0 && !this.isDvdCDComponent) {
+        this.viewModal = resp.bindingVM;
+      } else if (resp && resp.bindingVM && resp.bindingVM.id > 0 && this.isDvdCDComponent) {
+        //assign dvdcd modal
         this.viewModal = resp.bindingVM;
       } else {
         this.viewModal = this.initialObject();
@@ -155,9 +163,13 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.store.setProductSpecStore(
-      this.viewModal,
-      ProductSpecTypes.BINDING
-    );
+    if(this.isDvdCDComponent) {
+      this.childComponentDataBindingType.emit(this.viewModal);
+    } else {
+      this.store.setProductSpecStore(
+        this.viewModal,
+        ProductSpecTypes.BINDING
+      );
+    }
   }
 }

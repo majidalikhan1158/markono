@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ProductSpecTypes } from '../enums/app-enums';
-import { BindingVM, ChildIsbnVM, GeneralVM, ProductSpecStoreVM, TextVM } from '../models/product-spec';
+import { BindingVM, ChildIsbnVM, DVDVM, GeneralVM, ProductSpecStoreVM, TextVM } from '../models/product-spec';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,8 @@ export class ProductSpecStore {
       this.setChildIsbnVM(data as ChildIsbnVM);
     } else if (type === ProductSpecTypes.BINDING) {
       this.setBindingVM(data as BindingVM);
+    } else if(type === ProductSpecTypes.DVD_CD) {
+      this.setDvdCdVM(data as DVDVM[]);
     }
   }
 
@@ -46,6 +48,11 @@ export class ProductSpecStore {
 
   private setChildIsbnVM = (data: ChildIsbnVM) => {
     this.currentProductSpecStoreState.childIsbnVM = data;
+    this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
+  }
+
+  private setDvdCdVM = (data: DVDVM[]) => {
+    this.currentProductSpecStoreState.dvdCdVM = data;
     this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
   }
 }

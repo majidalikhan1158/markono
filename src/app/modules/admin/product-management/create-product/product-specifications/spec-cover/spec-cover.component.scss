@@ -1,7 +1,7 @@
 app-spec-cover {
     .spec-cover .labels {
         color: #484848;
-        font-family: 'Roboto-Regular';
+        font-family: "Roboto-Regular";
     }
 
     .spec-cover .mat-radio-label-content {
@@ -14,5 +14,34 @@ app-spec-cover {
 
     .spec-cover .mat-radio-label-content {
         font-size: 14px !important;
+    }
+
+    .spec-cover .color-type-options .option-item {
+        width: 78px;
+        height: 50px;
+        border-radius: 6px;
+        border: 1px solid #e6e6e6;
+        color: #afafaf;
+        font-size: 14px;
+        font-family: "Roboto-Regular";
+        text-align: center;
+        padding-top: 13px;
+        padding-bottom: 10px;
+        cursor: pointer;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .spec-cover .mat-chip-list-wrapper {
+        height: auto;
+        display: flex;
+        margin: auto;
+        width: max-content !important;
+        flex-wrap: nowrap;
+        padding-top: 5px;
+    }
+    .spec-cover .mat-chip {
+        //height: inherit;
+        border-radius: 25px;
     }
 }

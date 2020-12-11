@@ -340,19 +340,19 @@ export const BenchworkTypeList: SelectionList[] = [
 ];
 
 export const ColorTypes = {
-  Cyan : {
+  Cyan: {
     color: '#00E1D5',
     text: 'Cyan',
   },
-  Magenta : {
+  Magenta: {
     color: '#FF00FF',
     text: 'Magenta',
   },
-  Yellow : {
+  Yellow: {
     color: '#FFFF00',
     text: 'Yellow',
   },
-  Black : {
+  Black: {
     color: '#000000',
     text: 'Black',
   }
@@ -439,4 +439,23 @@ export const CoilColorList: SelectionList[] = [
     text: 'Others',
     enum: 'OTHERS'
   },
+];
+
+export const CoverTypeList = [
+  {
+    value: 'SELF',
+    text: 'Self',
+  },
+  {
+    value: '4PPCOVER',
+    text: '4pp Cover',
+  },
+  {
+    value: '6PPCOVER',
+    text: '6pp Cover',
+  },
+  {
+    value: '8PPCOVER',
+    text: '8pp Cover',
+  }
 ];

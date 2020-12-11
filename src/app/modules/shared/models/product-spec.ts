@@ -184,4 +184,23 @@ export class ProductSpecStoreVM {
   childIsbnVM: ChildIsbnVM;
   bindingVM: BindingVM;
   dvdCdVM: DVDVM[];
+  coverVM: CoverVM;
+}
+export interface CoverVM {
+  id: number;
+  coverMaterialWeight: string;
+  coverMaterial: string;
+  materialBrand: string;
+  coverType: string;
+  noOfColourExtent: number;
+  noOfMonoExtent: number;
+  totalExtent: number;
+  noOfColours: number;
+  colorTypeOutside: string;
+  colorTypeInside: string;
+  pantoneColourInside: string[];
+  pantoneColourOutside: string[];
+  finishingTypeOutside: string[];
+  finishingTypeInside: string[];
+  specialInstructions: string;
 }

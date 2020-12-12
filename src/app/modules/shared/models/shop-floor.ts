@@ -40,6 +40,7 @@ export interface MachineCurrentJobVM {
     jobActionPause: string;
     jobActionStop: string;
     jobReadOnly: boolean;
+    jobStatus: string;
     machineSummaryList: MachineJobSummaryVM[];
     machineJobActionsList: MachineJobActionsVM[];
 }

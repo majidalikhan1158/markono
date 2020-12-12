@@ -1,4 +1,7 @@
 <div class="row spec-binding">
+    <div class="col-lg-12 pb-3">
+        <span class="font-16px font-roboto-bold">Binding</span>
+    </div>
     <div class="col-lg-12 display-flex pl-0 pt-2">
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
@@ -176,7 +179,7 @@
             <div class="col-lg-9">
                 <div class="color-type-options display-flex pb-4">
                     <span *ngFor="let item of colorTypeList"
-                        [ngClass]="item.text === viewModal.caseBound.colorType ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
+                        [ngClass]="viewModal.caseBound.colorType.includes(item.text) ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
                         (click)="handleColorChange(item.text)">{{item.text}}</span>
                 </div>
             </div>

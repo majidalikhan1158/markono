@@ -1,3 +1,4 @@
+import { CheckPrintQA } from '../../models/product-spec';
 import { SelectionList } from './product-interfaces';
 
 export const PrintingTypes = {
@@ -15,6 +16,8 @@ export const ProductSpecificationTypes = {
   DVD_CD: 'DVD_CD',
   WEB_CODE: 'WEB_CODE',
   UNIT_PRICE: 'UNIT_PRICE',
+  OTHER_COMPONENT: 'OTHER_COMPONENT',
+  CHECK_PRINT_FILE: 'CHECK_PRINT_FILE'
 };
 
 export const ProductTypes = {
@@ -63,26 +66,40 @@ export const ProductSpecificationTypesArray = [
     isSelected: false,
     isVisited: false,
   },
+  {
+    value: 'Other Component',
+    id: 6,
+    enum: 'OTHER_COMPONENT',
+    isSelected: false,
+    isVisited: false,
+  },
+  {
+    value: 'Check Print File',
+    id: 20,
+    enum: 'CHECK_PRINT_FILE',
+    isSelected: false,
+    isVisited: false,
+  },
 ];
 
 export const ProductSpecificationTypePartialArray = [
   {
     value: 'Child ISBN',
-    id: 5,
+    id: 6,
     enum: 'CHILD_ISBN',
     isSelected: false,
     isVisited: false,
   },
   {
     value: 'DVD/CD',
-    id: 6,
+    id: 7,
     enum: 'DVD_CD',
     isSelected: false,
     isVisited: false,
   },
   {
     value: 'Webcode',
-    id: 7,
+    id: 8,
     enum: 'WEB_CODE',
     isSelected: false,
     isVisited: false,
@@ -459,3 +476,127 @@ export const CoverTypeList = [
     text: '8pp Cover',
   }
 ];
+
+export const CheckPrintCoverQAList: CheckPrintQA[] = [
+  {
+    text: 'Correct Title and ISBN?',
+    toggleLabel: 'Yes',
+    modalKey: 'correctTitleISBN_Cover',
+  },
+  {
+    text: 'Security: allowed to change file',
+    toggleLabel: 'No',
+    modalKey: 'securityAllowedToChange_Cover',
+  },
+  {
+    text: 'Correct Trim size?',
+    toggleLabel: 'No',
+    modalKey: 'correctTrimSize_Cover',
+  },
+  {
+    text: 'Cover format match?',
+    toggleLabel: 'No',
+    modalKey: 'coverFormatMatch_Cover',
+  },
+  {
+    text: 'Correct Printing color?',
+    toggleLabel: 'No',
+    modalKey: 'correctPrintingColor_Cover',
+  },
+  {
+    text: 'Sufficient bleed?',
+    toggleLabel: 'No',
+    modalKey: 'sufficientBleed_Cover',
+  },
+  {
+    text: 'Are Font embedded or Oulined?',
+    toggleLabel: 'Embedded',
+    modalKey: 'fontEmbeddedOrOutlined_Cover',
+  },
+  {
+    text: 'Image resolution < 300dpi?',
+    toggleLabel: 'No',
+    modalKey: 'imageResolutionLess300dpi_Cover',
+  },
+  {
+    text: 'Line thickness < 0.088mm?',
+    toggleLabel: 'No',
+    modalKey: 'lineThicknessless0088_Cover',
+  },
+  {
+    text: 'Have Finishing files?',
+    toggleLabel: 'No',
+    modalKey: 'haveFinishingFiles_Cover',
+  },
+  {
+    text: 'Enough Unique code qty?',
+    toggleLabel: 'No',
+    modalKey: 'enoughUniqueCodeQty_Cover',
+  },
+  {
+    text: 'Correct spine width?',
+    toggleLabel: 'No',
+    modalKey: 'correctSpineWidth_Cover',
+  },
+];
+
+export const CheckPrintTextQAList: CheckPrintQA[] = [
+  {
+    text: 'Security: allowed to change file',
+    toggleLabel: 'Yes',
+    modalKey: 'securityAllowedToChange_Text',
+  },
+  {
+    text: 'Correct Extent?',
+    toggleLabel: 'No',
+    modalKey: 'correctExtent_Text',
+  },
+  {
+    text: 'Correct Trim size?',
+    toggleLabel: 'No',
+    modalKey: 'correctTrimSize_Text',
+  },
+  {
+    text: 'Correct Printing color?',
+    toggleLabel: 'No',
+    modalKey: 'correctPrintingColor_Text',
+  },
+  {
+    text: 'Correct ISBN?',
+    toggleLabel: 'No',
+    modalKey: 'correctISBN_Text',
+  },
+  {
+    text: 'Sufficient bleed?',
+    toggleLabel: 'No',
+    modalKey: 'sufficientBleed_Text',
+  },
+  {
+    text: 'Are Font embedded or Oulined?',
+    toggleLabel: 'Embedded',
+    modalKey: 'fontEmbeddedOrOutlined_Text',
+  },
+  {
+    text: 'Image resolution < 300dpi?',
+    toggleLabel: 'No',
+    modalKey: 'imageResolutionLess300dpi_Text',
+  },
+  {
+    text: 'Known Insert / sticker location?',
+    toggleLabel: 'No',
+    modalKey: 'knownInsertOrStickerLocation_Text',
+  },
+];
+
+export const BindingType = {
+  CASEBOUND: 'CASEBOUND',
+  FLEXIBOUND: 'FLEXIBOUND',
+  FOLDING: 'FOLDING',
+  FULLCANADIANWIROO: 'FULLCANADIANWIROO',
+  HALFCANADIANWIROO: 'HALFCANADIANWIROO',
+  PAPERBACK: 'PAPERBACK',
+  SADDLESTITCH: 'SADDLESTITCH',
+  SPIRALBOUND: 'SPIRALBOUND',
+  TRIMTOSIZE: 'TRIMTOSIZE',
+  WIREOBINDING: 'WIREOBINDING'
+};

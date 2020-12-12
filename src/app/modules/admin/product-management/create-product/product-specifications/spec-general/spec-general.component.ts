@@ -6,7 +6,6 @@ import {
   Output,
   OnDestroy,
 } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
 import {
   AddRemoveSpecTypeEvent,
   AdditionalSpecTypes,

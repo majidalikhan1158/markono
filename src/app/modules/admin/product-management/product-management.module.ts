@@ -16,16 +16,32 @@ import { SpecChildIsbnComponent } from './create-product/product-specifications/
 import { SpecDvdCdComponent } from './create-product/product-specifications/spec-dvd-cd/spec-dvd-cd.component';
 import { SpecWebcodeComponent } from './create-product/product-specifications/spec-webcode/spec-webcode.component';
 import { SpecUnitPriceComponent } from './create-product/product-specifications/spec-unit-price/spec-unit-price.component';
-
-
+import { SpecOtherComponent } from './create-product/product-specifications/spec-other/spec-other.component';
+import { SpecCheckPrintFileComponent } from './create-product/product-specifications/spec-check-print-file/spec-check-print-file.component';
 
 @NgModule({
-  declarations: [CreateProductComponent, ProductSpecListComponent, ProductVersionsComponent, PastOrdersComponent, ProductSpecificationsComponent, SpecGeneralComponent, SpecCoverComponent, SpecTextComponent, SpecBindingComponent, SpecChildIsbnComponent, SpecDvdCdComponent, SpecWebcodeComponent, SpecUnitPriceComponent],
+  declarations: [
+    CreateProductComponent,
+    ProductSpecListComponent,
+    ProductVersionsComponent,
+    PastOrdersComponent,
+    ProductSpecificationsComponent,
+    SpecGeneralComponent,
+    SpecCoverComponent,
+    SpecTextComponent,
+    SpecBindingComponent,
+    SpecChildIsbnComponent,
+    SpecDvdCdComponent,
+    SpecWebcodeComponent,
+    SpecUnitPriceComponent,
+    SpecOtherComponent,
+    SpecCheckPrintFileComponent
+  ],
   imports: [
     ProductManagementRoutingModule,
     CommonModule,
     MaterialUiModule,
-    SharedModule
-  ]
+    SharedModule,
+  ],
 })
-export class ProductManagementModule { }
+export class ProductManagementModule {}

@@ -11,11 +11,11 @@ import {
   StitchTypeList,
   WireOColorList,
   CoilColorList,
+  BindingType,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
-import { BindingVM } from 'src/app/modules/shared/models/product-spec';
+import { BindingVM, DvdCDBindingMapper } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
-import { BindingType } from 'src/app/modules/shared/enums/product-management/product-enums';
 import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
 import { SelectionList } from '../../../../../shared/enums/product-management/product-interfaces';
 
@@ -27,8 +27,9 @@ import { SelectionList } from '../../../../../shared/enums/product-management/pr
 })
 export class SpecBindingComponent implements OnInit, OnDestroy {
   @Input() parentComponent: ProductSpecTypes;
-  @Input() parentComponentId: number;
-  @Output() childComponentDataBindingType = new EventEmitter();
+  @Input() parentData: BindingVM;
+  @Input() parentRecordIndex: number;
+  @Output() childComponentDataBindingType = new EventEmitter<DvdCDBindingMapper>();
   noOfColorsList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   coverMaterialWeightList = [
     '100gsm',
@@ -61,11 +62,11 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   wireOColorList = WireOColorList;
   coilColorList = CoilColorList;
   viewModal: BindingVM;
-  isDvdCDComponent = false;
+  isOtherComponent = false;
   constructor(private store: ProductSpecStore, private helper: ProductSpecHelperService) {}
 
   ngOnInit(): void {
-    this.isDvdCDComponent = this.parentComponent === ProductSpecTypes.DVD_CD;
+    this.isOtherComponent = !!this.parentComponent;
     this.getDefaultRecord();
   }
 
@@ -77,8 +78,14 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   }
 
   handleColorChange(color: string) {
-    this.viewModal.caseBound.colorType = color;
+    if (this.viewModal.caseBound.colorType.includes(color)) {
+      this.viewModal.caseBound.colorType = this.viewModal.caseBound.colorType.filter(x => x !== color);
+    } else {
+      this.viewModal.caseBound.colorType.push(color);
+    }
   }
+
+  getData = () => 'testing';
 
   addPantoneColour(event: Event) {
     const value = (event.target as HTMLInputElement).value;
@@ -119,16 +126,18 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.productSpecStore.subscribe((resp) => {
-      if (resp && resp.bindingVM && resp.bindingVM.id > 0 && !this.isDvdCDComponent) {
-        this.viewModal = resp.bindingVM;
-      } else if (resp && resp.bindingVM && resp.bindingVM.id > 0 && this.isDvdCDComponent) {
-        //assign dvdcd modal
-        this.viewModal = resp.bindingVM;
-      } else {
-        this.viewModal = this.initialObject();
-      }
-    });
+    if (this.isOtherComponent) {
+      this.viewModal = this.parentData ? this.parentData : this.initialObject();
+    } else {
+      this.store.productSpecStore.subscribe((resp) => {
+        if (resp && resp.bindingVM && resp.bindingVM.id > 0) {
+          // assign dvdcd modal
+          this.viewModal = resp.bindingVM;
+        } else {
+          this.viewModal = this.initialObject();
+        }
+      });
+    }
   }
 
   initialObject = (): BindingVM => {
@@ -163,8 +172,9 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if(this.isDvdCDComponent) {
-      this.childComponentDataBindingType.emit(this.viewModal);
+    if (this.isOtherComponent) {
+      const obj: DvdCDBindingMapper = {index: this.parentRecordIndex, bindingVM: this.viewModal};
+      this.childComponentDataBindingType.emit(obj);
     } else {
       this.store.setProductSpecStore(
         this.viewModal,

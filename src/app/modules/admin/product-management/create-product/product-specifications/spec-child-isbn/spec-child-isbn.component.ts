@@ -9,8 +9,6 @@ import {
   BenchworkTypeList,
   ColorTypeList,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
-import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
-import { MatSelectChange } from '@angular/material/select';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { ChildIsbnVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
@@ -50,7 +48,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   greyboardThicknessList = GreyboardThicknessList;
   benchworkTypeList = BenchworkTypeList;
   colorTypeList = ColorTypeList;
-  childIsbnVM: ChildIsbnVM;
+  viewModal: ChildIsbnVM;
   constructor(private store: ProductSpecStore) {}
 
   ngOnInit(): void {
@@ -58,37 +56,41 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   }
 
   handleColorChange(color: string) {
-    this.childIsbnVM.colorType = color;
+    if (this.viewModal.colorType.includes(color)) {
+      this.viewModal.colorType = this.viewModal.colorType.filter(x => x !== color);
+    } else {
+      this.viewModal.colorType.push(color);
+    }
   }
 
   addChildIsbn(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value !== '') {
-      this.childIsbnVM.childIsbns.push(value);
+      this.viewModal.childIsbns.push(value);
     }
     (event.target as HTMLInputElement).value = '';
   }
 
   removeChildIsbnSelection(item: string) {
-    this.childIsbnVM.childIsbns = this.childIsbnVM.childIsbns.filter(
+    this.viewModal.childIsbns = this.viewModal.childIsbns.filter(
       (x) => x !== item
     );
   }
 
   addPantoneColour(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-    if (value !== '' && this.childIsbnVM.pantoneColour.indexOf(value) === -1) {
-      this.childIsbnVM.pantoneColour.push(value);
+    if (value !== '' && this.viewModal.pantoneColour.indexOf(value) === -1) {
+      this.viewModal.pantoneColour.push(value);
     }
     (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelection(item: string) {
-    this.childIsbnVM.pantoneColour = this.childIsbnVM.pantoneColour.filter(x => x !== item);
+    this.viewModal.pantoneColour = this.viewModal.pantoneColour.filter(x => x !== item);
   }
 
   removeFinishTypeSelection = (recordId: string) => {
-    this.childIsbnVM.finishingType = this.childIsbnVM.finishingType.filter(x => x !== recordId);
+    this.viewModal.finishingType = this.viewModal.finishingType.filter(x => x !== recordId);
   }
 
   getFinishingTypeText = (id: number) => {
@@ -98,9 +100,9 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   getDefaultRecord = () => {
     this.store.productSpecStore.subscribe((resp) => {
       if (resp && resp.childIsbnVM && resp.childIsbnVM.id > 0) {
-        this.childIsbnVM = resp.childIsbnVM;
+        this.viewModal = resp.childIsbnVM;
       } else {
-        this.childIsbnVM = this.initialObject();
+        this.viewModal = this.initialObject();
       }
     });
   }
@@ -117,7 +119,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
       materialBrand: '',
       greyboardThickness: '',
       noOfColours: 0,
-      colorType: '',
+      colorType: [],
       pantoneColour: [],
       finishingType: [],
       specialInstructions2: '',
@@ -126,7 +128,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.store.setProductSpecStore(
-      this.childIsbnVM,
+      this.viewModal,
       ProductSpecTypes.CHILD_ISBN
     );
   }

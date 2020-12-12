@@ -38,7 +38,9 @@ app-spec-text {
         width: max-content !important;
         flex-wrap: nowrap;
         padding-top: 5px;
+        float: left;
     }
+    
     .spec-text .mat-chip {
         //height: inherit;
         border-radius: 25px;

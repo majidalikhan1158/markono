@@ -1,6 +1,6 @@
 <div class="display-flex" style="height: 100%;">
-    <div class="col-lg-2 product-spec-types pr-2 pl-1">
-        <mat-selection-list #caseDetailTypeList [multiple]="false"
+    <div class="col-lg-2 product-spec-types pr-1 pl-1">
+        <mat-selection-list [multiple]="false"
             (selectionChange)="handleProductSpecTypeChange($event)">
             <mat-list-option *ngFor="let types of productSpecTypesArray" class="font-14px" [selected]="types.isSelected"
                 [value]="types.enum">
@@ -13,13 +13,13 @@
             </mat-list-option>
         </mat-selection-list>
         <mat-divider></mat-divider>
-        <br>
+        <!-- <br>
         <a (click)="handleAddOtherComponent()" class="pl-3">
             <span class="material-icons add-icon pr-2 cursor-pointer font-18px ">
                 add_circle_outline
             </span>
             <span class="font-12px blue-link ">OTHER COMPONENT</span>
-        </a>
+        </a> -->
     </div>
     <div class="col-lg-10 product-spec-details pt-4 pr-2">
         <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.GENERAL">
@@ -45,6 +45,12 @@
         </ng-container>
         <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.UNIT_PRICE">
             <app-spec-unit-price></app-spec-unit-price>
+        </ng-container>
+        <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.OTHER_COMPONENT">
+            <app-spec-other></app-spec-other>
+        </ng-container>
+        <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.CHECK_PRINT_FILE">
+            <app-spec-check-print-file></app-spec-check-print-file>
         </ng-container>
         <ng-container>
             <div class="row">

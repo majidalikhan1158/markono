@@ -1,0 +1,50 @@
+app-spec-check-print-file {
+    .spec-check-print .mat-slide-toggle-thumb {
+        height: 15px;
+        width: 15px;
+    }
+    
+    .spec-check-print .mat-slide-toggle-thumb-container {
+        top: -1px;
+    }
+
+    .spec-check-print .mat-slide-toggle .mat-slide-toggle-ripple {
+        top: calc(50% - 12px);
+        left: calc(50% - 12px);
+        height: 20px;
+        width: 20px;
+    }
+
+    .spec-check-print .mat-slide-toggle-bar {
+        width: 33px;
+    }
+    
+    .spec-check-print li {
+        list-style-type:none;
+    }
+
+    .spec-check-print li:before{
+        content:'\00b7'; 
+        font-size:50px; 
+        line-height:24px; 
+        vertical-align:middle;
+        padding-right: 10px;
+    }
+
+    .spec-check-print .mat-divider.mat-divider-vertical {
+        height: 100%;
+        margin-top: -8px;
+    }
+
+    .spec-check-print .mat-checkbox-label {
+        font-size: 14px;
+        font-family: 'Roboto-Regular';
+    }
+
+    .spec-check-print a {
+        margin-top: 2px;
+        text-decoration: underline !important;
+        color: #5FACE2;
+        cursor: pointer;
+    }
+}

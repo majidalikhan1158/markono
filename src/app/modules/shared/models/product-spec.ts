@@ -43,7 +43,7 @@ export interface TextVM {
   noOfMonoExtent: number;
   totalExtent: number;
   noOfColours: number;
-  colorType: string;
+  colorType: string[];
   pantoneColour: string[];
   finishingType: string[];
   specialInstructions: string;
@@ -77,7 +77,7 @@ export interface BindingTypeCaseBound {
   noOfMonoExtent: number;
   totalExtent: number;
   noOfColours: number;
-  colorType: string;
+  colorType: string[];
   pantoneColour: string[];
   finishingType: string[];
   specialInstructions3: string;
@@ -128,7 +128,7 @@ export interface ChildIsbnVM {
   materialBrand: string;
   greyboardThickness: string;
   noOfColours: number;
-  colorType: string;
+  colorType: string[];
   pantoneColour: string[];
   finishingType: string[];
   specialInstructions2: string;
@@ -156,13 +156,15 @@ export interface DVDVM {
   openSizeHeight: number;
   openSizeWidth: number;
   textMaterialWeight: string;
+  spineWidth: number;
+  weight: number;
   textMaterial: string;
   materialBrand: string;
   noOfColourExtent: number;
   noOfMonoExtent: number;
   totalExtent: number;
   noOfColours: number;
-  colorType: string;
+  colorType: string[];
   pantoneColour: string[];
   finishingType: string[];
   specialInstructions: string;
@@ -184,7 +186,10 @@ export class ProductSpecStoreVM {
   childIsbnVM: ChildIsbnVM;
   bindingVM: BindingVM;
   dvdCdVM: DVDVM[];
+  webCodeVM: WebCodeVM[];
   coverVM: CoverVM;
+  otherVM: OtherVM[];
+  checkPrintFileVM: CheckPrintFileVM;
 }
 export interface CoverVM {
   id: number;
@@ -196,11 +201,82 @@ export interface CoverVM {
   noOfMonoExtent: number;
   totalExtent: number;
   noOfColours: number;
-  colorTypeOutside: string;
-  colorTypeInside: string;
+  colorTypeOutside: string[];
+  colorTypeInside: string[];
   pantoneColourInside: string[];
   pantoneColourOutside: string[];
   finishingTypeOutside: string[];
   finishingTypeInside: string[];
   specialInstructions: string;
+}
+
+export interface DvdCDBindingMapper {
+  index: number;
+  bindingVM: BindingVM;
+}
+
+
+
+export interface OtherVM {
+  id: number;
+  type: string;
+  mainWeight: number;
+  material: string;
+  brand: string;
+  colorExtend: string;
+  monoExtend: string;
+  totalExtend: string;
+  componentType: string;
+  orientationType: string;
+  height: number;
+  width: number;
+  isOpenSize: boolean;
+  openSizeHeight: number;
+  openSizeWidth: number;
+  textMaterialWeight: string;
+  spineWidth: number;
+  weight: number;
+  textMaterial: string;
+  materialBrand: string;
+  noOfColourExtent: number;
+  noOfMonoExtent: number;
+  totalExtent: number;
+  noOfColours: number;
+  colorType: string[];
+  pantoneColour: string[];
+  finishingType: string[];
+  specialInstructions: string;
+  bindingVM: BindingVM;
+}
+
+export interface CheckPrintQA {
+  text: string;
+  toggleLabel: string;
+  modalKey: string;
+}
+
+export interface CheckPrintFileVM {
+  id: number;
+  correctTitleISBN_Cover: boolean;
+  securityAllowedToChange_Cover: boolean;
+  correctTrimSize_Cover: boolean;
+  coverFormatMatch_Cover: boolean;
+  correctPrintingColor_Cover: boolean;
+  sufficientBleed_Cover: boolean;
+  fontEmbeddedOrOutlined_Cover: boolean;
+  imageResolutionLess300dpi_Cover: boolean;
+  lineThicknessless0088_Cover: boolean;
+  haveFinishingFiles_Cover: boolean;
+  enoughUniqueCodeQty_Cover: boolean;
+  correctSpineWidth_Cover: boolean;
+  securityAllowedToChange_Text: boolean;
+  correctExtent_Text: boolean;
+  correctTrimSize_Text: boolean;
+  correctPrintingColor_Text: boolean;
+  correctISBN_Text: boolean;
+  sufficientBleed_Text: boolean;
+  fontEmbeddedOrOutlined_Text: boolean;
+  imageResolutionLess300dpi_Text: boolean;
+  knownInsertOrStickerLocation_Text: boolean;
+  checkBoxApproval: boolean;
 }

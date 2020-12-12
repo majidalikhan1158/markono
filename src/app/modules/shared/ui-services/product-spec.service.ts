@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ProductSpecTypes } from '../enums/app-enums';
-import { BindingVM, ChildIsbnVM, DVDVM, GeneralVM, ProductSpecStoreVM, TextVM, CoverVM } from '../models/product-spec';
+import { BindingVM, ChildIsbnVM, DVDVM, GeneralVM, ProductSpecStoreVM, TextVM, CoverVM, WebCodeVM, OtherVM, CheckPrintFileVM } from '../models/product-spec';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +30,12 @@ export class ProductSpecStore {
       this.setDvdCdVM(data as DVDVM[]);
     } else if (type === ProductSpecTypes.COVER) {
       this.setCoverVM(data as CoverVM);
+    } else if (type === ProductSpecTypes.WEBCODE) {
+      this.setWebCodeVM(data as WebCodeVM[]);
+    } else if (type === ProductSpecTypes.OTHER_COMPONENT) {
+      this.setOtherVM(data as OtherVM[]);
+    } else if (type === ProductSpecTypes.CHECK_PRINT_FILE) {
+      this.setCheckPrintFile(data as CheckPrintFileVM);
     }
   }
 
@@ -60,6 +66,21 @@ export class ProductSpecStore {
 
   private setCoverVM = (data: CoverVM) => {
     this.currentProductSpecStoreState.coverVM = data;
+    this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
+  }
+
+  private setWebCodeVM = (data: WebCodeVM[]) => {
+    this.currentProductSpecStoreState.webCodeVM = data;
+    this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
+  }
+
+  private setOtherVM = (data: OtherVM[]) => {
+    this.currentProductSpecStoreState.otherVM = data;
+    this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
+  }
+
+  private setCheckPrintFile = (data: CheckPrintFileVM) => {
+    this.currentProductSpecStoreState.checkPrintFileVM = data;
     this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
   }
 }

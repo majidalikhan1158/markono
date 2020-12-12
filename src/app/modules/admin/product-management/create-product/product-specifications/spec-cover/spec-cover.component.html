@@ -1,8 +1,11 @@
 <div class="row spec-cover">
+    <div class="col-lg-12 pb-3">
+        <span class="font-16px font-roboto-bold">Cover</span>
+    </div>
     <div class="col-lg-12">
         <div class="col-sm-12 display-flex-direction-column">
             <span class="labels">Cover Type</span>
-            <mat-radio-group [(ngModel)]="coverVM.coverType" [disabled]="disabled">
+            <mat-radio-group [(ngModel)]="viewModal.coverType" [disabled]="disabled">
                 <mat-radio-button *ngFor="let item of coverTypeList" [value]="item.value">
                     {{item.text}}
                 </mat-radio-button>
@@ -10,13 +13,13 @@
         </div>
     </div>
 
-    <ng-container *ngIf="coverVM.coverType=='4PPCOVER'">
+    <ng-container *ngIf="viewModal.coverType=='4PPCOVER'">
 
         <div class="col-lg-12 display-flex pl-0 pt-2">
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Cover Material Weight</mat-label>
-                    <mat-select [(ngModel)]="coverVM.coverMaterialWeight">
+                    <mat-select [(ngModel)]="viewModal.coverMaterialWeight">
                         <mat-option [value]="item" *ngFor="let item of coverMaterialWeightList">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -24,7 +27,7 @@
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Cover Material</mat-label>
-                    <mat-select [(ngModel)]="coverVM.coverMaterial" [disabled]="coverVM.coverMaterialWeight === ''">
+                    <mat-select [(ngModel)]="viewModal.coverMaterial" [disabled]="viewModal.coverMaterialWeight === ''">
                         <mat-option value="Offset">Offset</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -32,8 +35,8 @@
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Material Brand</mat-label>
-                    <mat-select [(ngModel)]="coverVM.materialBrand"
-                        [disabled]="coverVM.coverMaterial === '' && coverVM.coverMaterialWeight === ''">
+                    <mat-select [(ngModel)]="viewModal.materialBrand"
+                        [disabled]="viewModal.coverMaterial === '' && viewModal.coverMaterialWeight === ''">
                         <mat-option value="Offset">Offset</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -44,7 +47,7 @@
             <mat-divider></mat-divider>
         </div>
         <!--outside-->
-        <div class="col-lg-12">
+        <div class="col-lg-12 pb-3">
             <span class="labels">Outside Cover</span>&nbsp;&nbsp;
             <mat-hint class="font-10px">No. of colours (1)</mat-hint>
         </div>
@@ -53,7 +56,7 @@
             <div class="col-lg-4 pr-0">
                 <div class="color-type-options display-flex pb-4">
                     <span *ngFor="let item of colorTypeList"
-                        [ngClass]="item.text === coverVM.colorTypeOutside ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
+                        [ngClass]="viewModal.colorTypeOutside.includes(item.text) ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
                         (click)="handleColorChangeOutside(item.text)">{{item.text}}</span>
                 </div>
             </div>
@@ -68,7 +71,7 @@
                 <div class="scroll-bar">
                     <mat-chip-list #pantoneColourchipList class="table-filter-chips">
                         <mat-chip [removable]="true" [ngStyle]="{'background-color': item}"
-                            *ngFor="let item of coverVM.pantoneColourOutside"
+                            *ngFor="let item of viewModal.pantoneColourOutside"
                             (removed)="removePantoneColourSelectionOutside(item)">
                             {{item}}
                             <mat-icon matChipRemove>cancel</mat-icon>
@@ -82,7 +85,7 @@
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Finishing</mat-label>
-                    <mat-select [(ngModel)]="coverVM.finishingTypeOutside" multiple>
+                    <mat-select [(ngModel)]="viewModal.finishingTypeOutside" multiple>
                         <mat-option [value]="item.value" *ngFor="let item of finishingTypeList">{{item.text}}
                         </mat-option>
                     </mat-select>
@@ -92,7 +95,7 @@
                 <!-- class="scrollableDivX" style="width:650px !important; height: 54px;" -->
                 <div class="scroll-bar">
                     <mat-chip-list #finishingChipList class="table-filter-chips">
-                        <mat-chip [removable]="true" *ngFor="let item of coverVM.finishingTypeOutside"
+                        <mat-chip [removable]="true" *ngFor="let item of viewModal.finishingTypeOutside"
                             (removed)="removeFinishTypeSelectionOutside(item)">
                             {{getFinishingTypeText(item)}}
                             <mat-icon matChipRemove>cancel</mat-icon>
@@ -120,12 +123,9 @@
         <div class="col-lg-12 display-flex pl-0 pt-3">
             <div class="col-lg-4 pr-0">
                 <div class="color-type-options display-flex pb-4">
-                    <span class="option-item mr-2 bg-cyan text-black" (click)="handleColorChangeInside()">Cyan</span>
-                    <span class="option-item mr-2 bg-magenta text-black"
-                        (click)="handleColorChangeInside()">Magenta</span>
-                    <span class="option-item mr-2 bg-yellow text-black"
-                        (click)="handleColorChangeInside()">Yellow</span>
-                    <span class="option-item mr-2 bg-black text-white" (click)="handleColorChangeInside()">Black</span>
+                    <span *ngFor="let item of colorTypeList"
+                        [ngClass]="viewModal.colorTypeInside.includes(item.text) ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
+                        (click)="handleColorChangeInside(item.text)">{{item.text}}</span>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -139,7 +139,7 @@
                 <div class="scroll-bar">
                     <mat-chip-list #pantoneColourchipList class="table-filter-chips">
                         <mat-chip [removable]="true" [ngStyle]="{'background-color': item}"
-                            *ngFor="let item of coverVM.pantoneColourInside"
+                            *ngFor="let item of viewModal.pantoneColourInside"
                             (removed)="removePantoneColourSelectionInside(item)">
                             {{item}}
                             <mat-icon matChipRemove>cancel</mat-icon>
@@ -153,7 +153,7 @@
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Finishing</mat-label>
-                    <mat-select [(ngModel)]="coverVM.finishingTypeInside" multiple>
+                    <mat-select [(ngModel)]="viewModal.finishingTypeInside" multiple>
                         <mat-option [value]="item.value" *ngFor="let item of finishingTypeList">{{item.text}}
                         </mat-option>
                     </mat-select>
@@ -163,7 +163,7 @@
                 <!-- class="scrollableDivX" style="width:650px !important; height: 54px;" -->
                 <div class="scroll-bar">
                     <mat-chip-list #finishingChipList class="table-filter-chips">
-                        <mat-chip [removable]="true" *ngFor="let item of coverVM.finishingTypeInside"
+                        <mat-chip [removable]="true" *ngFor="let item of viewModal.finishingTypeInside"
                             (removed)="removeFinishTypeSelectionInside(item)">
                             {{getFinishingTypeText(item)}}
                             <mat-icon matChipRemove>cancel</mat-icon>

@@ -32,7 +32,7 @@ export class ProductSpecHelperService {
       noOfMonoExtent: 0,
       totalExtent: 0,
       noOfColours: 0,
-      colorType: '',
+      colorType: [],
       pantoneColour: [],
       finishingType: [],
       specialInstructions3: '',

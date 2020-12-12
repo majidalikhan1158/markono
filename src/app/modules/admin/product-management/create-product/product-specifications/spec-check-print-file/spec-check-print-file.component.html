@@ -1,0 +1,69 @@
+<div class="row spec-check-print">
+  <div class="col-lg-12 pb-3">
+    <span class="font-16px font-roboto-bold">Check Print File - QD Report</span>
+  </div>
+  
+  <div class="col-lg-12 pt-2 pb-6 pl-0">
+    <mat-divider></mat-divider>
+  </div>
+
+  <div class="col-lg-12 pb-3">
+    <span class="font-14px font-roboto-bold">Upload print files</span>
+  </div>
+
+  <div class="col-lg-12 pl-0">
+    <mat-divider></mat-divider>
+  </div>
+
+  <div class="col-lg-12 pt-2 pl-0 display-flex">
+    <div class="col-lg-6">
+      <div class="col-lg-12 pb-3 pt-4">
+        <span class="font-14px font-roboto-bold">Cover</span>
+      </div>
+
+      <div class="col-lg-12 pb-3">
+        <ul class="pl-0">
+          <li class="pb-3" *ngFor="let item of checkPrintQAList">
+            <span class="font-14px font-roboto-regular">
+              {{item.text}}
+            </span>
+            <span class="float-right">
+              <mat-slide-toggle labelPosition="before" [(ngModel)]="viewModal[item.modalKey]">{{item.toggleLabel}}</mat-slide-toggle>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <mat-divider [vertical]="true"></mat-divider>
+
+    <div class="col-lg-5">
+      <div class="col-lg-12 pb-3 pt-4">
+        <span class="font-14px font-roboto-bold">Text</span>
+      </div>
+      <div class="col-lg-12 pb-3">
+        <ul class="pl-0">
+          <li class="pb-3" *ngFor="let item of checkTextQAList">
+            <span class="font-14px font-roboto-regular">
+              {{item.text}}
+            </span>
+            <span class="float-right">
+              <mat-slide-toggle labelPosition="before" [(ngModel)]="viewModal[item.modalKey]">{{item.toggleLabel}}</mat-slide-toggle>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12 pl-0" style="top: -8px">
+    <mat-divider></mat-divider>
+  </div>
+
+  <div class="col-lg-12 pt-3 display-flex">
+    <mat-checkbox [(ngModel)]="viewModal.checkBoxApproval">
+      The customer has acknowledged the print defects/revisions made and has given explicit approval to proceed with printing.
+    </mat-checkbox>
+    <a class="font-14px font-roboto-bold">Export QD Report</a>
+  </div>
+</div>

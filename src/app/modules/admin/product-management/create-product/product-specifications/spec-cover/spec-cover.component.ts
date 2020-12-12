@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   ColorTypeList,
-  ColorTypes,
   FinishingTypeList, CoverTypeList
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { MatSelectChange } from '@angular/material/select';
@@ -9,14 +8,13 @@ import { SelectionList } from 'src/app/modules/shared/enums/product-management/p
 import { CoverVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
-import { MatRadioChange } from '@angular/material/radio';
 @Component({
   selector: 'app-spec-cover',
   templateUrl: './spec-cover.component.html',
   styleUrls: ['./spec-cover.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class SpecCoverComponent implements OnInit {
+export class SpecCoverComponent implements OnInit, OnDestroy {
 
   noOfColorsList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   coverMaterialWeightList = [
@@ -42,7 +40,7 @@ export class SpecCoverComponent implements OnInit {
   finishingTypeList = FinishingTypeList;
   colorTypeList = ColorTypeList;
   selectedFinishingTypes: SelectionList[] = [];
-  coverVM: CoverVM;
+  viewModal: CoverVM;
   selectedCaseType = '';
   disabled = false;
 
@@ -53,47 +51,55 @@ export class SpecCoverComponent implements OnInit {
   }
 
   handleColorChangeOutside(color: string) {
-    this.coverVM.colorTypeOutside = color;
+    if (this.viewModal.colorTypeOutside.includes(color)) {
+      this.viewModal.colorTypeOutside = this.viewModal.colorTypeOutside.filter(x => x !== color);
+    } else {
+      this.viewModal.colorTypeOutside.push(color);
+    }
   }
 
-  handleColorChangeInside() {
-
+  handleColorChangeInside(color: string) {
+    if (this.viewModal.colorTypeInside.includes(color)) {
+      this.viewModal.colorTypeInside = this.viewModal.colorTypeInside.filter(x => x !== color);
+    } else {
+      this.viewModal.colorTypeInside.push(color);
+    }
   }
 
   addPantoneColourOutside(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-    if (value !== '' && this.coverVM.pantoneColourOutside.indexOf(value) === -1) {
-      this.coverVM.pantoneColourOutside.push(value);
+    if (value !== '' && this.viewModal.pantoneColourOutside.indexOf(value) === -1) {
+      this.viewModal.pantoneColourOutside.push(value);
     }
     (event.target as HTMLInputElement).value = '';
   }
 
   addPantoneColourInside(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-    if (value !== '' && this.coverVM.pantoneColourInside.indexOf(value) === -1) {
-      this.coverVM.pantoneColourInside.push(value);
+    if (value !== '' && this.viewModal.pantoneColourInside.indexOf(value) === -1) {
+      this.viewModal.pantoneColourInside.push(value);
     }
     (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelectionOutside(item: string) {
-    this.coverVM.pantoneColourOutside = this.coverVM.pantoneColourOutside.filter(
+    this.viewModal.pantoneColourOutside = this.viewModal.pantoneColourOutside.filter(
       (x) => x !== item
     );
   }
 
   removePantoneColourSelectionInside(item: string) {
-    this.coverVM.pantoneColourInside = this.coverVM.pantoneColourInside.filter(
+    this.viewModal.pantoneColourInside = this.viewModal.pantoneColourInside.filter(
       (x) => x !== item
     );
   }
 
   removeFinishTypeSelectionOutside = (recordId: string) => {
-    this.coverVM.finishingTypeOutside = this.coverVM.finishingTypeOutside.filter(x => x !== recordId);
+    this.viewModal.finishingTypeOutside = this.viewModal.finishingTypeOutside.filter(x => x !== recordId);
   }
 
   removeFinishTypeSelectionInside = (recordId: string) => {
-    this.coverVM.finishingTypeInside = this.coverVM.finishingTypeInside.filter(x => x !== recordId);
+    this.viewModal.finishingTypeInside = this.viewModal.finishingTypeInside.filter(x => x !== recordId);
   }
 
   getFinishingTypeText = (id: number) => {
@@ -103,9 +109,9 @@ export class SpecCoverComponent implements OnInit {
   getDefaultRecord = () => {
     this.store.productSpecStore.subscribe((resp) => {
       if (resp && resp.coverVM && resp.coverVM.id > 0) {
-        this.coverVM = resp.coverVM;
+        this.viewModal = resp.coverVM;
       } else {
-        this.coverVM = this.initialObject();
+        this.viewModal = this.initialObject();
       }
     });
   }
@@ -121,8 +127,8 @@ export class SpecCoverComponent implements OnInit {
       noOfMonoExtent: 0,
       totalExtent: 0,
       noOfColours: 0,
-      colorTypeOutside: '',
-      colorTypeInside: '',
+      colorTypeOutside: [],
+      colorTypeInside: [],
       pantoneColourInside: [],
       pantoneColourOutside: [],
       finishingTypeOutside: [],
@@ -132,13 +138,12 @@ export class SpecCoverComponent implements OnInit {
   }
 
   handleFinishingTypeChange(event: MatSelectChange) {
-    console.log(event);
     const selectedItemId = event.value as number[];
     this.selectedFinishingTypes = this.finishingTypeList.filter(x => selectedItemId.includes(x.value));
   }
 
   ngOnDestroy(): void {
-    this.store.setProductSpecStore(this.coverVM, ProductSpecTypes.COVER);
+    this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.COVER);
   }
 
 }

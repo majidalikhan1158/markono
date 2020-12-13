@@ -70,7 +70,7 @@
             <app-spec-check-print-file></app-spec-check-print-file>
         </ng-container>
         <ng-container>
-            <div class="row">
+            <div class="row pb-5">
                 <div class="col-lg-12 pt-10 text-right">
                     <button mat-button (click)="handleBackEvent()" *ngIf="selectedProductSpecType !== productSpecTypesConstant.GENERAL && selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && selectedProductSpecType !== productSpecTypesConstant.CHECK_PRINT_FILE" class="btn btn-primary stepper-back-button mr-2">Back</button>
                     <button mat-button (click)="handleNextEvent()" *ngIf="selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && selectedProductSpecType !== productSpecTypesConstant.CHECK_PRINT_FILE" class="btn btn-primary stepper-next-button">Next</button>

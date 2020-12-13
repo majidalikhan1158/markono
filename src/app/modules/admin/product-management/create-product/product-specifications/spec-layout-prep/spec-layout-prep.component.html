@@ -1,0 +1,230 @@
+<div class="row spec-layout-prep">
+
+    <div class="col-lg-12 display-flex pl-0 pt-2">
+        <div class="col-lg-2">
+            <span class="labels font-20px">Layout Prep</span>
+        </div>
+        <div class="col-lg-4 pr-0">
+            <mat-form-field appearance="fill">
+                <mat-label>Select Optimization Strategy</mat-label>
+                <mat-select>
+                    <mat-option value="Most Cost Effective">Most Cost Effective</mat-option>
+                    <mat-option value="Shortest Lead Time">Shortest Lead Time</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="col-lg-12 pt-6 pb-6">
+        <mat-divider></mat-divider>
+    </div>
+
+    <div class="col-lg-12">
+        <span class="labels font-20px">Component</span>
+    </div>
+
+    <div class="col-lg-12 pt-6 pb-6">
+        <mat-divider></mat-divider>
+    </div>
+
+    <div class="col-lg-12 padding-0px">
+        <div class="tab-content">
+            <!--begin::Table-->
+            <div class="">
+                <table
+                    class="table table-head-custom table-head-bg table-borderless table-vertical-center component-table">
+                    <thead>
+                        <tr class="text-left text-uppercase">
+                            <th *ngFor="let item of columnsToDisplayCompTable"> {{item}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="outer-row" *ngFor="let row of productSpecLayoutPrepCompList">
+                            <td>{{row.componentType}}</td>
+                            <td>
+                                <mat-form-field appearance="fill" class="width-100">
+                                    <mat-select>
+                                        <mat-option *ngFor="let item of impositionLayoutList" [value]="item.value">
+                                            {{row.impositionLayout}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field appearance="fill" class="width-100">
+                                    <mat-select>
+                                        <mat-option *ngFor="let item of grainDirectionList" [value]="item.value">
+                                            {{row.grainDirection}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field appearance="fill" class="width-150">
+                                    <input matInput value="{{row.cuttingSizeDepth}}">
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field appearance="fill" class="width-150">
+                                    <input matInput value="{{row.cuttingSizeWidth}}">
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field appearance="fill" class="width-100">
+                                    <mat-label>Choose</mat-label>
+                                    <mat-select>
+                                        <mat-option></mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--end::Table-->
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <span class="labels font-20px">Component Breakdown</span>
+    </div>
+
+    <div class="col-lg-12 pt-6 pb-6">
+        <mat-divider></mat-divider>
+    </div>
+
+    <div class="col-lg-12 padding-0px">
+        <div class="tab-content">
+            <!--begin::Table-->
+            <div class="">
+                <table
+                    class="table table-head-custom table-head-bg table-borderless table-vertical-center component-table">
+                    <thead>
+                        <tr class="text-left text-uppercase">
+                            <th *ngFor="let item of columnsToDisplayCompBreakTable"> {{item}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="outer-row" *ngFor="let row of productSpecLayoutPrepCompBreakList">
+                            <td>{{row.id}}</td>
+                            <td>
+                                {{row.type}}
+                            </td>
+                            <td>
+                                {{row.component}}
+                            </td>
+                            <td>
+                                {{row.qty}}
+                            </td>
+                            <td>
+                                {{row.printingSheets}}
+                            </td>
+                            <td>
+                                {{row.scrap}}
+                            </td>
+                            <td>
+                                {{row.totalSheets}}
+                            </td>
+                            <td>
+                                {{row.colour}}
+                            </td>
+                            <td>
+                                {{row.paper}}
+                            </td>
+                            <td>
+                                -
+                            </td>
+                            <td>
+                                <mat-form-field appearance="fill" class="width-100">
+                                    <mat-select>
+                                        <mat-option *ngFor="let item of machineTypeList" [value]="item.value">
+                                            {{item.text}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--end::Table-->
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <span class="labels font-20px">Production Activities</span>
+    </div>
+
+    <div class="col-lg-12 pt-6 pb-6">
+        <mat-divider></mat-divider>
+    </div>
+
+    <div class="col-lg-12 padding-0px">
+        <div class="tab-content">
+            <!--begin::Table-->
+            <div class="">
+                <table
+                    class="table table-head-custom table-head-bg table-borderless table-vertical-center component-table">
+                    <thead>
+                        <tr class="text-left text-uppercase">
+                            <th *ngFor="let item of columnsToDisplayProdActivityTable"> {{item}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="outer-row" *ngFor="let row of productSpecLayoutPrepProdActivityList">
+                            <td>{{row.comId}}</td>
+                            <td>
+                                {{row.dept}}
+                            </td>
+                            <td>
+                                {{row.type}}
+                            </td>
+                            <td>
+                                {{row.qty}}
+                            </td>
+                            <td>
+                                {{row.layout}}
+                            </td>
+                            <td>
+                                {{row.processCode}}
+                            </td>
+                            <td>
+                                {{row.activity}}
+                            </td>
+                            <td>
+                                {{row.units}}
+                            </td>
+                            <td>
+                                {{row.duration}}
+                            </td>
+                            <td>
+                                {{row.unitCosts}}
+                            </td>
+                            <td>
+                                {{row.newUnitsCosts}}
+                            </td>
+                            <td>
+                                {{row.totalEstCosts}}
+                            </td>
+                            <td>
+                                {{row.percentage}}
+                            </td>
+                            <td>
+                                <mat-form-field appearance="fill" class="width-100">
+                                    <mat-label></mat-label>
+                                    <mat-select>
+                                        <mat-option></mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--end::Table-->
+        </div>
+    </div>
+    <a class="pl-3">
+        <span class="material-icons add-icon pr-2 cursor-pointer font-18px ">
+            add_circle_outline
+        </span>
+        <span class="font-12px blue-link ">Add Another</span>
+    </a>
+</div>

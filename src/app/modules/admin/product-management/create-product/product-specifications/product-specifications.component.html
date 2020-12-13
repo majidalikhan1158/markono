@@ -43,6 +43,9 @@
         <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.WEB_CODE">
             <app-spec-webcode></app-spec-webcode>
         </ng-container>
+        <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.LAYOUT_PREP">
+            <app-spec-layout-prep></app-spec-layout-prep>
+        </ng-container>
         <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.UNIT_PRICE">
             <app-spec-unit-price></app-spec-unit-price>
         </ng-container>
@@ -55,9 +58,15 @@
         <ng-container>
             <div class="row">
                 <div class="col-lg-12 pt-10 text-right">
-                    <button mat-button (click)="handleBackEvent()" *ngIf="selectedProductSpecType !== productSpecTypesConstant.GENERAL" class="btn btn-primary stepper-back-button mr-2">Back</button>
-                    <button mat-button (click)="handleNextEvent()" *ngIf="selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE" class="btn btn-primary stepper-next-button">Next</button>
-                    <button mat-button (click)="handleNextEvent()" *ngIf="selectedProductSpecType === productSpecTypesConstant.UNIT_PRICE" class="btn btn-primary stepper-next-button">Create</button>
+                    <button mat-button (click)="handleBackEvent()"
+                        *ngIf="selectedProductSpecType !== productSpecTypesConstant.GENERAL"
+                        class="btn btn-primary stepper-back-button mr-2">Back</button>
+                    <button mat-button (click)="handleNextEvent()"
+                        *ngIf="selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE"
+                        class="btn btn-primary stepper-next-button">Next</button>
+                    <button mat-button (click)="handleNextEvent()"
+                        *ngIf="selectedProductSpecType === productSpecTypesConstant.UNIT_PRICE"
+                        class="btn btn-primary stepper-next-button">Create</button>
                 </div>
             </div>
         </ng-container>

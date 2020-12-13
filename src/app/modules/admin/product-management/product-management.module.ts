@@ -19,6 +19,7 @@ import { SpecUnitPriceComponent } from './create-product/product-specifications/
 import { SpecOtherComponent } from './create-product/product-specifications/spec-other/spec-other.component';
 import { SpecCheckPrintFileComponent } from './create-product/product-specifications/spec-check-print-file/spec-check-print-file.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { SpecLayoutPrepComponent } from './create-product/product-specifications/spec-layout-prep/spec-layout-prep.component';
 
 
 
@@ -38,7 +39,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     SpecWebcodeComponent,
     SpecUnitPriceComponent,
     SpecOtherComponent,
-    SpecCheckPrintFileComponent
+    SpecCheckPrintFileComponent,
+    SpecLayoutPrepComponent
   ],
   imports: [
     ProductManagementRoutingModule,

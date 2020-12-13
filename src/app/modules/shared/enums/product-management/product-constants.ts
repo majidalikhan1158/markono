@@ -17,7 +17,8 @@ export const ProductSpecificationTypes = {
   WEB_CODE: 'WEB_CODE',
   UNIT_PRICE: 'UNIT_PRICE',
   OTHER_COMPONENT: 'OTHER_COMPONENT',
-  CHECK_PRINT_FILE: 'CHECK_PRINT_FILE'
+  CHECK_PRINT_FILE: 'CHECK_PRINT_FILE',
+  LAYOUT_PREP: 'LAYOUT_PREP',
 };
 
 export const ProductTypes = {
@@ -72,14 +73,7 @@ export const ProductSpecificationTypesArray = [
     enum: 'OTHER_COMPONENT',
     isSelected: false,
     isVisited: false,
-  },
-  {
-    value: 'Check Print File',
-    id: 20,
-    enum: 'CHECK_PRINT_FILE',
-    isSelected: false,
-    isVisited: false,
-  },
+  }
 ];
 
 export const ProductSpecificationTypePartialArray = [
@@ -600,3 +594,66 @@ export const BindingType = {
   TRIMTOSIZE: 'TRIMTOSIZE',
   WIREOBINDING: 'WIREOBINDING'
 };
+export const ImpositionLayoutList = [
+  {
+    value: '1',
+    text: '1',
+  },
+  {
+    value: '2',
+    text: '2',
+  },
+  {
+    value: '3',
+    text: '3',
+  },
+  {
+    value: '4',
+    text: '4',
+  },
+  {
+    value: '8',
+    text: '8',
+  }
+];
+
+export const GrainDirectionList = [
+  {
+    value: 'true',
+    text: 'True',
+  },
+  {
+    value: 'false',
+    text: 'False',
+  }
+];
+
+export const MachineTypeList = [
+  {
+    value: '4 Color Press',
+    text: '4 Color Press',
+  },
+  {
+    value: '5 Color Press',
+    text: '5 Color Press',
+  }, {
+    value: '8 Color Press',
+    text: '8 Color Press',
+  },
+  {
+    value: 'Mono Press',
+    text: 'Mono Press',
+  },
+  {
+    value: 'Digital (std)',
+    text: 'Digital (std)',
+  },
+  {
+    value: 'Digital (Enchance)',
+    text: 'Digital (Enchance)',
+  },
+  {
+    value: 'Digital (Premium)',
+    text: 'Digital (Premium)',
+  }
+];

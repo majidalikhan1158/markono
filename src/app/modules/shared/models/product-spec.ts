@@ -280,3 +280,42 @@ export interface CheckPrintFileVM {
   knownInsertOrStickerLocation_Text: boolean;
   checkBoxApproval: boolean;
 }
+export interface LayoutPrepComponent {
+  id: number;
+  componentType: string;
+  impositionLayout: string;
+  grainDirection: string;
+  cuttingSizeDepth: string;
+  cuttingSizeWidth: string;
+  paper: string;
+}
+
+export interface LayoutPrepComponentBreakdown {
+  id: number;
+  type: string;
+  component: string;
+  qty: string;
+  printingSheets: string;
+  scrap: string;
+  totalSheets: string;
+  colour: string;
+  paper: string;
+  paperSize: string;
+  machineType: string;
+}
+
+export interface LayoutPrepProductionActivities {
+  comId: number;
+  dept: string;
+  type: string;
+  qty: string;
+  layout: string;
+  processCode: string;
+  activity: string;
+  units: string;
+  duration: string;
+  unitCosts: string;
+  newUnitsCosts: string;
+  totalEstCosts: string;
+  percentage: string;
+}

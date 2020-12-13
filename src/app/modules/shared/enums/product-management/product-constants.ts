@@ -15,6 +15,7 @@ export const ProductSpecificationTypes = {
   DVD_CD: 'DVD_CD',
   WEB_CODE: 'WEB_CODE',
   UNIT_PRICE: 'UNIT_PRICE',
+  LAYOUT_PREP: 'LAYOUT_PREP',
 };
 
 export const ProductTypes = {
@@ -60,6 +61,13 @@ export const ProductSpecificationTypesArray = [
     value: 'Unit Price',
     id: 5,
     enum: 'UNIT_PRICE',
+    isSelected: false,
+    isVisited: false,
+  },
+  {
+    value: 'Layout Prep',
+    id: 6,
+    enum: 'LAYOUT_PREP',
     isSelected: false,
     isVisited: false,
   },
@@ -457,5 +465,69 @@ export const CoverTypeList = [
   {
     value: '8PPCOVER',
     text: '8pp Cover',
+  }
+];
+
+export const ImpositionLayoutList = [
+  {
+    value: '1',
+    text: '1',
+  },
+  {
+    value: '2',
+    text: '2',
+  },
+  {
+    value: '3',
+    text: '3',
+  },
+  {
+    value: '4',
+    text: '4',
+  },
+  {
+    value: '8',
+    text: '8',
+  }
+];
+
+export const GrainDirectionList = [
+  {
+    value: 'true',
+    text: 'True',
+  },
+  {
+    value: 'false',
+    text: 'False',
+  }
+];
+
+export const MachineTypeList = [
+  {
+    value: '4 Color Press',
+    text: '4 Color Press',
+  },
+  {
+    value: '5 Color Press',
+    text: '5 Color Press',
+  }, {
+    value: '8 Color Press',
+    text: '8 Color Press',
+  },
+  {
+    value: 'Mono Press',
+    text: 'Mono Press',
+  },
+  {
+    value: 'Digital (std)',
+    text: 'Digital (std)',
+  },
+  {
+    value: 'Digital (Enchance)',
+    text: 'Digital (Enchance)',
+  },
+  {
+    value: 'Digital (Premium)',
+    text: 'Digital (Premium)',
   }
 ];

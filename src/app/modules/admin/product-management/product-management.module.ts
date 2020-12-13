@@ -17,11 +17,12 @@ import { SpecDvdCdComponent } from './create-product/product-specifications/spec
 import { SpecWebcodeComponent } from './create-product/product-specifications/spec-webcode/spec-webcode.component';
 import { SpecUnitPriceComponent } from './create-product/product-specifications/spec-unit-price/spec-unit-price.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { SpecLayoutPrepComponent } from './create-product/product-specifications/spec-layout-prep/spec-layout-prep.component';
 
 
 
 @NgModule({
-  declarations: [CreateProductComponent, ProductSpecListComponent, ProductVersionsComponent, PastOrdersComponent, ProductSpecificationsComponent, SpecGeneralComponent, SpecCoverComponent, SpecTextComponent, SpecBindingComponent, SpecChildIsbnComponent, SpecDvdCdComponent, SpecWebcodeComponent, SpecUnitPriceComponent],
+  declarations: [CreateProductComponent, ProductSpecListComponent, ProductVersionsComponent, PastOrdersComponent, ProductSpecificationsComponent, SpecGeneralComponent, SpecCoverComponent, SpecTextComponent, SpecBindingComponent, SpecChildIsbnComponent, SpecDvdCdComponent, SpecWebcodeComponent, SpecUnitPriceComponent, SpecLayoutPrepComponent],
   imports: [
     ProductManagementRoutingModule,
     CommonModule,

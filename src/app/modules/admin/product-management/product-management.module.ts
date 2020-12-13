@@ -16,6 +16,7 @@ import { SpecChildIsbnComponent } from './create-product/product-specifications/
 import { SpecDvdCdComponent } from './create-product/product-specifications/spec-dvd-cd/spec-dvd-cd.component';
 import { SpecWebcodeComponent } from './create-product/product-specifications/spec-webcode/spec-webcode.component';
 import { SpecUnitPriceComponent } from './create-product/product-specifications/spec-unit-price/spec-unit-price.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 
 
@@ -25,7 +26,9 @@ import { SpecUnitPriceComponent } from './create-product/product-specifications/
     ProductManagementRoutingModule,
     CommonModule,
     MaterialUiModule,
-    SharedModule
+    SharedModule,
+    NgApexchartsModule,
+
   ]
 })
 export class ProductManagementModule { }

@@ -5,9 +5,9 @@
         </div>
 
         <div class="col-sm-12">
-            
+
             <mat-radio-group class="pt-3  display-flex-direction-column">
-                <mat-radio-button  value="FIXED_PRICE">
+                <mat-radio-button value="FIXED_PRICE">
                     Fixed Price
                 </mat-radio-button>
                 <mat-hint class="pl-8 font-12px">(this price will be used regardless of any spec changes)</mat-hint>
@@ -17,17 +17,28 @@
                         <input matInput>
                     </mat-form-field>
                 </div>
-                <mat-radio-button  value="PRICE_SCALE">
+                <mat-radio-button value="PRICE_SCALE">
                     Price Scale
                 </mat-radio-button>
-                <mat-hint class="pl-8 font-12px">(unit price is derived based on specifications and print rate in price scale.Please work with IT to setup the price scale)</mat-hint>
+                <mat-hint class="pl-8 font-12px">(unit price is derived based on specifications and print rate in price
+                    scale.Please work with IT to setup the price scale)</mat-hint>
                 <div class="pb-5"></div>
-                <mat-radio-button  value="COST_PLUS">
+                <mat-radio-button value="COST_PLUS">
                     Cost plus
                 </mat-radio-button>
-                <mat-hint class="pl-8 font-12px">(unit price will be derived by margin multiply by estimated costs)</mat-hint>
+                <mat-hint class="pl-8 font-12px">(unit price will be derived by margin multiply by estimated costs)
+                </mat-hint>
                 <div class="pb-5"></div>
-           </mat-radio-group>
+            </mat-radio-group>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div id="chart">
+            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+                [stroke]="chartOptions.stroke" [colors]="chartOptions.colors" [dataLabels]="chartOptions.dataLabels"
+                [legend]="chartOptions.legend" [markers]="chartOptions.markers" [yaxis]="chartOptions.yaxis"
+                [title]="chartOptions.title"></apx-chart>
         </div>
     </div>
 </div>

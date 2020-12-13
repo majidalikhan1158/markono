@@ -18,6 +18,9 @@ import { SpecWebcodeComponent } from './create-product/product-specifications/sp
 import { SpecUnitPriceComponent } from './create-product/product-specifications/spec-unit-price/spec-unit-price.component';
 import { SpecOtherComponent } from './create-product/product-specifications/spec-other/spec-other.component';
 import { SpecCheckPrintFileComponent } from './create-product/product-specifications/spec-check-print-file/spec-check-print-file.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+
+
 
 @NgModule({
   declarations: [
@@ -42,6 +45,7 @@ import { SpecCheckPrintFileComponent } from './create-product/product-specificat
     CommonModule,
     MaterialUiModule,
     SharedModule,
-  ],
+    NgApexchartsModule,
+  ]
 })
 export class ProductManagementModule {}

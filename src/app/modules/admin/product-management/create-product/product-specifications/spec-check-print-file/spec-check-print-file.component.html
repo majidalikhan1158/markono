@@ -3,12 +3,87 @@
     <span class="font-16px font-roboto-bold">Check Print File - QD Report</span>
   </div>
   
-  <div class="col-lg-12 pt-2 pb-6 pl-0">
+  <div class="col-lg-12 pt-2 pb-5 pl-0">
     <mat-divider></mat-divider>
   </div>
 
-  <div class="col-lg-12 pb-3">
+  <div class="col-lg-12 pb-4">
     <span class="font-14px font-roboto-bold">Upload print files</span>
+  </div>
+
+  <div class="col-lg-12 pb-3 display-flex file-upload-section">
+    <div class="col-lg-4">
+      <div class="row">
+        <span class="file-title">
+          Cover:
+        </span>
+        <span>
+          <input type="file" name="coverFile" id="coverFile" class="inputfile"
+          (change)="handleFileInput($event.target.files,'COVERFILE')">
+          <label for="coverFile">
+            <mat-icon >cloud_upload</mat-icon>
+            <span class="file-label"> Replace File</span>
+          </label>
+        </span>
+      </div>
+      <div class="row">
+        <mat-chip class="chip"  [disableRipple]="true" (removed)="removeFile('COVERFILE')" 
+          [removable]="true" *ngIf="viewModal.coverFile">
+          <mat-icon class="chip-file-icon"> insert_drive_file</mat-icon>
+          {{viewModal.coverFile}}
+          <mat-icon matChipRemove
+          class="chip-remove-icon">cancel</mat-icon>
+        </mat-chip>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="row">
+        <span class="file-title">
+          Text:
+        </span>
+        <span>
+          <input type="file" name="textFile" id="textFile" class="inputfile"
+          (change)="handleFileInput($event.target.files,'TEXTFILE')">
+          <label for="textFile">
+            <mat-icon >cloud_upload</mat-icon>
+            <span class="file-label"> Upload File</span>
+          </label>
+        </span>
+      </div>
+      <div class="row">
+        <mat-chip class="chip" [disableRipple]="true" (removed)="removeFile('TEXTFILE')"
+          [removable]="true" *ngIf="viewModal.textFile">
+          <mat-icon class="chip-file-icon"> insert_drive_file</mat-icon>
+          {{viewModal.textFile}}
+          <mat-icon matChipRemove
+          class="chip-remove-icon">cancel</mat-icon>
+        </mat-chip>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="row">
+        <span class="file-title">
+          Others:
+        </span>
+        <span>
+          <input type="file" name="othersFile" id="othersFile" class="inputfile"
+          (change)="handleFileInput($event.target.files,'OTHERSFILE')">
+          <label for="othersFile">
+            <mat-icon >cloud_upload</mat-icon>
+            <span class="file-label"> Upload File</span>
+          </label>
+        </span>
+      </div>
+      <div class="row">
+        <mat-chip class="chip" [disableRipple]="true" (removed)="removeFile('OTHERSFILE')" 
+          [removable]="true" *ngIf="viewModal.othersFile">
+          <mat-icon class="chip-file-icon"> insert_drive_file</mat-icon>
+          {{viewModal.othersFile}}
+          <mat-icon matChipRemove
+          class="chip-remove-icon">cancel</mat-icon>
+        </mat-chip>
+      </div>
+    </div>
   </div>
 
   <div class="col-lg-12 pl-0">

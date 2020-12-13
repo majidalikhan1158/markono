@@ -6,7 +6,7 @@
 
         <div class="col-sm-12">
 
-            <mat-radio-group class="pt-3  display-flex-direction-column">
+            <mat-radio-group class="pt-3  display-flex-direction-column" [(ngModel)]="viewModal.priceType">
                 <mat-radio-button value="FIXED_PRICE">
                     Fixed Price
                 </mat-radio-button>
@@ -14,7 +14,7 @@
                 <div class="col-lg-3 pl-8 pt-3 pb-2">
                     <mat-form-field appearance="fill">
                         <mat-label>Enter Fixed Price</mat-label>
-                        <input matInput>
+                        <input matInput [(ngModel)]="viewModal.fixedPrice">
                     </mat-form-field>
                 </div>
                 <mat-radio-button value="PRICE_SCALE">
@@ -23,8 +23,8 @@
                 <mat-hint class="pl-8 font-12px">(unit price is derived based on specifications and print rate in price
                     scale.Please work with IT to setup the price scale)</mat-hint>
                 <div class="pb-5"></div>
-                <mat-radio-button value="COST_PLUS">
-                    Cost plus
+                <mat-radio-button value="ESTIMATED_PRICE">
+                    Estimated Costs
                 </mat-radio-button>
                 <mat-hint class="pl-8 font-12px">(unit price will be derived by margin multiply by estimated costs)
                 </mat-hint>
@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="col-sm-12">
+    <div class="col-sm-8" *ngIf="viewModal.priceType === 'ESTIMATED_PRICE'">
         <div id="chart">
             <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
                 [stroke]="chartOptions.stroke" [colors]="chartOptions.colors" [dataLabels]="chartOptions.dataLabels"

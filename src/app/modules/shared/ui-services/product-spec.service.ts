@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ProductSpecTypes } from '../enums/app-enums';
-import { BindingVM, ChildIsbnVM, DVDVM, GeneralVM, ProductSpecStoreVM, TextVM, CoverVM, WebCodeVM, OtherVM, CheckPrintFileVM } from '../models/product-spec';
+import { BindingVM, ChildIsbnVM, DVDVM, GeneralVM, ProductSpecStoreVM, TextVM, CoverVM, WebCodeVM, OtherVM, CheckPrintFileVM, UnitPriceVM } from '../models/product-spec';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +36,8 @@ export class ProductSpecStore {
       this.setOtherVM(data as OtherVM[]);
     } else if (type === ProductSpecTypes.CHECK_PRINT_FILE) {
       this.setCheckPrintFile(data as CheckPrintFileVM);
+    } else if (type === ProductSpecTypes.UNIT_PRICE) {
+      this.setUnitPriceVM(data as UnitPriceVM);
     }
   }
 
@@ -81,6 +83,11 @@ export class ProductSpecStore {
 
   private setCheckPrintFile = (data: CheckPrintFileVM) => {
     this.currentProductSpecStoreState.checkPrintFileVM = data;
+    this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
+  }
+
+  private setUnitPriceVM = (data: UnitPriceVM) => {
+    this.currentProductSpecStoreState.unitPriceVM = data;
     this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
   }
 }

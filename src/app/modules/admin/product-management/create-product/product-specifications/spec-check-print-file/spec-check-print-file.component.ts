@@ -3,7 +3,8 @@ import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { CheckPrintCoverQAList } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { CheckPrintFileVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecStore } from '../../../../../shared/ui-services/product-spec.service';
-import { CheckPrintTextQAList } from '../../../../../shared/enums/product-management/product-constants';
+import { CheckPrintTextQAList, CheckPrintFileTypes } from '../../../../../shared/enums/product-management/product-constants';
+import { SnackBarService } from '../../../../../shared/ui-services/snack-bar.service';
 
 @Component({
   selector: 'app-spec-check-print-file',
@@ -16,7 +17,7 @@ export class SpecCheckPrintFileComponent implements OnInit,OnDestroy {
   checkTextQAList = CheckPrintTextQAList;
   viewModal: CheckPrintFileVM;
 
-  constructor(private store: ProductSpecStore) { }
+  constructor(private store: ProductSpecStore, private snack: SnackBarService) { }
 
   ngOnInit() {
     this.getDefaultRecord();
@@ -56,11 +57,43 @@ export class SpecCheckPrintFileComponent implements OnInit,OnDestroy {
       fontEmbeddedOrOutlined_Text: false,
       imageResolutionLess300dpi_Text: false,
       knownInsertOrStickerLocation_Text: false,
-      checkBoxApproval: false
+      checkBoxApproval: false,
+      coverFile: null,
+      textFile: null,
+      othersFile: null
     };
   }
 
+  handleFileInput = (files: FileList, type: string) => {
+    if (!files || files.length === 0 ) {
+      this.snack.open('Please select a valid file first');
+    }
+    console.log(files.item(0));
+    const fileName = files.item(0).name;
+
+    if (type === CheckPrintFileTypes.COVERFILE) {
+      this.viewModal.coverFile = fileName;
+    } else if (type === CheckPrintFileTypes.TEXTFILE) {
+      this.viewModal.textFile = fileName;
+    } else if (type === CheckPrintFileTypes.OTHERSFILE) {
+      this.viewModal.othersFile = fileName;
+    }
+  }
+
+  removeFile = (type: string) => {
+    console.log(type);
+    if (type === CheckPrintFileTypes.COVERFILE) {
+      this.viewModal.coverFile = null;
+    } else if (type === CheckPrintFileTypes.TEXTFILE) {
+      this.viewModal.textFile = null;
+    } else if (type === CheckPrintFileTypes.OTHERSFILE) {
+      this.viewModal.othersFile = null;
+    }
+    console.log(this.viewModal);
+  }
+
   ngOnDestroy() {
+    console.log(this.viewModal);
     this.store.setProductSpecStore(
       this.viewModal,
       ProductSpecTypes.CHECK_PRINT_FILE

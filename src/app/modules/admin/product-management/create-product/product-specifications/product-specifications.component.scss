@@ -8,7 +8,7 @@ app-product-specifications {
   .product-spec-details {
     height: 100%;
   }
-  .product-spec-types .mat-list-option-number {
+  .product-spec-types .sub-types .mat-list-option-number {
     background-color: #afafaf;
     color: #fff;
     border-radius: 50%;
@@ -20,14 +20,27 @@ app-product-specifications {
     margin-right: 10px !important;
   }
 
-  .product-spec-types .mat-list-single-selected-option .mat-list-option-number {
-    background-color: #3699ff !important;
+  .product-spec-types .sub-types .mat-list-single-selected-option .mat-list-option-number {
+    background-color: #3699ff;
   }
-  .product-spec-types .mat-list-option-number-visited {
-    background-color: #7db961;
+
+  .product-spec-types .main-types .material-icons {
+    color: #AFAFAF;
   }
-  .product-spec-types .mat-list-option-number.visited {
-    background-color: #7db961;
+
+  .product-spec-types .main-types .mat-list-single-selected-option .material-icons {
+    color: #3699ff;
+  }
+
+  .product-spec-types .main-types .mat-list-option-number-visited .material-icons {
+    color: #7db961 !important;
+  }
+
+  .product-spec-types .sub-types .mat-list-option-number-visited {
+    background-color: #7db961 !important;
+  }
+  .product-spec-types .sub-types .mat-list-option-number.visited {
+    background-color: #7db961 !important;
   }
 
   .product-spec-types .mat-list-option-number-content {
@@ -39,10 +52,6 @@ app-product-specifications {
   .product-spec-types .mat-list-text {
     display: flex !important;
     flex-direction: row !important;
-  }
-
-  .product-spec-types .mat-list-text .material-icons {
-    color: #343434 !important;
   }
 
   .product-spec-types .mat-list-base {
@@ -59,9 +68,9 @@ app-product-specifications {
   }
   .product-spec-types .mat-list-text {
     padding-right: 0px !important;
-    font-size: 14px;
+    font-size: 12px;
     color: #343434;
-    font-family: "Roboto-Regular";
+    font-family: "Roboto-Medium";
   }
 
   .product-spec-types .mat-list-single-selected-option {
@@ -76,5 +85,28 @@ app-product-specifications {
 
   .product-spec-details mat-form-field {
     width: inherit;
+  }
+
+  .product-spec-types .mat-expansion-panel-body  {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 0px;
+  }
+
+  .product-spec-types .mat-expansion-panel-header.mat-expanded {
+    height: 50px;
+  }
+
+  .product-spec-types .mat-selection-list.sub-types  {
+    background: #F9F9F9;
+    border-radius: 10px;
+  }
+
+  .product-spec-types .mat-list-item {
+    border-radius: 5px;
+  }
+
+  .product-spec-types .mat-expansion-indicator::after {
+    vertical-align: super;
   }
 }

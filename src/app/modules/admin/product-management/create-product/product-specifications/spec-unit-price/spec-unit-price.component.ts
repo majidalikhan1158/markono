@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-
 import {
   ChartComponent,
   ApexAxisChartSeries,
@@ -13,6 +12,9 @@ import {
   ApexTitleSubtitle,
   ApexLegend
 } from "ng-apexcharts";
+import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
+import { UnitPriceVM } from 'src/app/modules/shared/models/product-spec';
+import { ProductSpecStore } from '../../../../../shared/ui-services/product-spec.service';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -27,6 +29,7 @@ export type ChartOptions = {
   legend: ApexLegend;
   title: ApexTitleSubtitle;
 };
+
 @Component({
   selector: 'app-spec-unit-price',
   templateUrl: './spec-unit-price.component.html',
@@ -37,8 +40,34 @@ export class SpecUnitPriceComponent implements OnInit {
 
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
+  viewModal: UnitPriceVM;
+  constructor(private store: ProductSpecStore) {
+  }
 
-  constructor() {
+  ngOnInit() {
+    this.getDefaultRecord();
+    this.initializeChart();
+  }
+
+  getDefaultRecord = () => {
+    this.store.productSpecStore.subscribe((resp) => {
+      if (resp && resp.unitPriceVM && resp.unitPriceVM.id > 0) {
+        this.viewModal = resp.unitPriceVM;
+      } else {
+        this.viewModal = this.initialObject();
+      }
+    });
+  }
+
+  initialObject = (): UnitPriceVM => {
+    return {
+      id: 1,
+      fixedPrice: 0,
+      priceType: ''
+    }
+  }
+
+  initializeChart = () => {
     this.chartOptions = {
       series: [
         {
@@ -108,8 +137,11 @@ export class SpecUnitPriceComponent implements OnInit {
       }
     };
   }
-  ngOnInit() {
 
+  ngOnDestroy(): void {
+    this.store.setProductSpecStore(
+      this.viewModal,
+      ProductSpecTypes.UNIT_PRICE
+    );
   }
-
 }

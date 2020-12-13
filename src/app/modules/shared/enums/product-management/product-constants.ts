@@ -1,5 +1,5 @@
 import { CheckPrintQA } from '../../models/product-spec';
-import { SelectionList } from './product-interfaces';
+import { ProductSpecTypeObject, SelectionList } from './product-interfaces';
 
 export const PrintingTypes = {
   OFFSET: 'Offset',
@@ -18,7 +18,7 @@ export const ProductSpecificationTypes = {
   UNIT_PRICE: 'UNIT_PRICE',
   OTHER_COMPONENT: 'OTHER_COMPONENT',
   CHECK_PRINT_FILE: 'CHECK_PRINT_FILE',
-  LAYOUT_PREP: 'LAYOUT_PREP',
+  LAYOUT_PREP: 'LAYOUT_PREP'
 };
 
 export const ProductTypes = {
@@ -31,7 +31,7 @@ export const ProductTypes = {
   OTHERS: 'OTHERS',
 };
 
-export const ProductSpecificationTypesArray = [
+export const ProductSpecificationTypesArray: ProductSpecTypeObject[] = [
   {
     value: 'General',
     id: 1,
@@ -61,22 +61,15 @@ export const ProductSpecificationTypesArray = [
     isVisited: false,
   },
   {
-    value: 'Unit Price',
-    id: 5,
-    enum: 'UNIT_PRICE',
-    isSelected: false,
-    isVisited: false,
-  },
-  {
     value: 'Other Component',
-    id: 6,
+    id: 5,
     enum: 'OTHER_COMPONENT',
     isSelected: false,
     isVisited: false,
-  }
+  },
 ];
 
-export const ProductSpecificationTypePartialArray = [
+export const ProductSpecificationTypePartialArray: ProductSpecTypeObject[] = [
   {
     value: 'Child ISBN',
     id: 6,
@@ -95,6 +88,30 @@ export const ProductSpecificationTypePartialArray = [
     value: 'Webcode',
     id: 8,
     enum: 'WEB_CODE',
+    isSelected: false,
+    isVisited: false,
+  },
+];
+
+export const ProductSpecificationTypeOtherArray: ProductSpecTypeObject[] = [
+  {
+    value: 'Check Print File',
+    id: 7,
+    enum: 'CHECK_PRINT_FILE',
+    isSelected: false,
+    isVisited: false,
+  },
+  {
+    value: 'Layout Prep',
+    id: 8,
+    enum: 'LAYOUT_PREP',
+    isSelected: false,
+    isVisited: false,
+  },
+  {
+    value: 'Unit Price',
+    id: 9,
+    enum: 'UNIT_PRICE',
     isSelected: false,
     isVisited: false,
   },
@@ -238,7 +255,6 @@ export const BindingTypeList: SelectionList[] = [
     enum: 'WIREOBINDING'
   },
 ];
-
 
 export const BindingMethodList: SelectionList[] = [
   {
@@ -391,7 +407,6 @@ export const ColorTypeList = [
     textColor: 'text-white'
   }
 ];
-
 
 export const StitchTypeList: SelectionList[] = [
   {
@@ -657,3 +672,9 @@ export const MachineTypeList = [
     text: 'Digital (Premium)',
   }
 ];
+
+export const CheckPrintFileTypes = {
+  COVERFILE: 'COVERFILE',
+  TEXTFILE: 'TEXTFILE',
+  OTHERSFILE: 'OTHERSFILE'
+};

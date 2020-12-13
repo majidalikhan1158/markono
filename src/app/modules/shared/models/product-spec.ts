@@ -173,10 +173,8 @@ export interface DVDVM {
 
 export interface UnitPriceVM {
   id: number;
-  isFixedPrice: boolean;
   fixedPrice: number;
-  isPriceScale: boolean;
-  isCostPlus: boolean;
+  priceType: string;
 }
 
 
@@ -190,6 +188,7 @@ export class ProductSpecStoreVM {
   coverVM: CoverVM;
   otherVM: OtherVM[];
   checkPrintFileVM: CheckPrintFileVM;
+  unitPriceVM: UnitPriceVM;
 }
 export interface CoverVM {
   id: number;
@@ -279,6 +278,9 @@ export interface CheckPrintFileVM {
   imageResolutionLess300dpi_Text: boolean;
   knownInsertOrStickerLocation_Text: boolean;
   checkBoxApproval: boolean;
+  coverFile: any;
+  textFile: any;
+  othersFile: any;
 }
 export interface LayoutPrepComponent {
   id: number;

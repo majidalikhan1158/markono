@@ -48,6 +48,8 @@ testem.log
 # # assets
 #/src/assets
 #src/assets
+#src/docs
+#src/dist
 
 # System Files
 .DS_Store

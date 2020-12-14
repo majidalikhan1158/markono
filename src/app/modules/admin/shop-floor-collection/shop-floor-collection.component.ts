@@ -302,7 +302,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       this.snack.open('Machine not have valid action');
       return;
     }
-    this.shopFloorService.setMachineAction(actionLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.setMachineAction(actionLink).subscribe(resp => {
       if (resp && resp.body && resp.body.message === 'OK') {
         this.snack.open('Job action has been set successfully');
       }

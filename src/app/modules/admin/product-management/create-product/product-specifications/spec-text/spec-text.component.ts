@@ -1,10 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   ColorTypeList,
-  ColorTypes,
   FinishingTypeList,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
-import { MatSelectChange } from '@angular/material/select';
 import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import { TextVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
@@ -40,7 +38,7 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   finishingTypeList = FinishingTypeList;
   colorTypeList = ColorTypeList;
   selectedFinishingTypes: SelectionList[] = [];
-  textVM: TextVM;
+  viewModal: TextVM;
   constructor(private store: ProductSpecStore) {}
 
   ngOnInit(): void {
@@ -48,25 +46,29 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   }
 
   handleColorChange(color: string) {
-    this.textVM.colorType = color;
+    if (this.viewModal.colorType.includes(color)) {
+      this.viewModal.colorType = this.viewModal.colorType.filter(x => x !== color);
+    } else {
+      this.viewModal.colorType.push(color);
+    }
   }
 
   addPantoneColour(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-    if (value !== '' && this.textVM.pantoneColour.indexOf(value) === -1) {
-      this.textVM.pantoneColour.push(value);
+    if (value !== '' && this.viewModal.pantoneColour.indexOf(value) === -1) {
+      this.viewModal.pantoneColour.push(value);
     }
     (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelection(item: string) {
-    this.textVM.pantoneColour = this.textVM.pantoneColour.filter(
+    this.viewModal.pantoneColour = this.viewModal.pantoneColour.filter(
       (x) => x !== item
     );
   }
 
   removeFinishTypeSelection = (recordId: string) => {
-    this.textVM.finishingType = this.textVM.finishingType.filter(x => x !== recordId);
+    this.viewModal.finishingType = this.viewModal.finishingType.filter(x => x !== recordId);
   }
 
   getFinishingTypeText = (id: number) => {
@@ -76,9 +78,9 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   getDefaultRecord = () => {
     this.store.productSpecStore.subscribe((resp) => {
       if (resp && resp.textVM && resp.textVM.id > 0) {
-        this.textVM = resp.textVM;
+        this.viewModal = resp.textVM;
       } else {
-        this.textVM = this.initialObject();
+        this.viewModal = this.initialObject();
       }
     });
   }
@@ -93,7 +95,7 @@ export class SpecTextComponent implements OnInit, OnDestroy {
       noOfMonoExtent: 0,
       totalExtent: 0,
       noOfColours: 0,
-      colorType: '',
+      colorType: [],
       pantoneColour: [],
       finishingType: [],
       specialInstructions: '',
@@ -101,6 +103,6 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.store.setProductSpecStore(this.textVM, ProductSpecTypes.TEXT);
+    this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.TEXT);
   }
 }

@@ -1,7 +1,7 @@
 app-spec-unit-price {
     .spec-unit-price .labels {
         color: #484848;
-        font-family: 'Roboto-Regular';
+        font-family: "Roboto-Regular";
     }
 
     .spec-unit-price .mat-radio-label-content {
@@ -14,5 +14,9 @@ app-spec-unit-price {
 
     .spec-unit-price .mat-radio-label-content {
         font-size: 14px !important;
+    }
+    #chart {
+        max-width: 1000px;
+        margin: 35px auto;
     }
 }

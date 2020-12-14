@@ -1,4 +1,7 @@
 <div class="row spec-child-isbn">
+    <div class="col-lg-12 pb-3">
+        <span class="font-16px font-roboto-bold">Child ISBN</span>
+    </div>
     <div class="col-lg-12 display-flex pl-0">
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
@@ -8,154 +11,153 @@
         </div>
         <div class="col-lg-9">
             <mat-chip-list #childIsbnchipList class="table-filter-chips">
-                <mat-chip [removable]="true" 
-                *ngFor="let item of childIsbnVM.childIsbns"
-                  (removed)="removeChildIsbnSelection(item)">
-                  {{item}}
-                  <mat-icon matChipRemove>cancel</mat-icon>
+                <mat-chip [removable]="true" *ngFor="let item of viewModal.childIsbns"
+                    (removed)="removeChildIsbnSelection(item)">
+                    {{item}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
-              </mat-chip-list>
+            </mat-chip-list>
         </div>
     </div>
 
     <div class="col-lg-12 display-flex pl-0 pt-3">
         <div class="col-lg-3 pr-0">
-            <mat-slide-toggle class="pt-4" [(ngModel)]="childIsbnVM.isShrinkWrapTogether"  labelPosition="before">Shrink Wrap Together</mat-slide-toggle>
+            <mat-slide-toggle class="pt-4" [(ngModel)]="viewModal.isShrinkWrapTogether" labelPosition="before">Shrink
+                Wrap Together</mat-slide-toggle>
         </div>
-        <div class="col-lg-9 pr-0" *ngIf="childIsbnVM.isShrinkWrapTogether">
+        <div class="col-lg-9 pr-0" *ngIf="viewModal.isShrinkWrapTogether">
             <mat-form-field appearance="fill">
                 <mat-label>Special instructions</mat-label>
-                <input matInput [(ngModel)]="childIsbnVM.specialInstruction1">
+                <input matInput [(ngModel)]="viewModal.specialInstruction1">
             </mat-form-field>
         </div>
     </div>
 
     <div class="col-lg-12 display-flex pl-0 pt-4 pb-2">
         <div class="col-lg-3 pr-0">
-            <mat-slide-toggle [(ngModel)]="childIsbnVM.isSlipCase"  labelPosition="before">Slipcase</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="viewModal.isSlipCase" labelPosition="before">Slipcase</mat-slide-toggle>
         </div>
     </div>
-    
-    <div class="col-lg-12 display-flex pl-0 pt-3">
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Material Weight</mat-label>
-                <mat-select [(ngModel)]="childIsbnVM.materialWeight">
-                    <mat-option value="Offset">Offset</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Text Material</mat-label>
-                <mat-select [(ngModel)]="childIsbnVM.textMaterial" [disabled]="childIsbnVM.materialWeight === ''">
-                    <mat-option value="Offset">Offset</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Material Brand</mat-label>
-                <mat-select [(ngModel)]="childIsbnVM.materialBrand" [disabled]="childIsbnVM.materialWeight === '' || childIsbnVM.textMaterial === ''">
-                    <mat-option value="Offset">Offset</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Greyboard Thickness</mat-label>
-                <mat-select [(ngModel)]="childIsbnVM.greyboardThickness">
-                    <mat-option [value]="item.value" *ngFor="let item of greyboardThicknessList">{{item.text}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </div>
-
-    <div class="col-lg-12 display-flex pl-0 pt-3">
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>No. of colours</mat-label>
-                <mat-select [(ngModel)]="childIsbnVM.noOfColours">
-                    <mat-option [value]="item" *ngFor="let item of noOfColorsList">{{item}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="col-lg-9">
-            <div class="color-type-options display-flex pb-4">
-                <span
-                *ngFor="let item of colorTypeList"
-                [ngClass]="item.text === childIsbnVM.colorType ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
-                (click)="handleColorChange(item.text)">{{item.text}}</span>
-              </div>
-        </div>
-    </div>
-
-    
-    <div class="col-lg-12 display-flex pl-0">
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Pantone Colour (Optional)</mat-label>
-                <input matInput 
-                pattern="(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)"
-                (keyup.enter)="addPantoneColour($event)">
-            </mat-form-field>
-        </div>
-        <div class="col-lg-9">
-            <mat-chip-list #pantoneColourchipList class="table-filter-chips">
-                <mat-chip [removable]="true" 
-                [ngStyle]="{'background-color': item}"
-                *ngFor="let item of childIsbnVM.pantoneColour"
-                  (removed)="removePantoneColourSelection(item)">
-                  {{item}}
-                  <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-            </mat-chip-list>
-        </div>
-    </div>
-
-    <div class="col-lg-12 pb-2">
-        <mat-hint class="font-10px">Add multiple pantone colour codes</mat-hint>
-    </div>
-
-    <div class="col-lg-12 display-flex pl-0">
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Finishing</mat-label>
-                <mat-select [(ngModel)]="childIsbnVM.finishingType" multiple>
-                    <mat-option [value]="item.value" *ngFor="let item of finishingTypeList">{{item.text}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="col-lg-9">
-            <!-- class="scrollableDivX" style="width:650px !important; height: 54px;" -->
-            <div >
-                <mat-chip-list #finishingChipList class="table-filter-chips">
-                    <mat-chip [removable]="true" 
-                    *ngFor="let item of childIsbnVM.finishingType"
-                      (removed)="removeFinishTypeSelection(item)">
-                      {{getFinishingTypeText(item)}}
-                      <mat-icon matChipRemove>cancel</mat-icon>
-                    </mat-chip>
-                </mat-chip-list>
+    <ng-container *ngIf="viewModal.isSlipCase">
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Material Weight</mat-label>
+                    <mat-select [(ngModel)]="viewModal.materialWeight">
+                        <mat-option value="Offset">Offset</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Text Material</mat-label>
+                    <mat-select [(ngModel)]="viewModal.textMaterial" [disabled]="viewModal.materialWeight === ''">
+                        <mat-option value="Offset">Offset</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Material Brand</mat-label>
+                    <mat-select [(ngModel)]="viewModal.materialBrand"
+                        [disabled]="viewModal.materialWeight === '' || viewModal.textMaterial === ''">
+                        <mat-option value="Offset">Offset</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Greyboard Thickness</mat-label>
+                    <mat-select [(ngModel)]="viewModal.greyboardThickness">
+                        <mat-option [value]="item.value" *ngFor="let item of greyboardThicknessList">{{item.text}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
         </div>
-    </div>
-    <div class="col-lg-12">
-        <mat-hint class="font-10px">You can add more than 1 type of finishing.</mat-hint>
-    </div>
-  
-    <div class="col-lg-12 pt-6 pb-6">
-        <mat-divider></mat-divider>
-    </div>
 
-    <div class="col-lg-12">
-        <span class="labels font-20px">Special Instruction</span>
-    </div>
+        <div class="col-lg-12 display-flex pl-0 pt-3">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>No. of colours</mat-label>
+                    <mat-select [(ngModel)]="viewModal.noOfColours">
+                        <mat-option [value]="item" *ngFor="let item of noOfColorsList">{{item}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-9">
+                <div class="color-type-options display-flex pb-4">
+                    <span *ngFor="let item of colorTypeList"
+                        [ngClass]="viewModal.colorType.includes(item.text) ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
+                        (click)="handleColorChange(item.text)">{{item.text}}</span>
+                </div>
+            </div>
+        </div>
 
+
+        <div class="col-lg-12 display-flex pl-0">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Pantone Colour (Optional)</mat-label>
+                    <input matInput pattern="(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)"
+                        (keyup.enter)="addPantoneColour($event)">
+                </mat-form-field>
+            </div>
+            <div class="col-lg-9">
+                <div class="scroll-bar">
+                    <mat-chip-list #pantoneColourchipList class="table-filter-chips">
+                        <mat-chip [removable]="true" [ngStyle]="{'background-color': item}"
+                            *ngFor="let item of viewModal.pantoneColour" (removed)="removePantoneColourSelection(item)">
+                            {{item}}
+                            <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12 pb-2">
+            <mat-hint class="font-10px">Add multiple pantone colour codes</mat-hint>
+        </div>
+
+        <div class="col-lg-12 display-flex pl-0">
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Finishing</mat-label>
+                    <mat-select [(ngModel)]="viewModal.finishingType" multiple>
+                        <mat-option [value]="item.value" *ngFor="let item of finishingTypeList">{{item.text}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-9">
+                <!-- class="scrollableDivX" style="width:650px !important; height: 54px;" -->
+                <div class="scroll-bar">
+                    <mat-chip-list #finishingChipList class="table-filter-chips">
+                        <mat-chip [removable]="true" *ngFor="let item of viewModal.finishingType"
+                            (removed)="removeFinishTypeSelection(item)">
+                            {{getFinishingTypeText(item)}}
+                            <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <mat-hint class="font-10px">You can add more than 1 type of finishing.</mat-hint>
+        </div>
+
+        <div class="col-lg-12 pt-6 pb-6">
+            <mat-divider></mat-divider>
+        </div>
+
+        <div class="col-lg-12">
+            <span class="labels font-20px">Special Instruction</span>
+        </div>
+    </ng-container>
     <div class="col-lg-12 pt-2">
         <mat-form-field appearance="fill">
             <mat-label>Write special instructions</mat-label>
-            <input matInput [(ngModel)]="childIsbnVM.specialInstructions2">
+            <input matInput [(ngModel)]="viewModal.specialInstructions2">
         </mat-form-field>
     </div>
 </div>

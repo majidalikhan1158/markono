@@ -1,5 +1,7 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { WebCodeVM } from 'src/app/modules/shared/models/product-spec';
+import { ProductSpecStore } from '../../../../../shared/ui-services/product-spec.service';
 
 @Component({
   selector: 'app-spec-webcode',
@@ -7,18 +9,28 @@ import { WebCodeVM } from 'src/app/modules/shared/models/product-spec';
   styleUrls: ['./spec-webcode.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class SpecWebcodeComponent implements OnInit {
+export class SpecWebcodeComponent implements OnInit, OnDestroy {
   columnsToDisplay = ['#', 'WebCode Location', 'No. of WebCode', 'X Coordinate', 'Y Coordinate', 'Special Instruction'];
-  rowsToDisplay: WebCodeVM[] = [];
-  constructor() { }
+  viewModal: WebCodeVM[] = [];
+  constructor(private store: ProductSpecStore) { }
 
   ngOnInit(): void {
-    this.addRow();
+    this.getDefaultRecord();
   }
 
-  addRow() {
-    const totalRows = this.rowsToDisplay.length;
-    this.rowsToDisplay.push({
+  getDefaultRecord = () => {
+    this.store.productSpecStore.subscribe(resp => {
+      if (resp && resp.webCodeVM && resp.webCodeVM.length > 0) {
+        this.viewModal = resp.webCodeVM;
+      } else {
+        this.initialObject();
+      }
+    });
+  }
+
+  initialObject = () => {
+    const totalRows = this.viewModal.length;
+    this.viewModal.push({
       id: totalRows + 1,
       webcodeLocation: '',
       noOfWebcode: '',
@@ -28,12 +40,20 @@ export class SpecWebcodeComponent implements OnInit {
     });
   }
 
+  addRow() {
+   this.initialObject();
+  }
+
   deleteRow(recordId) {
-    const filteredRows = this.rowsToDisplay.filter((x) => x.id !== recordId);
+    const filteredRows = this.viewModal.filter((x) => x.id !== recordId);
     filteredRows.forEach((x, i) => {
       x.id = i + 1;
     });
-    this.rowsToDisplay = filteredRows;
+    this.viewModal = filteredRows;
+  }
+
+  ngOnDestroy(): void {
+    this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.WEBCODE);
   }
 
 }

@@ -1,7 +1,7 @@
 app-spec-child-isbn {
     .spec-child-isbn .labels {
         color: #484848;
-        font-family: 'Roboto-Regular';
+        font-family: "Roboto-Regular";
     }
 
     .spec-child-isbn .mat-radio-label-content {
@@ -15,12 +15,12 @@ app-spec-child-isbn {
         font-size: 14px !important;
     }
 
-    .spec-child-isbn .color-type-options .option-item{
+    .spec-child-isbn .color-type-options .option-item {
         width: 78px;
         height: 50px;
         border-radius: 6px;
-        border: 1px solid #E6E6E6;
-        color: #AFAFAF;
+        border: 1px solid #e6e6e6;
+        color: #afafaf;
         font-size: 14px;
         font-family: "Roboto-Regular";
         text-align: center;
@@ -32,11 +32,16 @@ app-spec-child-isbn {
     }
 
     .spec-child-isbn .mat-chip-list-wrapper {
-        height: 45px;
+        height: auto;
+        margin: auto;
+        width: max-content !important;
+        flex-wrap: nowrap;
+        padding-top: 5px;
+        float: left;
     }
 
     .spec-child-isbn .mat-chip {
-        height: inherit;
+        //height: inherit;
         border-radius: 25px;
     }
 }

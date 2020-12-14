@@ -1,23 +1,23 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
-import { DvdCDBindingMapper, DVDVM } from 'src/app/modules/shared/models/product-spec';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
+import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { FinishingTypeList, BindingTypeList, ColorTypeList } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
-import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
+import { OtherVM, DvdCDBindingMapper } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 
 @Component({
-  selector: 'app-spec-dvd-cd',
-  templateUrl: './spec-dvd-cd.component.html',
-  styleUrls: ['./spec-dvd-cd.component.scss'],
+  selector: 'app-spec-other',
+  templateUrl: './spec-other.component.html',
+  styleUrls: ['./spec-other.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class SpecDvdCdComponent implements OnInit, OnDestroy {
+export class SpecOtherComponent implements OnInit, OnDestroy {
   productSpecTypes = ProductSpecTypes;
-  columnsToDisplay = ['#', 'Type', 'Quantity', 'Sleeve Type', ];
-  viewModal: DVDVM[] = [];
+  columnsToDisplay = ['#', 'Type', 'Weight', 'Material', 'Brand', 'Color Extend', 'Mono Extend', 'Total Extend' ];
+  viewModal: OtherVM[] = [];
   rowIdToExpand = 0;
-  shouldShowDvdDetails = false;
+  shouldShowOtherDetails = false;
   ExpansionIcons = ExpansionIcons;
   noOfColorsList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   coverMaterialWeightList = ['100gsm', '102gsm', '104gsm', '105gsm', '113gsm', '115gsm', '118gsm', '120gsm', '123gsm', '124gsm', '125gsm', '128gsm', '130gsm', '133gsm', '135gsm', '140gsm', '150gsm'];
@@ -36,10 +36,10 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
   showDvdDetails(rowId: number) {
     if (this.rowIdToExpand === rowId) {
       this.rowIdToExpand = 0;
-      this.shouldShowDvdDetails = !this.shouldShowDvdDetails;
+      this.shouldShowOtherDetails = !this.shouldShowOtherDetails;
     } else {
       this.rowIdToExpand = rowId;
-      this.shouldShowDvdDetails = true;
+      this.shouldShowOtherDetails = true;
     }
   }
 
@@ -75,8 +75,8 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
 
   getDefaultRecord = () => {
     this.store.productSpecStore.subscribe((resp) => {
-      if (resp && resp.dvdCdVM && resp.dvdCdVM.length > 0) {
-        this.viewModal = resp.dvdCdVM;
+      if (resp && resp.otherVM && resp.otherVM.length > 0) {
+        this.viewModal = resp.otherVM;
       } else {
         this.viewModal.push(this.initialObject());
       }
@@ -88,8 +88,12 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
     return {
       id: totalRows + 1,
       type: '',
-      quantity: 0,
-      sleeveType: '',
+      mainWeight: 0,
+      material: '',
+      brand: '',
+      colorExtend: '',
+      monoExtend: '',
+      totalExtend: '',
       componentType: '',
       orientationType: '',
       height: 0,
@@ -138,7 +142,8 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.store.setProductSpecStore(
       this.viewModal,
-      ProductSpecTypes.DVD_CD
+      ProductSpecTypes.OTHER_COMPONENT
     );
   }
+
 }

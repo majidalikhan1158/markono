@@ -38,6 +38,7 @@
     "ng-mat-search-bar": "^10.0.0-beta.3",
     "ngx-clipboard": "^13.0.1",
     "ngx-highlightjs": "3.0.3",
+    "ngx-mat-select-search": "^3.1.4",
     "ngx-perfect-scrollbar": "^9.0.0",
     "object-path": "^0.11.5",
     "perfect-scrollbar": "^1.5.0",

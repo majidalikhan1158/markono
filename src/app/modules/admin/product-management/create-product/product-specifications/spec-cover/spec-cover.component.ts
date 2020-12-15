@@ -1,13 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   ColorTypeList,
-  FinishingTypeList, CoverTypeList
+  FinishingTypeList, CoverTypeList, CoverMaterialList
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { MatSelectChange } from '@angular/material/select';
 import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import { CoverVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
+import { FormControl } from '@angular/forms';
+import { takeUntil } from 'rxjs/operators';
+import { ReplaySubject, Subject } from 'rxjs';
 @Component({
   selector: 'app-spec-cover',
   templateUrl: './spec-cover.component.html',
@@ -17,25 +20,7 @@ import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spe
 export class SpecCoverComponent implements OnInit, OnDestroy {
 
   noOfColorsList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  coverMaterialWeightList = [
-    '100gsm',
-    '102gsm',
-    '104gsm',
-    '105gsm',
-    '113gsm',
-    '115gsm',
-    '118gsm',
-    '120gsm',
-    '123gsm',
-    '124gsm',
-    '125gsm',
-    '128gsm',
-    '130gsm',
-    '133gsm',
-    '135gsm',
-    '140gsm',
-    '150gsm',
-  ];
+  coverMaterialWeightList =CoverMaterialList;
   coverTypeList = CoverTypeList;
   finishingTypeList = FinishingTypeList;
   colorTypeList = ColorTypeList;
@@ -43,11 +28,14 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   viewModal: CoverVM;
   selectedCaseType = '';
   disabled = false;
-
+  coverMaterialFltrCtrl: FormControl = new FormControl();
+  filteredCoverMaterial: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  protected onDestroy = new Subject<void>();
   constructor(private store: ProductSpecStore) { }
 
   ngOnInit(): void {
     this.getDefaultRecord();
+    this.handleFilterAutoComplete();
   }
 
   handleColorChangeOutside(color: string) {
@@ -142,7 +130,36 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
     this.selectedFinishingTypes = this.finishingTypeList.filter(x => selectedItemId.includes(x.value));
   }
 
+  handleFilterAutoComplete = () => {
+    this.filteredCoverMaterial.next(this.coverMaterialWeightList.slice());
+    this.coverMaterialFltrCtrl.valueChanges
+    .pipe(takeUntil(this.onDestroy))
+    .subscribe(() => {
+      this.filterCoverMaterials();
+    });
+  }
+
+  filterCoverMaterials = () => {
+    if (!this.coverMaterialWeightList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.coverMaterialFltrCtrl.value;
+    if (!search) {
+      this.filteredCoverMaterial.next(this.coverMaterialWeightList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredCoverMaterial.next(
+      this.coverMaterialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
   ngOnDestroy(): void {
+    this.onDestroy.next();
+    this.onDestroy.complete();
     this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.COVER);
   }
 

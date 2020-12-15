@@ -12,7 +12,7 @@ import { SnackBarService } from '../../../../../shared/ui-services/snack-bar.ser
   styleUrls: ['./spec-check-print-file.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class SpecCheckPrintFileComponent implements OnInit,OnDestroy {
+export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
   checkPrintQAList = CheckPrintCoverQAList;
   checkTextQAList = CheckPrintTextQAList;
   viewModal: CheckPrintFileVM;

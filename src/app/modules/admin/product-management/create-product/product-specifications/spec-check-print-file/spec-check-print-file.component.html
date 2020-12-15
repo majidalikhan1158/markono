@@ -22,7 +22,7 @@
           (change)="handleFileInput($event.target.files,'COVERFILE')">
           <label for="coverFile">
             <mat-icon >cloud_upload</mat-icon>
-            <span class="file-label"> Replace File</span>
+            <span class="file-label">{{viewModal.coverFile ? 'Replace File' : 'Upload File'}}</span>
           </label>
         </span>
       </div>
@@ -46,7 +46,7 @@
           (change)="handleFileInput($event.target.files,'TEXTFILE')">
           <label for="textFile">
             <mat-icon >cloud_upload</mat-icon>
-            <span class="file-label"> Upload File</span>
+            <span class="file-label"> {{viewModal.textFile ? 'Replace File' : 'Upload File'}}</span>
           </label>
         </span>
       </div>
@@ -70,7 +70,7 @@
           (change)="handleFileInput($event.target.files,'OTHERSFILE')">
           <label for="othersFile">
             <mat-icon >cloud_upload</mat-icon>
-            <span class="file-label"> Upload File</span>
+            <span class="file-label"> {{viewModal.othersFile ? 'Replace File' : 'Upload File'}}</span>
           </label>
         </span>
       </div>

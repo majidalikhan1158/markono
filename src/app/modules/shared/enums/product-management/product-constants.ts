@@ -678,3 +678,23 @@ export const CheckPrintFileTypes = {
   TEXTFILE: 'TEXTFILE',
   OTHERSFILE: 'OTHERSFILE'
 };
+
+export const CoverMaterialList =  [
+  '100gsm',
+  '102gsm',
+  '104gsm',
+  '105gsm',
+  '113gsm',
+  '115gsm',
+  '118gsm',
+  '120gsm',
+  '123gsm',
+  '124gsm',
+  '125gsm',
+  '128gsm',
+  '130gsm',
+  '133gsm',
+  '135gsm',
+  '140gsm',
+  '150gsm',
+];

@@ -20,7 +20,7 @@ import { SpecOtherComponent } from './create-product/product-specifications/spec
 import { SpecCheckPrintFileComponent } from './create-product/product-specifications/spec-check-print-file/spec-check-print-file.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SpecLayoutPrepComponent } from './create-product/product-specifications/spec-layout-prep/spec-layout-prep.component';
-
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 
 @NgModule({
@@ -48,6 +48,7 @@ import { SpecLayoutPrepComponent } from './create-product/product-specifications
     MaterialUiModule,
     SharedModule,
     NgApexchartsModule,
+    NgxMatSelectSearchModule
   ]
 })
 export class ProductManagementModule {}

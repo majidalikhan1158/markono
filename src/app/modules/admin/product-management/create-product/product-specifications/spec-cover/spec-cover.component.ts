@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   ColorTypeList,
-  FinishingTypeList, CoverTypeList, CoverMaterialList
+  FinishingTypeList, CoverTypeList, CoverMaterialList,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { MatSelectChange } from '@angular/material/select';
 import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
@@ -20,22 +20,28 @@ import { ReplaySubject, Subject } from 'rxjs';
 export class SpecCoverComponent implements OnInit, OnDestroy {
 
   noOfColorsList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  coverMaterialWeightList =CoverMaterialList;
+  coverMaterialWeightList = CoverMaterialList;
   coverTypeList = CoverTypeList;
-  finishingTypeList = FinishingTypeList;
+  finishingTypeList: SelectionList[] = FinishingTypeList;
   colorTypeList = ColorTypeList;
   selectedFinishingTypes: SelectionList[] = [];
   viewModal: CoverVM;
   selectedCaseType = '';
   disabled = false;
   coverMaterialFltrCtrl: FormControl = new FormControl();
+  finishingTypeOutsideFltrCtrl: FormControl = new FormControl();
+  finishingTypeInsideFltrCtrl: FormControl = new FormControl();
   filteredCoverMaterial: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredFinishingTypeOutside: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  filteredFinishingTypeInside: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
   protected onDestroy = new Subject<void>();
   constructor(private store: ProductSpecStore) { }
 
   ngOnInit(): void {
     this.getDefaultRecord();
-    this.handleFilterAutoComplete();
+    this.handleCoverMaterialsFilterAutoComplete();
+    this.handleFinishingTypeInsideFilterAutoComplete();
+    this.handleFinishingTypeOutsideFilterAutoComplete();
   }
 
   handleColorChangeOutside(color: string) {
@@ -130,13 +136,13 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
     this.selectedFinishingTypes = this.finishingTypeList.filter(x => selectedItemId.includes(x.value));
   }
 
-  handleFilterAutoComplete = () => {
+  handleCoverMaterialsFilterAutoComplete = () => {
     this.filteredCoverMaterial.next(this.coverMaterialWeightList.slice());
     this.coverMaterialFltrCtrl.valueChanges
-    .pipe(takeUntil(this.onDestroy))
-    .subscribe(() => {
-      this.filterCoverMaterials();
-    });
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterCoverMaterials();
+      });
   }
 
   filterCoverMaterials = () => {
@@ -154,6 +160,60 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
     // filter the banks
     this.filteredCoverMaterial.next(
       this.coverMaterialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  handleFinishingTypeInsideFilterAutoComplete = () => {
+    this.filteredFinishingTypeInside.next(this.finishingTypeList.slice());
+    this.finishingTypeInsideFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterFinishingInsideType();
+      });
+  }
+
+  filterFinishingInsideType = () => {
+    if (!this.finishingTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.finishingTypeInsideFltrCtrl.value;
+    if (!search) {
+      this.filteredFinishingTypeInside.next(this.finishingTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredFinishingTypeInside.next(
+      this.finishingTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  handleFinishingTypeOutsideFilterAutoComplete = () => {
+    this.filteredFinishingTypeOutside.next(this.finishingTypeList.slice());
+    this.finishingTypeOutsideFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterFinishingOutsideType();
+      });
+  }
+
+  filterFinishingOutsideType = () => {
+    if (!this.finishingTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.finishingTypeOutsideFltrCtrl.value;
+    if (!search) {
+      this.filteredFinishingTypeOutside.next(this.finishingTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredFinishingTypeOutside.next(
+      this.finishingTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
     );
   }
 

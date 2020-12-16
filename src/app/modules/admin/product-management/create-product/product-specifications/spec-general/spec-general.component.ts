@@ -9,14 +9,19 @@ import {
 import {
   AddRemoveSpecTypeEvent,
   AdditionalSpecTypes,
+  SelectionList,
 } from 'src/app/modules/shared/enums/product-management/product-interfaces';
-import { ProductSpecificationTypes,
+import {
+  ProductSpecificationTypes,
   ProductTypeList,
-  ProductTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
+  ProductTypes
+} from 'src/app/modules/shared/enums/product-management/product-constants';
 import { GeneralVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
-
+import { FormControl } from '@angular/forms';
+import { takeUntil } from 'rxjs/operators';
+import { ReplaySubject, Subject } from 'rxjs';
 @Component({
   selector: 'app-spec-general',
   templateUrl: './spec-general.component.html',
@@ -31,13 +36,17 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
     addDVDCD: false,
     addChildIsbn: false,
   };
-  productTypeList = ProductTypeList;
+  productTypeList: SelectionList[] = ProductTypeList;
   productTypes = ProductTypes;
   generalVM: GeneralVM;
-  constructor(private store: ProductSpecStore) {}
+  productTypeFltrCtrl: FormControl = new FormControl();
+  filteredProductType: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  protected onDestroy = new Subject<void>();
+  constructor(private store: ProductSpecStore) { }
 
   ngOnInit(): void {
     this.getDefaultRecord();
+    this.handleFilterAutoComplete();
   }
 
   handleSpecAddToggle(productSpecType: string) {
@@ -92,7 +101,36 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
     };
   }
 
+  handleFilterAutoComplete = () => {
+    this.filteredProductType.next(this.productTypeList.slice());
+    this.productTypeFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterProductType();
+      });
+  }
+
+  filterProductType = () => {
+    if (!this.productTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.productTypeFltrCtrl.value;
+    if (!search) {
+      this.filteredProductType.next(this.productTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredProductType.next(
+      this.productTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
   ngOnDestroy(): void {
-   this.store.setProductSpecStore(this.generalVM, ProductSpecTypes.GENERAL);
+    this.onDestroy.next();
+    this.onDestroy.complete();
+    this.store.setProductSpecStore(this.generalVM, ProductSpecTypes.GENERAL);
   }
 }

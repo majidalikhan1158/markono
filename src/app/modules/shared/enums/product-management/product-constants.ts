@@ -117,7 +117,7 @@ export const ProductSpecificationTypeOtherArray: ProductSpecTypeObject[] = [
   },
 ];
 
-export const ProductTypeList = [
+export const ProductTypeList: SelectionList[] = [
   {
     value: 1,
     text: 'Books',
@@ -679,7 +679,7 @@ export const CheckPrintFileTypes = {
   OTHERSFILE: 'OTHERSFILE'
 };
 
-export const CoverMaterialList =  [
+export const CoverMaterialList = [
   '100gsm',
   '102gsm',
   '104gsm',
@@ -697,4 +697,17 @@ export const CoverMaterialList =  [
   '135gsm',
   '140gsm',
   '150gsm',
+];
+
+export const NoOfColorsList = [
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9'
 ];

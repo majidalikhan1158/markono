@@ -7,12 +7,15 @@ import {
   HeadTailBandColorTypeList,
   GreyboardThicknessList,
   BenchworkTypeList,
-  ColorTypeList,
+  ColorTypeList, NoOfColorsList, CoverMaterialList
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { ChildIsbnVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
-
+import { FormControl } from '@angular/forms';
+import { takeUntil } from 'rxjs/operators';
+import { ReplaySubject, Subject } from 'rxjs';
+import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 @Component({
   selector: 'app-spec-child-isbn',
   templateUrl: './spec-child-isbn.component.html',
@@ -20,27 +23,9 @@ import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
   encapsulation: ViewEncapsulation.None,
 })
 export class SpecChildIsbnComponent implements OnInit, OnDestroy {
-  noOfColorsList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  coverMaterialWeightList = [
-    '100gsm',
-    '102gsm',
-    '104gsm',
-    '105gsm',
-    '113gsm',
-    '115gsm',
-    '118gsm',
-    '120gsm',
-    '123gsm',
-    '124gsm',
-    '125gsm',
-    '128gsm',
-    '130gsm',
-    '133gsm',
-    '135gsm',
-    '140gsm',
-    '150gsm',
-  ];
-  finishingTypeList = FinishingTypeList;
+  noOfColorsList = NoOfColorsList;
+  coverMaterialWeightList = CoverMaterialList;
+  finishingTypeList: SelectionList[] = FinishingTypeList;
   bindingTypeList = BindingTypeList;
   bindingMethodList = BindingMethodList;
   bookSpineTypeList = BookSpineTypeList;
@@ -49,10 +34,17 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   benchworkTypeList = BenchworkTypeList;
   colorTypeList = ColorTypeList;
   viewModal: ChildIsbnVM;
-  constructor(private store: ProductSpecStore) {}
+  noOfColoursFltrCtrl: FormControl = new FormControl();
+  finishingTypeFltrCtrl: FormControl = new FormControl();
+  filteredNoOfColors: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredFinishingType: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  protected onDestroy = new Subject<void>();
+  constructor(private store: ProductSpecStore) { }
 
   ngOnInit(): void {
     this.getDefaultRecord();
+    this.handleNoOfColorsFilterAutoComplete();
+    this.handleFinishingTypeFilterAutoComplete();
   }
 
   handleColorChange(color: string) {
@@ -126,7 +118,63 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     };
   }
 
+  handleNoOfColorsFilterAutoComplete = () => {
+    this.filteredNoOfColors.next(this.noOfColorsList.slice());
+    this.noOfColoursFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterNoOfColors();
+      });
+  }
+
+  filterNoOfColors = () => {
+    if (!this.noOfColorsList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.noOfColoursFltrCtrl.value;
+    if (!search) {
+      this.filteredNoOfColors.next(this.noOfColorsList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredNoOfColors.next(
+      this.noOfColorsList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  handleFinishingTypeFilterAutoComplete = () => {
+    this.filteredFinishingType.next(this.finishingTypeList.slice());
+    this.finishingTypeFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterFinishingType();
+      });
+  }
+
+  filterFinishingType = () => {
+    if (!this.coverMaterialWeightList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.finishingTypeFltrCtrl.value;
+    if (!search) {
+      this.filteredFinishingType.next(this.finishingTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredFinishingType.next(
+      this.finishingTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
   ngOnDestroy(): void {
+    this.onDestroy.next();
+    this.onDestroy.complete();
     this.store.setProductSpecStore(
       this.viewModal,
       ProductSpecTypes.CHILD_ISBN

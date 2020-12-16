@@ -18,7 +18,9 @@ import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
 import { SelectionList } from '../../../../../shared/enums/product-management/product-interfaces';
-
+import { FormControl } from '@angular/forms';
+import { takeUntil } from 'rxjs/operators';
+import { ReplaySubject, Subject } from 'rxjs';
 @Component({
   selector: 'app-spec-binding',
   templateUrl: './spec-binding.component.html',
@@ -51,7 +53,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     '150gsm',
   ];
   finishingTypeList = FinishingTypeList;
-  bindingTypeList = BindingTypeList;
+  bindingTypeList: SelectionList[] = BindingTypeList;
   bindingMethodList = BindingMethodList;
   bookSpineTypeList = BookSpineTypeList;
   headTailBandColorTypeList = HeadTailBandColorTypeList;
@@ -63,11 +65,15 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   coilColorList = CoilColorList;
   viewModal: BindingVM;
   isOtherComponent = false;
-  constructor(private store: ProductSpecStore, private helper: ProductSpecHelperService) {}
+  bindingTypeFltrCtrl: FormControl = new FormControl();
+  filteredBindingType: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  protected onDestroy = new Subject<void>();
+  constructor(private store: ProductSpecStore, private helper: ProductSpecHelperService) { }
 
   ngOnInit(): void {
     this.isOtherComponent = !!this.parentComponent;
     this.getDefaultRecord();
+    this.handleBindingTypeFilterAutoComplete();
   }
 
   handleBindingTypeChange = () => {
@@ -153,7 +159,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     };
   }
 
-  initializeObject =  (bindingType: SelectionList) => {
+  initializeObject = (bindingType: SelectionList) => {
     this.viewModal = this.initialObject();
     this.viewModal.bindingType = bindingType.value;
     if (bindingType.enum === BindingType.CASEBOUND) {
@@ -171,9 +177,38 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleBindingTypeFilterAutoComplete = () => {
+    this.filteredBindingType.next(this.bindingTypeList.slice());
+    this.bindingTypeFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterBindingType();
+      });
+  }
+
+  filterBindingType = () => {
+    if (!this.bindingTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.bindingTypeFltrCtrl.value;
+    if (!search) {
+      this.filteredBindingType.next(this.bindingTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredBindingType.next(
+      this.bindingTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
   ngOnDestroy(): void {
+    this.onDestroy.next();
+    this.onDestroy.complete();
     if (this.isOtherComponent) {
-      const obj: DvdCDBindingMapper = {index: this.parentRecordIndex, bindingVM: this.viewModal};
+      const obj: DvdCDBindingMapper = { index: this.parentRecordIndex, bindingVM: this.viewModal };
       this.childComponentDataBindingType.emit(obj);
     } else {
       this.store.setProductSpecStore(

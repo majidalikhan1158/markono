@@ -21,9 +21,11 @@
                     <mat-label>Cover Material Weight</mat-label>
                     <mat-select [(ngModel)]="viewModal.coverMaterialWeight">
                         <mat-option>
-                            <ngx-mat-select-search [formControl]="coverMaterialFltrCtrl" placeholderLabel="Search.."></ngx-mat-select-search>
-                          </mat-option>
-                        <mat-option [value]="item" *ngFor="let item of filteredCoverMaterial | async">{{item}}</mat-option>
+                            <ngx-mat-select-search [formControl]="coverMaterialFltrCtrl" placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item" *ngFor="let item of filteredCoverMaterial | async">{{item}}
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -89,7 +91,13 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Finishing</mat-label>
                     <mat-select [(ngModel)]="viewModal.finishingTypeOutside" multiple>
-                        <mat-option [value]="item.value" *ngFor="let item of finishingTypeList">{{item.text}}
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="finishingTypeOutsideFltrCtrl"
+                                placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item.value" *ngFor="let item of filteredFinishingTypeOutside |async">
+                            {{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -157,7 +165,13 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Finishing</mat-label>
                     <mat-select [(ngModel)]="viewModal.finishingTypeInside" multiple>
-                        <mat-option [value]="item.value" *ngFor="let item of finishingTypeList">{{item.text}}
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="finishingTypeInsideFltrCtrl"
+                                placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item.value" *ngFor="let item of filteredFinishingTypeInside | async">
+                            {{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

@@ -3,6 +3,7 @@ import { ImpositionLayoutList, GrainDirectionList, MachineTypeList } from 'src/a
 import { ProductSpecLayoutPrepCompBreakList } from 'src/app/modules/shared/mock-data/layout-prep-comp-break-list';
 import { ProductSpecLayoutPrepCompList } from 'src/app/modules/shared/mock-data/layout-prep-comp-list';
 import { ProductSpecLayoutPrepProdActivityList } from 'src/app/modules/shared/mock-data/layout-prep-production-activty-list';
+import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 
 @Component({
   selector: 'app-spec-layout-prep',
@@ -54,6 +55,7 @@ export class SpecLayoutPrepComponent implements OnInit {
   machineTypeList = MachineTypeList;
   productSpecLayoutPrepCompBreakList = ProductSpecLayoutPrepCompBreakList;
   productSpecLayoutPrepProdActivityList = ProductSpecLayoutPrepProdActivityList;
+  ExpansionIcons = ExpansionIcons;
   constructor() { }
 
   ngOnInit(): void {

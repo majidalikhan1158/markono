@@ -84,13 +84,18 @@
         <div class="col-lg-12 pt-6 pb-6">
             <mat-divider></mat-divider>
         </div>
-
         <div class="col-lg-12 display-flex pl-0">
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Benchwork Required</mat-label>
                     <mat-select [(ngModel)]="viewModal.caseBound.benchworkRequired">
-                        <mat-option [value]="item.value" *ngFor="let item of benchworkTypeList">{{item.text}}
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="caseBoundBenchWorkFltrCtrl"
+                                placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item.value" *ngFor="let item of filteredCaseBoundBenchWork |async">
+                            {{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -170,33 +175,26 @@
             </div>
         </div>
 
+        <div class="col-lg-12 pb-3">
+            <mat-hint class="font-10px">No. of colours ({{countNoOfColors}})</mat-hint>
+        </div>
+
         <div class="col-lg-12 display-flex pl-0 pt-3">
-            <div class="col-lg-3 pr-0">
-                <mat-form-field appearance="fill">
-                    <mat-label>No. of colours</mat-label>
-                    <mat-select [(ngModel)]="viewModal.caseBound.noOfColours">
-                        <mat-option [value]="item" *ngFor="let item of noOfColorsList">{{item}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-lg-9">
+            <div class="col-lg-4 pr-0">
                 <div class="color-type-options display-flex pb-4">
                     <span *ngFor="let item of colorTypeList"
                         [ngClass]="viewModal.caseBound.colorType.includes(item.text) ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
                         (click)="handleColorChange(item.text)">{{item.text}}</span>
                 </div>
             </div>
-        </div>
-
-        <div class="col-lg-12 display-flex pl-0">
-            <div class="col-lg-3 pr-0">
+            <div class="col-lg-3">
                 <mat-form-field appearance="fill">
                     <mat-label>Pantone Colour (Optional)</mat-label>
                     <input matInput pattern="(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)"
                         (keyup.enter)="addPantoneColour($event)">
                 </mat-form-field>
             </div>
-            <div class="col-lg-9">
+            <div class="col-lg-5">
                 <div class="scroll-bar">
                     <mat-chip-list #pantoneColourchipList class="table-filter-chips">
                         <mat-chip [removable]="true" [ngStyle]="{'background-color': item}"
@@ -213,13 +211,18 @@
         <div class="col-lg-12 pb-2">
             <mat-hint class="font-10px">Add multiple pantone colour codes</mat-hint>
         </div>
-
         <div class="col-lg-12 display-flex pl-0">
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Finishing</mat-label>
                     <mat-select multiple [(ngModel)]="viewModal.caseBound.finishingType">
-                        <mat-option [value]="item.value" *ngFor="let item of finishingTypeList">{{item.text}}
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="caseBoundFinishingTypeFltrCtrl"
+                                placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item.value" *ngFor="let item of filteredCaseBoundFinishingType | async">
+                            {{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -262,13 +265,17 @@
         <div class="col-lg-12 pt-6 pb-6">
             <mat-divider></mat-divider>
         </div>
-
         <div class="col-lg-12 display-flex pl-0">
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Benchwork Required</mat-label>
                     <mat-select multiple [(ngModel)]="viewModal.folding.benchworkRequired">
-                        <mat-option [value]="item.value" *ngFor="let item of benchworkTypeList">{{item.text}}
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="foldingBenchWorkFltrCtrl" placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item.value" *ngFor="let item of filteredFoldingBenchWork |async">
+                            {{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -322,13 +329,18 @@
         <div class="col-lg-12 pt-6 pb-6">
             <mat-divider></mat-divider>
         </div>
-
         <div class="col-lg-12 display-flex pl-0">
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Benchwork Required</mat-label>
                     <mat-select multiple [(ngModel)]="viewModal.saddleStich.benchworkRequired">
-                        <mat-option [value]="item.value" *ngFor="let item of benchworkTypeList">{{item.text}}
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="saddleStichBenchWorkFltrCtrl"
+                                placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item.value" *ngFor="let item of filteredSaddleStichBenchWork |async">
+                            {{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -382,13 +394,18 @@
         <div class="col-lg-12 pt-6 pb-6">
             <mat-divider></mat-divider>
         </div>
-
         <div class="col-lg-12 display-flex pl-0">
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Benchwork Required</mat-label>
                     <mat-select multiple [(ngModel)]="viewModal.wireoBinding.benchworkRequired">
-                        <mat-option [value]="item.value" *ngFor="let item of benchworkTypeList">{{item.text}}
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="wireoBindingBenchWorkFltrCtrl"
+                                placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item.value" *ngFor="let item of filteredWireoBindingBenchWork |async">
+                            {{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -442,13 +459,18 @@
         <div class="col-lg-12 pt-6 pb-6">
             <mat-divider></mat-divider>
         </div>
-
         <div class="col-lg-12 display-flex pl-0">
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Benchwork Required</mat-label>
                     <mat-select multiple [(ngModel)]="viewModal.spiralBound.benchworkRequired">
-                        <mat-option [value]="item.value" *ngFor="let item of benchworkTypeList">{{item.text}}
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="spiralBoundBenchworkFltrCtrl"
+                                placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item.value" *ngFor="let item of filteredSpiralBoundBenchwork |async">
+                            {{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -503,13 +525,18 @@
         <div class="col-lg-12 pt-6 pb-6">
             <mat-divider></mat-divider>
         </div>
-
         <div class="col-lg-12 display-flex pl-0">
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Benchwork Required</mat-label>
                     <mat-select multiple [(ngModel)]="viewModal.paperBack.benchworkRequired">
-                        <mat-option [value]="item.value" *ngFor="let item of benchworkTypeList">{{item.text}}
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="paperBackBenchworkFltrCtrl"
+                                placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item.value" *ngFor="let item of filteredPaperBackBenchwork |async">
+                            {{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

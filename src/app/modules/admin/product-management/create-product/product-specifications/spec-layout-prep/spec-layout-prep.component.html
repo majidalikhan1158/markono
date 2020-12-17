@@ -45,7 +45,7 @@
                                 <mat-form-field appearance="fill" class="width-100">
                                     <mat-select>
                                         <mat-option *ngFor="let item of impositionLayoutList" [value]="item.value">
-                                            {{row.impositionLayout}}</mat-option>
+                                            {{item.text}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </td>
@@ -53,17 +53,17 @@
                                 <mat-form-field appearance="fill" class="width-100">
                                     <mat-select>
                                         <mat-option *ngFor="let item of grainDirectionList" [value]="item.value">
-                                            {{row.grainDirection}}</mat-option>
+                                            {{item.text}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </td>
                             <td>
-                                <mat-form-field appearance="fill" class="width-150">
+                                <mat-form-field appearance="fill" class="width-100">
                                     <input matInput value="{{row.cuttingSizeDepth}}">
                                 </mat-form-field>
                             </td>
                             <td>
-                                <mat-form-field appearance="fill" class="width-150">
+                                <mat-form-field appearance="fill" class="width-100">
                                     <input matInput value="{{row.cuttingSizeWidth}}">
                                 </mat-form-field>
                             </td>
@@ -126,7 +126,7 @@
                             <td>
                                 {{row.colour}}
                             </td>
-                            <td>
+                            <td style="width: 10%;">
                                 {{row.paper}}
                             </td>
                             <td>
@@ -161,7 +161,7 @@
             <!--begin::Table-->
             <div class="">
                 <table
-                    class="table table-head-custom table-head-bg table-borderless table-vertical-center component-table">
+                    class="table table-head-custom table-head-bg table-borderless table-vertical-center product-activitiy-table">
                     <thead>
                         <tr class="text-left text-uppercase">
                             <th *ngFor="let item of columnsToDisplayProdActivityTable"> {{item}}</th>
@@ -185,7 +185,7 @@
                             <td>
                                 {{row.processCode}}
                             </td>
-                            <td>
+                            <td style="width: 10%;">
                                 {{row.activity}}
                             </td>
                             <td>
@@ -197,22 +197,19 @@
                             <td>
                                 {{row.unitCosts}}
                             </td>
-                            <td>
+                            <td style="width: 10%;">
                                 {{row.newUnitsCosts}}
                             </td>
-                            <td>
+                            <td style="width: 10%;">
                                 {{row.totalEstCosts}}
                             </td>
-                            <td>
+                            <td style="width: 10%;">
                                 {{row.percentage}}
                             </td>
-                            <td>
-                                <mat-form-field appearance="fill" class="width-100">
-                                    <mat-label></mat-label>
-                                    <mat-select>
-                                        <mat-option></mat-option>
-                                    </mat-select>
-                                </mat-form-field>
+                            <td class="action-column pb-0" style="width: 10%;">
+                                <span class="material-icons expansion-icon">
+                                    {{ ExpansionIcons.KEYBOARD_ARROW_DOWN }}
+                                </span>
                             </td>
                         </tr>
                     </tbody>

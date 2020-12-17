@@ -16,7 +16,7 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
   checkPrintQAList = CheckPrintCoverQAList;
   checkTextQAList = CheckPrintTextQAList;
   viewModal: CheckPrintFileVM;
-
+  checked: boolean = true;
   constructor(private store: ProductSpecStore, private snack: SnackBarService) { }
 
   ngOnInit() {
@@ -65,7 +65,7 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
   }
 
   handleFileInput = (files: FileList, type: string) => {
-    if (!files || files.length === 0 ) {
+    if (!files || files.length === 0) {
       this.snack.open('Please select a valid file first');
     }
     const fileName = files.item(0).name;

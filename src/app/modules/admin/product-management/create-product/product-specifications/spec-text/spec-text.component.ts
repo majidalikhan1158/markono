@@ -30,6 +30,7 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   filteredNoOfColorsList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredFinishingType: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
   protected onDestroy = new Subject<void>();
+  countNoOfColors = 0;
   constructor(private store: ProductSpecStore) { }
 
   ngOnInit(): void {
@@ -41,8 +42,10 @@ export class SpecTextComponent implements OnInit, OnDestroy {
 
   handleColorChange(color: string) {
     if (this.viewModal.colorType.includes(color)) {
+      this.countNoOfColors--;
       this.viewModal.colorType = this.viewModal.colorType.filter(x => x !== color);
     } else {
+      this.countNoOfColors++;
       this.viewModal.colorType.push(color);
     }
   }
@@ -50,12 +53,14 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   addPantoneColour(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value !== '' && this.viewModal.pantoneColour.indexOf(value) === -1) {
+      this.countNoOfColors++;
       this.viewModal.pantoneColour.push(value);
     }
     (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelection(item: string) {
+    this.countNoOfColors--;
     this.viewModal.pantoneColour = this.viewModal.pantoneColour.filter(
       (x) => x !== item
     );

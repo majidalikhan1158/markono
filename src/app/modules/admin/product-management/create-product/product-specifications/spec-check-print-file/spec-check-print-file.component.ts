@@ -68,7 +68,6 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
     if (!files || files.length === 0 ) {
       this.snack.open('Please select a valid file first');
     }
-    console.log(files.item(0));
     const fileName = files.item(0).name;
 
     if (type === CheckPrintFileTypes.COVERFILE) {
@@ -81,7 +80,6 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
   }
 
   removeFile = (type: string) => {
-    console.log(type);
     if (type === CheckPrintFileTypes.COVERFILE) {
       this.viewModal.coverFile = null;
     } else if (type === CheckPrintFileTypes.TEXTFILE) {
@@ -89,11 +87,9 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
     } else if (type === CheckPrintFileTypes.OTHERSFILE) {
       this.viewModal.othersFile = null;
     }
-    console.log(this.viewModal);
   }
 
   ngOnDestroy() {
-    console.log(this.viewModal);
     this.store.setProductSpecStore(
       this.viewModal,
       ProductSpecTypes.CHECK_PRINT_FILE

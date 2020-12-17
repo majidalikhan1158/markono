@@ -93,6 +93,7 @@ export class ShopFloorHelperService {
       jobActionPause: item.jobActionPause,
       jobActionStop: item.jobActionStop,
       jobReadOnly: item.jobReadOnly,
+      jobStatus: item.jobStatus,
       machineSummaryList: this.getMachineSummaries(item.jobSummaries),
       machineJobActionsList: this.getMachineActions(item.jobActions),
     };

@@ -4,7 +4,7 @@
     </div>
     <div class="col-lg-12">
         <div class="col-sm-12 display-flex-direction-column">
-            <span class="labels pb-2">Cover Type</span>
+            <span class="labels pb-2" style="color: #AFAFAF !important">Cover Type</span>
             <mat-radio-group [(ngModel)]="viewModal.coverType" [disabled]="disabled">
                 <mat-radio-button *ngFor="let item of coverTypeList" [value]="item.value">
                     {{item.text}}
@@ -20,7 +20,10 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Cover Material Weight</mat-label>
                     <mat-select [(ngModel)]="viewModal.coverMaterialWeight">
-                        <mat-option [value]="item" *ngFor="let item of coverMaterialWeightList">{{item}}</mat-option>
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="coverMaterialFltrCtrl" placeholderLabel="Search.."></ngx-mat-select-search>
+                          </mat-option>
+                        <mat-option [value]="item" *ngFor="let item of filteredCoverMaterial | async">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>

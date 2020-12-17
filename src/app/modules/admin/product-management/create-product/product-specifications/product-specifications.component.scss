@@ -109,4 +109,8 @@ app-product-specifications {
   .product-spec-types .mat-expansion-indicator::after {
     vertical-align: super;
   }
+
+  .product-spec-types .material-icons {
+    font-size: 20px !important;
+  }
 }

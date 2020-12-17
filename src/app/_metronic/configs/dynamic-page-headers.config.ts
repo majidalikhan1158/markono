@@ -14,7 +14,7 @@ export const DynamicPageHeaderLabels = {
       page: '/admin/product-management/list',
     },
     {
-      title: 'Create Product Spec',
+      title: 'Add Product',
       page: '/admin/product-management/create',
     },
     {

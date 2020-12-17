@@ -150,7 +150,6 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions = this.auth.shopFloorToken.subscribe(tokenObj => {
-      console.log(tokenObj)
       const isTokenExist = this.auth.getToken(TokenType.SHOPFLOOR);
       if (tokenObj && isTokenExist && isTokenExist !== '') {
         this.ui.show();

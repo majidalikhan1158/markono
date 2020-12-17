@@ -16,7 +16,7 @@ export class ProductService {
     private http: ApiHttpService,
     private endPoint: ApiEndpointsService,
     private helper: HelperService
-  ) {}
+  ) { }
 
   public getLiveVersion = (
     modal: ProductDetailsVM
@@ -40,4 +40,17 @@ export class ProductService {
     );
     return this.http.get(url);
   }
+
+  public getProducts = (isbn: string, versionNo: string, expand: string): Observable<HttpResponse<ResponseModal>> => {
+    const url = this.helper.createUrlWithQueryParameters(
+      this.endPoint.getProductsUrl(),
+      (qs: QueryStringParameters) => {
+        qs.push('isbn', isbn);
+        qs.push('versionNo', versionNo);
+        qs.push('expand', expand);
+      }
+    );
+    return this.http.get(url);
+  }
+
 }

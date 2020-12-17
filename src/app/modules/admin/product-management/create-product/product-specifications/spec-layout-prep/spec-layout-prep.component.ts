@@ -56,9 +56,20 @@ export class SpecLayoutPrepComponent implements OnInit {
   productSpecLayoutPrepCompBreakList = ProductSpecLayoutPrepCompBreakList;
   productSpecLayoutPrepProdActivityList = ProductSpecLayoutPrepProdActivityList;
   ExpansionIcons = ExpansionIcons;
+  rowIdToExpand = 0;
+  shouldShowDetails = false;
   constructor() { }
 
   ngOnInit(): void {
+  }
+  showDetails(rowId) {
+    if (this.rowIdToExpand === rowId) {
+      this.rowIdToExpand = 0;
+      this.shouldShowDetails = !this.shouldShowDetails;
+    } else {
+      this.rowIdToExpand = rowId;
+      this.shouldShowDetails = true;
+    }
   }
 
 }

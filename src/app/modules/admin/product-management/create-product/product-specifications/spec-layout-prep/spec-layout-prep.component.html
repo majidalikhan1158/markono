@@ -168,50 +168,132 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="outer-row" *ngFor="let row of productSpecLayoutPrepProdActivityList">
-                            <td>{{row.comId}}</td>
-                            <td>
-                                {{row.dept}}
-                            </td>
-                            <td>
-                                {{row.type}}
-                            </td>
-                            <td>
-                                {{row.qty}}
-                            </td>
-                            <td>
-                                {{row.layout}}
-                            </td>
-                            <td>
-                                {{row.processCode}}
-                            </td>
-                            <td style="width: 10%;">
-                                {{row.activity}}
-                            </td>
-                            <td>
-                                {{row.units}}
-                            </td>
-                            <td>
-                                {{row.duration}}
-                            </td>
-                            <td>
-                                {{row.unitCosts}}
-                            </td>
-                            <td style="width: 10%;">
-                                {{row.newUnitsCosts}}
-                            </td>
-                            <td style="width: 10%;">
-                                {{row.totalEstCosts}}
-                            </td>
-                            <td style="width: 10%;">
-                                {{row.percentage}}
-                            </td>
-                            <td class="action-column pb-0" style="width: 10%;">
-                                <span class="material-icons expansion-icon">
-                                    {{ ExpansionIcons.KEYBOARD_ARROW_DOWN }}
-                                </span>
-                            </td>
-                        </tr>
+                        <ng-container *ngFor="let row of productSpecLayoutPrepProdActivityList ;let i = index;">
+                            <tr class="outer-row">
+                                <td>{{row.comId}}</td>
+                                <td>
+                                    {{row.dept}}
+                                </td>
+                                <td>
+                                    {{row.type}}
+                                </td>
+                                <td>
+                                    {{row.qty}}
+                                </td>
+                                <td>
+                                    {{row.layout}}
+                                </td>
+                                <td>
+                                    {{row.processCode}}
+                                </td>
+                                <td style="width: 10%;">
+                                    {{row.activity}}
+                                </td>
+                                <td>
+                                    {{row.units}}
+                                </td>
+                                <td>
+                                    {{row.duration}}
+                                </td>
+                                <td>
+                                    {{row.unitCosts}}
+                                </td>
+                                <td style="width: 10%;">
+                                    {{row.newUnitsCosts}}
+                                </td>
+                                <td style="width: 10%;">
+                                    {{row.totalEstCosts}}
+                                </td>
+                                <td style="width: 10%;">
+                                    {{row.percentage}}
+                                </td>
+                                <td class="action-column pb-0" style="width: 10%;">
+                                    <span class="material-icons expansion-icon" (click)="showDetails(i)">
+                                        {{
+                                        i== rowIdToExpand ?
+                                        ExpansionIcons.KEYBOARD_ARROW_UP :
+                                        ExpansionIcons.KEYBOARD_ARROW_DOWN
+                                        }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <ng-container *ngIf="shouldShowDetails && i == rowIdToExpand">
+                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                    <th style="width: 15%;padding: 15px;" class="info-label">In Use</th>
+                                    <th style="width: 15%;padding: 15px;" class="info-label">Operation Code</th>
+                                    <th style="width: 15%;padding: 15px;" class="info-label">Operation Description</th>
+                                    <th style="width: 15%;padding: 15px;" class="info-label"></th>
+                                    <th style="width: 15%;padding: 15px;" class="info-label">UOM</th>
+                                    <th style="width: 15%;padding: 15px;" class="info-label">Unit Selling Price</th>
+                                    <th style="width: 15%;padding: 15px;" class="info-label">Sales Amount</th>
+                                    <th style="width: 15%;padding: 15px;" class="info-label">Formula Code</th>
+                                    <th style="width: 15%;padding: 15px;" class="info-label">Speed Table</th>
+                                    <th style="width: 15%;padding: 15px;" class="info-label"> Price List Code</th>
+                                    <th style="width: 15%;padding: 15px;" class="info-label"></th>
+                                    <th style="width: 15%;padding: 15px;" class="info-label"></th>
+                                </tr>
+                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">110</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">1</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">MAKEREADYPRINT</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">16</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">125.00</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">4202</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">19212</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
+
+                                </tr>
+                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">110</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">1</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">MAKEREADYPRINT</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">16</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">125.00</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">4202</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">19212</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
+
+                                </tr>
+                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">110</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">360</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">MAKEREADYPRINT</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">16</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">125.00</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">4202</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">19212</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
+
+                                </tr>
+                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">110</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">1</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">MAKEREADYPRINT</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">16</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">125.00</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">4202</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label">19212</td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
+                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
+
+                                </tr>
+                            </ng-container>
+                        </ng-container>
                     </tbody>
                 </table>
             </div>

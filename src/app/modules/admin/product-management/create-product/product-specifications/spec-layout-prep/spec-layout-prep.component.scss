@@ -148,7 +148,7 @@ app-spec-layout-prep {
         opacity: 1;
     }
     .product-activitiy-table tbody tr td.action-column {
-        padding-right: 6px;
+        padding-right: 35px;
         cursor: pointer;
     }
 
@@ -170,5 +170,13 @@ app-spec-layout-prep {
         font-size: 21px !important;
         text-align: center;
         line-height: 1.3;
+    }
+    .padding-11 th {
+        // width: 20% !important;
+        padding: 6px !important;
+    }
+    .padding-11 td {
+        // width: 20% !important;
+        padding: 6px !important;
     }
 }

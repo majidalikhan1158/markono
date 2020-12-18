@@ -217,80 +217,94 @@
                                     </span>
                                 </td>
                             </tr>
-                            <ng-container *ngIf="shouldShowDetails && i == rowIdToExpand">
-                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                    <th style="width: 15%;padding: 15px;" class="info-label">In Use</th>
-                                    <th style="width: 15%;padding: 15px;" class="info-label">Operation Code</th>
-                                    <th style="width: 15%;padding: 15px;" class="info-label">Operation Description</th>
-                                    <th style="width: 15%;padding: 15px;" class="info-label"></th>
-                                    <th style="width: 15%;padding: 15px;" class="info-label">UOM</th>
-                                    <th style="width: 15%;padding: 15px;" class="info-label">Unit Selling Price</th>
-                                    <th style="width: 15%;padding: 15px;" class="info-label">Sales Amount</th>
-                                    <th style="width: 15%;padding: 15px;" class="info-label">Formula Code</th>
-                                    <th style="width: 15%;padding: 15px;" class="info-label">Speed Table</th>
-                                    <th style="width: 15%;padding: 15px;" class="info-label"> Price List Code</th>
-                                    <th style="width: 15%;padding: 15px;" class="info-label"></th>
-                                    <th style="width: 15%;padding: 15px;" class="info-label"></th>
+                            <ng-container *ngIf="shouldShowDetails && i == rowIdToExpand" class="width-100">
+                                <tr class="expandedRow padding-11" style="border-bottom: 1px solid #afafaf;">
+                                    <th class="info-label">In Use</th>
+                                    <th class="info-label">Operation Code</th>
+                                    <th class="info-label">Operation Description</th>
+                                    <th class="info-label"></th>
+                                    <th class="info-label">UOM</th>
+                                    <th class="info-label">Unit Selling Price</th>
+                                    <th class="info-label">Sales Amount</th>
+                                    <th class="info-label">Formula Code</th>
+                                    <th class="info-label">Speed Table</th>
+                                    <th class="info-label"> Price List Code</th>
+                                    <th class="info-label"></th>
+                                    <th class="info-label"></th>
+                                    <th class="info-label"></th>
+                                    <th class="info-label"></th>
                                 </tr>
                                 <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">110</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">1</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">MAKEREADYPRINT</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">16</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">125.00</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">4202</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">19212</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
-
+                                    <td class="info-label">
+                                        <span class="material-icons" style="color:green">
+                                            done
+                                        </span>
+                                    </td>
+                                    <td class="info-label">110</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">1</td>
+                                    <td class="info-label">MAKEREADYPRINT</td>
+                                    <td class="info-label">16</td>
+                                    <td class="info-label">125.00</td>
+                                    <td class="info-label">4202</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">19212</td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
                                 </tr>
                                 <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">110</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">1</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">MAKEREADYPRINT</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">16</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">125.00</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">4202</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">19212</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
-
+                                    <td class="info-label"></td>
+                                    <td class="info-label">110</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">1</td>
+                                    <td class="info-label">MAKEREADYPRINT</td>
+                                    <td class="info-label">16</td>
+                                    <td class="info-label">125.00</td>
+                                    <td class="info-label">4202</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">19212</td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
                                 </tr>
                                 <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">110</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">360</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">MAKEREADYPRINT</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">16</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">125.00</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">4202</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">19212</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
-
+                                    <td class="info-label"></td>
+                                    <td class="info-label">110</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">360</td>
+                                    <td class="info-label">MAKEREADYPRINT</td>
+                                    <td class="info-label">16</td>
+                                    <td class="info-label">125.00</td>
+                                    <td class="info-label">4202</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">19212</td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
                                 </tr>
                                 <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">110</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">1</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">MAKEREADYPRINT</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">16</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">125.00</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">4202</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">-</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label">19212</td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
-                                    <td style="width: 15%;padding: 15px;" class="info-label"></td>
-
+                                    <td class="info-label">
+                                        <span class="material-icons" style="color:green">
+                                            done
+                                        </span>
+                                    </td>
+                                    <td class="info-label">110</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">1</td>
+                                    <td class="info-label">MAKEREADYPRINT</td>
+                                    <td class="info-label">16</td>
+                                    <td class="info-label">125.00</td>
+                                    <td class="info-label">4202</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">19212</td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
                                 </tr>
                             </ng-container>
                         </ng-container>

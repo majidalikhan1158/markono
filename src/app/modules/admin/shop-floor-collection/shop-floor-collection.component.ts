@@ -132,14 +132,14 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   tokenIntervalId: any;
   subscriptions: Subscription;
   constructor(private layout: LayoutService,
-              private auth: AppAuthService,
-              private shopFloorService: ShopFloorService,
-              private helper: ShopFloorHelperService,
-              private snack: SnackBarService,
-              private ref: ChangeDetectorRef,
-              private modalService: ModalService,
-              private store: CaseStore,
-              private ui: SpinnerService) {
+    private auth: AppAuthService,
+    private shopFloorService: ShopFloorService,
+    private helper: ShopFloorHelperService,
+    private snack: SnackBarService,
+    private ref: ChangeDetectorRef,
+    private modalService: ModalService,
+    private store: CaseStore,
+    private ui: SpinnerService) {
     this.setStyling();
   }
 
@@ -332,7 +332,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
     });
   }
 
-  callToCurrentMachineSubscription = (machineCurrentJobLink: string,  showMessage = false) => {
+  callToCurrentMachineSubscription = (machineCurrentJobLink: string, showMessage = false) => {
     this.subscriptions = this.shopFloorService.getCurretnMachineJob(machineCurrentJobLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data && resp.body.data.id) {
         this.machineCurrentJobVM = this.helper.mapToMachineCurrentJobModal(resp.body.data);
@@ -369,7 +369,8 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
         this.machineCurrentJobUnitsVM = this.helper.mapToMachineCurrentJobUnitsModal(resp.body.data);
         const unitsPerMinutes = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.count);
-        this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart(unitsPerMinutes) as UnitsProducedChartOptions;
+        const unitsFromDate = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.fromDate);
+        this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart(unitsPerMinutes, unitsFromDate) as UnitsProducedChartOptions;
       } else {
         showMessage ? this.snack.open('Unable to get machine current job units') : '';
       }
@@ -752,12 +753,16 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
     };
   }
 
-  getUnitsProducePerMinuteChart(list: any[]) {
+  getUnitsProducePerMinuteChart(list: any[], fromDate: any[]) {
     return {
       series: [
         {
           name: 'Units Produced',
           data: list
+        },
+        {
+          name: '',
+          data: fromDate
         }
       ],
       chart: {

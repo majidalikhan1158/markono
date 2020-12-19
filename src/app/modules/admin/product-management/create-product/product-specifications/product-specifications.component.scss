@@ -25,7 +25,7 @@ app-product-specifications {
   }
 
   .product-spec-types .main-types .material-icons {
-    color: #AFAFAF;
+    color: #afafaf;
   }
 
   .product-spec-types .main-types .mat-list-single-selected-option .material-icons {
@@ -53,7 +53,9 @@ app-product-specifications {
     display: flex !important;
     flex-direction: row !important;
   }
-
+  .product-spec-types .text-color .mat-list-text {
+    color: #7e7e7e !important;
+  }
   .product-spec-types .mat-list-base {
     padding-top: 5px;
     padding-bottom: 5px;
@@ -87,7 +89,7 @@ app-product-specifications {
     width: inherit;
   }
 
-  .product-spec-types .mat-expansion-panel-body  {
+  .product-spec-types .mat-expansion-panel-body {
     padding-left: 5px;
     padding-right: 5px;
     padding-bottom: 0px;
@@ -97,8 +99,8 @@ app-product-specifications {
     height: 50px;
   }
 
-  .product-spec-types .mat-selection-list.sub-types  {
-    background: #F9F9F9;
+  .product-spec-types .mat-selection-list.sub-types {
+    background: #f9f9f9;
     border-radius: 10px;
   }
 

@@ -1,36 +1,38 @@
 <div class="display-flex" style="height: 100%;">
     <div class="col-lg-2 product-spec-types pr-0 pl-0">
         <mat-accordion class="example-headers-align">
-            <mat-expansion-panel style="box-shadow: none;" #matExpansionPanelElement [expanded]="!shouldExpandedPanelClose">
+            <mat-expansion-panel style="box-shadow: none;" #matExpansionPanelElement
+                [expanded]="!shouldExpandedPanelClose">
                 <mat-expansion-panel-header class="pr-2 pl-3">
                     <mat-panel-title class="font-12px font-roboto-medium">
                         <mat-icon style="color: #AFAFAF">check_circle</mat-icon>
                         Create Specs
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-              
+
                 <mat-selection-list [multiple]="false" class="pt-0 pb-0 sub-types"
                     (selectionChange)="handleProductSpecTypeChange($event, productSpecTypesArray)">
-                    <mat-list-option *ngFor="let types of productSpecTypesArray" [selected]="types.isSelected"
-                    [value]="types.enum">
-                    <div class="mat-list-option-number" [ngClass]="{'mat-list-option-number-visited': types.isVisited}">
-                        <div class="mat-list-option-number-content">
-                            <span>{{types.id}}</span>
+                    <mat-list-option class="text-color" *ngFor="let types of productSpecTypesArray"
+                        [selected]="types.isSelected" [value]="types.enum">
+                        <div class="mat-list-option-number"
+                            [ngClass]="{'mat-list-option-number-visited': types.isVisited}">
+                            <div class="mat-list-option-number-content">
+                                <span>{{types.id}}</span>
+                            </div>
                         </div>
-                    </div>
-                    {{types.value}}
+                        {{types.value}}
                     </mat-list-option>
                 </mat-selection-list>
-          
+
             </mat-expansion-panel>
             <mat-selection-list [multiple]="false" class="pt-0 pb-0 main-types"
-                    (selectionChange)="handleProductSpecTypeChange($event, productSpecTypeOtherArray)">
+                (selectionChange)="handleProductSpecTypeChange($event, productSpecTypeOtherArray)">
                 <mat-list-option *ngFor="let types of productSpecTypeOtherArray" [selected]="types.isSelected"
-                [value]="types.enum">
-                <div class="mat-list-option-number" [ngClass]="{'mat-list-option-number-visited': types.isVisited}">
-                    <mat-icon >check_circle</mat-icon>
-                </div>
-                {{types.value}}
+                    [value]="types.enum">
+                    <div class="mat-list-option-number" [ngClass]="{'mat-list-option-number-visited': types.isVisited}">
+                        <mat-icon>check_circle</mat-icon>
+                    </div>
+                    {{types.value}}
                 </mat-list-option>
             </mat-selection-list>
         </mat-accordion>
@@ -72,9 +74,15 @@
         <ng-container>
             <div class="row pb-5">
                 <div class="col-lg-12 pt-10 text-right">
-                    <button mat-button (click)="handleBackEvent()" *ngIf="selectedProductSpecType !== productSpecTypesConstant.GENERAL && selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && selectedProductSpecType !== productSpecTypesConstant.CHECK_PRINT_FILE" class="btn btn-primary stepper-back-button mr-2">Back</button>
-                    <button mat-button (click)="handleNextEvent()" *ngIf="selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && selectedProductSpecType !== productSpecTypesConstant.CHECK_PRINT_FILE" class="btn btn-primary stepper-next-button">Next</button>
-                    <button mat-button (click)="handleNextEvent()" *ngIf="selectedProductSpecType === productSpecTypesConstant.UNIT_PRICE || selectedProductSpecType === productSpecTypesConstant.LAYOUT_PREP || selectedProductSpecType === productSpecTypesConstant.CHECK_PRINT_FILE" class="btn btn-primary stepper-next-button">Save</button>
+                    <button mat-button (click)="handleBackEvent()"
+                        *ngIf="selectedProductSpecType !== productSpecTypesConstant.GENERAL && selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && selectedProductSpecType !== productSpecTypesConstant.CHECK_PRINT_FILE"
+                        class="btn btn-primary stepper-back-button mr-2">Back</button>
+                    <button mat-button (click)="handleNextEvent()"
+                        *ngIf="selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && selectedProductSpecType !== productSpecTypesConstant.CHECK_PRINT_FILE"
+                        class="btn btn-primary stepper-next-button">Next</button>
+                    <button mat-button (click)="handleNextEvent()"
+                        *ngIf="selectedProductSpecType === productSpecTypesConstant.UNIT_PRICE || selectedProductSpecType === productSpecTypesConstant.LAYOUT_PREP || selectedProductSpecType === productSpecTypesConstant.CHECK_PRINT_FILE"
+                        class="btn btn-primary stepper-next-button">Save</button>
                 </div>
             </div>
         </ng-container>

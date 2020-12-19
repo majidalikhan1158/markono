@@ -10,7 +10,7 @@ export const DynamicPageHeaderLabels = {
       page: '/admin/case-management/quotation-list',
     },
     {
-      title: 'Product Specs',
+      title: 'Add Product',
       page: '/admin/product-management/list',
     },
     {

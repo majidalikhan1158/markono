@@ -142,7 +142,8 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
               private ui: SpinnerService) {
     this.setStyling();
   }
-  ngOnDestroy(): void {
+
+  ngOnDestroy() {
     this.clearIntervals();
     clearInterval(this.tokenIntervalId);
     this.subscriptions.unsubscribe();

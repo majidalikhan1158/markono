@@ -49,4 +49,9 @@ app-spec-cover {
         flex: 0 0 40.3333333333% !important;
         max-width: 40.3333333333% !important;
     }
+    .spec-cover .suffix-style {
+        color: #81b6df;
+        padding-bottom: 3px;
+        display: table-caption;
+    }
 }

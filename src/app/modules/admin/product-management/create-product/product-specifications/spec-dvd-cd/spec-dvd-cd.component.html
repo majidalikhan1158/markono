@@ -44,10 +44,10 @@
                                 delete
                             </span>
                             <span class="material-icons expansion-icon" (click)="showDvdDetails(viewModal[i].id)">
-                                {{ 
-                                    viewModal[i].id == rowIdToExpand ? 
-                                    ExpansionIcons.KEYBOARD_ARROW_UP : 
-                                    ExpansionIcons.KEYBOARD_ARROW_DOWN 
+                                {{
+                                viewModal[i].id == rowIdToExpand ?
+                                ExpansionIcons.KEYBOARD_ARROW_UP :
+                                ExpansionIcons.KEYBOARD_ARROW_DOWN
                                 }}
                             </span>
                         </td>
@@ -96,7 +96,8 @@
 
                                     <div class="col-lg-12 display-flex pl-0 pb-5 pt-5">
                                         <div class="col-lg-3">
-                                            <mat-slide-toggle [(ngModel)]="viewModal[i].isOpenSize" labelPosition="before">
+                                            <mat-slide-toggle [(ngModel)]="viewModal[i].isOpenSize"
+                                                labelPosition="before">
                                                 Open Size</mat-slide-toggle>
                                         </div>
                                     </div>
@@ -209,6 +210,7 @@
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Pantone Colour (Optional)</mat-label>
                                                 <input matInput (keyup.enter)="addPantoneColour($event, i)">
+                                                <span matSuffix class="suffix-style">+ ADD</span>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-9" style="width: 45px;">
@@ -270,8 +272,10 @@
                                     </div>
 
                                     <div class="col-lg-12 pt-3">
-                                        <app-spec-binding [parentComponent]="productSpecTypes.DVD_CD" [parentRecordIndex]="i" [parentData]="viewModal[i].bindingVM" 
-                                        (childComponentDataBindingType)="catchChildComponentDataBindingType($event)"></app-spec-binding>
+                                        <app-spec-binding [parentComponent]="productSpecTypes.DVD_CD"
+                                            [parentRecordIndex]="i" [parentData]="viewModal[i].bindingVM"
+                                            (childComponentDataBindingType)="catchChildComponentDataBindingType($event)">
+                                        </app-spec-binding>
                                     </div>
 
                                     <div class="col-lg-12 pt-6 pb-6">

@@ -40,9 +40,15 @@ app-spec-text {
         padding-top: 5px;
         float: left;
     }
-    
+
     .spec-text .mat-chip {
         //height: inherit;
         border-radius: 25px;
+    }
+
+    .spec-text .suffix-style {
+        color: #81b6df;
+        padding-bottom: 3px;
+        display: table-caption;
     }
 }

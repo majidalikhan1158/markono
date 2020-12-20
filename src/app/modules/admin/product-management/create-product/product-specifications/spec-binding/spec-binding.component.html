@@ -192,6 +192,7 @@
                     <mat-label>Pantone Colour (Optional)</mat-label>
                     <input matInput pattern="(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)"
                         (keyup.enter)="addPantoneColour($event)">
+                    <span matSuffix class="suffix-style">+ ADD</span>
                 </mat-form-field>
             </div>
             <div class="col-lg-5">

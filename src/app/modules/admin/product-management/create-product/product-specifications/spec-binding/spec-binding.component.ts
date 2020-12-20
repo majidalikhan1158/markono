@@ -66,14 +66,37 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   viewModal: BindingVM;
   isOtherComponent = false;
   bindingTypeFltrCtrl: FormControl = new FormControl();
+  caseBoundBenchWorkFltrCtrl: FormControl = new FormControl();
+  caseBoundFinishingTypeFltrCtrl: FormControl = new FormControl();
+  foldingBenchWorkFltrCtrl: FormControl = new FormControl();
+  saddleStichBenchWorkFltrCtrl: FormControl = new FormControl();
+  wireoBindingBenchWorkFltrCtrl: FormControl = new FormControl();
+  spiralBoundBenchworkFltrCtrl: FormControl = new FormControl();
+  paperBackBenchworkFltrCtrl: FormControl = new FormControl();
+
   filteredBindingType: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  filteredCaseBoundBenchWork: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  filteredCaseBoundFinishingType: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  filteredFoldingBenchWork: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  filteredSaddleStichBenchWork: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  filteredWireoBindingBenchWork: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  filteredSpiralBoundBenchwork: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  filteredPaperBackBenchwork: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
   protected onDestroy = new Subject<void>();
+  countNoOfColors = 0;
   constructor(private store: ProductSpecStore, private helper: ProductSpecHelperService) { }
 
   ngOnInit(): void {
     this.isOtherComponent = !!this.parentComponent;
     this.getDefaultRecord();
     this.handleBindingTypeFilterAutoComplete();
+    this.handleCaseBoundFinishingTypeFilterAutoComplete();
+    this.handleCaseBoundBenchWorkFilterAutoComplete();
+    this.handleFoldingBenchWorkFilterAutoComplete();
+    this.handleSaddleStichBenchWorkFilterAutoComplete();
+    this.handleWireoBindingBenchWorkFilterAutoComplete();
+    this.handleSpiralBoundBenchworkFilterAutoComplete();
+    this.handlePaperBoundBenchworkFilterAutoComplete();
   }
 
   handleBindingTypeChange = () => {
@@ -85,8 +108,10 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
 
   handleColorChange(color: string) {
     if (this.viewModal.caseBound.colorType.includes(color)) {
+      this.countNoOfColors--;
       this.viewModal.caseBound.colorType = this.viewModal.caseBound.colorType.filter(x => x !== color);
     } else {
+      this.countNoOfColors++;
       this.viewModal.caseBound.colorType.push(color);
     }
   }
@@ -96,12 +121,14 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   addPantoneColour(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value !== '' && this.viewModal.caseBound.pantoneColour.indexOf(value) === -1) {
+      this.countNoOfColors++;
       this.viewModal.caseBound.pantoneColour.push(value);
     }
     (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelection(item: string) {
+    this.countNoOfColors--;
     this.viewModal.caseBound.pantoneColour = this.viewModal.caseBound.pantoneColour.filter(x => x !== item);
   }
 
@@ -201,6 +228,195 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     // filter the banks
     this.filteredBindingType.next(
       this.bindingTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  handleCaseBoundFinishingTypeFilterAutoComplete = () => {
+    this.filteredCaseBoundFinishingType.next(this.finishingTypeList.slice());
+    this.caseBoundFinishingTypeFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterCaseBoundFinishingType();
+      });
+  }
+
+  filterCaseBoundFinishingType = () => {
+    if (!this.finishingTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.caseBoundFinishingTypeFltrCtrl.value;
+    if (!search) {
+      this.filteredCaseBoundFinishingType.next(this.finishingTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredCaseBoundFinishingType.next(
+      this.finishingTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  handleCaseBoundBenchWorkFilterAutoComplete = () => {
+    this.filteredCaseBoundBenchWork.next(this.benchworkTypeList.slice());
+    this.caseBoundBenchWorkFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterCaseBoundBenchWork();
+      });
+  }
+
+  filterCaseBoundBenchWork = () => {
+    if (!this.benchworkTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.caseBoundBenchWorkFltrCtrl.value;
+    if (!search) {
+      this.filteredCaseBoundBenchWork.next(this.benchworkTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredCaseBoundBenchWork.next(
+      this.benchworkTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  handleFoldingBenchWorkFilterAutoComplete = () => {
+    this.filteredFoldingBenchWork.next(this.benchworkTypeList.slice());
+    this.foldingBenchWorkFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterFoldingBenchWork();
+      });
+  }
+
+  filterFoldingBenchWork = () => {
+    if (!this.benchworkTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.foldingBenchWorkFltrCtrl.value;
+    if (!search) {
+      this.filteredFoldingBenchWork.next(this.benchworkTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredFoldingBenchWork.next(
+      this.benchworkTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  handleSaddleStichBenchWorkFilterAutoComplete = () => {
+    this.filteredSaddleStichBenchWork.next(this.benchworkTypeList.slice());
+    this.saddleStichBenchWorkFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterSaddleStichBenchWork();
+      });
+  }
+
+  filterSaddleStichBenchWork = () => {
+    if (!this.benchworkTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.saddleStichBenchWorkFltrCtrl.value;
+    if (!search) {
+      this.filteredSaddleStichBenchWork.next(this.benchworkTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredSaddleStichBenchWork.next(
+      this.benchworkTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  handleWireoBindingBenchWorkFilterAutoComplete = () => {
+    this.filteredWireoBindingBenchWork.next(this.benchworkTypeList.slice());
+    this.wireoBindingBenchWorkFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterWireoBindingBenchWork();
+      });
+  }
+
+  filterWireoBindingBenchWork = () => {
+    if (!this.benchworkTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.wireoBindingBenchWorkFltrCtrl.value;
+    if (!search) {
+      this.filteredWireoBindingBenchWork.next(this.benchworkTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredWireoBindingBenchWork.next(
+      this.benchworkTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  handleSpiralBoundBenchworkFilterAutoComplete = () => {
+    this.filteredSpiralBoundBenchwork.next(this.benchworkTypeList.slice());
+    this.spiralBoundBenchworkFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterSpiralBoundBenchwork();
+      });
+  }
+
+  filterSpiralBoundBenchwork = () => {
+    if (!this.benchworkTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.spiralBoundBenchworkFltrCtrl.value;
+    if (!search) {
+      this.filteredSpiralBoundBenchwork.next(this.benchworkTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredSpiralBoundBenchwork.next(
+      this.benchworkTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  handlePaperBoundBenchworkFilterAutoComplete = () => {
+    this.filteredPaperBackBenchwork.next(this.benchworkTypeList.slice());
+    this.paperBackBenchworkFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterPaperBackBenchwork();
+      });
+  }
+
+  filterPaperBackBenchwork = () => {
+    if (!this.benchworkTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.paperBackBenchworkFltrCtrl.value;
+    if (!search) {
+      this.filteredPaperBackBenchwork.next(this.benchworkTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredPaperBackBenchwork.next(
+      this.benchworkTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
     );
   }
 

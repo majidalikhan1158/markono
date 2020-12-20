@@ -45,7 +45,7 @@
                                 <mat-form-field appearance="fill" class="width-100">
                                     <mat-select>
                                         <mat-option *ngFor="let item of impositionLayoutList" [value]="item.value">
-                                            {{row.impositionLayout}}</mat-option>
+                                            {{item.text}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </td>
@@ -53,17 +53,17 @@
                                 <mat-form-field appearance="fill" class="width-100">
                                     <mat-select>
                                         <mat-option *ngFor="let item of grainDirectionList" [value]="item.value">
-                                            {{row.grainDirection}}</mat-option>
+                                            {{item.text}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </td>
                             <td>
-                                <mat-form-field appearance="fill" class="width-150">
+                                <mat-form-field appearance="fill" class="width-100">
                                     <input matInput value="{{row.cuttingSizeDepth}}">
                                 </mat-form-field>
                             </td>
                             <td>
-                                <mat-form-field appearance="fill" class="width-150">
+                                <mat-form-field appearance="fill" class="width-100">
                                     <input matInput value="{{row.cuttingSizeWidth}}">
                                 </mat-form-field>
                             </td>
@@ -126,7 +126,7 @@
                             <td>
                                 {{row.colour}}
                             </td>
-                            <td>
+                            <td style="width: 10%;">
                                 {{row.paper}}
                             </td>
                             <td>
@@ -161,60 +161,153 @@
             <!--begin::Table-->
             <div class="">
                 <table
-                    class="table table-head-custom table-head-bg table-borderless table-vertical-center component-table">
+                    class="table table-head-custom table-head-bg table-borderless table-vertical-center product-activitiy-table">
                     <thead>
                         <tr class="text-left text-uppercase">
                             <th *ngFor="let item of columnsToDisplayProdActivityTable"> {{item}}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="outer-row" *ngFor="let row of productSpecLayoutPrepProdActivityList">
-                            <td>{{row.comId}}</td>
-                            <td>
-                                {{row.dept}}
-                            </td>
-                            <td>
-                                {{row.type}}
-                            </td>
-                            <td>
-                                {{row.qty}}
-                            </td>
-                            <td>
-                                {{row.layout}}
-                            </td>
-                            <td>
-                                {{row.processCode}}
-                            </td>
-                            <td>
-                                {{row.activity}}
-                            </td>
-                            <td>
-                                {{row.units}}
-                            </td>
-                            <td>
-                                {{row.duration}}
-                            </td>
-                            <td>
-                                {{row.unitCosts}}
-                            </td>
-                            <td>
-                                {{row.newUnitsCosts}}
-                            </td>
-                            <td>
-                                {{row.totalEstCosts}}
-                            </td>
-                            <td>
-                                {{row.percentage}}
-                            </td>
-                            <td>
-                                <mat-form-field appearance="fill" class="width-100">
-                                    <mat-label></mat-label>
-                                    <mat-select>
-                                        <mat-option></mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </td>
-                        </tr>
+                        <ng-container *ngFor="let row of productSpecLayoutPrepProdActivityList ;let i = index;">
+                            <tr class="outer-row">
+                                <td>{{row.comId}}</td>
+                                <td>
+                                    {{row.dept}}
+                                </td>
+                                <td>
+                                    {{row.type}}
+                                </td>
+                                <td>
+                                    {{row.qty}}
+                                </td>
+                                <td>
+                                    {{row.layout}}
+                                </td>
+                                <td>
+                                    {{row.processCode}}
+                                </td>
+                                <td style="width: 10%;">
+                                    {{row.activity}}
+                                </td>
+                                <td>
+                                    {{row.units}}
+                                </td>
+                                <td>
+                                    {{row.duration}}
+                                </td>
+                                <td>
+                                    {{row.unitCosts}}
+                                </td>
+                                <td style="width: 10%;">
+                                    {{row.newUnitsCosts}}
+                                </td>
+                                <td style="width: 10%;">
+                                    {{row.totalEstCosts}}
+                                </td>
+                                <td style="width: 10%;">
+                                    {{row.percentage}}
+                                </td>
+                                <td class="action-column pb-0" style="width: 10%;">
+                                    <span class="material-icons expansion-icon" (click)="showDetails(i)">
+                                        {{
+                                        i== rowIdToExpand ?
+                                        ExpansionIcons.KEYBOARD_ARROW_UP :
+                                        ExpansionIcons.KEYBOARD_ARROW_DOWN
+                                        }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <ng-container *ngIf="shouldShowDetails && i == rowIdToExpand" class="width-100">
+                                <tr class="expandedRow padding-11" style="border-bottom: 1px solid #afafaf;">
+                                    <th class="info-label">In Use</th>
+                                    <th class="info-label">Operation Code</th>
+                                    <th class="info-label">Operation Description</th>
+                                    <th class="info-label"></th>
+                                    <th class="info-label">UOM</th>
+                                    <th class="info-label">Unit Selling Price</th>
+                                    <th class="info-label">Sales Amount</th>
+                                    <th class="info-label">Formula Code</th>
+                                    <th class="info-label">Speed Table</th>
+                                    <th class="info-label"> Price List Code</th>
+                                    <th class="info-label"></th>
+                                    <th class="info-label"></th>
+                                    <th class="info-label"></th>
+                                    <th class="info-label"></th>
+                                </tr>
+                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                    <td class="info-label">
+                                        <span class="material-icons" style="color:green">
+                                            done
+                                        </span>
+                                    </td>
+                                    <td class="info-label">110</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">1</td>
+                                    <td class="info-label">MAKEREADYPRINT</td>
+                                    <td class="info-label">16</td>
+                                    <td class="info-label">125.00</td>
+                                    <td class="info-label">4202</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">19212</td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                </tr>
+                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                    <td class="info-label"></td>
+                                    <td class="info-label">110</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">1</td>
+                                    <td class="info-label">MAKEREADYPRINT</td>
+                                    <td class="info-label">16</td>
+                                    <td class="info-label">125.00</td>
+                                    <td class="info-label">4202</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">19212</td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                </tr>
+                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                    <td class="info-label"></td>
+                                    <td class="info-label">110</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">360</td>
+                                    <td class="info-label">MAKEREADYPRINT</td>
+                                    <td class="info-label">16</td>
+                                    <td class="info-label">125.00</td>
+                                    <td class="info-label">4202</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">19212</td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                </tr>
+                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                    <td class="info-label">
+                                        <span class="material-icons" style="color:green">
+                                            done
+                                        </span>
+                                    </td>
+                                    <td class="info-label">110</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">1</td>
+                                    <td class="info-label">MAKEREADYPRINT</td>
+                                    <td class="info-label">16</td>
+                                    <td class="info-label">125.00</td>
+                                    <td class="info-label">4202</td>
+                                    <td class="info-label">-</td>
+                                    <td class="info-label">19212</td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                    <td class="info-label"></td>
+                                </tr>
+                            </ng-container>
+                        </ng-container>
                     </tbody>
                 </table>
             </div>

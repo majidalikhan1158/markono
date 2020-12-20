@@ -35,6 +35,8 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   filteredFinishingTypeOutside: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
   filteredFinishingTypeInside: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
   protected onDestroy = new Subject<void>();
+  countNoOfColorsInside = 0;
+  countNoOfColorsOutside = 0;
   constructor(private store: ProductSpecStore) { }
 
   ngOnInit(): void {
@@ -46,16 +48,20 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
 
   handleColorChangeOutside(color: string) {
     if (this.viewModal.colorTypeOutside.includes(color)) {
+      this.countNoOfColorsOutside--;
       this.viewModal.colorTypeOutside = this.viewModal.colorTypeOutside.filter(x => x !== color);
     } else {
+      this.countNoOfColorsOutside++;
       this.viewModal.colorTypeOutside.push(color);
     }
   }
 
   handleColorChangeInside(color: string) {
     if (this.viewModal.colorTypeInside.includes(color)) {
+      this.countNoOfColorsInside--;
       this.viewModal.colorTypeInside = this.viewModal.colorTypeInside.filter(x => x !== color);
     } else {
+      this.countNoOfColorsInside++;
       this.viewModal.colorTypeInside.push(color);
     }
   }
@@ -63,6 +69,7 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   addPantoneColourOutside(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value !== '' && this.viewModal.pantoneColourOutside.indexOf(value) === -1) {
+      this.countNoOfColorsOutside++;
       this.viewModal.pantoneColourOutside.push(value);
     }
     (event.target as HTMLInputElement).value = '';
@@ -71,18 +78,21 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   addPantoneColourInside(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value !== '' && this.viewModal.pantoneColourInside.indexOf(value) === -1) {
+      this.countNoOfColorsInside++;
       this.viewModal.pantoneColourInside.push(value);
     }
     (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelectionOutside(item: string) {
+    this.countNoOfColorsOutside--;
     this.viewModal.pantoneColourOutside = this.viewModal.pantoneColourOutside.filter(
       (x) => x !== item
     );
   }
 
   removePantoneColourSelectionInside(item: string) {
+    this.countNoOfColorsInside--;
     this.viewModal.pantoneColourInside = this.viewModal.pantoneColourInside.filter(
       (x) => x !== item
     );

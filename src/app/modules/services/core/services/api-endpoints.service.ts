@@ -59,4 +59,16 @@ export class ApiEndpointsService {
   getProductsUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getProducts}`
 
+  getProductGroupUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getProductGroups}`
+
+  getCoverMaterialWeightUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getCoverMaterialWeight}`
+
+  getFinishingTypeUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getFinishingType}`
+
+  getBindingTypeUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getBindingType}`
+
 }

@@ -11,7 +11,7 @@
                         <ngx-mat-select-search [formControl]="bindingTypeFltrCtrl" placeholderLabel="Search..">
                         </ngx-mat-select-search>
                     </mat-option>
-                    <mat-option [value]="item.value" *ngFor="let item of filteredBindingType |async">{{item.text}}
+                    <mat-option [value]="item" *ngFor="let item of filteredBindingTypeList | async">{{item}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -23,7 +23,7 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Binding Method</mat-label>
                     <mat-select [(ngModel)]="viewModal.caseBound.bindingMethod">
-                        <mat-option [value]="item.value" *ngFor="let item of bindingMethodList">{{item.text}}
+                        <mat-option [value]="item.text" *ngFor="let item of bindingMethodList">{{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -32,7 +32,7 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Book Spine Type</mat-label>
                     <mat-select [(ngModel)]="viewModal.caseBound.bookSpineType">
-                        <mat-option [value]="item.value" *ngFor="let item of bookSpineTypeList">{{item.text}}
+                        <mat-option [value]="item.text" *ngFor="let item of bookSpineTypeList">{{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -48,7 +48,7 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Head/Tail Band Colour</mat-label>
                     <mat-select [(ngModel)]="viewModal.caseBound.headTailBandColour">
-                        <mat-option [value]="item.value" *ngFor="let item of headTailBandColorTypeList">{{item.text}}
+                        <mat-option [value]="item.text" *ngFor="let item of headTailBandColorTypeList">{{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -65,7 +65,7 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Greyboard Thickness</mat-label>
                     <mat-select [(ngModel)]="viewModal.caseBound.greyboardThickness">
-                        <mat-option [value]="item.value" *ngFor="let item of greyboardThicknessList">{{item.text}}
+                        <mat-option [value]="item.text" *ngFor="let item of greyboardThicknessList">{{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -88,20 +88,27 @@
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Benchwork Required</mat-label>
-                    <mat-select [(ngModel)]="viewModal.caseBound.benchworkRequired">
+                    <mat-select multiple [(ngModel)]="viewModal.caseBound.benchworkRequired">
                         <mat-option>
-                            <ngx-mat-select-search [formControl]="caseBoundBenchWorkFltrCtrl"
-                                placeholderLabel="Search..">
+                            <ngx-mat-select-search [formControl]="caseBoundBenchWorkFltrCtrl" placeholderLabel="Search..">
                             </ngx-mat-select-search>
                         </mat-option>
-                        <mat-option [value]="item.value" *ngFor="let item of filteredCaseBoundBenchWork |async">
-                            {{item.text}}
+                        <mat-option [value]="item" *ngFor="let item of filteredCaseBoundBenchWork |async">
+                            {{item}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
             <div class="col-lg-9">
-
+                <div class="scroll-bar">
+                    <mat-chip-list #finishingChipList class="table-filter-chips">
+                        <mat-chip [removable]="true" *ngFor="let item of viewModal.caseBound.benchworkRequired"
+                            (removed)="removeBenchworkSelection(item, 'Case Bound')">
+                            {{item}}
+                            <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
             </div>
         </div>
 
@@ -130,17 +137,18 @@
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Endpaper Weight</mat-label>
-                    <mat-select [(ngModel)]="viewModal.caseBound.endPaperWeight">
-                        <mat-option value="Offset">Offset</mat-option>
+                    <mat-select [(ngModel)]="viewModal.caseBound.endPaperWeight" (selectionChange)="handleMaterialWeightChange('MATERIALWEIGHT')">
+                        <mat-option [value]="item" *ngFor="let item of filteredMaterialWeightList | async">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Endpaper Material</mat-label>
-                    <mat-select [(ngModel)]="viewModal.caseBound.endPaperMaterial"
+                    <mat-select (selectionChange)="handleMaterialWeightChange('MATERIAL')"  
+                        [(ngModel)]="viewModal.caseBound.endPaperMaterial"
                         [disabled]="viewModal.caseBound.endPaperWeight === ''">
-                        <mat-option value="Offset">Offset</mat-option>
+                        <mat-option [value]="item" *ngFor="let item of materialList">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -148,8 +156,8 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Material Brand</mat-label>
                     <mat-select [(ngModel)]="viewModal.caseBound.materialBrand"
-                        [disabled]="viewModal.caseBound.endPaperWeight === '' || viewModal.caseBound.endPaperMaterial === ''">
-                        <mat-option value="Offset">Offset</mat-option>
+                        [disabled]="!viewModal.caseBound.endPaperWeight || !viewModal.caseBound.endPaperMaterial">
+                        <mat-option [value]="item" *ngFor="let item of materialBrandList">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -158,25 +166,25 @@
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>No. of Colour Extent</mat-label>
-                    <input matInput [(ngModel)]="viewModal.caseBound.noOfColourExtent">
+                    <input matInput [(ngModel)]="viewModal.caseBound.noOfColourExtent" type="number" min="0">
                 </mat-form-field>
             </div>
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>No. of Mono Extent</mat-label>
-                    <input matInput [(ngModel)]="viewModal.caseBound.noOfMonoExtent">
+                    <input matInput [(ngModel)]="viewModal.caseBound.noOfMonoExtent" type="number" min="0">
                 </mat-form-field>
             </div>
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Total Extent</mat-label>
-                    <input matInput [(ngModel)]="viewModal.caseBound.totalExtent">
+                    <input matInput [(ngModel)]="viewModal.caseBound.totalExtent" type="number" min="0">
                 </mat-form-field>
             </div>
         </div>
 
         <div class="col-lg-12 pb-3">
-            <mat-hint class="font-10px">No. of colours ({{countNoOfColors}})</mat-hint>
+            <mat-hint class="font-10px">No. of colours ({{viewModal.caseBound.colorType.length + viewModal.caseBound.pantoneColour.length}})</mat-hint>
         </div>
 
         <div class="col-lg-12 display-flex pl-0 pt-3">
@@ -218,12 +226,12 @@
                     <mat-label>Finishing</mat-label>
                     <mat-select multiple [(ngModel)]="viewModal.caseBound.finishingType">
                         <mat-option>
-                            <ngx-mat-select-search [formControl]="caseBoundFinishingTypeFltrCtrl"
+                            <ngx-mat-select-search [formControl]="finishingTypeFltrCtrl"
                                 placeholderLabel="Search..">
                             </ngx-mat-select-search>
                         </mat-option>
-                        <mat-option [value]="item.value" *ngFor="let item of filteredCaseBoundFinishingType | async">
-                            {{item.text}}
+                        <mat-option [value]="item" *ngFor="let item of filteredFinishingTypeList | async">
+                            {{item}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -234,7 +242,7 @@
                     <mat-chip-list #finishingChipList class="table-filter-chips">
                         <mat-chip [removable]="true" *ngFor="let item of viewModal.caseBound.finishingType"
                             (removed)="removeFinishTypeSelection(item)">
-                            {{getFinishingTypeText(item)}}
+                            {{item}}
                             <mat-icon matChipRemove>cancel</mat-icon>
                         </mat-chip>
                     </mat-chip-list>
@@ -275,8 +283,8 @@
                             <ngx-mat-select-search [formControl]="foldingBenchWorkFltrCtrl" placeholderLabel="Search..">
                             </ngx-mat-select-search>
                         </mat-option>
-                        <mat-option [value]="item.value" *ngFor="let item of filteredFoldingBenchWork |async">
-                            {{item.text}}
+                        <mat-option [value]="item" *ngFor="let item of filteredFoldingBenchWork |async">
+                            {{item}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -285,8 +293,8 @@
                 <div class="scroll-bar">
                     <mat-chip-list #finishingChipList class="table-filter-chips">
                         <mat-chip [removable]="true" *ngFor="let item of viewModal.folding.benchworkRequired"
-                            (removed)="removeBenchworkSelection(item, 'FOLDING')">
-                            {{getBenchworkText(item)}}
+                            (removed)="removeBenchworkSelection(item, 'Folding')">
+                            {{item}}
                             <mat-icon matChipRemove>cancel</mat-icon>
                         </mat-chip>
                     </mat-chip-list>
@@ -340,8 +348,8 @@
                                 placeholderLabel="Search..">
                             </ngx-mat-select-search>
                         </mat-option>
-                        <mat-option [value]="item.value" *ngFor="let item of filteredSaddleStichBenchWork |async">
-                            {{item.text}}
+                        <mat-option [value]="item" *ngFor="let item of filteredSaddleStichBenchWork |async">
+                            {{item}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -350,8 +358,8 @@
                 <div class="scroll-bar">
                     <mat-chip-list #finishingChipList class="table-filter-chips">
                         <mat-chip [removable]="true" *ngFor="let item of viewModal.saddleStich.benchworkRequired"
-                            (removed)="removeBenchworkSelection(item, 'SADDLESTITCH')">
-                            {{getBenchworkText(item)}}
+                            (removed)="removeBenchworkSelection(item, 'Saddle Stitch')">
+                            {{item}}
                             <mat-icon matChipRemove>cancel</mat-icon>
                         </mat-chip>
                     </mat-chip-list>
@@ -405,8 +413,8 @@
                                 placeholderLabel="Search..">
                             </ngx-mat-select-search>
                         </mat-option>
-                        <mat-option [value]="item.value" *ngFor="let item of filteredWireoBindingBenchWork |async">
-                            {{item.text}}
+                        <mat-option [value]="item" *ngFor="let item of filteredWireoBindingBenchWork |async">
+                            {{item}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -415,8 +423,8 @@
                 <div class="scroll-bar">
                     <mat-chip-list #finishingChipList class="table-filter-chips">
                         <mat-chip [removable]="true" *ngFor="let item of viewModal.wireoBinding.benchworkRequired"
-                            (removed)="removeBenchworkSelection(item, 'WIREOBINDING')">
-                            {{getBenchworkText(item)}}
+                            (removed)="removeBenchworkSelection(item, 'Wire-O Binding')">
+                            {{item}}
                             <mat-icon matChipRemove>cancel</mat-icon>
                         </mat-chip>
                     </mat-chip-list>
@@ -470,8 +478,8 @@
                                 placeholderLabel="Search..">
                             </ngx-mat-select-search>
                         </mat-option>
-                        <mat-option [value]="item.value" *ngFor="let item of filteredSpiralBoundBenchwork |async">
-                            {{item.text}}
+                        <mat-option [value]="item" *ngFor="let item of filteredSpiralBoundBenchwork |async">
+                            {{item}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -480,8 +488,8 @@
                 <div class="scroll-bar">
                     <mat-chip-list #finishingChipList class="table-filter-chips">
                         <mat-chip [removable]="true" *ngFor="let item of viewModal.spiralBound.benchworkRequired"
-                            (removed)="removeBenchworkSelection(item, 'SPIRALBOUND')">
-                            {{getBenchworkText(item)}}
+                            (removed)="removeBenchworkSelection(item, 'Spiral Bound')">
+                            {{item}}
                             <mat-icon matChipRemove>cancel</mat-icon>
                         </mat-chip>
                     </mat-chip-list>
@@ -536,8 +544,8 @@
                                 placeholderLabel="Search..">
                             </ngx-mat-select-search>
                         </mat-option>
-                        <mat-option [value]="item.value" *ngFor="let item of filteredPaperBackBenchwork |async">
-                            {{item.text}}
+                        <mat-option [value]="item" *ngFor="let item of filteredPaperBackBenchwork |async">
+                            {{item}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -546,8 +554,8 @@
                 <div class="scroll-bar">
                     <mat-chip-list #finishingChipList class="table-filter-chips">
                         <mat-chip [removable]="true" *ngFor="let item of viewModal.paperBack.benchworkRequired"
-                            (removed)="removeBenchworkSelection(item, 'PAPERBACK')">
-                            {{getBenchworkText(item)}}
+                            (removed)="removeBenchworkSelection(item, 'Paper Back')">
+                            {{item}}
                             <mat-icon matChipRemove>cancel</mat-icon>
                         </mat-chip>
                     </mat-chip-list>

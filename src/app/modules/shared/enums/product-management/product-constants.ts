@@ -265,17 +265,17 @@ export const BindingMethodList: SelectionList[] = [
   {
     value: 2,
     text: 'Notch Binding',
-    enum: 'NotchBinding'
+    enum: 'Notch Binding'
   },
   {
     value: 3,
     text: 'Perfect Binding',
-    enum: 'PerfectBinding'
+    enum: 'Perfect Binding'
   },
   {
     value: 4,
     text: 'PUR Binding',
-    enum: 'PURBinding'
+    enum: 'PUR Binding'
   }
 ];
 
@@ -333,37 +333,13 @@ export const GreyboardThicknessList: SelectionList[] = [
   }
 ];
 
-export const BenchworkTypeList: SelectionList[] = [
-  {
-    value: 1,
-    text: 'None',
-    enum: 'None'
-  },
-  {
-    value: 2,
-    text: 'Drill Holes',
-    enum: 'DrillHoles'
-  },
-  {
-    value: 3,
-    text: 'Ribbon Marker',
-    enum: 'Ribbon Marker'
-  },
-  {
-    value: 4,
-    text: 'Shrinkwrap',
-    enum: 'Shrinkwrap'
-  },
-  {
-    value: 5,
-    text: 'Forming',
-    enum: 'Forming'
-  },
-  {
-    value: 6,
-    text: 'Others',
-    enum: 'Others'
-  },
+export const BenchworkTypeList: string[] = [
+  'None',
+  'Drill Holes',
+  'Ribbon Marker',
+  'Shrinkwrap',
+  'Forming',
+  'Others',
 ];
 
 export const ColorTypes = {
@@ -470,19 +446,19 @@ export const CoilColorList: SelectionList[] = [
 export const CoverTypeList = [
   {
     value: 'SELF',
-    text: 'Self',
+    text: 'Self-cover',
   },
   {
     value: '4PPCOVER',
-    text: '4pp Cover',
+    text: '4pp cover',
   },
   {
     value: '6PPCOVER',
-    text: '6pp Cover',
+    text: '6pp cover',
   },
   {
     value: '8PPCOVER',
-    text: '8pp Cover',
+    text: '8pp cover',
   }
 ];
 
@@ -598,17 +574,18 @@ export const CheckPrintTextQAList: CheckPrintQA[] = [
 ];
 
 export const BindingType = {
-  CASEBOUND: 'CASEBOUND',
-  FLEXIBOUND: 'FLEXIBOUND',
-  FOLDING: 'FOLDING',
-  FULLCANADIANWIROO: 'FULLCANADIANWIROO',
-  HALFCANADIANWIROO: 'HALFCANADIANWIROO',
-  PAPERBACK: 'PAPERBACK',
-  SADDLESTITCH: 'SADDLESTITCH',
-  SPIRALBOUND: 'SPIRALBOUND',
-  TRIMTOSIZE: 'TRIMTOSIZE',
-  WIREOBINDING: 'WIREOBINDING'
+  CASEBOUND: 'Case Bound',
+  FLEXIBOUND: 'Flexi Bound',
+  FOLDING: 'Folding',
+  FULLCANADIANWIROO: 'Full Canadian Wire-O',
+  HALFCANADIANWIROO: 'Half Canadian Wire-O',
+  PAPERBACK: 'Paper Back',
+  SADDLESTITCH: 'Saddle Stitch',
+  SPIRALBOUND: 'Spiral Bound',
+  TRIMTOSIZE: 'Trim to size',
+  WIREOBINDING: 'Wire-O Binding'
 };
+
 export const ImpositionLayoutList = [
   {
     value: '1',

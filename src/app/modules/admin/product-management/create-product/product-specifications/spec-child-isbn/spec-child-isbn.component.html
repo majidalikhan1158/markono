@@ -6,7 +6,19 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Child Isbns</mat-label>
-                <input matInput (keyup.enter)="addChildIsbn($event)">
+                <input matInput [(ngModel)]="childIsbnNumber"
+                    #trigger="matAutocompleteTrigger" 
+                    [formControl]="childIsbnNumberCtrl"
+                    [matAutocomplete]="auto"
+                    (keyup)='handleIsbnSearch()'>
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" showPanel="true" (optionSelected)='handleSelectedIsbnOwner($event.option.value)'>
+                        <mat-option *ngIf="isLoading" class="is-loading" value="0">Loading...</mat-option>
+                        <ng-container *ngIf="!isLoading">
+                        <mat-option *ngFor="let item of isbnOwnerList" [value]="item.ISBN">
+                            <span>{{item.ISBN}}</span>
+                        </mat-option> 
+                        </ng-container>
+                    </mat-autocomplete>
             </mat-form-field>
         </div>
         <div class="col-lg-9">
@@ -43,16 +55,22 @@
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Material Weight</mat-label>
-                    <mat-select [(ngModel)]="viewModal.materialWeight">
-                        <mat-option value="Offset">Offset</mat-option>
+                    <mat-select [(ngModel)]="viewModal.materialWeight" (selectionChange)="handleMaterialWeightChange('MATERIALWEIGHT')">
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="materialWeightFltrCtrl" placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item" *ngFor="let item of filteredMaterialWeightList | async">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Text Material</mat-label>
-                    <mat-select [(ngModel)]="viewModal.textMaterial" [disabled]="viewModal.materialWeight === ''">
-                        <mat-option value="Offset">Offset</mat-option>
+                    <mat-select (selectionChange)="handleMaterialWeightChange('MATERIAL')" 
+                        [(ngModel)]="viewModal.textMaterial" 
+                        [disabled]="!viewModal.materialWeight">
+                        <mat-option [value]="item" *ngFor="let item of materialList">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -60,8 +78,8 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Material Brand</mat-label>
                     <mat-select [(ngModel)]="viewModal.materialBrand"
-                        [disabled]="viewModal.materialWeight === '' || viewModal.textMaterial === ''">
-                        <mat-option value="Offset">Offset</mat-option>
+                        [disabled]="!viewModal.textMaterial || !viewModal.materialWeight">
+                        <mat-option [value]="item" *ngFor="let item of materialBrandList">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -76,31 +94,19 @@
             </div>
         </div>
 
-        <div class="col-lg-12 display-flex pl-0 pt-3">
-            <div class="col-lg-3 pr-0">
-                <mat-form-field appearance="fill">
-                    <mat-label>No. of colours</mat-label>
-                    <mat-select [(ngModel)]="viewModal.noOfColours">
-                        <mat-option>
-                            <ngx-mat-select-search [formControl]="noOfColoursFltrCtrl" placeholderLabel="Search..">
-                            </ngx-mat-select-search>
-                        </mat-option>
-                        <mat-option [value]="item" *ngFor="let item of filteredNoOfColors | async">{{item}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-lg-9">
+        <div class="col-lg-12 pb-3 pt-2">
+            <mat-hint class="font-10px">No. of colours ({{viewModal.pantoneColour.length + viewModal.colorType.length}})</mat-hint>
+        </div>
+    
+        <div class="col-lg-12 display-flex pl-0">
+            <div class="col-lg-4 pr-0">
                 <div class="color-type-options display-flex pb-4">
                     <span *ngFor="let item of colorTypeList"
-                        [ngClass]="viewModal.colorType.includes(item.text) ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
+                        [ngClass]="viewModal.colorType.includes(item.text) ? item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
                         (click)="handleColorChange(item.text)">{{item.text}}</span>
                 </div>
             </div>
-        </div>
-
-
-        <div class="col-lg-12 display-flex pl-0">
-            <div class="col-lg-3 pr-0">
+            <div class="col-lg-3">
                 <mat-form-field appearance="fill">
                     <mat-label>Pantone Colour (Optional)</mat-label>
                     <input matInput pattern="(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)"
@@ -108,7 +114,7 @@
                     <span matSuffix class="suffix-style">+ ADD</span>
                 </mat-form-field>
             </div>
-            <div class="col-lg-9">
+            <div class="col-lg-5">
                 <div class="scroll-bar">
                     <mat-chip-list #pantoneColourchipList class="table-filter-chips">
                         <mat-chip [removable]="true" [ngStyle]="{'background-color': item}"
@@ -134,7 +140,7 @@
                             <ngx-mat-select-search [formControl]="finishingTypeFltrCtrl" placeholderLabel="Search..">
                             </ngx-mat-select-search>
                         </mat-option>
-                        <mat-option [value]="item.value" *ngFor="let item of filteredFinishingType |async">{{item.text}}
+                        <mat-option [value]="item" *ngFor="let item of filteredFinishingTypeList |async">{{item}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -145,7 +151,7 @@
                     <mat-chip-list #finishingChipList class="table-filter-chips">
                         <mat-chip [removable]="true" *ngFor="let item of viewModal.finishingType"
                             (removed)="removeFinishTypeSelection(item)">
-                            {{getFinishingTypeText(item)}}
+                            {{item}}
                             <mat-icon matChipRemove>cancel</mat-icon>
                         </mat-chip>
                     </mat-chip-list>

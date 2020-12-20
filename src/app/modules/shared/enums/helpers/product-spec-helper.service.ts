@@ -23,7 +23,7 @@ export class ProductSpecHelperService {
       isRibbon: false,
       greyboardThickness: '',
       specialInstruction1: '',
-      benchworkRequired: '',
+      benchworkRequired: [],
       specialInstruction2: '',
       endPaperWeight: '',
       endPaperMaterial: '',

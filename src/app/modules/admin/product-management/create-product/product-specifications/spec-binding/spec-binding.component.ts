@@ -21,6 +21,7 @@ import { SelectionList } from '../../../../../shared/enums/product-management/pr
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { ReplaySubject, Subject } from 'rxjs';
+import { MaterialDataList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 @Component({
   selector: 'app-spec-binding',
   templateUrl: './spec-binding.component.html',
@@ -32,28 +33,13 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   @Input() parentData: BindingVM;
   @Input() parentRecordIndex: number;
   @Output() childComponentDataBindingType = new EventEmitter<DvdCDBindingMapper>();
-  noOfColorsList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  coverMaterialWeightList = [
-    '100gsm',
-    '102gsm',
-    '104gsm',
-    '105gsm',
-    '113gsm',
-    '115gsm',
-    '118gsm',
-    '120gsm',
-    '123gsm',
-    '124gsm',
-    '125gsm',
-    '128gsm',
-    '130gsm',
-    '133gsm',
-    '135gsm',
-    '140gsm',
-    '150gsm',
-  ];
-  finishingTypeList = FinishingTypeList;
-  bindingTypeList: SelectionList[] = BindingTypeList;
+
+  materialDataList: MaterialDataList[];
+  materialWeightList: string[];
+  materialList: string[];
+  materialBrandList: string[];
+  finishingTypeList: string[];
+  bindingTypeList: string[] = [];
   bindingMethodList = BindingMethodList;
   bookSpineTypeList = BookSpineTypeList;
   headTailBandColorTypeList = HeadTailBandColorTypeList;
@@ -65,32 +51,35 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   coilColorList = CoilColorList;
   viewModal: BindingVM;
   isOtherComponent = false;
+
   bindingTypeFltrCtrl: FormControl = new FormControl();
+  materialWeightFltrCtrl: FormControl = new FormControl();
   caseBoundBenchWorkFltrCtrl: FormControl = new FormControl();
-  caseBoundFinishingTypeFltrCtrl: FormControl = new FormControl();
+  finishingTypeFltrCtrl: FormControl = new FormControl();
   foldingBenchWorkFltrCtrl: FormControl = new FormControl();
   saddleStichBenchWorkFltrCtrl: FormControl = new FormControl();
   wireoBindingBenchWorkFltrCtrl: FormControl = new FormControl();
   spiralBoundBenchworkFltrCtrl: FormControl = new FormControl();
   paperBackBenchworkFltrCtrl: FormControl = new FormControl();
 
-  filteredBindingType: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
-  filteredCaseBoundBenchWork: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
-  filteredCaseBoundFinishingType: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
-  filteredFoldingBenchWork: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
-  filteredSaddleStichBenchWork: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
-  filteredWireoBindingBenchWork: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
-  filteredSpiralBoundBenchwork: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
-  filteredPaperBackBenchwork: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  filteredBindingTypeList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredMaterialWeightList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredCaseBoundBenchWork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredFinishingTypeList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredFoldingBenchWork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredSaddleStichBenchWork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredWireoBindingBenchWork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredSpiralBoundBenchwork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredPaperBackBenchwork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   protected onDestroy = new Subject<void>();
   countNoOfColors = 0;
-  constructor(private store: ProductSpecStore, private helper: ProductSpecHelperService) { }
+  constructor(public store: ProductSpecStore, private helper: ProductSpecHelperService) { }
 
   ngOnInit(): void {
+    this.getApiData();
     this.isOtherComponent = !!this.parentComponent;
     this.getDefaultRecord();
     this.handleBindingTypeFilterAutoComplete();
-    this.handleCaseBoundFinishingTypeFilterAutoComplete();
     this.handleCaseBoundBenchWorkFilterAutoComplete();
     this.handleFoldingBenchWorkFilterAutoComplete();
     this.handleSaddleStichBenchWorkFilterAutoComplete();
@@ -99,10 +88,40 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     this.handlePaperBoundBenchworkFilterAutoComplete();
   }
 
+  getApiData = () => {
+    this.store.getBindingTypes('Binding');
+    this.store.getCoverMaterialWeight('Endpaper');
+    this.store.getFinishingTypes('Endpaper');
+    this.store.$bindingTypeList.subscribe(list => {
+      this.bindingTypeList = list;
+      this.handleBindingTypeFilterAutoComplete();
+    });
+
+    this.store.$coverMaterialDataList.subscribe(list => {
+      this.materialDataList = list;
+      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))];
+      this.handleMaterialWeightFilterAutoComplete();
+    });
+
+    this.store.$finishingTypeList.subscribe(list => {
+      this.finishingTypeList = list;
+      this.handleFinishingTypeFilterAutoComplete();
+    });
+  }
+
   handleBindingTypeChange = () => {
     if (this.viewModal && this.viewModal.bindingType) {
-      const bindingType = this.bindingTypeList.find(x => x.value === this.viewModal.bindingType);
-      this.initializeObject(bindingType);
+      this.initializeObject(this.viewModal.bindingType);
+    }
+  }
+
+  handleMaterialWeightChange = (type: string) => {
+    if (type === 'MATERIALWEIGHT') {
+      const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.caseBound.endPaperWeight);
+      this.materialList = [...new Set(records.map(x => x.PaperMaterial))];
+    } else if (type === 'MATERIAL') {
+      const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal.caseBound.endPaperMaterial);
+      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))];
     }
   }
 
@@ -115,8 +134,6 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
       this.viewModal.caseBound.colorType.push(color);
     }
   }
-
-  getData = () => 'testing';
 
   addPantoneColour(event: Event) {
     const value = (event.target as HTMLInputElement).value;
@@ -137,7 +154,9 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   }
 
   removeBenchworkSelection = (recordId: string, type: string) => {
-    if (type === BindingType.FOLDING) {
+    if (type === BindingType.CASEBOUND) {
+      this.viewModal.caseBound.benchworkRequired = this.viewModal.caseBound.benchworkRequired.filter(x => x !== recordId);
+    } else if (type === BindingType.FOLDING) {
       this.viewModal.folding.benchworkRequired = this.viewModal.folding.benchworkRequired.filter(x => x !== recordId);
     } else if (type === BindingType.SADDLESTITCH) {
       this.viewModal.saddleStich.benchworkRequired = this.viewModal.saddleStich.benchworkRequired.filter(x => x !== recordId);
@@ -150,22 +169,15 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     }
   }
 
-  getFinishingTypeText = (id: number) => {
-    return this.finishingTypeList.find(x => x.value === id).text;
-  }
-
-  getBenchworkText = (id: number) => {
-    return this.benchworkTypeList.find(x => x.value === id).text;
-  }
-
   getDefaultRecord = () => {
     if (this.isOtherComponent) {
       this.viewModal = this.parentData ? this.parentData : this.initialObject();
     } else {
       this.store.productSpecStore.subscribe((resp) => {
         if (resp && resp.bindingVM && resp.bindingVM.id > 0) {
-          // assign dvdcd modal
           this.viewModal = resp.bindingVM;
+          this.handleMaterialWeightChange('MATERIALWEIGHT');
+          this.handleMaterialWeightChange('MATERIAL');
         } else {
           this.viewModal = this.initialObject();
         }
@@ -176,7 +188,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   initialObject = (): BindingVM => {
     return {
       id: 1,
-      bindingType: 0,
+      bindingType: '',
       caseBound: null,
       folding: null,
       paperBack: null,
@@ -186,26 +198,26 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     };
   }
 
-  initializeObject = (bindingType: SelectionList) => {
+  initializeObject = (bindingType: string) => {
     this.viewModal = this.initialObject();
-    this.viewModal.bindingType = bindingType.value;
-    if (bindingType.enum === BindingType.CASEBOUND) {
+    this.viewModal.bindingType = bindingType;
+    if (bindingType === BindingType.CASEBOUND) {
       this.viewModal.caseBound = this.helper.getCaseBoundTypeObject();
-    } else if (bindingType.enum === BindingType.FOLDING) {
+    } else if (bindingType === BindingType.FOLDING) {
       this.viewModal.folding = this.helper.getFoldingTypeObject();
-    } else if (bindingType.enum === BindingType.SADDLESTITCH) {
+    } else if (bindingType === BindingType.SADDLESTITCH) {
       this.viewModal.saddleStich = this.helper.getSaddleStitchTypeObject();
-    } else if (bindingType.enum === BindingType.WIREOBINDING) {
+    } else if (bindingType === BindingType.WIREOBINDING) {
       this.viewModal.wireoBinding = this.helper.getWireOBindingTypeObject();
-    } else if (bindingType.enum === BindingType.SPIRALBOUND) {
+    } else if (bindingType === BindingType.SPIRALBOUND) {
       this.viewModal.spiralBound = this.helper.getSpiralBoundTypeObject();
-    } else if (bindingType.enum === BindingType.PAPERBACK) {
+    } else if (bindingType === BindingType.PAPERBACK) {
       this.viewModal.paperBack = this.helper.getPaperBackTypeObject();
     }
   }
 
   handleBindingTypeFilterAutoComplete = () => {
-    this.filteredBindingType.next(this.bindingTypeList.slice());
+    this.filteredBindingTypeList.next(this.bindingTypeList.slice());
     this.bindingTypeFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
@@ -220,41 +232,68 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     // get the search keyword
     let search = this.bindingTypeFltrCtrl.value;
     if (!search) {
-      this.filteredBindingType.next(this.bindingTypeList.slice());
+      this.filteredBindingTypeList.next(this.bindingTypeList.slice());
       return;
     } else {
       search = search.toLowerCase();
     }
     // filter the banks
-    this.filteredBindingType.next(
-      this.bindingTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    this.filteredBindingTypeList.next(
+      this.bindingTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
-  handleCaseBoundFinishingTypeFilterAutoComplete = () => {
-    this.filteredCaseBoundFinishingType.next(this.finishingTypeList.slice());
-    this.caseBoundFinishingTypeFltrCtrl.valueChanges
+  handleMaterialWeightFilterAutoComplete = () => {
+    this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+    this.materialWeightFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
-        this.filterCaseBoundFinishingType();
+        this.filterMaterialWeight();
       });
   }
 
-  filterCaseBoundFinishingType = () => {
+  filterMaterialWeight = () => {
+    if (!this.materialWeightList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.materialWeightFltrCtrl.value;
+    if (!search) {
+      this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredMaterialWeightList.next(
+      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  handleFinishingTypeFilterAutoComplete = () => {
+    this.filteredFinishingTypeList.next(this.finishingTypeList.slice());
+    this.finishingTypeFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterFinishingType();
+      });
+  }
+
+  filterFinishingType = () => {
     if (!this.finishingTypeList) {
       return;
     }
     // get the search keyword
-    let search = this.caseBoundFinishingTypeFltrCtrl.value;
+    let search = this.finishingTypeFltrCtrl.value;
     if (!search) {
-      this.filteredCaseBoundFinishingType.next(this.finishingTypeList.slice());
+      this.filteredFinishingTypeList.next(this.finishingTypeList.slice());
       return;
     } else {
       search = search.toLowerCase();
     }
     // filter the banks
-    this.filteredCaseBoundFinishingType.next(
-      this.finishingTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    this.filteredFinishingTypeList.next(
+      this.finishingTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -281,7 +320,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     }
     // filter the banks
     this.filteredCaseBoundBenchWork.next(
-      this.benchworkTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+      this.benchworkTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -308,7 +347,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     }
     // filter the banks
     this.filteredFoldingBenchWork.next(
-      this.benchworkTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+      this.benchworkTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -335,7 +374,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     }
     // filter the banks
     this.filteredSaddleStichBenchWork.next(
-      this.benchworkTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+      this.benchworkTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -362,7 +401,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     }
     // filter the banks
     this.filteredWireoBindingBenchWork.next(
-      this.benchworkTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+      this.benchworkTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -389,7 +428,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     }
     // filter the banks
     this.filteredSpiralBoundBenchwork.next(
-      this.benchworkTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+      this.benchworkTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -416,7 +455,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     }
     // filter the banks
     this.filteredPaperBackBenchwork.next(
-      this.benchworkTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+      this.benchworkTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 

@@ -13,7 +13,7 @@ export interface GeneralVM {
   id: number;
   productNumber: string;
   printingType: string;
-  productType: string;
+  productType: number;
   externalPartNo: string;
   isbnOwner: string;
   journalTitleCode: string;
@@ -51,7 +51,7 @@ export interface TextVM {
 
 export interface BindingVM {
   id: number;
-  bindingType: number;
+  bindingType: string;
   caseBound: BindingTypeCaseBound;
   folding: BindingTypeFolding;
   paperBack: BindingTypePaperBack;
@@ -68,7 +68,7 @@ export interface BindingTypeCaseBound {
   isRibbon: boolean;
   greyboardThickness: string;
   specialInstruction1: string;
-  benchworkRequired: string;
+  benchworkRequired: string[];
   specialInstruction2: string;
   endPaperWeight: string;
   endPaperMaterial: string;
@@ -320,4 +320,9 @@ export interface LayoutPrepProductionActivities {
   newUnitsCosts: string;
   totalEstCosts: string;
   percentage: string;
+}
+
+export interface IsbnOwner {
+  CompanyCode: string;
+  CompanyName: string;
 }

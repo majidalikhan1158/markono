@@ -7,6 +7,7 @@ import { ResponseModal } from '../../shared/classes/response-modal';
 import { QueryStringParameters } from '../../shared/classes/query-string-parameter';
 import { ProductDetailsVM } from 'src/app/modules/shared/models/create-case';
 import { HelperService } from './helper.service';
+import { ProductResponseModal } from '../../shared/classes/product-modals/product-modals';
 
 @Injectable({
   providedIn: 'root',
@@ -53,4 +54,42 @@ export class ProductService {
     return this.http.get(url);
   }
 
+  getProductGroups = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getProductGroupUrl();
+    const queryParams = `$filter=printType eq '${reqObj.printType}' and isDeleted eq ${reqObj.isDeleted}&$select=id,productName`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getCoverMaterialWeight = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getCoverMaterialWeightUrl();
+    const queryParams = `$filter=printType eq '${reqObj.printType}' and ComponentType eq '${reqObj.componentType}'
+     and isDeleted eq ${reqObj.isDeleted} &$select=paperWeight,paperMaterial,paperBrand`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getFinishingTypes = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getFinishingTypeUrl();
+    const queryParams = `$filter=ComponentType eq '${reqObj.componentType}'
+     and isDeleted eq ${reqObj.isDeleted} &$select=finishingName`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getBindingTypes = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getBindingTypeUrl();
+    const queryParams = `$filter=printType eq null and sellToNo eq '${reqObj.sellToNo ?? null}'
+    or null eq null and isDeleted eq ${reqObj.isDeleted} &$select=bindingName`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getProductsForChildIsbn = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getProductsUrl();
+    const queryParams = `$filter=contains(isbn,'${reqObj.isbn}')
+     and deleted eq ${reqObj.isDeleted} &$select=id,isbn,versionNo`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
 }

@@ -1,21 +1,16 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import {
-  BindingMethodList,
-  FinishingTypeList,
-  BindingTypeList,
-  BookSpineTypeList,
-  HeadTailBandColorTypeList,
-  GreyboardThicknessList,
-  BenchworkTypeList,
-  ColorTypeList, NoOfColorsList, CoverMaterialList
-} from 'src/app/modules/shared/enums/product-management/product-constants';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { GreyboardThicknessList, ColorTypeList } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { ChildIsbnVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
+import { MaterialDataList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
+import { ChildIsbnModalList } from '../../../../../services/shared/classes/product-modals/product-modals';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { GeneralVM } from '../../../../../shared/models/product-spec';
 @Component({
   selector: 'app-spec-child-isbn',
   templateUrl: './spec-child-isbn.component.html',
@@ -23,28 +18,54 @@ import { SelectionList } from 'src/app/modules/shared/enums/product-management/p
   encapsulation: ViewEncapsulation.None,
 })
 export class SpecChildIsbnComponent implements OnInit, OnDestroy {
-  noOfColorsList = NoOfColorsList;
-  coverMaterialWeightList = CoverMaterialList;
-  finishingTypeList: SelectionList[] = FinishingTypeList;
-  bindingTypeList = BindingTypeList;
-  bindingMethodList = BindingMethodList;
-  bookSpineTypeList = BookSpineTypeList;
-  headTailBandColorTypeList = HeadTailBandColorTypeList;
-  greyboardThicknessList = GreyboardThicknessList;
-  benchworkTypeList = BenchworkTypeList;
+  @ViewChild('trigger') trigger: MatAutocompleteTrigger;
+  materialDataList: MaterialDataList[];
+  materialWeightList: string[];
+  materialList: string[];
+  materialBrandList: string[];
+  finishingTypeList: string[];
   colorTypeList = ColorTypeList;
+  selectedFinishingTypes: string[] = [];
+
   viewModal: ChildIsbnVM;
-  noOfColoursFltrCtrl: FormControl = new FormControl();
+  materialWeightFltrCtrl: FormControl = new FormControl();
   finishingTypeFltrCtrl: FormControl = new FormControl();
-  filteredNoOfColors: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
-  filteredFinishingType: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  filteredMaterialWeightList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredFinishingTypeList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+
+  greyboardThicknessList = GreyboardThicknessList;
+  childIsbnNumber: string;
+  childIsbnNumberCtrl = new FormControl();
+  isbnOwnerList: ChildIsbnModalList[];
+  isLoading = false;
+  previousValue: string;
+  generalVM: GeneralVM;
   protected onDestroy = new Subject<void>();
-  constructor(private store: ProductSpecStore) { }
+  subscription: Subscription;
+  constructor(private store: ProductSpecStore, private ref: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    this.store.getCoverMaterialWeight('SlipCase');
+    this.store.getFinishingTypes('SlipCase');
+    this.getApiData();
     this.getDefaultRecord();
-    this.handleNoOfColorsFilterAutoComplete();
-    this.handleFinishingTypeFilterAutoComplete();
+  }
+
+  getApiData = () => {
+    this.subscription = this.store.$coverMaterialDataList.subscribe(list => {
+      this.materialDataList = list;
+      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))];
+      this.handleMaterialWeightFilterAutoComplete();
+    });
+
+    this.subscription = this.store.$finishingTypeList.subscribe(list => {
+      this.finishingTypeList = list;
+      this.handleFinishingTypeFilterAutoComplete();
+    });
+
+    this.subscription = this.store.productSpecStore.subscribe(data => {
+      this.generalVM = data.generalVM;
+    });
   }
 
   handleColorChange(color: string) {
@@ -53,6 +74,43 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     } else {
       this.viewModal.colorType.push(color);
     }
+  }
+
+  handleIsbnSearch() {
+    if (this.childIsbnNumber && this.childIsbnNumber !== this.previousValue && this.childIsbnNumber.length === 10) {
+      this.isbnOwnerList = [];
+      this.ref.detectChanges();
+      this.previousValue = this.childIsbnNumber;
+      this.isLoading = true;
+      setTimeout(_ => this.trigger.openPanel());
+      // call api to get customer results
+      this.subscription = this.store.getProducts(this.childIsbnNumber).subscribe(resp => {
+        const details = (resp.body.result as unknown) as ChildIsbnModalList[];
+        this.isbnOwnerList = details && details.length > 0 ? details : [];
+        this.isLoading = false;
+        this.ref.detectChanges();
+      }, (err) => {
+        this.isbnOwnerList = [];
+        this.isLoading = false;
+        this.ref.detectChanges();
+      });
+    }
+  }
+
+  handleSelectedIsbnOwner = (isbnOwner: string) => {
+    if (isbnOwner === '0') {
+      setTimeout(_ => this.trigger.openPanel());
+      return;
+    }
+
+    if (!this.viewModal.childIsbns.includes(isbnOwner) && this.generalVM?.productNumber !== isbnOwner) {
+      this.viewModal.childIsbns.push(isbnOwner);
+    }
+    setTimeout(_ => this.trigger.openPanel());
+  }
+
+  displayFn(isbnOwner: string) {
+    if (isbnOwner) { return isbnOwner; }
   }
 
   addChildIsbn(event: Event) {
@@ -67,6 +125,16 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     this.viewModal.childIsbns = this.viewModal.childIsbns.filter(
       (x) => x !== item
     );
+  }
+
+  handleMaterialWeightChange = (type: string) => {
+    if (type === 'MATERIALWEIGHT') {
+      const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.materialWeight);
+      this.materialList = [...new Set(records.map(x => x.PaperMaterial))];
+    } else if (type === 'MATERIAL') {
+      const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal.textMaterial);
+      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))];
+    }
   }
 
   addPantoneColour(event: Event) {
@@ -85,12 +153,8 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     this.viewModal.finishingType = this.viewModal.finishingType.filter(x => x !== recordId);
   }
 
-  getFinishingTypeText = (id: number) => {
-    return this.finishingTypeList.find(x => x.value === id).text;
-  }
-
   getDefaultRecord = () => {
-    this.store.productSpecStore.subscribe((resp) => {
+    this.subscription = this.store.productSpecStore.subscribe((resp) => {
       if (resp && resp.childIsbnVM && resp.childIsbnVM.id > 0) {
         this.viewModal = resp.childIsbnVM;
       } else {
@@ -118,36 +182,9 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     };
   }
 
-  handleNoOfColorsFilterAutoComplete = () => {
-    this.filteredNoOfColors.next(this.noOfColorsList.slice());
-    this.noOfColoursFltrCtrl.valueChanges
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe(() => {
-        this.filterNoOfColors();
-      });
-  }
-
-  filterNoOfColors = () => {
-    if (!this.noOfColorsList) {
-      return;
-    }
-    // get the search keyword
-    let search = this.noOfColoursFltrCtrl.value;
-    if (!search) {
-      this.filteredNoOfColors.next(this.noOfColorsList.slice());
-      return;
-    } else {
-      search = search.toLowerCase();
-    }
-    // filter the banks
-    this.filteredNoOfColors.next(
-      this.noOfColorsList.filter(item => item.toLowerCase().indexOf(search) > -1)
-    );
-  }
-
   handleFinishingTypeFilterAutoComplete = () => {
-    this.filteredFinishingType.next(this.finishingTypeList.slice());
-    this.finishingTypeFltrCtrl.valueChanges
+    this.filteredFinishingTypeList.next(this.finishingTypeList.slice());
+    this.subscription = this.finishingTypeFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
         this.filterFinishingType();
@@ -155,26 +192,55 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   }
 
   filterFinishingType = () => {
-    if (!this.coverMaterialWeightList) {
+    if (!this.finishingTypeList) {
       return;
     }
     // get the search keyword
     let search = this.finishingTypeFltrCtrl.value;
     if (!search) {
-      this.filteredFinishingType.next(this.finishingTypeList.slice());
+      this.filteredFinishingTypeList.next(this.finishingTypeList.slice());
       return;
     } else {
       search = search.toLowerCase();
     }
     // filter the banks
-    this.filteredFinishingType.next(
-      this.finishingTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+    this.filteredFinishingTypeList.next(
+      this.finishingTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+
+  handleMaterialWeightFilterAutoComplete = () => {
+    this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+    this.subscription = this.materialWeightFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterMaterialWeight();
+      });
+  }
+
+  filterMaterialWeight = () => {
+    if (!this.materialWeightList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.materialWeightFltrCtrl.value;
+    if (!search) {
+      this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredMaterialWeightList.next(
+      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
   ngOnDestroy(): void {
     this.onDestroy.next();
     this.onDestroy.complete();
+    this.subscription.unsubscribe();
     this.store.setProductSpecStore(
       this.viewModal,
       ProductSpecTypes.CHILD_ISBN

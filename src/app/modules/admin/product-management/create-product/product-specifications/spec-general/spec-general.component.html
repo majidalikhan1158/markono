@@ -18,7 +18,7 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Printing Type</mat-label>
-                <mat-select [(ngModel)]="generalVM.printingType">
+                <mat-select [(ngModel)]="generalVM.printingType" (selectionChange)="handlePrintTypeChange()">
                     <mat-option value="Offset">Offset</mat-option>
                     <mat-option value="Digital">Digital</mat-option>
                     <mat-option value="POD">POD</mat-option>
@@ -29,7 +29,19 @@
             <mat-form-field appearance="fill">
                 <mat-label>ISBN Owner</mat-label>
                 <mat-icon matPrefix>search</mat-icon>
-                <input matInput [(ngModel)]="generalVM.isbnOwner">
+                <input matInput [(ngModel)]="generalVM.isbnOwner" [value] = "generalVM.isbnOwner"
+                #trigger="matAutocompleteTrigger" 
+                [formControl]="isbnOwnerSearchCtrl"
+                [matAutocomplete]="auto"
+                (keyup)='handleCustomerSearch()'>
+                <mat-autocomplete  #auto="matAutocomplete" [displayWith]="displayFn" showPanel="true" (optionSelected)='handleSelectedIsbnOwner($event.option.value)'>
+                    <mat-option *ngIf="isLoading" class="is-loading" value="0">Loading...</mat-option>
+                    <ng-container *ngIf="!isLoading">
+                      <mat-option *ngFor="let item of isbnOwnerList" [value]="item.CompanyCode">
+                        <span><b>{{item.CompanyCode}}</b>_{{item.CompanyName}}</span>
+                      </mat-option> 
+                    </ng-container>
+                  </mat-autocomplete>
             </mat-form-field>
         </div>
     </div>
@@ -37,34 +49,36 @@
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>Product Type</mat-label>
-                <mat-select [(ngModel)]="generalVM.productType">
+                <mat-select [(ngModel)]="generalVM.productType" (selectionChange)="shouldShowJournalFields()">
                     <mat-option>
                         <ngx-mat-select-search [formControl]="productTypeFltrCtrl" placeholderLabel="Search..">
                         </ngx-mat-select-search>
                     </mat-option>
-                    <mat-option [value]="item.enum" *ngFor="let item of filteredProductType | async">{{item.text}}
+                    <mat-option [value]="item.Id" *ngFor="let item of store.$productGroupList | async">{{item.ProductName}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
-        <div class="col-lg-3 pr-0" *ngIf="generalVM.productType === productTypes.JOURNALS">
-            <mat-form-field appearance="fill">
-                <mat-label>Journal Title Code</mat-label>
-                <input matInput [(ngModel)]="generalVM.journalTitleCode">
-            </mat-form-field>
-        </div>
-        <div class="col-lg-3 pr-0" *ngIf="generalVM.productType === productTypes.JOURNALS">
-            <mat-form-field appearance="fill">
-                <mat-label>Volume</mat-label>
-                <input matInput [(ngModel)]="generalVM.volume">
-            </mat-form-field>
-        </div>
-        <div class="col-lg-3 pr-0" *ngIf="generalVM.productType === productTypes.JOURNALS">
-            <mat-form-field appearance="fill">
-                <mat-label>Issue</mat-label>
-                <input matInput [(ngModel)]="generalVM.issue">
-            </mat-form-field>
-        </div>
+        <ng-container *ngIf="store.$showJournaFields | async">
+            <div class="col-lg-3 pr-0" >
+                <mat-form-field appearance="fill">
+                    <mat-label>Journal Title Code</mat-label>
+                    <input matInput [(ngModel)]="generalVM.journalTitleCode">
+                </mat-form-field>
+            </div>
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Volume</mat-label>
+                    <input matInput [(ngModel)]="generalVM.volume">
+                </mat-form-field>
+            </div>
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Issue</mat-label>
+                    <input matInput [(ngModel)]="generalVM.issue">
+                </mat-form-field>
+            </div>
+        </ng-container>
     </div>
     <div class="col-lg-12 display-flex">
         <mat-form-field appearance="fill">
@@ -108,25 +122,25 @@
                 <div class="col-lg-6 pr-0">
                     <mat-form-field appearance="fill">
                         <mat-label>Height(mm)</mat-label>
-                        <input matInput [(ngModel)]="generalVM.height">
+                        <input matInput [(ngModel)]="generalVM.height" type="number" min="0">
                     </mat-form-field>
                 </div>
                 <div class="col-lg-6 pr-0">
                     <mat-form-field appearance="fill">
                         <mat-label>Width(mm)</mat-label>
-                        <input matInput [(ngModel)]="generalVM.width">
+                        <input matInput [(ngModel)]="generalVM.width" type="number" min="0">
                     </mat-form-field>
                 </div>
                 <div class="col-lg-6 pr-0">
                     <mat-form-field appearance="fill">
                         <mat-label>Weight(kg)</mat-label>
-                        <input matInput [(ngModel)]="generalVM.weight">
+                        <input matInput [(ngModel)]="generalVM.weight" type="number" min="0" readonly="true">
                     </mat-form-field>
                 </div>
                 <div class="col-lg-6 pr-0">
                     <mat-form-field appearance="fill">
                         <mat-label>Spine Width</mat-label>
-                        <input matInput [(ngModel)]="generalVM.spinWidth">
+                        <input matInput [(ngModel)]="generalVM.spinWidth" type="number" min="0" readonly="true">
                     </mat-form-field>
                 </div>
             </div>
@@ -142,13 +156,13 @@
                 <div class="col-lg-6 pr-0">
                     <mat-form-field appearance="fill">
                         <mat-label>Open Size Height(mm)</mat-label>
-                        <input matInput [(ngModel)]="generalVM.openSizeHeight">
+                        <input matInput [(ngModel)]="generalVM.openSizeHeight" type="number" min="0">
                     </mat-form-field>
                 </div>
                 <div class="col-lg-6 pr-0">
                     <mat-form-field appearance="fill">
                         <mat-label>Open Size Width(mm)</mat-label>
-                        <input matInput [(ngModel)]="generalVM.openSizeWidth">
+                        <input matInput [(ngModel)]="generalVM.openSizeWidth" type="number" min="0">
                     </mat-form-field>
                 </div>
             </div>

@@ -38,6 +38,7 @@ import { expandableRowAnimation } from './expandable-row.animation';
   animations: [expandableRowAnimation],
 })
 export class PlatemakingComponent implements OnInit {
+  //#region declaration
   @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = [
     'id',
@@ -51,7 +52,7 @@ export class PlatemakingComponent implements OnInit {
     'webcode',
     'status',
     'actions',
-    //'expandRow',
+    'expandRow',
     //  'expandTable'
   ];
   columnsToDisplay = [
@@ -88,7 +89,7 @@ export class PlatemakingComponent implements OnInit {
     customer: '',
     platesTobeReadByDate: '',
     scheduledPrinitngDate: '',
-    status: '',
+    status: ''
   };
   tableFilterTypes = PlatemakingnSearchFilterTypes;
   statusTypes = StatusTypes;
@@ -98,17 +99,14 @@ export class PlatemakingComponent implements OnInit {
   ExpansionIcons = ExpansionIcons;
   rowIdToExpand = 0;
   chooseList = '';
+  //#endregion
+
   constructor(private modalService: ModalService, private router: Router,
     private snack: SnackBarService,) {
     this.dataSource = new MatTableDataSource<PlatemakingListModel>(this.dataArray);
   }
 
   ngOnInit(): void {
-    // this.modalService.modalToBeOpen.subscribe(modalId => {
-    //   if (modalId && modalId === UIModalID.ADD_PRODUCT_SPEC_MODAL) {
-    //     this.modalService.open(modalId);
-    //   }
-    // });
   }
 
   ngAfterViewInit() {
@@ -139,6 +137,12 @@ export class PlatemakingComponent implements OnInit {
     } else if (filterPropType === this.tableFilterTypes.CUSTOMER) {
       this.tableFilters.customer = '';
     } else if (filterPropType === this.tableFilterTypes.JOB_NO) {
+      this.tableFilters.jobNo = '';
+    } else {
+      this.tableFilters.platesTobeReadByDate = '';
+      this.tableFilters.status = this.selectedStatus = '';
+      this.tableFilters.scheduledPrinitngDate = '';
+      this.tableFilters.customer = '';
       this.tableFilters.jobNo = '';
     }
     this.dataSource.filter = JSON.stringify(this.tableFilters);
@@ -213,17 +217,6 @@ export class PlatemakingComponent implements OnInit {
       if (this.tableFilters.status !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          new Date(data.status)
-            .toLocaleDateString()
-            .trim()
-            .indexOf(
-              new Date(searchString.status).toLocaleDateString()
-            ) !== -1 ? 1 : 0
-        );
-      }
-      if (this.tableFilters.status !== '') {
-        filterCounter++;
-        matchedFilters = matchedFilters + (
           data.status
             .toString()
             .trim()
@@ -255,12 +248,8 @@ export class PlatemakingComponent implements OnInit {
       if (filterCounter === 0) { return true; }
       return filterCounter === matchedFilters;
     };
-    return myFilterPredicate;
-  }
 
-  handleAddProductSpecEvent(modalId: string) {
-    this.modalService.close(modalId);
-    this.router.navigate(['admin/product-management/create']);
+    return myFilterPredicate;
   }
 
   handleModalRejectEvent(modalId: string) { }
@@ -274,15 +263,11 @@ export class PlatemakingComponent implements OnInit {
       ? 0
       : id;
   }
-  chooseSelectionChange(event: Event) {
-    let a = 'Hold';
-    console.log('lllllllllllll', a)
-    if (a == 'Hold') {
-      console.log(true)
-      this.modalService.open('ADD_REASON_MODAL');
-    }
 
+  chooseSelectionChange(event: Event) {
+    this.modalService.open('ADD_REASON_MODAL');
   }
+
   handleAddReasonEvent(modalId: string) {
     this.snack.open('Reason is Saved');
   }

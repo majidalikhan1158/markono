@@ -110,9 +110,9 @@
                 <div class="row full-width">
                     <div class="col-lg-12 pt-2 pb-2 pr-0">
                         <div class="float-left display-flex">
-                            <span
+                            <!-- <span
                                 style="padding-top: 10px;font-size: 15px;color: #AFAFAF;width: -webkit-fill-available;">View
-                                By:&nbsp;</span>
+                                By:&nbsp;</span> 
                             <mat-form-field appearance="fill" class="font-12px pb-4">
                                 <mat-label>Status</mat-label>
                                 <mat-select>
@@ -120,7 +120,7 @@
                                         {{item.text}}
                                     </mat-option>
                                 </mat-select>
-                            </mat-form-field>
+                            </mat-form-field>-->
                             <mat-chip-list #chipList class="table-filter-chips">
                                 <mat-chip [removable]="true" *ngIf="tableFilters.jobNo != ''"
                                     (removed)="removeFilter(tableFilterTypes.JOB_NO)">
@@ -134,12 +134,12 @@
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.platesTobeReadByDate != ''"
                                     (removed)="removeFilter(tableFilterTypes.PLATESTOBEREADBY_DATE)">
-                                    {{tableFilters.platesTobeReadByDate | date:'shortDate' }}
+                                    {{tableFilters.platesTobeReadByDate }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.scheduledPrinitngDate != ''"
                                     (removed)="removeFilter(tableFilterTypes.SCHEDULEDPRINTING_DATE)">
-                                    {{tableFilters.scheduledPrinitngDate | date:'shortDate' }}
+                                    {{tableFilters.scheduledPrinitngDate }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.status != ''"
@@ -202,7 +202,7 @@
                                     </mat-form-field>
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Status</mat-label>
-                                        <mat-select>
+                                        <mat-select [(ngModel)]="tableFilters.status">
                                             <mat-option [value]="item.value" *ngFor="let item of statusTypesList">
                                                 {{item.text}}
                                             </mat-option>
@@ -244,13 +244,13 @@
 
                     <ng-container matColumnDef="platesToBeReadyBy">
                         <th mat-header-cell *matHeaderCellDef style="width: 100px;"> Plates to be ready by</th>
-                        <td mat-cell *matCellDef="let element" style="width: 100px;"> {{element.platesToBeReadyBy}}
+                        <td mat-cell *matCellDef="let element" style="width: 100px;"> {{element.platesToBeReadyBy }}
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="printingDate">
                         <th mat-header-cell *matHeaderCellDef style="width: 100px;"> Printing Date </th>
-                        <td mat-cell *matCellDef="let element" style="width: 100px;"> {{element.printingDate}} </td>
+                        <td mat-cell *matCellDef="let element" style="width: 100px;"> {{element.printingDate }} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="qty">
@@ -326,7 +326,7 @@
                         </td>
                     </ng-container>
 
-                    <!-- <ng-container class="action-column pb-0" matColumnDef="expandRow">
+                    <ng-container class="action-column pb-0" matColumnDef="expandRow">
                         <th mat-header-cell *matHeaderCellDef> </th>
                         <td mat-cell *matCellDef="let element;index as i;">
                             <span class="material-icons expansion-icon" (click)="toggleExpandable(element.id)">
@@ -337,7 +337,7 @@
                                 }}
                             </span>
                         </td>
-                    </ng-container> -->
+                    </ng-container>
 
                     <ng-container matColumnDef="expandedDetail">
                         <mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length"

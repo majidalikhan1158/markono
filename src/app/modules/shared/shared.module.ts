@@ -14,6 +14,7 @@ import { AddFgRequiredModalComponent } from './ui-modals/case-management/add-fg-
 import { AddAdvancesModalComponent } from './ui-modals/case-management/add-advances-modal/add-advances-modal.component';
 import { ViewAllModalComponent } from './ui-modals/case-management/view-all-modal/view-all-modal.component';
 import { ViewOperatorsModalComponent } from './ui-modals/shop-floor-management/view-operators-modal/view-operators-modal.component';
+import { AddReasonModalComponent } from './ui-modals/platemaking/add-reason-modal/add-reason-modal.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { ViewOperatorsModalComponent } from './ui-modals/shop-floor-management/v
     AddAdvancesModalComponent,
     ViewAllModalComponent,
     ViewOperatorsModalComponent,
+    AddReasonModalComponent,
   ],
   imports: [CommonModule, MaterialUiModule, NgbDropdownModule, SumPipeModule],
   exports: [
@@ -37,7 +39,8 @@ import { ViewOperatorsModalComponent } from './ui-modals/shop-floor-management/v
     CreateProductSpecModalComponent,
     ModalComponent,
     ViewAllModalComponent,
-    ViewOperatorsModalComponent
+    ViewOperatorsModalComponent,
+    AddReasonModalComponent
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DATA, useValue: {} },

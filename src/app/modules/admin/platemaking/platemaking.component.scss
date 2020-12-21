@@ -1,0 +1,247 @@
+app-platemaking {
+    .platemaking-table-card {
+        width: 100%;
+    }
+
+    .platemaking-table-card .card-body {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+    }
+
+    .card-header {
+        min-height: 45px !important;
+    }
+
+    .platemaking-table-card .platemaking-table {
+        width: 100%;
+    }
+
+    .platemaking-table .mat-header-cell {
+        font-size: 14px;
+        font-family: "Roboto-Regular";
+        color: #afafaf;
+        font-weight: normal;
+    }
+
+    .platemaking-table .mat-cell {
+        font-size: 14px;
+        font-family: "Roboto-Regular";
+        color: #484848;
+        font-weight: normal;
+    }
+
+    .platemaking-table th.mat-header-cell:first-of-type,
+    td.mat-cell:first-of-type,
+    td.mat-footer-cell:first-of-type {
+        padding-left: 5px;
+    }
+
+    .platemaking-table th.mat-header-cell,
+    td.mat-cell,
+    td.mat-footer-cell {
+        padding: 5px;
+        border-bottom: 0px;
+    }
+
+    .platemaking-table-card .mat-form-field.mat-paginator-page-size-select {
+        margin-top: -12px;
+    }
+
+    .platemaking-table-card .mat-form-field.mat-paginator-page-size-select .mat-form-field-flex {
+        width: 70px;
+    }
+
+    .platemaking-table-card .mat-form-field.mat-paginator-page-size-select .mat-form-field-infix {
+        border: 1px solid #dfdfdf;
+        padding-left: 10px;
+        padding-right: 5px;
+    }
+
+    .platemaking-table-card .mat-form-field.mat-paginator-page-size-select .mat-form-field-ripple {
+        background-color: transparent;
+    }
+
+    .platemaking-table-card .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+        color: rgba(0, 0, 0, 0.54) !important;
+    }
+
+    .platemaking-table-card .mat-paginator-container {
+        color: #343434;
+        font-family: "Roboto-Regular";
+        font-size: 14px;
+    }
+
+    .table-filter-icon {
+        height: 40px;
+        width: 42px;
+        border-radius: 56px;
+        background-color: transparent;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .table-filter-icon:hover {
+        background-color: #0000000d;
+    }
+
+    .table-filter-icon .material-icons {
+        font-size: 30px !important;
+        margin-top: 5px;
+        color: #343434;
+    }
+
+    .platemaking-table-card .mat-form-field-wrapper {
+        padding-bottom: 0px !important;
+    }
+
+    .mat-form-field-wrapper {
+        padding-bottom: 0px !important;
+    }
+
+    .platemaking-header-card {
+        top: 10px;
+        //left: 246px;
+        width: 100%;
+        height: 100px;
+        background: #ffffff 0% 0% no-repeat padding-box;
+        border-radius: 6px;
+        opacity: 1;
+    }
+    .font-size-h {
+        font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-bold) 32px/38px
+            var(--unnamed-font-family-roboto);
+        letter-spacing: var(--unnamed-character-spacing-0);
+        color: var(--unnamed-color-343434);
+        text-align: left;
+        font: normal normal bold 32px/38px Roboto;
+        letter-spacing: 0px;
+        color: #343434;
+        opacity: 1;
+    }
+    .platemaking-header-card .card-body .d-flex {
+        //   padding-right: 27px;
+        width: 250px;
+    }
+    .platemaking-header-card .card-body {
+        display: inline-flex !important;
+        padding-top: 17px !important;
+    }
+    .clear-filter {
+        padding-left: 169px !important;
+        display: inline-block;
+        font: normal normal normal 14px/17px Roboto;
+    }
+    .label-inline {
+        width: -webkit-fill-available !important;
+    }
+    .label-light-purple {
+        color: #9560ff;
+        background-color: #eee5ff;
+    }
+    .label-light-green {
+        color: #0fe848;
+        background-color: #0fe8481a;
+    }
+    .label-light-orange {
+        color: #ffa800;
+        background-color: #fff4de;
+    }
+    .label-light-blue {
+        color: #3699ff;
+        background-color: #e1f0ff;
+    }
+    .action-column {
+        padding-right: 35px;
+        padding-left: 5px;
+        cursor: pointer;
+    }
+    .expansion-icon {
+        width: 26px;
+        border-radius: 14px;
+        height: 26px;
+        background: #e6e6e6;
+        font-size: 21px !important;
+        text-align: center;
+        line-height: 1.3;
+    }
+    .component-table .mat-form-field-appearance-fill .mat-form-field-flex {
+        padding-top: 0px !important;
+    }
+
+    .component-table .mat-select-arrow-wrapper {
+        vertical-align: bottom !important;
+    }
+    .component-table thead tr {
+        background: transparent !important;
+    }
+
+    .component-table thead th {
+        background: transparent !important;
+        color: #afafaf !important;
+
+        text-transform: none !important;
+        font-weight: normal !important;
+        padding-left: 10px;
+        padding-right: 0px;
+        padding-top: 0px;
+        // padding-bottom: 10px;
+        text-align: left;
+        font: normal normal normal 12px/14px Roboto;
+        letter-spacing: 0px !important;
+        opacity: 1;
+    }
+
+    .component-table tbody tr td {
+        color: #484848 !important;
+        font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-normal) var(--unnamed-font-size-14) /
+            var(--unnamed-line-spacing-17) var(--unnamed-font-family-roboto);
+        letter-spacing: var(--unnamed-character-spacing-0);
+        text-align: left;
+        font: normal normal normal 14px/17px Roboto;
+        letter-spacing: 0px;
+        color: #484848;
+        opacity: 1;
+        padding-top: 5px;
+        padding-bottom: 0px;
+        padding-right: 0px;
+        //padding-left: 22px;
+    }
+
+    .component-table tbody tr.expandedRow td {
+        padding-top: 10px;
+        background-color: #f1f2f1f1 !important;
+    }
+
+    .component-table tbody tr.expandedRow th {
+        border-bottom: #afafaf 1px solid;
+    }
+
+    .component-table tbody tr td.action-column {
+        padding-right: 6px;
+        cursor: pointer;
+    }
+
+    .component-table .outer-row {
+        border-bottom: 1px solid #e6e6e6;
+        border-top: 1px solid #e6e6e6;
+        opacity: 1;
+    }
+
+    .mat-row {
+        border-bottom-width: 0px;
+
+        &:hover {
+            cursor: pointer;
+            //  background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    .expandable-row {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        background-color: #fafafa;
+        min-height: 0;
+        overflow: hidden;
+    }
+}

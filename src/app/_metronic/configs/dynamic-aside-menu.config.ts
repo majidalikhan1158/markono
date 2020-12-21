@@ -53,6 +53,15 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/icons/Design/Cap-2.svg',
       permission: 'accessToShopFloorCollection'
     },
+    {
+      title: 'Platemaking',
+      root: true,
+      bullet: 'dot',
+      page: '/admin/platemaking',
+      icon: 'flaticon2-browser-2',
+      svg: './assets/media/svg/icons/Design/Cap-2.svg',
+      permission: 'accessToPlatemaking'
+    },
   ]
 };
 

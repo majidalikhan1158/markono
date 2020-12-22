@@ -1,12 +1,10 @@
 import { Component, Input, OnDestroy, OnInit, Output, ViewEncapsulation, EventEmitter } from '@angular/core';
 import {
-  FinishingTypeList,
   BindingMethodList,
   BookSpineTypeList,
   HeadTailBandColorTypeList,
   GreyboardThicknessList,
   BenchworkTypeList,
-  BindingTypeList,
   ColorTypeList,
   StitchTypeList,
   WireOColorList,
@@ -17,11 +15,16 @@ import { BindingVM, DvdCDBindingMapper } from 'src/app/modules/shared/models/pro
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
-import { SelectionList } from '../../../../../shared/enums/product-management/product-interfaces';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { ReplaySubject, Subject } from 'rxjs';
 import { MaterialDataList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
+export interface ComponentType {
+  text: string;
+  componentType: ProductSpecTypes;
+  materialDataObservableProperty: string;
+  finishingListObservableProperty: string;
+}
 @Component({
   selector: 'app-spec-binding',
   templateUrl: './spec-binding.component.html',
@@ -73,11 +76,12 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   filteredPaperBackBenchwork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   protected onDestroy = new Subject<void>();
   countNoOfColors = 0;
+  componentType: ComponentType;
   constructor(public store: ProductSpecStore, private helper: ProductSpecHelperService) { }
 
   ngOnInit(): void {
+    this.handleComponentType();
     this.getApiData();
-    this.isOtherComponent = !!this.parentComponent;
     this.getDefaultRecord();
     this.handleBindingTypeFilterAutoComplete();
     this.handleCaseBoundBenchWorkFilterAutoComplete();
@@ -88,22 +92,41 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     this.handlePaperBoundBenchworkFilterAutoComplete();
   }
 
+  handleComponentType = () => {
+    this.parentComponent = this.parentComponent ? this.parentComponent : ProductSpecTypes.BINDING;
+    this.isOtherComponent = !(this.parentComponent === ProductSpecTypes.BINDING);
+    if (this.parentComponent === ProductSpecTypes.BINDING) {
+      this.componentType =
+      { text: 'Endpaper', componentType: ProductSpecTypes.BINDING,
+      materialDataObservableProperty: '$bindingMaterialDataList', finishingListObservableProperty: '$bindingFinishingTypeList'};
+    } else if (this.parentComponent === ProductSpecTypes.OTHER_COMPONENT) {
+      this.componentType =
+      { text: 'Endpaper', componentType: ProductSpecTypes.BINDING_OTHER_COMPONENT,
+      materialDataObservableProperty: '$bindingOtherComponentMaterialDataList', finishingListObservableProperty: '$bindingOtherComponentFinishingTypeList'};
+    } else if (this.parentComponent === ProductSpecTypes.DVD_CD) {
+      this.componentType =
+      { text: 'Endpaper', componentType: ProductSpecTypes.BINDING_DVD_CD,
+      materialDataObservableProperty: '$bindingDvdCdMaterialDataList', finishingListObservableProperty: '$bindingDvdCdFinishingTypeList'};
+    }
+  }
+
   getApiData = () => {
     this.store.getBindingTypes('Binding');
-    this.store.getCoverMaterialWeight('Endpaper');
-    this.store.getFinishingTypes('Endpaper');
+    this.store.getCoverMaterialWeight(this.componentType.text, this.componentType.componentType);
+    this.store.getFinishingTypes(this.componentType.text, this.componentType.componentType);
+
     this.store.$bindingTypeList.subscribe(list => {
       this.bindingTypeList = list;
       this.handleBindingTypeFilterAutoComplete();
     });
 
-    this.store.$coverMaterialDataList.subscribe(list => {
+    this.store[this.componentType.materialDataObservableProperty].subscribe(list => {
       this.materialDataList = list;
       this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))];
       this.handleMaterialWeightFilterAutoComplete();
     });
 
-    this.store.$finishingTypeList.subscribe(list => {
+    this.store[this.componentType.finishingListObservableProperty].subscribe(list => {
       this.finishingTypeList = list;
       this.handleFinishingTypeFilterAutoComplete();
     });

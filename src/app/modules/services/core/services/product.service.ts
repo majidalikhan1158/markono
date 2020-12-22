@@ -92,4 +92,12 @@ export class ProductService {
     const urlWithParams = `${url}?${queryParams}`;
     return this.http.get(decodeURI(urlWithParams));
   }
+
+  getVersions = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getProductsUrl();
+    const queryParams = `$filter=isbn eq '${reqObj.isbn}'
+     &$select=id,versionNo,createdDateTime,createdBy,versionDescription`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
 }

@@ -9,7 +9,7 @@ import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { MaterialDataList } from '../../../../../services/shared/classes/product-modals/product-modals';
 @Component({
   selector: 'app-spec-cover',
@@ -37,22 +37,22 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   filteredFinishingTypeOutside: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredFinishingTypeInside: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   protected onDestroy = new Subject<void>();
+  subscription: Subscription;
   constructor(public store: ProductSpecStore) { }
 
   ngOnInit(): void {
-    this.store.getFinishingTypes('Cover');
     this.getCoverSectionApiData();
     this.getDefaultRecord();
   }
 
   getCoverSectionApiData = () => {
-    this.store.$coverMaterialDataList.subscribe(list => {
+    this.subscription = this.store.$coverMaterialDataList.subscribe(list => {
       this.materialDataList = list;
       this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))];
       this.handleCoverMaterialsFilterAutoComplete();
     });
 
-    this.store.$finishingTypeList.subscribe(list => {
+    this.subscription = this.store.$coverFinishingTypeList.subscribe(list => {
       this.finishingTypeList = list;
       this.handleFinishingTypeInsideFilterAutoComplete();
       this.handleFinishingTypeOutsideFilterAutoComplete();
@@ -61,7 +61,8 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
 
   handleCoverTypeChange = () => {
     if (this.viewModal.coverType === '4pp cover') {
-      this.store.getCoverMaterialWeight('Cover');
+      this.store.getCoverMaterialWeight('Cover',  ProductSpecTypes.COVER);
+      this.store.getFinishingTypes('Cover', ProductSpecTypes.COVER);
     }
   }
 

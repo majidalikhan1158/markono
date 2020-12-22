@@ -147,26 +147,31 @@
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Text Material Weight</mat-label>
-                                                <mat-select [(ngModel)]="viewModal[i].textMaterialWeight">
-                                                    <mat-option [value]="item"
-                                                        *ngFor="let item of coverMaterialWeightList">{{item}}
+                                                <mat-select [(ngModel)]="viewModal[i].textMaterialWeight" (selectionChange)="handleMaterialWeightChange('MATERIALWEIGHT', i)">
+                                                    <mat-option>
+                                                        <ngx-mat-select-search [formControl]="materialWeightFltrCtrl" placeholderLabel="Search..">
+                                                        </ngx-mat-select-search>
                                                     </mat-option>
+                                                    <mat-option [value]="item" *ngFor="let item of filteredMaterialWeightList | async">{{item}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Text Material</mat-label>
-                                                <mat-select [(ngModel)]="viewModal[i].textMaterial">
-                                                    <mat-option value="Offset">Offset</mat-option>
+                                                <mat-select (selectionChange)="handleMaterialWeightChange('MATERIAL', i)" 
+                                                    [(ngModel)]="viewModal[i].textMaterial" 
+                                                    [disabled]="!viewModal[i].textMaterialWeight">
+                                                    <mat-option [value]="item" *ngFor="let item of materialList">{{item}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Material Brand</mat-label>
-                                                <mat-select [(ngModel)]="viewModal[i].materialBrand">
-                                                    <mat-option value="Offset">Offset</mat-option>
+                                                <mat-select [(ngModel)]="viewModal[i].materialBrand"
+                                                    [disabled]="!viewModal[i].textMaterial || !viewModal[i].textMaterialWeight">
+                                                    <mat-option [value]="item" *ngFor="let item of materialBrandList">{{item}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
@@ -193,8 +198,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-12 pb-3">
-                                        <span class="labels">Outside Cover</span>&nbsp;&nbsp;
+                                    <div class="col-lg-12 pb-3 pt-2">
                                         <mat-hint class="font-10px">No. of colours ({{viewModal[i].pantoneColour.length + viewModal[i].colorType.length}})</mat-hint>
                                     </div>
                             
@@ -236,8 +240,8 @@
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Finishing</mat-label>
                                                 <mat-select multiple [(ngModel)]="viewModal[i].finishingType">
-                                                    <mat-option [value]="item.value"
-                                                        *ngFor="let item of finishingTypeList">{{item.text}}
+                                                    <mat-option [value]="item"
+                                                        *ngFor="let item of filteredFinishingTypeList | async">{{item}}
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>
@@ -249,7 +253,7 @@
                                                     <mat-chip [removable]="true"
                                                         *ngFor="let item of viewModal[i].finishingType"
                                                         (removed)="removeFinishTypeSelection(item, i)">
-                                                        {{getFinishingTypeText(item)}}
+                                                        {{item}}
                                                         <mat-icon matChipRemove>cancel</mat-icon>
                                                     </mat-chip>
                                                 </mat-chip-list>

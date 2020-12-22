@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ProductVersionMockDataList } from 'src/app/modules/shared/mock-data/product-versions-data-list';
+import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 
 @Component({
   selector: 'app-product-versions',
@@ -8,11 +8,17 @@ import { ProductVersionMockDataList } from 'src/app/modules/shared/mock-data/pro
   encapsulation: ViewEncapsulation.None,
 })
 export class ProductVersionsComponent implements OnInit {
-  displayedColumns = ['versionNo', 'dateCreated', 'createdBy', 'versionDescription', 'estimateNo', 'isSpecsInView'];
-  dataSource = ProductVersionMockDataList;
-  constructor() { }
+  displayedColumns = ['versionNo', 'dateCreated', 'createdBy', 'versionDescription', 'isSpecsInView'];
+  productIsbnNumber: string;
+  constructor(public store: ProductSpecStore) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.store.productSpecStore.subscribe(resp => {
+      if (resp && resp.generalVM && resp.generalVM.productNumber && this.productIsbnNumber !== resp.generalVM.productNumber) {
+        this.productIsbnNumber = resp.generalVM.productNumber;
+        this.store.getVersions(this.productIsbnNumber);
+      }
+    });
   }
 
 }

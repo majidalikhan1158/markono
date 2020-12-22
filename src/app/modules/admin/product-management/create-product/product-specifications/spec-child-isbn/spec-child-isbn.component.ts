@@ -45,20 +45,20 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   constructor(private store: ProductSpecStore, private ref: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.store.getCoverMaterialWeight('SlipCase');
-    this.store.getFinishingTypes('SlipCase');
+    this.store.getCoverMaterialWeight('SlipCase', ProductSpecTypes.CHILD_ISBN);
+    this.store.getFinishingTypes('SlipCase', ProductSpecTypes.CHILD_ISBN);
     this.getApiData();
     this.getDefaultRecord();
   }
 
   getApiData = () => {
-    this.subscription = this.store.$coverMaterialDataList.subscribe(list => {
+    this.subscription = this.store.$childIsbnMaterialDataList.subscribe(list => {
       this.materialDataList = list;
       this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))];
       this.handleMaterialWeightFilterAutoComplete();
     });
 
-    this.subscription = this.store.$finishingTypeList.subscribe(list => {
+    this.subscription = this.store.$childIsbnFinishingTypeList.subscribe(list => {
       this.finishingTypeList = list;
       this.handleFinishingTypeFilterAutoComplete();
     });

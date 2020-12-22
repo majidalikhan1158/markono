@@ -25,3 +25,11 @@ export interface ChildIsbnModalList {
     ISBN: string;
     VersionNo: string;
 }
+
+export interface ProductVersions {
+    Id: string;
+    VersionNo: string;
+    CreatedDateTime: string;
+    CreatedBy: string;
+    VersionDescription: string;
+}

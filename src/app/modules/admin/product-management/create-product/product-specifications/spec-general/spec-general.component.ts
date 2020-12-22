@@ -11,7 +11,6 @@ import {
 import {
   AddRemoveSpecTypeEvent,
   AdditionalSpecTypes,
-  SelectionList,
 } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import {
   ProductSpecificationTypes,

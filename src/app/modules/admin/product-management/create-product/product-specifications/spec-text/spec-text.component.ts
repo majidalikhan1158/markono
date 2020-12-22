@@ -31,20 +31,20 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   constructor(private store: ProductSpecStore) { }
 
   ngOnInit(): void {
-    this.store.getCoverMaterialWeight('Text');
-    this.store.getFinishingTypes('Text');
+    this.store.getCoverMaterialWeight('Text', ProductSpecTypes.TEXT);
+    this.store.getFinishingTypes('Text', ProductSpecTypes.TEXT);
     this.getApiData();
     this.getDefaultRecord();
   }
 
   getApiData = () => {
-    this.store.$coverMaterialDataList.subscribe(list => {
+    this.store.$textMaterialDataList.subscribe(list => {
       this.materialDataList = list;
       this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))];
       this.handleMaterialWeightFilterAutoComplete();
     });
 
-    this.store.$finishingTypeList.subscribe(list => {
+    this.store.$textFinishingTypeList.subscribe(list => {
       this.finishingTypeList = list;
       this.handleFinishingTypeFilterAutoComplete();
     });

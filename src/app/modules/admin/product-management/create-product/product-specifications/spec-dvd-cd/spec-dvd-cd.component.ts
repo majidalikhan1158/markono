@@ -5,6 +5,10 @@ import { FinishingTypeList, BindingTypeList, ColorTypeList } from 'src/app/modul
 import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
+import { MaterialDataList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
+import { FormControl } from '@angular/forms';
+import { ReplaySubject, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-spec-dvd-cd',
@@ -19,18 +23,45 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
   rowIdToExpand = 0;
   shouldShowDvdDetails = false;
   ExpansionIcons = ExpansionIcons;
-  noOfColorsList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  coverMaterialWeightList = ['100gsm', '102gsm', '104gsm', '105gsm', '113gsm', '115gsm', '118gsm', '120gsm', '123gsm', '124gsm', '125gsm', '128gsm', '130gsm', '133gsm', '135gsm', '140gsm', '150gsm'];
-  finishingTypeList = FinishingTypeList;
-  selectedFinishingTypes: SelectionList[] = [];
+
+  materialDataList: MaterialDataList[];
+  materialWeightList: string[];
+  materialList: string[];
+  materialBrandList: string[];
+  finishingTypeList: string[];
+  colorTypeList = ColorTypeList;
+  selectedFinishingTypes: string[] = [];
+
+  materialWeightFltrCtrl: FormControl = new FormControl();
+  finishingTypeFltrCtrl: FormControl = new FormControl();
+  filteredMaterialWeightList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredFinishingTypeList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+
   bindingTypeList = BindingTypeList;
   selectedPantoneColourList: string[] = [];
-  colorTypeList = ColorTypeList;
   parentRecordId: number;
+  subscription: Subscription;
+  protected onDestroy = new Subject<void>();
   constructor(private store: ProductSpecStore) { }
 
   ngOnInit(): void {
+    this.store.getCoverMaterialWeight('Text', ProductSpecTypes.DVD_CD);
+    this.store.getFinishingTypes('Text', ProductSpecTypes.DVD_CD);
+    this.getApiData();
     this.getDefaultRecord();
+  }
+
+  getApiData = () => {
+    this.subscription = this.store.$dvdCdMaterialDataList.subscribe(list => {
+      this.materialDataList = list;
+      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))];
+      this.handleMaterialWeightFilterAutoComplete();
+    });
+
+    this.subscription = this.store.$dvdCdFinishingTypeList.subscribe(list => {
+      this.finishingTypeList = list;
+      this.handleFinishingTypeFilterAutoComplete();
+    });
   }
 
   showDvdDetails(rowId: number) {
@@ -40,6 +71,16 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
     } else {
       this.rowIdToExpand = rowId;
       this.shouldShowDvdDetails = true;
+    }
+  }
+
+  handleMaterialWeightChange = (type: string, index: number) => {
+    if (type === 'MATERIALWEIGHT') {
+      const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal[index].textMaterialWeight);
+      this.materialList = [...new Set(records.map(x => x.PaperMaterial))];
+    } else if (type === 'MATERIAL') {
+      const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal[index].textMaterial);
+      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))];
     }
   }
 
@@ -67,10 +108,6 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
 
   removeFinishTypeSelection = (recordId: string, index: number) => {
     this.viewModal[index].finishingType = this.viewModal[index].finishingType.filter(x => x !== recordId);
-  }
-
-  getFinishingTypeText = (id: number) => {
-    return this.finishingTypeList.find((x) => x.value === id).text;
   }
 
   getDefaultRecord = () => {
@@ -134,6 +171,62 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
     }
     this.viewModal[$event.index].bindingVM = $event.bindingVM;
   }
+
+  handleFinishingTypeFilterAutoComplete = () => {
+    this.filteredFinishingTypeList.next(this.finishingTypeList.slice());
+    this.subscription = this.finishingTypeFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterFinishingType();
+      });
+  }
+
+  filterFinishingType = () => {
+    if (!this.finishingTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.finishingTypeFltrCtrl.value;
+    if (!search) {
+      this.filteredFinishingTypeList.next(this.finishingTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredFinishingTypeList.next(
+      this.finishingTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+
+  handleMaterialWeightFilterAutoComplete = () => {
+    this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+    this.subscription = this.materialWeightFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterMaterialWeight();
+      });
+  }
+
+  filterMaterialWeight = () => {
+    if (!this.materialWeightList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.materialWeightFltrCtrl.value;
+    if (!search) {
+      this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredMaterialWeightList.next(
+      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
 
   ngOnDestroy(): void {
     this.store.setProductSpecStore(

@@ -18,8 +18,14 @@
                             <mat-form-field appearance="fill">
                                 <mat-label>Choose Location</mat-label>
                                 <mat-select [(ngModel)]="viewModal[i].webcodeLocation">
-                                    <mat-option value="Location1">Location 1</mat-option>
-                                    <mat-option value="Location2">Location 2</mat-option>
+                                    <mat-option value="Front cover">Front cover</mat-option>
+                                    <mat-option value="Inside front cover">Inside front cover</mat-option>
+                                    <mat-option value="Back cover">Back cover</mat-option>
+                                    <mat-option value="Inside back cover">Inside back cover</mat-option>
+                                    <mat-option value="Text">Text</mat-option>
+                                    <mat-option value="Front endpaper">Front endpaper</mat-option>
+                                    <mat-option value="Back Endpaper">Back Endpaper</mat-option>
+                                    <mat-option value="Others">Others</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -30,21 +36,20 @@
                                     <mat-option value="1">1</mat-option>
                                     <mat-option value="2">2</mat-option>
                                     <mat-option value="3">3</mat-option>
+                                    <mat-option value="4">4</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
                         <td>
                             <mat-form-field appearance="fill">
                                 <mat-label>X Coordinate</mat-label>
-                                <input [(ngModel)]="viewModal[i].xCoordinate" matInput
-                                    placeholder="0">
+                                <input [(ngModel)]="viewModal[i].xCoordinate" matInput type="number" min="0">
                             </mat-form-field>
                         </td>
                         <td>
                             <mat-form-field appearance="fill">
                                 <mat-label>Y Coordinate</mat-label>
-                                <input [(ngModel)]="viewModal[i].ycoordinate" matInput
-                                    placeholder="0">
+                                <input [(ngModel)]="viewModal[i].ycoordinate" matInput type="number" min="0">
                             </mat-form-field>
                         </td>
                         <td>

@@ -28,4 +28,21 @@ export const QuotationSpecFilterTypes = {
     CUSTOMER: 'CUSTOMER',
 };
 
+export interface PlatemakingSearchFilters {
+    currentSelectedFilter: string;
+    jobNo: string;
+    customer: string;
+    platesToBeReadyBy: string;
+    printingDate: string;
+    status: string;
+}
+
+export const PlatemakingnSearchFilterTypes = {
+    JOB_NO: 'JOB_NO',
+    STATUS: 'STATUS',
+    PLATESTOBEREADBY_DATE: 'PLATESTOBEREADBY_DATE',
+    SCHEDULEDPRINTING_DATE: 'SCHEDULEDPRINTING_DATE',
+    CUSTOMER: 'CUSTOMER',
+};
+
 

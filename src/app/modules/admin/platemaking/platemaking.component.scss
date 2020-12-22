@@ -32,16 +32,20 @@ app-platemaking {
         font-weight: normal;
     }
 
+    .mat-cell:last-of-type,
+    mat-header-cell:last-of-type,
+    mat-footer-cell:last-of-type {
+        margin-left: 12px;
+    }
     .platemaking-table th.mat-header-cell:first-of-type,
     td.mat-cell:first-of-type,
     td.mat-footer-cell:first-of-type {
-        padding-left: 5px;
+        padding-left: 20px;
     }
-
     .platemaking-table th.mat-header-cell,
     td.mat-cell,
     td.mat-footer-cell {
-        padding: 5px;
+        padding: 0px;
         border-bottom: 0px;
     }
 
@@ -169,7 +173,10 @@ app-platemaking {
     .component-table .mat-form-field-appearance-fill .mat-form-field-flex {
         padding-top: 0px !important;
     }
-
+    .platemaking-table .mat-form-field-appearance-fill .mat-form-field-flex {
+        padding-top: 5px !important;
+        margin-top: 10px !important;
+    }
     .component-table .mat-select-arrow-wrapper {
         vertical-align: bottom !important;
     }
@@ -255,5 +262,56 @@ app-platemaking {
 
     .symbol {
         padding-top: 6px;
+    }
+    .mat-column-id {
+        flex: none;
+        width: 70px;
+    }
+    .mat-column-jobNo {
+        flex: none;
+        width: 80px;
+    }
+    .mat-column-customer {
+        flex: none;
+        width: 100px;
+    }
+    .mat-column-isbn {
+        flex: none;
+        width: 140px;
+    }
+    .mat-column-press {
+        flex: none;
+        width: 80px;
+    }
+    .mat-column-platesToBeReadyBy {
+        flex: none;
+        width: 80px;
+    }
+    .mat-column-printingDate {
+        flex: none;
+        width: 80px;
+    }
+    .mat-column-qty {
+        flex: none;
+        width: 50px;
+    }
+    .mat-column-webcode {
+        flex: none;
+        width: 80px;
+    }
+    .mat-column-status {
+        flex: none;
+        width: 120px;
+    }
+    .mat-column-actions {
+        flex: none;
+        width: 100px;
+    }
+    .mat-column-expandRow {
+        flex: none;
+        width: 50px;
+    }
+    .status-options {
+        width: 100px;
     }
 }

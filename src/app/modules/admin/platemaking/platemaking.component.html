@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <span class="symbol symbol-50 symbol-light-primary mr-2">
+                    <span class="symbol symbol-square symbol-50 symbol-light-primary mr-2">
                         <span class="symbol-label">
                             <span class="svg-icon svg-icon-primary svg-icon-2x">
                                 <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo2/dist/../src/media/svg/icons/Home/Clock.svg--><svg
@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <span class="symbol symbol-50 symbol-light-success mr-2">
+                    <span class="symbol symbol-square symbol-50 symbol-light-success mr-2">
                         <span class="symbol-label">
                             <span class="svg-icon svg-icon-success svg-icon-2x">
                                 <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo2/dist/../src/media/svg/icons/Code/Done-circle.svg--><svg
@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <span class="symbol symbol-50 symbol-light-danger mr-2">
+                    <span class="symbol symbol-square symbol-50 symbol-light-danger mr-2">
                         <span class="symbol-label">
                             <span class="svg-icon svg-icon-danger svg-icon-2x">
                                 <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo2/dist/../src/media/svg/icons/Code/Stop.svg--><svg
@@ -110,17 +110,17 @@
                 <div class="row full-width">
                     <div class="col-lg-12 pt-2 pb-2 pr-0">
                         <div class="float-left display-flex">
-                            <!-- <span
-                                style="padding-top: 10px;font-size: 15px;color: #AFAFAF;width: -webkit-fill-available;">View
-                                By:&nbsp;</span> 
+                            <span style="padding-top: 10px;font-size: 15px;color: #AFAFAF;">View
+                                By:&nbsp;</span>
                             <mat-form-field appearance="fill" class="font-12px pb-4">
                                 <mat-label>Status</mat-label>
-                                <mat-select>
+                                <mat-select [(ngModel)]="viewByFilter"
+                                    (ngModelChange)="viewByFilterChange($event,tableFilterTypes.STATUS)">
                                     <mat-option [value]="item.value" *ngFor="let item of statusTypesList">
                                         {{item.text}}
                                     </mat-option>
                                 </mat-select>
-                            </mat-form-field>-->
+                            </mat-form-field>
                             <mat-chip-list #chipList class="table-filter-chips">
                                 <mat-chip [removable]="true" *ngIf="tableFilters.jobNo != ''"
                                     (removed)="removeFilter(tableFilterTypes.JOB_NO)">
@@ -132,14 +132,14 @@
                                     {{tableFilters.customer}}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
-                                <mat-chip [removable]="true" *ngIf="tableFilters.platesTobeReadByDate != ''"
+                                <mat-chip [removable]="true" *ngIf="tableFilters.platesToBeReadyBy != ''"
                                     (removed)="removeFilter(tableFilterTypes.PLATESTOBEREADBY_DATE)">
-                                    {{tableFilters.platesTobeReadByDate }}
+                                    {{tableFilters.platesToBeReadyBy | date:'shortDate' }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
-                                <mat-chip [removable]="true" *ngIf="tableFilters.scheduledPrinitngDate != ''"
+                                <mat-chip [removable]="true" *ngIf="tableFilters.printingDate != ''"
                                     (removed)="removeFilter(tableFilterTypes.SCHEDULEDPRINTING_DATE)">
-                                    {{tableFilters.scheduledPrinitngDate }}
+                                    {{tableFilters.printingDate | date:'shortDate' }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.status != ''"
@@ -187,7 +187,7 @@
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Plates to be ready by</mat-label>
                                         <input [matDatepicker]="picker" matInput
-                                            [(ngModel)]="tableFilters.platesTobeReadByDate"
+                                            [(ngModel)]="tableFilters.platesToBeReadyBy"
                                             (ngModelChange)="tableFilterChange($event,tableFilterTypes.PLATESTOBEREADBY_DATE)">
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker></mat-datepicker>
@@ -195,14 +195,15 @@
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Scheduled Printing</mat-label>
                                         <input [matDatepicker]="picker1" matInput
-                                            [(ngModel)]="tableFilters.scheduledPrinitngDate"
+                                            [(ngModel)]="tableFilters.printingDate"
                                             (ngModelChange)="tableFilterChange($event,tableFilterTypes.SCHEDULEDPRINTING_DATE)">
                                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                         <mat-datepicker #picker1></mat-datepicker>
                                     </mat-form-field>
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Status</mat-label>
-                                        <mat-select [(ngModel)]="tableFilters.status">
+                                        <mat-select [(ngModel)]="tableFilters.status"
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.STATUS)">
                                             <mat-option [value]="item.value" *ngFor="let item of statusTypesList">
                                                 {{item.text}}
                                             </mat-option>
@@ -244,13 +245,15 @@
 
                     <ng-container matColumnDef="platesToBeReadyBy">
                         <th mat-header-cell *matHeaderCellDef style="width: 100px;"> Plates to be ready by</th>
-                        <td mat-cell *matCellDef="let element" style="width: 100px;"> {{element.platesToBeReadyBy }}
+                        <td mat-cell *matCellDef="let element" style="width: 100px;"> {{element.platesToBeReadyBy |
+                            date:'shortDate' }}
                         </td>
                     </ng-container>
 
                     <ng-container matColumnDef="printingDate">
                         <th mat-header-cell *matHeaderCellDef style="width: 100px;"> Printing Date </th>
-                        <td mat-cell *matCellDef="let element" style="width: 100px;"> {{element.printingDate }} </td>
+                        <td mat-cell *matCellDef="let element" style="width: 100px;"> {{element.printingDate |
+                            date:'shortDate' }} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="qty">
@@ -266,16 +269,14 @@
                     <ng-container matColumnDef="status">
                         <th mat-header-cell *matHeaderCellDef style="width:125px;"> Status </th>
                         <td mat-cell *matCellDef="let element" style="width:125px;">
-                            <div *ngIf="element.status == 'Pending File Prep'">
+                            <div *ngIf="element.status == 'Outstanding'">
                                 <span style="width: 100px;">
-                                    <span class="label label-lg label-light-orange label-inline">Pending File
-                                        Prep</span>
+                                    <span class="label label-lg label-light-orange label-inline">Outstanding</span>
                                 </span>
                             </div>
-                            <div *ngIf="element.status == 'Order Confirmed'">
+                            <div *ngIf="element.status == 'Completed'">
                                 <span style="width: 100px;">
-                                    <span class="label label-lg label-light-green label-inline">Order
-                                        Confirmed</span>
+                                    <span class="label label-lg label-light-green label-inline">Completed</span>
                                 </span>
                             </div>
                             <div *ngIf="element.status == 'Planning'">

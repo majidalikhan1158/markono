@@ -28,12 +28,12 @@ export const QuotationSpecFilterTypes = {
     CUSTOMER: 'CUSTOMER',
 };
 
-
 export interface PlatemakingSearchFilters {
+    currentSelectedFilter: string;
     jobNo: string;
     customer: string;
-    platesTobeReadByDate: string;
-    scheduledPrinitngDate: string;
+    platesToBeReadyBy: string;
+    printingDate: string;
     status: string;
 }
 

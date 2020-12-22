@@ -244,4 +244,16 @@ app-platemaking {
         min-height: 0;
         overflow: hidden;
     }
+
+    .text-muted {
+        font: normal normal bold 10px/16px Roboto;
+    }
+
+    .symbol.symbol-circle {
+        padding-top: 6px;
+    }
+
+    .symbol {
+        padding-top: 6px;
+    }
 }

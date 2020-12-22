@@ -85,10 +85,11 @@ export class PlatemakingComponent implements OnInit {
   machineTypeList = MachineTypeList;
   dataSource;
   tableFilters: PlatemakingSearchFilters = {
+    currentSelectedFilter: '',
     jobNo: '',
     customer: '',
-    platesTobeReadByDate: '',
-    scheduledPrinitngDate: '',
+    platesToBeReadyBy: '',
+    printingDate: '',
     status: ''
   };
   tableFilterTypes = PlatemakingnSearchFilterTypes;
@@ -99,6 +100,7 @@ export class PlatemakingComponent implements OnInit {
   ExpansionIcons = ExpansionIcons;
   rowIdToExpand = 0;
   chooseList = '';
+  viewByFilter = '';
   //#endregion
 
   constructor(private modalService: ModalService, private router: Router,
@@ -120,30 +122,31 @@ export class PlatemakingComponent implements OnInit {
   }
 
   tableFilterChange(filterValue: string, filterPropType: string) {
-    if (filterPropType === this.tableFilterTypes.STATUS) {
-      this.tableFilters.status = this.selectedStatus = this.tableFilters.status === filterValue ? '' : filterValue;
-    }
-    this.tableFilters.status = filterPropType;
+    // if (filterPropType === this.tableFilterTypes.STATUS) {
+    //   this.tableFilters.status = this.selectedStatus = this.tableFilters.status === filterValue ? '' : filterValue;
+    // }
+    this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
 
   removeFilter(filterPropType: string) {
     if (filterPropType === this.tableFilterTypes.PLATESTOBEREADBY_DATE) {
-      this.tableFilters.platesTobeReadByDate = '';
+      this.tableFilters.platesToBeReadyBy = '';
     } else if (filterPropType === this.tableFilterTypes.STATUS) {
       this.tableFilters.status = this.selectedStatus = '';
     } else if (filterPropType === this.tableFilterTypes.SCHEDULEDPRINTING_DATE) {
-      this.tableFilters.scheduledPrinitngDate = '';
+      this.tableFilters.printingDate = '';
     } else if (filterPropType === this.tableFilterTypes.CUSTOMER) {
       this.tableFilters.customer = '';
     } else if (filterPropType === this.tableFilterTypes.JOB_NO) {
       this.tableFilters.jobNo = '';
     } else {
-      this.tableFilters.platesTobeReadByDate = '';
+      this.tableFilters.platesToBeReadyBy = '';
       this.tableFilters.status = this.selectedStatus = '';
-      this.tableFilters.scheduledPrinitngDate = '';
+      this.tableFilters.printingDate = '';
       this.tableFilters.customer = '';
       this.tableFilters.jobNo = '';
+      this.dataSource.filter = JSON.stringify(this.tableFilters);
     }
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
@@ -154,10 +157,11 @@ export class PlatemakingComponent implements OnInit {
       filter: string
     ): boolean => {
       let globalMatch = !this.globalFilter;
+
       if (this.globalFilter) {
         // search all text fields
         globalMatch =
-          new Date(data.printingDate)
+          new Date(data.platesToBeReadyBy)
             .toLocaleDateString()
             .toString()
             .trim()
@@ -192,37 +196,41 @@ export class PlatemakingComponent implements OnInit {
       const searchString = JSON.parse(filter) as PlatemakingSearchFilters;
       let matchedFilters = 0;
       let filterCounter = 0;
-      if (this.tableFilters.platesTobeReadByDate !== '') {
+      if (this.tableFilters.platesToBeReadyBy !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
           new Date(data.platesToBeReadyBy)
             .toLocaleDateString()
             .trim()
             .indexOf(
-              new Date(searchString.platesTobeReadByDate).toLocaleDateString()
+              new Date(searchString.platesToBeReadyBy).toLocaleDateString()
             ) !== -1 ? 1 : 0
         );
       }
-      if (this.tableFilters.scheduledPrinitngDate !== '') {
+      if (this.tableFilters.printingDate !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
           new Date(data.printingDate)
             .toLocaleDateString()
             .trim()
             .indexOf(
-              new Date(searchString.scheduledPrinitngDate).toLocaleDateString()
+              new Date(searchString.printingDate).toLocaleDateString()
             ) !== -1 ? 1 : 0
         );
       }
       if (this.tableFilters.status !== '') {
-        filterCounter++;
-        matchedFilters = matchedFilters + (
-          data.status
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.status.toLowerCase()) !== -1 ? 1 : 0
-        );
+        if (this.tableFilters.status == 'All') {
+
+        } else {
+          filterCounter++;
+          matchedFilters = matchedFilters + (
+            data.status
+              .toString()
+              .trim()
+              .toLowerCase()
+              .indexOf(searchString.status.toLowerCase()) !== -1 ? 1 : 0
+          );
+        }
       }
       if (this.tableFilters.jobNo !== '') {
         filterCounter++;
@@ -272,8 +280,13 @@ export class PlatemakingComponent implements OnInit {
     this.snack.open('Reason is Saved');
   }
 
+  viewByFilterChange(filterValue: string, filterPropType: string) {
+    if (filterPropType === this.tableFilterTypes.STATUS) {
+      this.tableFilters.status = this.selectedStatus = this.tableFilters.status === filterValue ? '' : filterValue;
+    } else {
+
+    }
+    //this.tableFilters.currentSelectedFilter = filterPropType;
+    this.dataSource.filter = JSON.stringify(this.tableFilters);
+  }
 }
-
-
-
-

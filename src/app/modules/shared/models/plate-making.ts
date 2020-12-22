@@ -10,8 +10,8 @@ export interface PlatemakingListModel {
     customer: string;
     isbn: string;
     press: string;
-    platesToBeReadyBy: string;
-    printingDate: string;
+    platesToBeReadyBy: number;
+    printingDate: number;
     qty: string;
     webcode: string;
     status: string;

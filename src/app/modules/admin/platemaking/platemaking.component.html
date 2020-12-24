@@ -219,7 +219,7 @@
                 <mat-table #table [dataSource]="dataSource" class="platemaking-table" [multiTemplateDataRows]="true">
 
                     <ng-container matColumnDef="id">
-                        <mat-header-cell *matHeaderCellDef> # </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef style="padding-left: 20px !important;"> # </mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
                     </ng-container>
 
@@ -329,8 +329,8 @@
                     </ng-container>
 
                     <ng-container class="action-column pb-0" matColumnDef="expandRow">
-                        <mat-header-cell *matHeaderCellDef> </mat-header-cell>
-                        <mat-cell *matCellDef="let element;index as i;">
+                        <mat-header-cell *matHeaderCellDef style="margin-left:12px !important"> </mat-header-cell>
+                        <mat-cell *matCellDef="let element;index as i;" style="margin-left:12px !important">
                             <span class="material-icons expansion-icon" (click)="toggleExpandable(element.id)">
                                 {{
                                 element.id== rowIdToExpand ?
@@ -344,22 +344,22 @@
                     <ng-container matColumnDef="expandedDetail">
                         <mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length"
                             [@expandableRow]="element.id === rowIdToExpand ? 'expanded' : 'collapsed'">
-                            <div *ngIf="element.id === rowIdToExpand">
+                            <div *ngIf="element.id === rowIdToExpand" style="margin-bottom:-14px">
                                 <table class="table table-head-custom table-head-bg table-borderless table-vertical-center
-                                    component-table">
+                                    component-table" style="width: 105%;">
                                     <thead>
                                         <tr class="expandedRow text-left"
-                                            style="border-top: 1px solid #afafaf;height: 60px;">
+                                            style="height: 60px;border-bottom: 1px solid #e6e6e6;">
                                             <th *ngFor="let item of columnsToDisplayCompBreakTable"
-                                                style="color: #AFAFAF; font-size: 12px;font: normal normal normal 12px/14px Roboto;width: 70px;">
+                                                style="padding-top:15px;color: #AFAFAF; font-size: 12px;font: normal normal normal 12px/14px Roboto;width: 70px;">
                                                 {{item}}</th>
                                         </tr>
                                     </thead>
                                     <!-- <tbody> -->
-                                    <tr class="expandedRow" style="border-top: 1px solid #afafaf;"
-                                        *ngFor="let row of productSpecLayoutPrepCompBreakList">
+                                    <tr class="expandedRow" *ngFor="let row of productSpecLayoutPrepCompBreakList"
+                                        style="border-bottom: 1px solid #e6e6e6;">
                                         <td
-                                            style="color: #484848;font: normal normal normal 12px/14px Roboto;width: 70px;">
+                                            style="padding-left: 21px !important;color: #484848;font: normal normal normal 12px/14px Roboto;width: 70px;">
                                             {{row.id}}</td>
                                         <td
                                             style="color: #484848;font: normal normal normal 12px/14px Roboto;width: 70px;">
@@ -400,7 +400,9 @@
                                         <td
                                             style="color: #484848;font: normal normal normal 12px/14px Roboto;width: 70px;">
                                             <mat-form-field appearance="fill" class="width-100">
-                                                <mat-select>
+                                                <mat-label>Choose</mat-label>
+                                                <mat-select [(ngModel)]="chooseList"
+                                                    (selectionChange)="chooseSelectionChange($event)">
                                                     <mat-option *ngFor="let item of machineTypeList"
                                                         [value]="item.value">
                                                         {{item.text}}</mat-option>

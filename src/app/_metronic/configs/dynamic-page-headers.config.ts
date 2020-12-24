@@ -26,7 +26,7 @@ export const DynamicPageHeaderLabels = {
       page: '/admin/app-dashboard',
     },
     {
-      title: 'Platemakeing',
+      title: 'Platemaking',
       page: '/admin/platemaking',
     }
   ]

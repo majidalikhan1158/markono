@@ -102,6 +102,7 @@ export class PlatemakingComponent implements OnInit {
   rowIdToExpand = 0;
   chooseList = '';
   viewByFilter = '';
+  machineType = '';
   //#endregion
 
   constructor(private modalService: ModalService, private router: Router,

@@ -2,7 +2,27 @@ app-platemaking {
     .platemaking-table-card {
         width: 100%;
     }
-
+    .expandable-row mat-cell:last-of-type,
+    mat-header-cell:last-of-type,
+    mat-footer-cell:last-of-type {
+        padding-right: 0px;
+    }
+    .component-table thead th:first-child {
+        padding-left: 21px !important;
+    }
+    .expandable-row mat-cell:first-of-type,
+    mat-header-cell:first-of-type,
+    mat-footer-cell:first-of-type {
+        padding-left: 0px !important;
+    }
+    .mat-cell:last-of-type,
+    app-platemaking mat-header-cell:last-of-type,
+    app-platemaking mat-footer-cell:last-of-type {
+        margin-left: 0px !important;
+    }
+    .pt-5 {
+        padding-top: 0px !important;
+    }
     .platemaking-table-card .card-body {
         padding-left: 5px !important;
         padding-right: 5px !important;
@@ -140,22 +160,7 @@ app-platemaking {
     .label-inline {
         width: -webkit-fill-available !important;
     }
-    .label-light-purple {
-        color: #9560ff;
-        background-color: #eee5ff;
-    }
-    .label-light-green {
-        color: #0fe848;
-        background-color: #0fe8481a;
-    }
-    .label-light-orange {
-        color: #ffa800;
-        background-color: #fff4de;
-    }
-    .label-light-blue {
-        color: #3699ff;
-        background-color: #e1f0ff;
-    }
+
     .action-column {
         padding-right: 35px;
         padding-left: 5px;
@@ -250,6 +255,8 @@ app-platemaking {
         background-color: #fafafa;
         min-height: 0;
         overflow: hidden;
+        margin-left: -5px;
+        margin-right: -5px;
     }
 
     .text-muted {

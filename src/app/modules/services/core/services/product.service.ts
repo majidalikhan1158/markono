@@ -7,7 +7,7 @@ import { ResponseModal } from '../../shared/classes/response-modal';
 import { QueryStringParameters } from '../../shared/classes/query-string-parameter';
 import { ProductDetailsVM } from 'src/app/modules/shared/models/create-case';
 import { HelperService } from './helper.service';
-import { ProductResponseModal } from '../../shared/classes/product-modals/product-modals';
+import { ProductResponseModal, SpineWidthThicknessParamHistory, SpineWidthParamHistory } from '../../shared/classes/product-modals/product-modals';
 
 @Injectable({
   providedIn: 'root',
@@ -62,7 +62,7 @@ export class ProductService {
   }
 
   getCoverMaterialWeight = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
-    const url = this.endPoint.getCoverMaterialWeightUrl();
+    const url = this.endPoint.getPaperMaterialUrl();
     const queryParams = `$filter=printType eq '${reqObj.printType}' and ComponentType eq '${reqObj.componentType}'
      and isDeleted eq ${reqObj.isDeleted} &$select=paperWeight,paperMaterial,paperBrand`;
     const urlWithParams = `${url}?${queryParams}`;
@@ -100,4 +100,29 @@ export class ProductService {
     const urlWithParams = `${url}?${queryParams}`;
     return this.http.get(decodeURI(urlWithParams));
   }
+
+  getThickness = (reqObj: SpineWidthThicknessParamHistory): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getPaperMaterialUrl();
+    const queryParams = `$filter=PrintType eq '${reqObj.PrintType}' and ComponentType eq 'Text' and PaperWeight eq '${reqObj.PaperWeight}' and PaperMaterial eq '${reqObj.PaperMaterial}' and PaperBrand eq '${reqObj.PaperBrand}'&$select=thickness`;
+    const urlWithParams = `${url}?${queryParams}`;
+    console.log(urlWithParams);
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getSpineWidth = (reqObj: SpineWidthParamHistory): Observable<HttpResponse<ProductResponseModal>> => {
+    const obj = {
+      noOfColourExtent: reqObj.noOfColourExtent,
+      noOfMonoExtent: reqObj.noOfMonoExtent,
+      thickness: reqObj.thickness,
+      bindingType: reqObj.bindingType
+    };
+    const url = this.endPoint.getSpineWidthUrl();
+    return this.http.post(url, obj);
+  }
+
+  getBookWeight = (reqObj: any): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getBookWeightUrl();
+    return this.http.post(url, reqObj);
+  }
+  
 }

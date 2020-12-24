@@ -140,10 +140,10 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
 
   handleMaterialWeightChange = (type: string) => {
     if (type === 'MATERIALWEIGHT') {
-      const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.caseBound.endPaperWeight);
+      const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.caseBound?.endPaperWeight);
       this.materialList = [...new Set(records.map(x => x.PaperMaterial))];
     } else if (type === 'MATERIAL') {
-      const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal.caseBound.endPaperMaterial);
+      const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal.caseBound?.endPaperMaterial);
       this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))];
     }
   }
@@ -195,6 +195,8 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   getDefaultRecord = () => {
     if (this.isOtherComponent) {
       this.viewModal = this.parentData ? this.parentData : this.initialObject();
+      this.handleMaterialWeightChange('MATERIALWEIGHT');
+      this.handleMaterialWeightChange('MATERIAL');
     } else {
       this.store.productSpecStore.subscribe((resp) => {
         if (resp && resp.bindingVM && resp.bindingVM.id > 0) {

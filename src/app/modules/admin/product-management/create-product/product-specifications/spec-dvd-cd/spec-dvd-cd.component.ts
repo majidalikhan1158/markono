@@ -69,6 +69,13 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
       this.rowIdToExpand = 0;
       this.shouldShowDvdDetails = !this.shouldShowDvdDetails;
     } else {
+      const index = rowId - 1;
+      if (this.viewModal[index].textMaterialWeight) {
+        this.handleMaterialWeightChange('MATERIALWEIGHT', index);
+      }
+      if (this.viewModal[index].textMaterial) {
+        this.handleMaterialWeightChange('MATERIAL', index);
+      }
       this.rowIdToExpand = rowId;
       this.shouldShowDvdDetails = true;
     }

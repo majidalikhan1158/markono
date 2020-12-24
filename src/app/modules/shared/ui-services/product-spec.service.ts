@@ -15,26 +15,31 @@ import {
   CheckPrintFileVM,
   UnitPriceVM,
 } from '../models/product-spec';
-import { ProductGroupDDL, MaterialDataList, ProductVersions } from '../../services/shared/classes/product-modals/product-modals';
+import { ProductGroupDDL, MaterialDataList, ProductVersions, SpineWidthThicknessParamHistory, SpineWidthParamHistory } from '../../services/shared/classes/product-modals/product-modals';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductSpecStore {
   public productSpecStore: Observable<ProductSpecStoreVM>;
-  private productSpecStoreSubject = new BehaviorSubject<ProductSpecStoreVM>(
-    new ProductSpecStoreVM()
-  );
+  private productSpecStoreSubject = new BehaviorSubject<ProductSpecStoreVM>(new ProductSpecStoreVM());
+
   private currentProductSpecStoreState: ProductSpecStoreVM;
   private showJournaFieldsSubject = new BehaviorSubject<boolean>(false);
   private productVersionListSubject = new BehaviorSubject<ProductVersions[]>([]);
   private productGroupListSubject = new BehaviorSubject<ProductGroupDDL[]>([]);
   private bindingTypeListSubject = new BehaviorSubject<string[]>([]);
+  private spineWidthThicknessParamHistorySubject = new BehaviorSubject<SpineWidthThicknessParamHistory>(null);
+  private spineWidthParamHistorySubject = new BehaviorSubject<SpineWidthParamHistory>(null);
+  private spinWidthThicknessSubject = new BehaviorSubject<number>(0);
 
   public $showJournaFields: Observable<boolean>;
   public $productGroupList: Observable<ProductGroupDDL[]>;
   public $bindingTypeList: Observable<string[]>;
   public $productVersionList: Observable<ProductVersions[]>;
+  public $spineWidthThicknessParamHistory: Observable<SpineWidthThicknessParamHistory>;
+  public $spineWidthParamHistory: Observable<SpineWidthParamHistory>;
+  public $spinWidthThickness: Observable<number>;
 
   private coverMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private textMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
@@ -74,16 +79,33 @@ export class ProductSpecStore {
   public $bindingDvdCdFinishingTypeList: Observable<string[]>;
 
 
-
+  private spineWidthThicknessParamHistory: SpineWidthThicknessParamHistory;
+  private spineWidthParamHistory: SpineWidthParamHistory;
+  private spineWidthThickness: number;
   constructor(private productService: ProductService) {
     this.$showJournaFields = this.showJournaFieldsSubject.asObservable();
     this.$productGroupList = this.productGroupListSubject.asObservable();
     this.$bindingTypeList = this.bindingTypeListSubject.asObservable();
     this.$productVersionList = this.productVersionListSubject.asObservable();
     this.productSpecStore = this.productSpecStoreSubject.asObservable();
+    this.$spineWidthParamHistory = this.spineWidthParamHistorySubject.asObservable();
+    this.$spineWidthThicknessParamHistory = this.spineWidthThicknessParamHistorySubject.asObservable();
+    this.$spinWidthThickness = this.spinWidthThicknessSubject.asObservable();
 
     this.productSpecStore.subscribe((data) => {
       this.currentProductSpecStoreState = data;
+    });
+
+    this.$spineWidthParamHistory.subscribe(resp => {
+      this.spineWidthParamHistory = resp;
+    });
+
+    this.$spineWidthThicknessParamHistory.subscribe(resp => {
+      this.spineWidthThicknessParamHistory = resp;
+    });
+
+    this.$spinWidthThickness.subscribe(resp => {
+      this.spineWidthThickness = resp ? resp : 0.0;
     });
 
     this.$coverMaterialDataList = this.coverMaterialDataListSubject.asObservable();
@@ -129,19 +151,26 @@ export class ProductSpecStore {
     }
   }
 
-  private setGeneralVM = (data: GeneralVM) => {
+  private setGeneralVM = (data: GeneralVM, shouldCall = true) => {
     this.currentProductSpecStoreState.generalVM = data;
     this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
+    if (shouldCall) {
+      this.getBookWeight();
+    }
   }
 
   private setTextVM = (data: TextVM) => {
     this.currentProductSpecStoreState.textVM = data;
     this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
+    // call funtion to handle spine width api calling
+    this.handleSpineWidthApi();
+    this.getBookWeight();
   }
 
   private setBindingVM = (data: BindingVM) => {
     this.currentProductSpecStoreState.bindingVM = data;
     this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
+    this.getSpineWidth();
   }
 
   private setChildIsbnVM = (data: ChildIsbnVM) => {
@@ -157,6 +186,7 @@ export class ProductSpecStore {
   private setCoverVM = (data: CoverVM) => {
     this.currentProductSpecStoreState.coverVM = data;
     this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
+    this.getBookWeight();
   }
 
   private setWebCodeVM = (data: WebCodeVM[]) => {
@@ -285,4 +315,170 @@ export class ProductSpecStore {
       this.productVersionListSubject.next(result);
     }));
   }
+
+  handleSpineWidthApi = () => {
+    const textVM = this.currentProductSpecStoreState.textVM;
+    // return if textVM model is emtpy/null/undefined
+    if (!textVM) {
+      return;
+    }
+    // check if current model (textVM) values is same as stored in observable for thickness api then return from here
+    // if (this.isValueChangedForThicknessApi()) {
+    //   this.spineWidthThicknessParamHistorySubject.next(this.getUpdatedObject());
+    //   this.getThickness();
+    // }
+    this.getThickness();
+  }
+
+  private getUpdatedObject = (): SpineWidthThicknessParamHistory => {
+    const textVM = this.currentProductSpecStoreState.textVM;
+    return {
+      PaperBrand: textVM.materialBrand,
+      PaperMaterial: textVM.textMaterial,
+      PaperWeight: textVM.textMaterialWeight,
+      PrintType: this.currentProductSpecStoreState.generalVM?.printingType
+    };
+  }
+
+  private isValueChangedForThicknessApi = () => {
+    const textVM = this.currentProductSpecStoreState.textVM;
+
+    return !this.spineWidthThicknessParamHistory ||
+    this.spineWidthThicknessParamHistory.PaperBrand !== textVM.materialBrand ||
+    this.spineWidthThicknessParamHistory.PaperMaterial !== textVM.textMaterial ||
+    this.spineWidthThicknessParamHistory.PaperWeight !== textVM.textMaterialWeight ||
+    this.spineWidthThicknessParamHistory.PrintType !== this.currentProductSpecStoreState?.generalVM?.printingType;
+  }
+
+  private isValueChangedForSpineWidthApi = () => {
+    const textVM = this.currentProductSpecStoreState.textVM;
+    const bindingVM = this.currentProductSpecStoreState.bindingVM;
+
+    return !this.spineWidthParamHistory ||
+    this.spineWidthParamHistory.bindingType !== bindingVM?.bindingType ||
+    this.spineWidthParamHistory.noOfColourExtent !== textVM?.noOfColourExtent ||
+    this.spineWidthParamHistory.noOfMonoExtent !== textVM?.noOfMonoExtent;
+  }
+
+  private getThickness = () => {
+    const reqObj = this.getUpdatedObject();
+    this.productService.getThickness(reqObj).subscribe(resp => {
+      if (resp.body && resp.body.result) {
+        const respObj = resp.body.result as unknown as any[];
+        const thickness = respObj.length > 0 ? respObj[0].Thickness : 0.0;
+        this.spinWidthThicknessSubject.next(thickness);
+        // if stored observable object exists and stored thickness is not same then update store object
+        // if (this.spineWidthParamHistory && this.spineWidthParamHistory.thickness !== thickness) {
+        //   this.spineWidthParamHistory.thickness = thickness;
+        //   this.spineWidthParamHistorySubject.next(this.spineWidthParamHistory);
+        // } else {
+        //   this.spineWidthParamHistory = {
+        //     thickness,
+        //     noOfColourExtent: 0,
+        //     noOfMonoExtent: 0,
+        //     bindingType: ''
+        //   };
+        //   this.spineWidthParamHistorySubject.next(this.spineWidthParamHistory);
+        // }
+      }
+    });
+  }
+
+  setRequestObjectForSpineWidthApiCall = () => {
+    const bindingVM = this.currentProductSpecStoreState.bindingVM;
+    if (this.spineWidthParamHistory) {
+      this.spineWidthParamHistory.bindingType = bindingVM.bindingType;
+      this.spineWidthParamHistory.noOfColourExtent = this.currentProductSpecStoreState.textVM?.noOfColourExtent;
+      this.spineWidthParamHistory.noOfMonoExtent = this.currentProductSpecStoreState.textVM?.noOfMonoExtent;
+      this.spineWidthParamHistory.thickness = this.spineWidthThickness;
+      // this.spineWidthParamHistorySubject.next(this.spineWidthParamHistory);
+    } else {
+      this.spineWidthParamHistory = {
+        bindingType: bindingVM.bindingType,
+        noOfColourExtent: this.currentProductSpecStoreState.textVM?.noOfColourExtent,
+        noOfMonoExtent: this.currentProductSpecStoreState.textVM?.noOfMonoExtent,
+        thickness: this.spineWidthThickness
+      };
+    }
+  }
+
+  private getSpineWidth = () => {
+    // if (!this.isValueChangedForSpineWidthApi()) {
+    //   return;
+    // }
+    this.setRequestObjectForSpineWidthApiCall();
+    // console.log(this.spineWidthParamHistory)
+    this.productService.getSpineWidth(this.spineWidthParamHistory).subscribe(resp => {
+      if (resp && resp.body && resp.body.result && resp.body.result.data) {
+        const attributes = resp.body.result.data.attributes;
+        const generalVM = this.currentProductSpecStoreState.generalVM;
+        let spineWidth = 0;
+        if (attributes) {
+          spineWidth = attributes['spine-width'];
+          generalVM.spinWidth = spineWidth;
+        } else {
+          generalVM.spinWidth = spineWidth;
+        }
+        this.setGeneralVM(generalVM);
+        this.getBookWeight();
+      }
+    });
+  }
+
+  private getBookWeight = () => {
+     const reqObj = this.getBookWeightRequestObject();
+     if (!reqObj.bindingType) {
+       return ;
+     }
+     this.productService.getBookWeight(reqObj).subscribe(resp => {
+      if (resp && resp.body && resp.body.result && resp.body.result.data) {
+        const attributes = resp.body.result.data.attributes;
+        const generalVM = this.currentProductSpecStoreState.generalVM;
+        let bookWeight = 0;
+        if (attributes) {
+          bookWeight = attributes['book-weight'];
+          generalVM.weight = bookWeight;
+        } else {
+          generalVM.weight = bookWeight;
+        }
+        this.setGeneralVM(generalVM, false);
+      }
+    });
+  }
+
+  private getBookWeightRequestObject = () => {
+    const generalVM = this.currentProductSpecStoreState.generalVM;
+    const textVM = this.currentProductSpecStoreState.textVM;
+    const bindingVM = this.currentProductSpecStoreState.bindingVM;
+    const coverVM = this.currentProductSpecStoreState.coverVM;
+
+    let coverMaterialWeight = 0;
+    let textMaterialWeight = 0;
+    if (coverVM && coverVM.coverMaterialWeight) {
+      const splitObject = coverVM.coverMaterialWeight.split('g');
+      // tslint:disable-next-line: radix
+      coverMaterialWeight = parseInt(splitObject[0]);
+    }
+
+    if (textVM && textVM.textMaterialWeight) {
+      const splitObject = textVM.textMaterialWeight.split('g');
+      // tslint:disable-next-line: radix
+      textMaterialWeight = parseInt(splitObject[0]);
+    }
+
+    return {
+      width: generalVM?.width > 0 ? generalVM?.width : 0,
+      height:  generalVM?.height > 0 ? generalVM?.height : 0,
+      coverMaterialWeight,
+      textMaterialWeight,
+      noOfColourExtent: textVM?.noOfColourExtent > 0 ? textVM?.noOfColourExtent : 0,
+      noOfMonoExtent: textVM?.noOfMonoExtent > 0 ? textVM?.noOfMonoExtent : 0,
+      spineWidth: generalVM?.spinWidth > 0 ? generalVM?.spinWidth : 0,
+      bindingType: bindingVM?.bindingType ? bindingVM?.bindingType : ''
+    };
+  }
 }
+
+// subscribe to spineWidthParamHistorySubject in setBindingVM function.
+// in setBindingVM function, check for bindingType value and call spine width api.
+// After API RESP, update generalVM with spineWidth value and call for weight call and update value in generalVM.

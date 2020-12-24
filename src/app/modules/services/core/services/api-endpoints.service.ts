@@ -62,8 +62,8 @@ export class ApiEndpointsService {
   getProductGroupUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getProductGroups}`
 
-  getCoverMaterialWeightUrl = () =>
-    `${this.getProductServicesEndpoint()}${Endpoints.product.getCoverMaterialWeight}`
+  getPaperMaterialUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getPaperMaterial}`
 
   getFinishingTypeUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getFinishingType}`
@@ -71,4 +71,9 @@ export class ApiEndpointsService {
   getBindingTypeUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getBindingType}`
 
+  getSpineWidthUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getSpineWidth}`
+
+  getBookWeightUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getBookWeight}`
 }

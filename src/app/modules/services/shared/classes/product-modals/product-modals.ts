@@ -33,3 +33,30 @@ export interface ProductVersions {
     CreatedBy: string;
     VersionDescription: string;
 }
+
+
+export interface SpineWidthThicknessParamHistory {
+    PrintType: string;
+    PaperWeight: string;
+    PaperMaterial: string;
+    PaperBrand: string;
+}
+
+export interface SpineWidthParamHistory {
+    noOfColourExtent: number;
+    noOfMonoExtent: number;
+    thickness: number;
+    bindingType: string;
+}
+
+export interface FileCheckConfig {
+    id: number;
+    component: string;
+    question: string;
+    remark: string;
+    mandatory: string;
+    createdDateTime: string;
+    createdBy: string;
+    updatedDateTime: string;
+    updatedBy: string;
+}

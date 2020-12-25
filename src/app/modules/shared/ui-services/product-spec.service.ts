@@ -32,6 +32,7 @@ export class ProductSpecStore {
   private spineWidthThicknessParamHistorySubject = new BehaviorSubject<SpineWidthThicknessParamHistory>(null);
   private spineWidthParamHistorySubject = new BehaviorSubject<SpineWidthParamHistory>(null);
   private spinWidthThicknessSubject = new BehaviorSubject<number>(0);
+  private createProductSubject = new BehaviorSubject<ProductSpecStoreVM>(new ProductSpecStoreVM());
 
   public $showJournaFields: Observable<boolean>;
   public $productGroupList: Observable<ProductGroupDDL[]>;
@@ -40,6 +41,7 @@ export class ProductSpecStore {
   public $spineWidthThicknessParamHistory: Observable<SpineWidthThicknessParamHistory>;
   public $spineWidthParamHistory: Observable<SpineWidthParamHistory>;
   public $spinWidthThickness: Observable<number>;
+  public $createProduct: Observable<ProductSpecStoreVM>;
 
   private coverMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private textMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
@@ -91,6 +93,7 @@ export class ProductSpecStore {
     this.$spineWidthParamHistory = this.spineWidthParamHistorySubject.asObservable();
     this.$spineWidthThicknessParamHistory = this.spineWidthThicknessParamHistorySubject.asObservable();
     this.$spinWidthThickness = this.spinWidthThicknessSubject.asObservable();
+    this.$createProduct = this.createProductSubject.asObservable();
 
     this.productSpecStore.subscribe((data) => {
       this.currentProductSpecStoreState = data;
@@ -344,10 +347,10 @@ export class ProductSpecStore {
     const textVM = this.currentProductSpecStoreState.textVM;
 
     return !this.spineWidthThicknessParamHistory ||
-    this.spineWidthThicknessParamHistory.PaperBrand !== textVM.materialBrand ||
-    this.spineWidthThicknessParamHistory.PaperMaterial !== textVM.textMaterial ||
-    this.spineWidthThicknessParamHistory.PaperWeight !== textVM.textMaterialWeight ||
-    this.spineWidthThicknessParamHistory.PrintType !== this.currentProductSpecStoreState?.generalVM?.printingType;
+      this.spineWidthThicknessParamHistory.PaperBrand !== textVM.materialBrand ||
+      this.spineWidthThicknessParamHistory.PaperMaterial !== textVM.textMaterial ||
+      this.spineWidthThicknessParamHistory.PaperWeight !== textVM.textMaterialWeight ||
+      this.spineWidthThicknessParamHistory.PrintType !== this.currentProductSpecStoreState?.generalVM?.printingType;
   }
 
   private isValueChangedForSpineWidthApi = () => {
@@ -355,9 +358,9 @@ export class ProductSpecStore {
     const bindingVM = this.currentProductSpecStoreState.bindingVM;
 
     return !this.spineWidthParamHistory ||
-    this.spineWidthParamHistory.bindingType !== bindingVM?.bindingType ||
-    this.spineWidthParamHistory.noOfColourExtent !== textVM?.noOfColourExtent ||
-    this.spineWidthParamHistory.noOfMonoExtent !== textVM?.noOfMonoExtent;
+      this.spineWidthParamHistory.bindingType !== bindingVM?.bindingType ||
+      this.spineWidthParamHistory.noOfColourExtent !== textVM?.noOfColourExtent ||
+      this.spineWidthParamHistory.noOfMonoExtent !== textVM?.noOfMonoExtent;
   }
 
   private getThickness = () => {
@@ -426,11 +429,11 @@ export class ProductSpecStore {
   }
 
   private getBookWeight = () => {
-     const reqObj = this.getBookWeightRequestObject();
-     if (!reqObj.bindingType) {
-       return ;
-     }
-     this.productService.getBookWeight(reqObj).subscribe(resp => {
+    const reqObj = this.getBookWeightRequestObject();
+    if (!reqObj.bindingType) {
+      return;
+    }
+    this.productService.getBookWeight(reqObj).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.data) {
         const attributes = resp.body.result.data.attributes;
         const generalVM = this.currentProductSpecStoreState.generalVM;
@@ -468,7 +471,7 @@ export class ProductSpecStore {
 
     return {
       width: generalVM?.width > 0 ? generalVM?.width : 0,
-      height:  generalVM?.height > 0 ? generalVM?.height : 0,
+      height: generalVM?.height > 0 ? generalVM?.height : 0,
       coverMaterialWeight,
       textMaterialWeight,
       noOfColourExtent: textVM?.noOfColourExtent > 0 ? textVM?.noOfColourExtent : 0,

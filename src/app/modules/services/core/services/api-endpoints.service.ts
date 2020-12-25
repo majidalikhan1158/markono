@@ -76,4 +76,7 @@ export class ApiEndpointsService {
 
   getBookWeightUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getBookWeight}`
+
+  createProductUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.createProduct}`
 }

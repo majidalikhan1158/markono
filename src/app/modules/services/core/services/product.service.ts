@@ -124,5 +124,10 @@ export class ProductService {
     const url = this.endPoint.getBookWeightUrl();
     return this.http.post(url, reqObj);
   }
-  
+
+  createProduct = (reqObj: any): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.createProductUrl();
+    return this.http.post(url, reqObj);
+  }
+
 }

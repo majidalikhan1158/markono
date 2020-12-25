@@ -189,6 +189,7 @@ export class ProductSpecStoreVM {
   otherVM: OtherVM[];
   checkPrintFileVM: CheckPrintFileVM;
   unitPriceVM: UnitPriceVM;
+  productSpecVM: ProductSpecListVM;
 }
 export interface CoverVM {
   id: number;

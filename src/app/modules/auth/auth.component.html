@@ -4,7 +4,7 @@
     <!--begin::Aside-->
     <div class="login-aside d-flex flex-column flex-row-auto" style="justify-content: center;align-items: center;">
       <!--begin::Content body-->
-      <div class="d-flex flex-column-fluid flex-center">
+      <div class="d-flex flex-column-fluid flex-center" style="margin-top: -126px !important;">
         <router-outlet></router-outlet>
       </div>
       <!--end::Content body-->
@@ -19,7 +19,7 @@
     </div>
     <!--begin::Content-->
     <div
-      class="login-content flex-row-fluid d-flex flex-column justify-content-center position-relative overflow-hidden p-7 mx-auto">
+      class="login-content flex-row-fluid d-flex flex-column justify-content-center position-relative overflow-hidden mx-auto">
       <mat-carousel proportion="100" timings="200ms ease-in" [hideArrows]="true" [hideIndicators]="false"
         [useKeyboard]="true" [useMouseWheel]="false" [autoplay]="true" interval="6000" color="black">
         <mat-carousel-slide *ngFor="let slide of slides; let i = index" [image]="slide.image" [hideOverlay]="false">

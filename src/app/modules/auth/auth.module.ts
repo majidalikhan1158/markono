@@ -11,6 +11,7 @@ import { AuthComponent } from './auth.component';
 import { TranslationModule } from '../i18n/translation.module';
 import { NgImageSliderModule } from 'ng-image-slider';
 import { MatCarouselModule } from '@ngmodule/material-carousel';
+
 @NgModule({
   declarations: [
     LoginComponent,

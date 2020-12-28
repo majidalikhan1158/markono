@@ -9,5 +9,33 @@
         width: 100%;
       }
     }
+    .form {
+      padding-top: 100px;
+    }
+
+    .login-title {
+      font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-bold) var(--unnamed-font-size-24) /
+        var(--unnamed-line-spacing-29) var(--unnamed-font-family-roboto);
+      letter-spacing: var(--unnamed-character-spacing-0);
+      text-align: left;
+      font: normal normal bold 24px/29px Roboto;
+      letter-spacing: 0px;
+      color: #484848;
+      opacity: 1;
+    }
+    .login-subtitle {
+      font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-normal) var(--unnamed-font-size-14) /
+        var(--unnamed-line-spacing-17) var(--unnamed-font-family-roboto);
+      letter-spacing: var(--unnamed-character-spacing-0);
+      color: var(--unnamed-color-afafaf);
+      text-align: left;
+      font: normal normal normal 14px/17px Roboto;
+      letter-spacing: 0px;
+      color: #afafaf;
+      opacity: 1;
+    }
+    .form-control {
+      border-radius: 0px;
+    }
   }
 }

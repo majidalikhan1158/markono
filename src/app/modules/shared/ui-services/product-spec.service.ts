@@ -15,7 +15,7 @@ import {
   CheckPrintFileVM,
   UnitPriceVM,
 } from '../models/product-spec';
-import { ProductGroupDDL, MaterialDataList, ProductVersions, SpineWidthThicknessParamHistory, SpineWidthParamHistory } from '../../services/shared/classes/product-modals/product-modals';
+import { ProductGroupDDL, MaterialDataList, ProductVersions, SpineWidthThicknessParamHistory, SpineWidthParamHistory, FileCheckConfig } from '../../services/shared/classes/product-modals/product-modals';
 
 @Injectable({
   providedIn: 'root',
@@ -27,12 +27,12 @@ export class ProductSpecStore {
   private currentProductSpecStoreState: ProductSpecStoreVM;
   private showJournaFieldsSubject = new BehaviorSubject<boolean>(false);
   private productVersionListSubject = new BehaviorSubject<ProductVersions[]>([]);
+  private fileCheckConfigListSubject = new BehaviorSubject<FileCheckConfig[]>([]);
   private productGroupListSubject = new BehaviorSubject<ProductGroupDDL[]>([]);
   private bindingTypeListSubject = new BehaviorSubject<string[]>([]);
   private spineWidthThicknessParamHistorySubject = new BehaviorSubject<SpineWidthThicknessParamHistory>(null);
   private spineWidthParamHistorySubject = new BehaviorSubject<SpineWidthParamHistory>(null);
   private spinWidthThicknessSubject = new BehaviorSubject<number>(0);
-  private createProductSubject = new BehaviorSubject<ProductSpecStoreVM>(new ProductSpecStoreVM());
 
   public $showJournaFields: Observable<boolean>;
   public $productGroupList: Observable<ProductGroupDDL[]>;
@@ -41,7 +41,7 @@ export class ProductSpecStore {
   public $spineWidthThicknessParamHistory: Observable<SpineWidthThicknessParamHistory>;
   public $spineWidthParamHistory: Observable<SpineWidthParamHistory>;
   public $spinWidthThickness: Observable<number>;
-  public $createProduct: Observable<ProductSpecStoreVM>;
+  public $fileCheckConfig: Observable<FileCheckConfig[]>;
 
   private coverMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private textMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
@@ -93,7 +93,7 @@ export class ProductSpecStore {
     this.$spineWidthParamHistory = this.spineWidthParamHistorySubject.asObservable();
     this.$spineWidthThicknessParamHistory = this.spineWidthThicknessParamHistorySubject.asObservable();
     this.$spinWidthThickness = this.spinWidthThicknessSubject.asObservable();
-    this.$createProduct = this.createProductSubject.asObservable();
+    this.$fileCheckConfig = this.fileCheckConfigListSubject.asObservable();
 
     this.productSpecStore.subscribe((data) => {
       this.currentProductSpecStoreState = data;
@@ -316,6 +316,13 @@ export class ProductSpecStore {
     this.productService.getVersions(reqObj).subscribe((resp => {
       const result = (resp.body.result as unknown) as ProductVersions[];
       this.productVersionListSubject.next(result);
+    }));
+  }
+
+  getFileCheckConfig = () => {
+    this.productService.getFileCheckConfig().subscribe((resp => {
+      const result = (resp.body.result as unknown) as FileCheckConfig[];
+      this.fileCheckConfigListSubject.next(result);
     }));
   }
 

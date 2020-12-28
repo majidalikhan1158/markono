@@ -54,7 +54,7 @@
                         <ngx-mat-select-search [formControl]="productTypeFltrCtrl" placeholderLabel="Search..">
                         </ngx-mat-select-search>
                     </mat-option>
-                    <mat-option [value]="item.Id" *ngFor="let item of store.$productGroupList | async">{{item.ProductName}}
+                    <mat-option [value]="item.ProductName" *ngFor="let item of store.$productGroupList | async">{{item.ProductName}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

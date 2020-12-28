@@ -1,3 +1,4 @@
+import { ChildIsbnModal } from '../../services/shared/classes/product-modals/product-modals';
 export interface ProductSpecListVM {
   id: number;
   isbn: string;
@@ -13,7 +14,7 @@ export interface GeneralVM {
   id: number;
   productNumber: string;
   printingType: string;
-  productType: number;
+  productType: string;
   externalPartNo: string;
   isbnOwner: string;
   journalTitleCode: string;
@@ -120,6 +121,7 @@ export interface BindingTypeWireoBinding {
 export interface ChildIsbnVM {
   id: number;
   childIsbns: string[];
+  childIsbnsDetail: ChildIsbnModal[];
   isShrinkWrapTogether: boolean;
   specialInstruction1: string;
   isSlipCase: boolean;
@@ -220,12 +222,6 @@ export interface DvdCDBindingMapper {
 export interface OtherVM {
   id: number;
   type: string;
-  mainWeight: number;
-  material: string;
-  brand: string;
-  colorExtend: string;
-  monoExtend: string;
-  totalExtend: string;
   componentType: string;
   orientationType: string;
   height: number;
@@ -257,6 +253,7 @@ export interface CheckPrintQA {
 
 export interface CheckPrintFileVM {
   id: number;
+  fileCheckIds: number [];
   correctTitleISBN_Cover: boolean;
   securityAllowedToChange_Cover: boolean;
   correctTrimSize_Cover: boolean;

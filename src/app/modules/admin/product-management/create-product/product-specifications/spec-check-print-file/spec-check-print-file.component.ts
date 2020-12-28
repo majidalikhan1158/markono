@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
-import { CheckPrintCoverQAList } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { CheckPrintFileVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecStore } from '../../../../../shared/ui-services/product-spec.service';
-import { CheckPrintTextQAList, CheckPrintFileTypes } from '../../../../../shared/enums/product-management/product-constants';
+import { CheckPrintFileTypes } from '../../../../../shared/enums/product-management/product-constants';
 import { SnackBarService } from '../../../../../shared/ui-services/snack-bar.service';
+import { Subscription } from 'rxjs';
+import { FileCheckConfig } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 
 @Component({
   selector: 'app-spec-check-print-file',
@@ -13,14 +14,26 @@ import { SnackBarService } from '../../../../../shared/ui-services/snack-bar.ser
   encapsulation: ViewEncapsulation.None,
 })
 export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
-  checkPrintQAList = CheckPrintCoverQAList;
-  checkTextQAList = CheckPrintTextQAList;
+  checkPrintQAList: FileCheckConfig[] = [];
+  checkTextQAList: FileCheckConfig[] = [];
+  fileCheckConfigList: FileCheckConfig[];
   viewModal: CheckPrintFileVM;
-  checked: boolean = true;
+  checked = true;
+  subscription: Subscription;
   constructor(private store: ProductSpecStore, private snack: SnackBarService) { }
 
   ngOnInit() {
+    this.store.getFileCheckConfig();
+    this.getApiData();
     this.getDefaultRecord();
+  }
+
+  getApiData = () => {
+    this.subscription = this.store.$fileCheckConfig.subscribe(resp => {
+      this.fileCheckConfigList = resp;
+      this.checkTextQAList = this.fileCheckConfigList.filter(x => x.component === 'Text');
+      this.checkPrintQAList = this.fileCheckConfigList.filter(x => x.component === 'Cover');
+    });
   }
 
   getDefaultRecord = () => {
@@ -36,6 +49,7 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
   initialObject = () => {
     return {
       id: 1,
+      fileCheckIds: [],
       correctTitleISBN_Cover: false,
       securityAllowedToChange_Cover: false,
       correctTrimSize_Cover: false,
@@ -64,6 +78,14 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
     };
   }
 
+  handleToggleChange = (id: number) => {
+    if (this.viewModal.fileCheckIds.includes(id)) {
+      this.viewModal.fileCheckIds = this.viewModal.fileCheckIds.filter(x => x !== id);
+    } else {
+      this.viewModal.fileCheckIds.push(id);
+    }
+  }
+
   handleFileInput = (files: FileList, type: string) => {
     if (!files || files.length === 0) {
       this.snack.open('Please select a valid file first');
@@ -90,6 +112,7 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log(this.viewModal);
     this.store.setProductSpecStore(
       this.viewModal,
       ProductSpecTypes.CHECK_PRINT_FILE

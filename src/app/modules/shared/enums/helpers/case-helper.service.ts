@@ -50,7 +50,7 @@ export class CaseHelperService {
       billToNo: data.customerInfo.customerId,
       salesPerson: data.customerInfo.customerDetail.SalesPerson,
       coordinator: data.customerInfo.customerDetail.Coordinator,
-      yourReference: '',
+      yourReference: data.customerInfo.referenceNumber,
       specialInstructions: this.getSpecialInstructions(data.specialInstructionList),
       discount: data.overallCostVM.discount,
       tax: data.overallCostVM.tax,

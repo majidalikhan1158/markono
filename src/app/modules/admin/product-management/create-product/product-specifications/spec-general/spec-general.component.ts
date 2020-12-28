@@ -51,6 +51,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
   previousValue = '';
   isbnOwnerList: IsbnOwner[];
   isLoading = false;
+  matAutoCompleteSubscription: Subscription;
   constructor(public store: ProductSpecStore, private ref: ChangeDetectorRef, private orderService: OrderService) { }
 
   ngOnInit(): void {
@@ -60,14 +61,15 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
   }
 
   handleCustomerSearch() {
-    if (this.generalVM.isbnOwner !== '' && this.generalVM.isbnOwner !== this.previousValue && this.generalVM.isbnOwner.length === 3) {
+    if (this.generalVM.isbnOwner !== '' && this.generalVM.isbnOwner !== this.previousValue && this.generalVM.isbnOwner.length >= 3) {
+      this.matAutoCompleteSubscription?.unsubscribe();
       this.isbnOwnerList = [];
       this.ref.detectChanges();
       this.previousValue = this.generalVM.isbnOwner;
       this.isLoading = true;
       setTimeout(_ => this.trigger.openPanel());
       // call api to get customer results
-      this.orderService.getCustomerDetail({sellToNo: this.generalVM.isbnOwner}).subscribe(resp => {
+      this.matAutoCompleteSubscription = this.orderService.getCustomerDetail({sellToNo: this.generalVM.isbnOwner}).subscribe(resp => {
         const details = resp.body as unknown as IsbnOwner[];
         this.isbnOwnerList = details && details.length > 0 ? details : [];
         this.isLoading = false;
@@ -123,7 +125,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
       id: 1,
       productNumber: '',
       printingType: '',
-      productType: 0,
+      productType: '',
       externalPartNo: '',
       isbnOwner: '',
       journalTitleCode: '',
@@ -181,7 +183,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
 
   shouldShowJournalFields = () => {
     this.store.$productGroupList.subscribe(list => {
-      const obj = list.find(x => x.Id === this.generalVM.productType);
+      const obj = list.find(x => x.ProductName === this.generalVM.productType);
       this.store.setShouldShowJournalFields(obj?.ProductName.toLowerCase() === this.productTypes.JOURNALS.toLowerCase());
     });
   }

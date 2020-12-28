@@ -8,6 +8,12 @@ import {
   ProductSpecificationTypeOtherArray,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { AddRemoveSpecTypeEvent, ProductSpecTypeObject } from 'src/app/modules/shared/enums/product-management/product-interfaces';
+import { ProductSpecStore } from '../../../../shared/ui-services/product-spec.service';
+import { ProductSpecHelperService } from '../../../../shared/enums/helpers/product-spec-helper.service';
+import { ProductSpecTypes } from '../../../../shared/enums/app-enums';
+import { SnackBarService } from '../../../../shared/ui-services/snack-bar.service';
+import { ProductService } from '../../../../services/core/services/product.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-product-specifications',
@@ -23,7 +29,7 @@ export class ProductSpecificationsComponent implements OnInit {
   productSpecTypeOtherArray = ProductSpecificationTypeOtherArray;
   selectedProductSpecType = '';
   shouldExpandedPanelClose = false;
-  constructor() {}
+  constructor(private store: ProductSpecStore, private productservice: ProductService, private productHelper: ProductSpecHelperService, private snack: SnackBarService) {}
 
   ngOnInit(): void {
     this.selectedProductSpecType = this.productSpecTypesConstant.GENERAL;
@@ -132,5 +138,38 @@ export class ProductSpecificationsComponent implements OnInit {
       //   (x) => x.enum === this.productSpecTypesConstant.UNIT_PRICE
       // ).id = this.productSpecTypesArray.length;
     }
+  }
+
+  createProductSpec = () => {
+    if(this.selectedProductSpecType === this.productSpecTypesConstant.UNIT_PRICE) {
+      this.saveFromUnitPrice();
+    } else if(this.selectedProductSpecType === this.productSpecTypesConstant.CHECK_PRINT_FILE) {
+      this.saveFromCheckPrintFile();
+    } else if(this.selectedProductSpecType === this.productSpecTypesConstant.LAYOUT_PREP) {
+
+    }
+  }
+
+  saveFromUnitPrice = () => {
+    this.store.productSpecStore.subscribe(resp => {
+      const transformedObj = this.productHelper.transCreateProductApiModal(resp);
+      // console.log(JSON.stringify(transformedObj));
+      this.productservice.createProduct(transformedObj).subscribe(resp => {
+        if(resp && resp.body && resp.body.result) {
+          const result = resp.body.result;
+          if(result?.failureCount > 0) {
+            this.snack.open(result.error[0]);
+          } else {
+            this.snack.open('Product spec created successfully');
+          }
+        }
+      },(error: HttpErrorResponse) => {
+        this.snack.open("An error occured: ", "Interal Server Error");
+      });
+    });
+  }
+
+  saveFromCheckPrintFile = () => {
+
   }
 }

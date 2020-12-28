@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import { MaterialDataList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
-import { ChildIsbnModalList } from '../../../../../services/shared/classes/product-modals/product-modals';
+import { ChildIsbnModal } from '../../../../../services/shared/classes/product-modals/product-modals';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { GeneralVM } from '../../../../../shared/models/product-spec';
 @Component({
@@ -36,7 +36,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   greyboardThicknessList = GreyboardThicknessList;
   childIsbnNumber: string;
   childIsbnNumberCtrl = new FormControl();
-  isbnOwnerList: ChildIsbnModalList[];
+  isbnOwnerList: ChildIsbnModal[];
   isLoading = false;
   previousValue: string;
   generalVM: GeneralVM;
@@ -85,7 +85,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
       setTimeout(_ => this.trigger.openPanel());
       // call api to get customer results
       this.subscription = this.store.getProducts(this.childIsbnNumber).subscribe(resp => {
-        const details = (resp.body.result as unknown) as ChildIsbnModalList[];
+        const details = (resp.body.result as unknown) as ChildIsbnModal[];
         this.isbnOwnerList = details && details.length > 0 ? details : [];
         this.isLoading = false;
         this.ref.detectChanges();
@@ -97,14 +97,15 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleSelectedIsbnOwner = (isbnOwner: string) => {
+  handleSelectedIsbnOwner = (isbnOwner: any) => {
     if (isbnOwner === '0') {
       setTimeout(_ => this.trigger.openPanel());
       return;
     }
-
-    if (!this.viewModal.childIsbns.includes(isbnOwner) && this.generalVM?.productNumber !== isbnOwner) {
-      this.viewModal.childIsbns.push(isbnOwner);
+    const obj = isbnOwner as ChildIsbnModal;
+    if (!this.viewModal.childIsbns.includes(obj.ISBN) && this.generalVM?.productNumber !== obj.ISBN) {
+      this.viewModal.childIsbns.push(obj.ISBN);
+      this.viewModal.childIsbnsDetail.push(obj);
     }
     setTimeout(_ => this.trigger.openPanel());
   }
@@ -124,6 +125,9 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   removeChildIsbnSelection(item: string) {
     this.viewModal.childIsbns = this.viewModal.childIsbns.filter(
       (x) => x !== item
+    );
+    this.viewModal.childIsbnsDetail = this.viewModal.childIsbnsDetail.filter(
+      (x) => x.ISBN !== item
     );
   }
 
@@ -157,6 +161,8 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     this.subscription = this.store.productSpecStore.subscribe((resp) => {
       if (resp && resp.childIsbnVM && resp.childIsbnVM.id > 0) {
         this.viewModal = resp.childIsbnVM;
+        this.handleMaterialWeightChange('MATERIALWEIGHT');
+        this.handleMaterialWeightChange('MATERIAL');
       } else {
         this.viewModal = this.initialObject();
       }
@@ -167,6 +173,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     return {
       id: 1,
       childIsbns: [],
+      childIsbnsDetail: [],
       isShrinkWrapTogether: false,
       specialInstruction1: '',
       isSlipCase: false,
@@ -208,7 +215,6 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
       this.finishingTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
-
 
   handleMaterialWeightFilterAutoComplete = () => {
     this.filteredMaterialWeightList.next(this.materialWeightList.slice());

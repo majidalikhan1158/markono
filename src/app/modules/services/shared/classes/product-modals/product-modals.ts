@@ -20,7 +20,7 @@ export interface MaterialDataList {
     PaperBrand: string;
 }
 
-export interface ChildIsbnModalList {
+export interface ChildIsbnModal {
     Id: string;
     ISBN: string;
     VersionNo: string;
@@ -59,4 +59,5 @@ export interface FileCheckConfig {
     createdBy: string;
     updatedDateTime: string;
     updatedBy: string;
+    toggleLabel: boolean;
 }

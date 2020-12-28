@@ -14,7 +14,7 @@
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" showPanel="true" (optionSelected)='handleSelectedIsbnOwner($event.option.value)'>
                         <mat-option *ngIf="isLoading" class="is-loading" value="0">Loading...</mat-option>
                         <ng-container *ngIf="!isLoading">
-                        <mat-option *ngFor="let item of isbnOwnerList" [value]="item.ISBN">
+                        <mat-option *ngFor="let item of isbnOwnerList" [value]="item">
                             <span>{{item.ISBN}}</span>
                         </mat-option> 
                         </ng-container>

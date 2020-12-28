@@ -101,11 +101,15 @@ export class ProductService {
     return this.http.get(decodeURI(urlWithParams));
   }
 
+  getFileCheckConfig = (): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getFileCheckConfigUrl();
+    return this.http.get(url);
+  }
+
   getThickness = (reqObj: SpineWidthThicknessParamHistory): Observable<HttpResponse<any>> => {
     const url = this.endPoint.getPaperMaterialUrl();
     const queryParams = `$filter=PrintType eq '${reqObj.PrintType}' and ComponentType eq 'Text' and PaperWeight eq '${reqObj.PaperWeight}' and PaperMaterial eq '${reqObj.PaperMaterial}' and PaperBrand eq '${reqObj.PaperBrand}'&$select=thickness`;
     const urlWithParams = `${url}?${queryParams}`;
-    console.log(urlWithParams);
     return this.http.get(decodeURI(urlWithParams));
   }
 
@@ -125,7 +129,7 @@ export class ProductService {
     return this.http.post(url, reqObj);
   }
 
-  createProduct = (reqObj: any): Observable<HttpResponse<ProductResponseModal>> => {
+  createProduct = (reqObj: any): Observable<HttpResponse<any>> => {
     const url = this.endPoint.createProductUrl();
     return this.http.post(url, reqObj);
   }

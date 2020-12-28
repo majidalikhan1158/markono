@@ -79,4 +79,7 @@ export class ApiEndpointsService {
 
   createProductUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.createProduct}`
+
+  getFileCheckConfigUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getFileCheckConfig}`
 }

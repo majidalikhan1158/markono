@@ -8,8 +8,9 @@ import { RegistrationComponent } from './registration/registration.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LogoutComponent } from './logout/logout.component';
 import { AuthComponent } from './auth.component';
-import {TranslationModule} from '../i18n/translation.module';
-
+import { TranslationModule } from '../i18n/translation.module';
+import { NgImageSliderModule } from 'ng-image-slider';
+import { MatCarouselModule } from '@ngmodule/material-carousel';
 @NgModule({
   declarations: [
     LoginComponent,
@@ -25,6 +26,8 @@ import {TranslationModule} from '../i18n/translation.module';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgImageSliderModule,
+    MatCarouselModule.forRoot(),
   ]
 })
-export class AuthModule {}
+export class AuthModule { }

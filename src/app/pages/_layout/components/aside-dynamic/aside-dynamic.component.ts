@@ -26,6 +26,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   asideSelfMinimizeToggle = false;
 
   currentUrl: string;
+  activeMenu: boolean = true;
 
   constructor(
     private layout: LayoutService,
@@ -113,13 +114,14 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
 
   private getLogo() {
     if (this.brandSkin === 'light') {
-      return './assets/media/logos/logo-dark.png';
+      return './assets/media/logos/PrintAI.png';
     } else {
-      return './assets/media/logos/logo-light.png';
+      return './assets/media/logos/PrintAI.png';
     }
   }
 
   isMenuItemActive(path) {
+
     if (!this.currentUrl || !path) {
       return false;
     }
@@ -131,7 +133,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     if (this.currentUrl.indexOf(path) > -1) {
       return true;
     }
-
+    this.activeMenu = !this.activeMenu;
     return false;
   }
 

@@ -6,9 +6,7 @@ import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { ReplaySubject, Subject, Subscription } from 'rxjs';
-import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
-import { MaterialDataList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
-import { ChildIsbnModal } from '../../../../../services/shared/classes/product-modals/product-modals';
+import { ChildIsbnModal, MaterialDataList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { GeneralVM } from '../../../../../shared/models/product-spec';
 @Component({
@@ -110,8 +108,8 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     setTimeout(_ => this.trigger.openPanel());
   }
 
-  displayFn(isbnOwner: string) {
-    if (isbnOwner) { return isbnOwner; }
+  displayFn(isbnOwner: ChildIsbnModal) {
+    if (isbnOwner) { return isbnOwner.ISBN; }
   }
 
   addChildIsbn(event: Event) {

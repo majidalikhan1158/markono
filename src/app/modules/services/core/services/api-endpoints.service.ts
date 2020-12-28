@@ -59,4 +59,27 @@ export class ApiEndpointsService {
   getProductsUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getProducts}`
 
+  getProductGroupUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getProductGroups}`
+
+  getPaperMaterialUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getPaperMaterial}`
+
+  getFinishingTypeUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getFinishingType}`
+
+  getBindingTypeUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getBindingType}`
+
+  getSpineWidthUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getSpineWidth}`
+
+  getBookWeightUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getBookWeight}`
+
+  createProductUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.createProduct}`
+
+  getFileCheckConfigUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getFileCheckConfig}`
 }

@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   ColorTypeList,
-  FinishingTypeList, CoverTypeList, CoverMaterialList,
+  CoverTypeList,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { MatSelectChange } from '@angular/material/select';
-import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import { CoverVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject, Subscription } from 'rxjs';
+import { MaterialDataList } from '../../../../../services/shared/classes/product-modals/product-modals';
 @Component({
   selector: 'app-spec-cover',
   templateUrl: './spec-cover.component.html',
@@ -19,49 +19,75 @@ import { ReplaySubject, Subject } from 'rxjs';
 })
 export class SpecCoverComponent implements OnInit, OnDestroy {
 
-  noOfColorsList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  coverMaterialWeightList = CoverMaterialList;
+  materialDataList: MaterialDataList[];
+  materialWeightList: string[];
+  materialList: string[];
+  materialBrandList: string[];
   coverTypeList = CoverTypeList;
-  finishingTypeList: SelectionList[] = FinishingTypeList;
+  finishingTypeList: string[];
   colorTypeList = ColorTypeList;
-  selectedFinishingTypes: SelectionList[] = [];
+  selectedFinishingTypes: string[] = [];
   viewModal: CoverVM;
   selectedCaseType = '';
   disabled = false;
-  coverMaterialFltrCtrl: FormControl = new FormControl();
+  materialFltrCtrl: FormControl = new FormControl();
   finishingTypeOutsideFltrCtrl: FormControl = new FormControl();
   finishingTypeInsideFltrCtrl: FormControl = new FormControl();
-  filteredCoverMaterial: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
-  filteredFinishingTypeOutside: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
-  filteredFinishingTypeInside: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  filteredMaterialList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredFinishingTypeOutside: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredFinishingTypeInside: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   protected onDestroy = new Subject<void>();
-  countNoOfColorsInside = 0;
-  countNoOfColorsOutside = 0;
-  constructor(private store: ProductSpecStore) { }
+  subscription: Subscription;
+  constructor(public store: ProductSpecStore) { }
 
   ngOnInit(): void {
+    this.getCoverSectionApiData();
     this.getDefaultRecord();
-    this.handleCoverMaterialsFilterAutoComplete();
-    this.handleFinishingTypeInsideFilterAutoComplete();
-    this.handleFinishingTypeOutsideFilterAutoComplete();
+  }
+
+  getCoverSectionApiData = () => {
+    this.subscription = this.store.$coverMaterialDataList.subscribe(list => {
+      this.materialDataList = list;
+      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))];
+      this.handleCoverMaterialsFilterAutoComplete();
+    });
+
+    this.subscription = this.store.$coverFinishingTypeList.subscribe(list => {
+      this.finishingTypeList = list;
+      this.handleFinishingTypeInsideFilterAutoComplete();
+      this.handleFinishingTypeOutsideFilterAutoComplete();
+    });
+  }
+
+  handleCoverTypeChange = () => {
+    if (this.viewModal.coverType === '4pp cover') {
+      this.store.getCoverMaterialWeight('Cover',  ProductSpecTypes.COVER);
+      this.store.getFinishingTypes('Cover', ProductSpecTypes.COVER);
+    }
+  }
+
+  handleMaterialWeightChange = (type: string) => {
+    if (type === 'MATERIALWEIGHT') {
+      const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.coverMaterialWeight);
+      this.materialList = [...new Set(records.map(x => x.PaperMaterial))];
+    } else if (type === 'MATERIAL') {
+      const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal.coverMaterial);
+      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))];
+    }
   }
 
   handleColorChangeOutside(color: string) {
     if (this.viewModal.colorTypeOutside.includes(color)) {
-      this.countNoOfColorsOutside--;
       this.viewModal.colorTypeOutside = this.viewModal.colorTypeOutside.filter(x => x !== color);
     } else {
-      this.countNoOfColorsOutside++;
       this.viewModal.colorTypeOutside.push(color);
     }
   }
 
   handleColorChangeInside(color: string) {
     if (this.viewModal.colorTypeInside.includes(color)) {
-      this.countNoOfColorsInside--;
       this.viewModal.colorTypeInside = this.viewModal.colorTypeInside.filter(x => x !== color);
     } else {
-      this.countNoOfColorsInside++;
       this.viewModal.colorTypeInside.push(color);
     }
   }
@@ -69,7 +95,6 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   addPantoneColourOutside(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value !== '' && this.viewModal.pantoneColourOutside.indexOf(value) === -1) {
-      this.countNoOfColorsOutside++;
       this.viewModal.pantoneColourOutside.push(value);
     }
     (event.target as HTMLInputElement).value = '';
@@ -78,21 +103,18 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   addPantoneColourInside(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     if (value !== '' && this.viewModal.pantoneColourInside.indexOf(value) === -1) {
-      this.countNoOfColorsInside++;
       this.viewModal.pantoneColourInside.push(value);
     }
     (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelectionOutside(item: string) {
-    this.countNoOfColorsOutside--;
     this.viewModal.pantoneColourOutside = this.viewModal.pantoneColourOutside.filter(
       (x) => x !== item
     );
   }
 
   removePantoneColourSelectionInside(item: string) {
-    this.countNoOfColorsInside--;
     this.viewModal.pantoneColourInside = this.viewModal.pantoneColourInside.filter(
       (x) => x !== item
     );
@@ -106,14 +128,12 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
     this.viewModal.finishingTypeInside = this.viewModal.finishingTypeInside.filter(x => x !== recordId);
   }
 
-  getFinishingTypeText = (id: number) => {
-    return this.finishingTypeList.find((x) => x.value === id).text;
-  }
-
   getDefaultRecord = () => {
     this.store.productSpecStore.subscribe((resp) => {
       if (resp && resp.coverVM && resp.coverVM.id > 0) {
         this.viewModal = resp.coverVM;
+        this.handleMaterialWeightChange('MATERIALWEIGHT');
+        this.handleMaterialWeightChange('MATERIAL');
       } else {
         this.viewModal = this.initialObject();
       }
@@ -142,13 +162,13 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   }
 
   handleFinishingTypeChange(event: MatSelectChange) {
-    const selectedItemId = event.value as number[];
-    this.selectedFinishingTypes = this.finishingTypeList.filter(x => selectedItemId.includes(x.value));
+    const selectedItemId = event.value as string[];
+    this.selectedFinishingTypes = this.finishingTypeList.filter(x => selectedItemId.includes(x));
   }
 
   handleCoverMaterialsFilterAutoComplete = () => {
-    this.filteredCoverMaterial.next(this.coverMaterialWeightList.slice());
-    this.coverMaterialFltrCtrl.valueChanges
+    this.filteredMaterialList.next(this.materialWeightList.slice());
+    this.materialFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
         this.filterCoverMaterials();
@@ -156,20 +176,20 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   }
 
   filterCoverMaterials = () => {
-    if (!this.coverMaterialWeightList) {
+    if (!this.materialWeightList) {
       return;
     }
     // get the search keyword
-    let search = this.coverMaterialFltrCtrl.value;
+    let search = this.materialFltrCtrl.value;
     if (!search) {
-      this.filteredCoverMaterial.next(this.coverMaterialWeightList.slice());
+      this.filteredMaterialList.next(this.materialWeightList.slice());
       return;
     } else {
       search = search.toLowerCase();
     }
     // filter the banks
-    this.filteredCoverMaterial.next(
-      this.coverMaterialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    this.filteredMaterialList.next(
+      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -196,7 +216,7 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
     }
     // filter the banks
     this.filteredFinishingTypeInside.next(
-      this.finishingTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+      this.finishingTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -223,9 +243,10 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
     }
     // filter the banks
     this.filteredFinishingTypeOutside.next(
-      this.finishingTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+      this.finishingTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
+
 
   ngOnDestroy(): void {
     this.onDestroy.next();

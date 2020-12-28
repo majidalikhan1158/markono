@@ -7,6 +7,7 @@ import { ResponseModal } from '../../shared/classes/response-modal';
 import { QueryStringParameters } from '../../shared/classes/query-string-parameter';
 import { ProductDetailsVM } from 'src/app/modules/shared/models/create-case';
 import { HelperService } from './helper.service';
+import { ProductResponseModal, SpineWidthThicknessParamHistory, SpineWidthParamHistory } from '../../shared/classes/product-modals/product-modals';
 
 @Injectable({
   providedIn: 'root',
@@ -51,6 +52,86 @@ export class ProductService {
       }
     );
     return this.http.get(url);
+  }
+
+  getProductGroups = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getProductGroupUrl();
+    const queryParams = `$filter=printType eq '${reqObj.printType}' and isDeleted eq ${reqObj.isDeleted}&$select=id,productName`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getCoverMaterialWeight = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getPaperMaterialUrl();
+    const queryParams = `$filter=printType eq '${reqObj.printType}' and ComponentType eq '${reqObj.componentType}'
+     and isDeleted eq ${reqObj.isDeleted} &$select=paperWeight,paperMaterial,paperBrand`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getFinishingTypes = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getFinishingTypeUrl();
+    const queryParams = `$filter=ComponentType eq '${reqObj.componentType}'
+     and isDeleted eq ${reqObj.isDeleted} &$select=finishingName`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getBindingTypes = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getBindingTypeUrl();
+    const queryParams = `$filter=printType eq null and sellToNo eq '${reqObj.sellToNo ?? null}'
+    or null eq null and isDeleted eq ${reqObj.isDeleted} &$select=bindingName`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getProductsForChildIsbn = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getProductsUrl();
+    const queryParams = `$filter=contains(isbn,'${reqObj.isbn}')
+     and deleted eq ${reqObj.isDeleted} &$select=id,isbn,versionNo`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getVersions = (reqObj): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getProductsUrl();
+    const queryParams = `$filter=isbn eq '${reqObj.isbn}'
+     &$select=id,versionNo,createdDateTime,createdBy,versionDescription`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getFileCheckConfig = (): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getFileCheckConfigUrl();
+    return this.http.get(url);
+  }
+
+  getThickness = (reqObj: SpineWidthThicknessParamHistory): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getPaperMaterialUrl();
+    const queryParams = `$filter=PrintType eq '${reqObj.PrintType}' and ComponentType eq 'Text' and PaperWeight eq '${reqObj.PaperWeight}' and PaperMaterial eq '${reqObj.PaperMaterial}' and PaperBrand eq '${reqObj.PaperBrand}'&$select=thickness`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getSpineWidth = (reqObj: SpineWidthParamHistory): Observable<HttpResponse<ProductResponseModal>> => {
+    const obj = {
+      noOfColourExtent: reqObj.noOfColourExtent,
+      noOfMonoExtent: reqObj.noOfMonoExtent,
+      thickness: reqObj.thickness,
+      bindingType: reqObj.bindingType
+    };
+    const url = this.endPoint.getSpineWidthUrl();
+    return this.http.post(url, obj);
+  }
+
+  getBookWeight = (reqObj: any): Observable<HttpResponse<ProductResponseModal>> => {
+    const url = this.endPoint.getBookWeightUrl();
+    return this.http.post(url, reqObj);
+  }
+
+  createProduct = (reqObj: any): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.createProductUrl();
+    return this.http.post(url, reqObj);
   }
 
 }

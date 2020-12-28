@@ -1,3 +1,4 @@
+import { ChildIsbnModal } from '../../services/shared/classes/product-modals/product-modals';
 export interface ProductSpecListVM {
   id: number;
   isbn: string;
@@ -51,7 +52,7 @@ export interface TextVM {
 
 export interface BindingVM {
   id: number;
-  bindingType: number;
+  bindingType: string;
   caseBound: BindingTypeCaseBound;
   folding: BindingTypeFolding;
   paperBack: BindingTypePaperBack;
@@ -68,7 +69,7 @@ export interface BindingTypeCaseBound {
   isRibbon: boolean;
   greyboardThickness: string;
   specialInstruction1: string;
-  benchworkRequired: string;
+  benchworkRequired: string[];
   specialInstruction2: string;
   endPaperWeight: string;
   endPaperMaterial: string;
@@ -120,6 +121,7 @@ export interface BindingTypeWireoBinding {
 export interface ChildIsbnVM {
   id: number;
   childIsbns: string[];
+  childIsbnsDetail: ChildIsbnModal[];
   isShrinkWrapTogether: boolean;
   specialInstruction1: string;
   isSlipCase: boolean;
@@ -189,6 +191,7 @@ export class ProductSpecStoreVM {
   otherVM: OtherVM[];
   checkPrintFileVM: CheckPrintFileVM;
   unitPriceVM: UnitPriceVM;
+  productSpecVM: ProductSpecListVM;
 }
 export interface CoverVM {
   id: number;
@@ -219,12 +222,6 @@ export interface DvdCDBindingMapper {
 export interface OtherVM {
   id: number;
   type: string;
-  mainWeight: number;
-  material: string;
-  brand: string;
-  colorExtend: string;
-  monoExtend: string;
-  totalExtend: string;
   componentType: string;
   orientationType: string;
   height: number;
@@ -256,6 +253,7 @@ export interface CheckPrintQA {
 
 export interface CheckPrintFileVM {
   id: number;
+  fileCheckIds: number [];
   correctTitleISBN_Cover: boolean;
   securityAllowedToChange_Cover: boolean;
   correctTrimSize_Cover: boolean;
@@ -320,4 +318,9 @@ export interface LayoutPrepProductionActivities {
   newUnitsCosts: string;
   totalEstCosts: string;
   percentage: string;
+}
+
+export interface IsbnOwner {
+  CompanyCode: string;
+  CompanyName: string;
 }

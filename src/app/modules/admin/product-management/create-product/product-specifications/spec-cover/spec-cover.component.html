@@ -5,26 +5,25 @@
     <div class="col-lg-12">
         <div class="col-sm-12 display-flex-direction-column">
             <span class="labels pb-2" style="color: #AFAFAF !important">Cover Type</span>
-            <mat-radio-group [(ngModel)]="viewModal.coverType" [disabled]="disabled">
-                <mat-radio-button *ngFor="let item of coverTypeList" [value]="item.value">
+            <mat-radio-group [(ngModel)]="viewModal.coverType" (change)="handleCoverTypeChange()" >
+                <mat-radio-button *ngFor="let item of coverTypeList" [value]="item.text">
                     {{item.text}}
                 </mat-radio-button>
             </mat-radio-group>
         </div>
     </div>
 
-    <ng-container *ngIf="viewModal.coverType=='4PPCOVER'">
-
+    <ng-container *ngIf="viewModal.coverType=='4pp cover'">
         <div class="col-lg-12 display-flex pl-0 pt-2">
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Cover Material Weight</mat-label>
-                    <mat-select [(ngModel)]="viewModal.coverMaterialWeight">
+                    <mat-select [(ngModel)]="viewModal.coverMaterialWeight" (selectionChange)="handleMaterialWeightChange('MATERIALWEIGHT')">
                         <mat-option>
-                            <ngx-mat-select-search [formControl]="coverMaterialFltrCtrl" placeholderLabel="Search..">
+                            <ngx-mat-select-search [formControl]="materialFltrCtrl" placeholderLabel="Search..">
                             </ngx-mat-select-search>
                         </mat-option>
-                        <mat-option [value]="item" *ngFor="let item of filteredCoverMaterial | async">{{item}}
+                        <mat-option [value]="item" *ngFor="let item of filteredMaterialList| async ">{{item}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -32,8 +31,10 @@
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Cover Material</mat-label>
-                    <mat-select [(ngModel)]="viewModal.coverMaterial" [disabled]="viewModal.coverMaterialWeight === ''">
-                        <mat-option value="Offset">Offset</mat-option>
+                    <mat-select (selectionChange)="handleMaterialWeightChange('MATERIAL')"
+                        [(ngModel)]="viewModal.coverMaterial" 
+                        [disabled]="!viewModal.coverMaterialWeight">
+                        <mat-option [value]="item" *ngFor="let item of materialList">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -41,8 +42,8 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Material Brand</mat-label>
                     <mat-select [(ngModel)]="viewModal.materialBrand"
-                        [disabled]="viewModal.coverMaterial === '' && viewModal.coverMaterialWeight === ''">
-                        <mat-option value="Offset">Offset</mat-option>
+                        [disabled]="!viewModal.coverMaterialWeight || !viewModal.coverMaterial">
+                        <mat-option [value]="item" *ngFor="let item of materialBrandList">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -54,7 +55,7 @@
         <!--outside-->
         <div class="col-lg-12 pb-3">
             <span class="labels">Outside Cover</span>&nbsp;&nbsp;
-            <mat-hint class="font-10px">No. of colours ({{countNoOfColorsOutside}})</mat-hint>
+            <mat-hint class="font-10px">No. of colours ({{viewModal.pantoneColourOutside.length + viewModal.colorTypeOutside.length}})</mat-hint>
         </div>
 
         <div class="col-lg-12 display-flex pl-0">
@@ -97,8 +98,8 @@
                                 placeholderLabel="Search..">
                             </ngx-mat-select-search>
                         </mat-option>
-                        <mat-option [value]="item.value" *ngFor="let item of filteredFinishingTypeOutside |async">
-                            {{item.text}}
+                        <mat-option [value]="item" *ngFor="let item of filteredFinishingTypeOutside | async">
+                            {{item}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -109,7 +110,7 @@
                     <mat-chip-list #finishingChipList class="table-filter-chips">
                         <mat-chip [removable]="true" *ngFor="let item of viewModal.finishingTypeOutside"
                             (removed)="removeFinishTypeSelectionOutside(item)">
-                            {{getFinishingTypeText(item)}}
+                            {{item}}
                             <mat-icon matChipRemove>cancel</mat-icon>
                         </mat-chip>
                     </mat-chip-list>
@@ -129,7 +130,7 @@
 
         <div class="col-lg-12">
             <span class="labels">Inside Cover</span>&nbsp;&nbsp;
-            <mat-hint class="font-10px">No. of colours ({{countNoOfColorsInside}})</mat-hint>
+            <mat-hint class="font-10px">No. of colours ({{viewModal.colorTypeInside.length + viewModal.pantoneColourInside.length}})</mat-hint>
         </div>
 
         <div class="col-lg-12 display-flex pl-0 pt-3">
@@ -172,8 +173,8 @@
                                 placeholderLabel="Search..">
                             </ngx-mat-select-search>
                         </mat-option>
-                        <mat-option [value]="item.value" *ngFor="let item of filteredFinishingTypeInside | async">
-                            {{item.text}}
+                        <mat-option [value]="item" *ngFor="let item of filteredFinishingTypeInside | async">
+                            {{item}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -184,7 +185,7 @@
                     <mat-chip-list #finishingChipList class="table-filter-chips">
                         <mat-chip [removable]="true" *ngFor="let item of viewModal.finishingTypeInside"
                             (removed)="removeFinishTypeSelectionInside(item)">
-                            {{getFinishingTypeText(item)}}
+                            {{item}}
                             <mat-icon matChipRemove>cancel</mat-icon>
                         </mat-chip>
                     </mat-chip-list>

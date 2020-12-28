@@ -80,7 +80,7 @@
                     <button mat-button (click)="handleNextEvent()"
                         *ngIf="selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && selectedProductSpecType !== productSpecTypesConstant.CHECK_PRINT_FILE"
                         class="btn btn-primary stepper-next-button">Next</button>
-                    <button mat-button (click)="handleNextEvent()"
+                    <button mat-button (click)="createProductSpec()"
                         *ngIf="selectedProductSpecType === productSpecTypesConstant.UNIT_PRICE || selectedProductSpecType === productSpecTypesConstant.LAYOUT_PREP || selectedProductSpecType === productSpecTypesConstant.CHECK_PRINT_FILE"
                         class="btn btn-primary stepper-next-button">Save</button>
                 </div>

@@ -18,8 +18,13 @@
                             <mat-form-field appearance="fill">
                                 <mat-label>Choose</mat-label>
                                 <mat-select [(ngModel)]="viewModal[i].type">
-                                    <mat-option value="Location1">Front Lay</mat-option>
-                                    <mat-option value="Location2">Location 2</mat-option>
+                                    <mat-option value="Insert">Insert</mat-option>
+                                    <mat-option value="Jacket">Jacket</mat-option>
+                                    <mat-option value="Other Special Instruction">Other Special Instruction</mat-option>
+                                    <mat-option value="Others">Others</mat-option>
+                                    <mat-option value="Slip case">Slip case</mat-option>
+                                    <mat-option value="Sticker">Sticker</mat-option>
+                                    <mat-option value="Tip-In">Tip-In</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -64,7 +69,13 @@
                                     <mat-form-field appearance="fill">
                                         <mat-label>Add Component</mat-label>
                                         <mat-select [(ngModel)]="viewModal[i].componentType">
-                                            <mat-option value="Location1">Front Lay</mat-option>
+                                            <mat-option value="Insert">Insert</mat-option>
+                                            <mat-option value="Jacket">Jacket</mat-option>
+                                            <mat-option value="Other Special Instruction">Other Special Instruction</mat-option>
+                                            <mat-option value="Others">Others</mat-option>
+                                            <mat-option value="Slip case">Slip case</mat-option>
+                                            <mat-option value="Sticker">Sticker</mat-option>
+                                            <mat-option value="Tip-In">Tip-In</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
@@ -88,13 +99,13 @@
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Height(mm)</mat-label>
-                                                <input matInput [(ngModel)]="viewModal[i].height">
+                                                <input matInput [(ngModel)]="viewModal[i].height" type="number" min="0">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Width(mm)</mat-label>
-                                                <input matInput [(ngModel)]="viewModal[i].width">
+                                                <input matInput [(ngModel)]="viewModal[i].width" type="number" min="0">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -111,13 +122,13 @@
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Open Size Height(mm)</mat-label>
-                                                <input matInput [(ngModel)]="viewModal[i].openSizeHeight">
+                                                <input matInput [(ngModel)]="viewModal[i].openSizeHeight" type="number" min="0">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Open Size Width(mm)</mat-label>
-                                                <input matInput [(ngModel)]="viewModal[i].openSizeWidth">
+                                                <input matInput [(ngModel)]="viewModal[i].openSizeWidth" type="number" min="0">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -126,13 +137,13 @@
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Weight(kg)</mat-label>
-                                                <input matInput [(ngModel)]="viewModal[i].weight">
+                                                <input matInput [(ngModel)]="viewModal[i].weight" type="number" min="0">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Spine Width</mat-label>
-                                                <input matInput [(ngModel)]="viewModal[i].spineWidth">
+                                                <input matInput [(ngModel)]="viewModal[i].spineWidth" type="number" min="0">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -145,26 +156,31 @@
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Text Material Weight</mat-label>
-                                                <mat-select [(ngModel)]="viewModal[i].textMaterialWeight">
-                                                    <mat-option [value]="item"
-                                                        *ngFor="let item of coverMaterialWeightList">{{item}}
+                                                <mat-select [(ngModel)]="viewModal[i].textMaterialWeight" (selectionChange)="handleMaterialWeightChange('MATERIALWEIGHT', i)">
+                                                    <mat-option>
+                                                        <ngx-mat-select-search [formControl]="materialWeightFltrCtrl" placeholderLabel="Search..">
+                                                        </ngx-mat-select-search>
                                                     </mat-option>
+                                                    <mat-option [value]="item" *ngFor="let item of filteredMaterialWeightList | async">{{item}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Text Material</mat-label>
-                                                <mat-select [(ngModel)]="viewModal[i].textMaterial">
-                                                    <mat-option value="Offset">Offset</mat-option>
+                                                <mat-select (selectionChange)="handleMaterialWeightChange('MATERIAL', i)" 
+                                                    [(ngModel)]="viewModal[i].textMaterial" 
+                                                    [disabled]="!viewModal[i].textMaterialWeight">
+                                                    <mat-option [value]="item" *ngFor="let item of materialList">{{item}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Material Brand</mat-label>
-                                                <mat-select [(ngModel)]="viewModal[i].materialBrand">
-                                                    <mat-option value="Offset">Offset</mat-option>
+                                                <mat-select [(ngModel)]="viewModal[i].materialBrand"
+                                                    [disabled]="!viewModal[i].textMaterial || !viewModal[i].textMaterialWeight">
+                                                    <mat-option [value]="item" *ngFor="let item of materialBrandList">{{item}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
@@ -174,54 +190,47 @@
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>No. of Colour Extent</mat-label>
-                                                <input matInput [(ngModel)]="viewModal[i].noOfColourExtent">
+                                                <input matInput [(ngModel)]="viewModal[i].noOfColourExtent" type="number" min="0">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>No. of Mono Extent</mat-label>
-                                                <input matInput [(ngModel)]="viewModal[i].noOfMonoExtent">
+                                                <input matInput [(ngModel)]="viewModal[i].noOfMonoExtent" type="number" min="0">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Total Extent</mat-label>
-                                                <input matInput [(ngModel)]="viewModal[i].totalExtent">
+                                                <input matInput [(ngModel)]="viewModal[i].totalExtent" type="number" min="0">
                                             </mat-form-field>
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-12 display-flex pl-0 pt-3">
-                                        <div class="col-lg-3 pr-0">
-                                            <mat-form-field appearance="fill">
-                                                <mat-label>No. of colours</mat-label>
-                                                <mat-select [(ngModel)]="viewModal[i].noOfColours">
-                                                    <mat-option [value]="item" *ngFor="let item of noOfColorsList">
-                                                        {{item}}</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-lg-9">
+                                    <div class="col-lg-12 pb-3 pt-2">
+                                        <mat-hint class="font-10px">No. of colours ({{viewModal[i].pantoneColour.length + viewModal[i].colorType.length}})</mat-hint>
+                                    </div>
+                            
+                                    <div class="col-lg-12 display-flex pl-0">
+                                        <div class="col-lg-4 pr-0">
                                             <div class="color-type-options display-flex pb-4">
                                                 <span *ngFor="let item of colorTypeList"
-                                                    [ngClass]="viewModal[i].colorType.includes(item.text) ? item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
+                                                    [ngClass]="viewModal[i].colorType.includes(item.text) ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"
                                                     (click)="handleColorChange(item.text, i)">{{item.text}}</span>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="col-lg-12 display-flex pl-0 pt-3">
-                                        <div class="col-lg-3 pr-0 chip">
+                                        <div class="col-lg-3">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Pantone Colour (Optional)</mat-label>
-                                                <input matInput (keyup.enter)="addPantoneColour($event, i)">
+                                                <input matInput pattern="(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)"
+                                                    (keyup.enter)="addPantoneColour($event, i)">
                                                 <span matSuffix class="suffix-style">+ ADD</span>
                                             </mat-form-field>
                                         </div>
-                                        <div class="col-lg-9" style="width: 45px;">
+                                        <div class="col-lg-5">
                                             <div class="scroll-bar">
                                                 <mat-chip-list #pantoneColourchipList class="table-filter-chips">
-                                                    <mat-chip [removable]="true"
+                                                    <mat-chip [removable]="true" [ngStyle]="{'background-color': item}"
                                                         *ngFor="let item of viewModal[i].pantoneColour"
                                                         (removed)="removePantoneColourSelection(item, i)">
                                                         {{item}}
@@ -231,6 +240,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-lg-12 pb-2">
                                         <mat-hint class="font-10px">Add multiple pantone colour codes</mat-hint>
                                     </div>
@@ -240,8 +250,8 @@
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Finishing</mat-label>
                                                 <mat-select multiple [(ngModel)]="viewModal[i].finishingType">
-                                                    <mat-option [value]="item.value"
-                                                        *ngFor="let item of finishingTypeList">{{item.text}}
+                                                    <mat-option [value]="item"
+                                                        *ngFor="let item of finishingTypeList">{{item}}
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>
@@ -253,7 +263,7 @@
                                                     <mat-chip [removable]="true"
                                                         *ngFor="let item of viewModal[i].finishingType"
                                                         (removed)="removeFinishTypeSelection(item, i)">
-                                                        {{getFinishingTypeText(item)}}
+                                                        {{item}}
                                                         <mat-icon matChipRemove>cancel</mat-icon>
                                                     </mat-chip>
                                                 </mat-chip-list>

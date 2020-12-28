@@ -18,7 +18,15 @@ export const Endpoints = {
     product: {
         getLiveVersion: 'GetLiveVersion',
         getProductVersions: 'GetProductVersions',
-        getProducts: 'getProducts'
+        getProducts: 'getProducts',
+        getProductGroups: 'GetProductGroups',
+        getPaperMaterial: 'GetPaperMaterials',
+        getFinishingType: 'GetFinishings',
+        getBindingType: 'GetBindings',
+        getSpineWidth: 'GetSpineWidth',
+        getBookWeight: 'GetBookWeight',
+        createProduct: 'CreateProduct',
+        getFileCheckConfig: 'GetFileCheckConfig'
     },
     shopFloor: {
         getMachinesList: 'machines?filter[active]=true&filter[sdcFlag]=true&sort=seq'

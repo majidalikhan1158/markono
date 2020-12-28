@@ -1,34 +1,34 @@
-<mat-table #table [dataSource]="dataSource" class="product-version-table">
+<mat-table #table [dataSource]="store.$productVersionList | async" class="product-version-table">
     <!--- Note that these columns can be defined in any order.
 				The actual rendered columns are set as a property on the row definition" -->
     <!-- Position Column -->
     <ng-container matColumnDef="versionNo">
         <mat-header-cell *matHeaderCellDef> Version no. </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.versionNo}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.VersionNo}} </mat-cell>
     </ng-container>
     <!-- Name Column -->
     <ng-container matColumnDef="dateCreated">
         <mat-header-cell *matHeaderCellDef> Date Created </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.dateCreated | date:'shortDate'}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.CreatedDateTime | date:'shortDate'}} </mat-cell>
     </ng-container>
     <!-- Weight Column -->
     <ng-container matColumnDef="createdBy">
         <mat-header-cell *matHeaderCellDef> Created By </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.createdBy}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.CreatedBy}} </mat-cell>
     </ng-container>
     <!-- Symbol Column -->
     <ng-container matColumnDef="versionDescription">
         <mat-header-cell *matHeaderCellDef> Version Description </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.versionDescription}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.VersionDescription}} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="estimateNo">
+    <!-- <ng-container matColumnDef="estimateNo">
         <mat-header-cell *matHeaderCellDef> Estimate No. </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.estimateNo}} </mat-cell>
-    </ng-container>
+    </ng-container> -->
     <ng-container matColumnDef="isSpecsInView">
         <mat-header-cell *matHeaderCellDef> Specs in View </mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <mat-radio-button [checked]="element.isSpecsInView"></mat-radio-button>
+            <mat-radio-button [checked]="false"></mat-radio-button>
         </mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

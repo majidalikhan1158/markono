@@ -5,18 +5,17 @@ import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.servic
 import {
   CreateCaseMode,
   CreateCaseDataType,
-  RecordType,
   CreateCaseSteps,
 } from 'src/app/modules/shared/enums/app-enums';
 import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
 import { CaseTypes } from 'src/app/modules/shared/enums/case-management/case-contants';
 import { OrderService } from 'src/app/modules/services/core/services/order.service';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
-import { debounceTime, finalize, switchMap, tap } from 'rxjs/operators';
 import { ViewChild } from '@angular/core';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatRadioChange } from '@angular/material/radio';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-customer-info',
@@ -39,6 +38,7 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   isLoading = false;
   previousValue = '';
   selectedCaseType = '';
+  matAutoCompleteSubscription: Subscription;
   constructor(
     private modalService: ModalService,
     private store: CaseStore,
@@ -63,13 +63,14 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
 
   handleCustomerSearch() {
     if (this.customerInfoVM.customerId !== '' && this.customerInfoVM.customerId !== this.previousValue) {
+      this.matAutoCompleteSubscription?.unsubscribe();
       this.customerDetailVMList = [];
       this.ref.detectChanges();
       this.previousValue = this.customerInfoVM.customerId;
       this.isLoading = true;
       setTimeout(_ => this.trigger.openPanel());
       // call api to get customer results
-      this.orderService.getCustomerDetail({sellToNo: this.customerInfoVM.customerId}).subscribe(resp => {
+      this.matAutoCompleteSubscription = this.orderService.getCustomerDetail({sellToNo: this.customerInfoVM.customerId}).subscribe(resp => {
         const details = resp.body as unknown as CustomerDetailVM[];
         this.customerDetailVMList = details && details.length > 0 ? details : [];
         this.isLoading = false;

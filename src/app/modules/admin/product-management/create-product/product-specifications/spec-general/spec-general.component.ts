@@ -5,23 +5,26 @@ import {
   EventEmitter,
   Output,
   OnDestroy,
+  ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
 import {
   AddRemoveSpecTypeEvent,
   AdditionalSpecTypes,
-  SelectionList,
 } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import {
   ProductSpecificationTypes,
-  ProductTypeList,
   ProductTypes
 } from 'src/app/modules/shared/enums/product-management/product-constants';
-import { GeneralVM } from 'src/app/modules/shared/models/product-spec';
+import { GeneralVM, IsbnOwner } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject, Subscription } from 'rxjs';
+import { ProductGroupDDL } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { OrderService } from '../../../../../services/core/services/order.service';
 @Component({
   selector: 'app-spec-general',
   templateUrl: './spec-general.component.html',
@@ -30,23 +33,66 @@ import { ReplaySubject, Subject } from 'rxjs';
 })
 export class SpecGeneralComponent implements OnInit, OnDestroy {
   @Output() productSpecTypeEvent = new EventEmitter<AddRemoveSpecTypeEvent>();
+  @ViewChild('trigger') trigger: MatAutocompleteTrigger;
   productSpecTypesConstant = ProductSpecificationTypes;
   additionalSpecTypes: AdditionalSpecTypes = {
     addwebCode: false,
     addDVDCD: false,
     addChildIsbn: false,
   };
-  productTypeList: SelectionList[] = ProductTypeList;
+  productTypeList: ProductGroupDDL[] = [];
   productTypes = ProductTypes;
   generalVM: GeneralVM;
   productTypeFltrCtrl: FormControl = new FormControl();
-  filteredProductType: ReplaySubject<SelectionList[]> = new ReplaySubject<SelectionList[]>(1);
+  filteredProductType: ReplaySubject<ProductGroupDDL[]> = new ReplaySubject<ProductGroupDDL[]>(1);
   protected onDestroy = new Subject<void>();
-  constructor(private store: ProductSpecStore) { }
+  subscription: Subscription;
+  isbnOwnerSearchCtrl = new FormControl();
+  previousValue = '';
+  isbnOwnerList: IsbnOwner[];
+  isLoading = false;
+  matAutoCompleteSubscription: Subscription;
+  constructor(public store: ProductSpecStore, private ref: ChangeDetectorRef, private orderService: OrderService) { }
 
   ngOnInit(): void {
+    this.getApisData();
     this.getDefaultRecord();
     this.handleFilterAutoComplete();
+  }
+
+  handleCustomerSearch() {
+    if (this.generalVM.isbnOwner !== '' && this.generalVM.isbnOwner !== this.previousValue && this.generalVM.isbnOwner.length >= 3) {
+      this.matAutoCompleteSubscription?.unsubscribe();
+      this.isbnOwnerList = [];
+      this.ref.detectChanges();
+      this.previousValue = this.generalVM.isbnOwner;
+      this.isLoading = true;
+      setTimeout(_ => this.trigger.openPanel());
+      // call api to get customer results
+      this.matAutoCompleteSubscription = this.orderService.getCustomerDetail({sellToNo: this.generalVM.isbnOwner}).subscribe(resp => {
+        const details = resp.body as unknown as IsbnOwner[];
+        this.isbnOwnerList = details && details.length > 0 ? details : [];
+        this.isLoading = false;
+        this.ref.detectChanges();
+      }, (err) => {
+        this.isbnOwnerList = [];
+        this.isLoading = false;
+        this.ref.detectChanges();
+      });
+
+    }
+  }
+
+  handleSelectedIsbnOwner = (isbnOwner: string) => {
+    if (isbnOwner === '0') {
+      setTimeout(_ => this.trigger.openPanel());
+      return;
+    }
+    this.generalVM.isbnOwner = isbnOwner;
+  }
+
+  displayFn(isbnOwner: string) {
+    if (isbnOwner) { return isbnOwner; }
   }
 
   handleSpecAddToggle(productSpecType: string) {
@@ -124,8 +170,22 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
     }
     // filter the banks
     this.filteredProductType.next(
-      this.productTypeList.filter(item => item.text.toLowerCase().indexOf(search) > -1)
+      this.productTypeList.filter(item => item.ProductName.toLowerCase().indexOf(search) > -1)
     );
+  }
+
+  getApisData = () => {
+  }
+
+  handlePrintTypeChange = () => {
+    this.store.getProductGroupList(this.generalVM);
+  }
+
+  shouldShowJournalFields = () => {
+    this.store.$productGroupList.subscribe(list => {
+      const obj = list.find(x => x.ProductName === this.generalVM.productType);
+      this.store.setShouldShowJournalFields(obj?.ProductName.toLowerCase() === this.productTypes.JOURNALS.toLowerCase());
+    });
   }
 
   ngOnDestroy(): void {

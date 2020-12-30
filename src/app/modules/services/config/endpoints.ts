@@ -26,7 +26,8 @@ export const Endpoints = {
         getSpineWidth: 'GetSpineWidth',
         getBookWeight: 'GetBookWeight',
         createProduct: 'CreateProduct',
-        getFileCheckConfig: 'GetFileCheckConfig'
+        getFileCheckConfig: 'GetFileCheckConfig',
+        getCreateCheckPrintFile: 'CreateFileCheck'
     },
     shopFloor: {
         getMachinesList: 'machines?filter[active]=true&filter[sdcFlag]=true&sort=seq'

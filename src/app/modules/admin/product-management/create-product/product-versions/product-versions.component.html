@@ -1,4 +1,4 @@
-<mat-table #table [dataSource]="store.$productVersionList | async" class="product-version-table">
+<mat-table #table [dataSource]="productVersionList" class="product-version-table">
     <!--- Note that these columns can be defined in any order.
 				The actual rendered columns are set as a property on the row definition" -->
     <!-- Position Column -->
@@ -28,7 +28,7 @@
     <ng-container matColumnDef="isSpecsInView">
         <mat-header-cell *matHeaderCellDef> Specs in View </mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <mat-radio-button [checked]="false"></mat-radio-button>
+            <mat-radio-button (change)="handleVersionSelection(element.Id)" [checked]="false"></mat-radio-button>
         </mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

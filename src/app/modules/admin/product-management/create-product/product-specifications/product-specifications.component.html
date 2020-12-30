@@ -37,7 +37,7 @@
             </mat-selection-list>
         </mat-accordion>
     </div>
-    <div class="col-lg-10 product-spec-details pt-4" style="min-width: 87%;">
+    <div class="col-lg-10 product-spec-details pt-4">
         <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.GENERAL">
             <app-spec-general (productSpecTypeEvent)="addProductSpecType($event)"></app-spec-general>
         </ng-container>

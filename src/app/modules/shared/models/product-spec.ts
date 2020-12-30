@@ -1,4 +1,4 @@
-import { ChildIsbnModal } from '../../services/shared/classes/product-modals/product-modals';
+import { ChildIsbnModal, ProductVersions } from '../../services/shared/classes/product-modals/product-modals';
 export interface ProductSpecListVM {
   id: number;
   isbn: string;
@@ -191,8 +191,9 @@ export class ProductSpecStoreVM {
   otherVM: OtherVM[];
   checkPrintFileVM: CheckPrintFileVM;
   unitPriceVM: UnitPriceVM;
-  productSpecVM: ProductSpecListVM;
+  selectedVersion: ProductVersions;
 }
+
 export interface CoverVM {
   id: number;
   coverMaterialWeight: string;
@@ -254,27 +255,6 @@ export interface CheckPrintQA {
 export interface CheckPrintFileVM {
   id: number;
   fileCheckIds: number [];
-  correctTitleISBN_Cover: boolean;
-  securityAllowedToChange_Cover: boolean;
-  correctTrimSize_Cover: boolean;
-  coverFormatMatch_Cover: boolean;
-  correctPrintingColor_Cover: boolean;
-  sufficientBleed_Cover: boolean;
-  fontEmbeddedOrOutlined_Cover: boolean;
-  imageResolutionLess300dpi_Cover: boolean;
-  lineThicknessless0088_Cover: boolean;
-  haveFinishingFiles_Cover: boolean;
-  enoughUniqueCodeQty_Cover: boolean;
-  correctSpineWidth_Cover: boolean;
-  securityAllowedToChange_Text: boolean;
-  correctExtent_Text: boolean;
-  correctTrimSize_Text: boolean;
-  correctPrintingColor_Text: boolean;
-  correctISBN_Text: boolean;
-  sufficientBleed_Text: boolean;
-  fontEmbeddedOrOutlined_Text: boolean;
-  imageResolutionLess300dpi_Text: boolean;
-  knownInsertOrStickerLocation_Text: boolean;
   checkBoxApproval: boolean;
   coverFile: any;
   textFile: any;

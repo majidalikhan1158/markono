@@ -15,7 +15,7 @@ import {
   CheckPrintFileVM,
   UnitPriceVM,
 } from '../models/product-spec';
-import { ProductGroupDDL, MaterialDataList, ProductVersions, SpineWidthThicknessParamHistory, SpineWidthParamHistory, FileCheckConfig } from '../../services/shared/classes/product-modals/product-modals';
+import { ProductGroupDDL, MaterialDataList, ProductVersions, SpineWidthThicknessParamHistory, SpineWidthParamHistory, FileCheckConfig, ProductSpecsList } from '../../services/shared/classes/product-modals/product-modals';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +23,7 @@ import { ProductGroupDDL, MaterialDataList, ProductVersions, SpineWidthThickness
 export class ProductSpecStore {
   public productSpecStore: Observable<ProductSpecStoreVM>;
   private productSpecStoreSubject = new BehaviorSubject<ProductSpecStoreVM>(new ProductSpecStoreVM());
+  private currentProductSpecSelectedSubject = new BehaviorSubject<ProductSpecsList>(null);
 
   private currentProductSpecStoreState: ProductSpecStoreVM;
   private showJournaFieldsSubject = new BehaviorSubject<boolean>(false);
@@ -33,6 +34,7 @@ export class ProductSpecStore {
   private spineWidthThicknessParamHistorySubject = new BehaviorSubject<SpineWidthThicknessParamHistory>(null);
   private spineWidthParamHistorySubject = new BehaviorSubject<SpineWidthParamHistory>(null);
   private spinWidthThicknessSubject = new BehaviorSubject<number>(0);
+  private productIdSubject = new BehaviorSubject<string>('');
 
   public $showJournaFields: Observable<boolean>;
   public $productGroupList: Observable<ProductGroupDDL[]>;
@@ -42,6 +44,8 @@ export class ProductSpecStore {
   public $spineWidthParamHistory: Observable<SpineWidthParamHistory>;
   public $spinWidthThickness: Observable<number>;
   public $fileCheckConfig: Observable<FileCheckConfig[]>;
+  public $productId: Observable<string>;
+  public $currentProductSpecSelected: Observable<ProductSpecsList>;
 
   private coverMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private textMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
@@ -94,6 +98,8 @@ export class ProductSpecStore {
     this.$spineWidthThicknessParamHistory = this.spineWidthThicknessParamHistorySubject.asObservable();
     this.$spinWidthThickness = this.spinWidthThicknessSubject.asObservable();
     this.$fileCheckConfig = this.fileCheckConfigListSubject.asObservable();
+    this.$productId = this.productIdSubject.asObservable();
+    this.$currentProductSpecSelected = this.currentProductSpecSelectedSubject.asObservable();
 
     this.productSpecStore.subscribe((data) => {
       this.currentProductSpecStoreState = data;
@@ -210,6 +216,19 @@ export class ProductSpecStore {
   private setUnitPriceVM = (data: UnitPriceVM) => {
     this.currentProductSpecStoreState.unitPriceVM = data;
     this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
+  }
+
+  setSelectedVersion = (selectedVersion: ProductVersions) => {
+    this.currentProductSpecStoreState.selectedVersion = selectedVersion;
+    this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
+  }
+
+  setProductId = (productId: string) => {
+    this.productIdSubject.next(productId);
+  }
+
+  setCurrentProductSpecSelectedSubject = (product: ProductSpecsList) => {
+    this.currentProductSpecSelectedSubject.next(product);
   }
 
   /** PRODUCT SPEC UI observables */

@@ -4,19 +4,25 @@ import {
   ViewChild,
   AfterViewInit,
   ViewEncapsulation,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { ProductSpecListVM } from 'src/app/modules/shared/models/product-spec';
-import { ProductSpecMockDataList } from 'src/app/modules/shared/mock-data/product-spec-data-list';
 import {
   ProductSpecFilters,
   ProductSpecFilterTypes,
 } from 'src/app/modules/shared/models/table-filter-modals';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 import { UIModalID } from 'src/app/modules/shared/enums/app-constants';
-import { Router } from '@angular/router';
+import { Router, ResolveEnd } from '@angular/router';
 import { PrintingTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
+import { ProductService } from '../../../services/core/services/product.service';
+import { ProductSpecsList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
+import { SnackBarService } from '../../../shared/ui-services/snack-bar.service';
+import { ProductSpecStore } from '../../../shared/ui-services/product-spec.service';
+import { Subscription } from 'rxjs';
+import { OnDestroy } from '@angular/core';
+import { ProductSpecHelperService } from '../../../shared/enums/helpers/product-spec-helper.service';
 
 @Component({
   selector: 'app-product-spec-list',
@@ -24,36 +30,29 @@ import { PrintingTypes } from 'src/app/modules/shared/enums/product-management/p
   styleUrls: ['./product-spec-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ProductSpecListComponent implements OnInit, AfterViewInit {
+export class ProductSpecListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  displayedColumns: string[] = [
-    'id',
-    'isbn',
-    'productTitle',
-    'dateCreated',
-    'createdBy',
-    'isbnOwner',
-    'printingType',
-    'version',
-  ];
-  dataArray = ProductSpecMockDataList;
+  displayedColumns: string[] = ['id', 'isbn', 'productTitle', 'dateCreated', 'createdBy', 'isbnOwner', 'printingType', 'version'];
+  dataArray: ProductSpecsList[];
   dataSource;
-  tableFilters: ProductSpecFilters = {
-    createdDate: '',
-    printingType: '',
-    createdBy: '',
-    isbnOwner: '',
-    currentSelectedFilter: ''
-  };
+  tableFilters: ProductSpecFilters;
   tableFilterTypes = ProductSpecFilterTypes;
   printingTypes = PrintingTypes;
   selectedPrintingType = '';
   globalFilter = '';
-  constructor(private modalService: ModalService, private router: Router) {
-    this.dataSource = new MatTableDataSource<ProductSpecListVM>(this.dataArray);
+  subscription: Subscription;
+  constructor(private modalService: ModalService,
+              private router: Router,
+              private productService: ProductService,
+              private cd: ChangeDetectorRef,
+              private snack: SnackBarService,
+              private store: ProductSpecStore,
+              private helper: ProductSpecHelperService) {
+    this.tableFilters  = { createdDate: '', printingType: '', createdBy: '', isbnOwner: '', currentSelectedFilter: ''};
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.getProductSpecList();
     this.modalService.modalToBeOpen.subscribe(modalId => {
       if (modalId && modalId === UIModalID.ADD_PRODUCT_SPEC_MODAL) {
         this.modalService.open(modalId);
@@ -61,9 +60,18 @@ export class ProductSpecListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
+  getProductSpecList = () => {
+    this.subscription = this.productService.getProductSpecList().subscribe(resp => {
+      this.dataArray = resp.body.result ? resp.body.result as ProductSpecsList[] : [];
+      this.initializeDatatable();
+    });
+  }
+
+  initializeDatatable = () => {
+    this.dataSource = new MatTableDataSource<ProductSpecsList>(this.dataArray);
     this.dataSource.paginator = this.paginator;
     this.dataSource.filterPredicate = this.customFilterPredicate();
+    this.cd.detectChanges();
   }
 
   applySearch(event: Event) {
@@ -94,7 +102,7 @@ export class ProductSpecListComponent implements OnInit, AfterViewInit {
 
   customFilterPredicate() {
     const myFilterPredicate = (
-      data: ProductSpecListVM,
+      data: ProductSpecsList,
       filter: string
     ): boolean => {
       let globalMatch = !this.globalFilter;
@@ -106,12 +114,12 @@ export class ProductSpecListComponent implements OnInit, AfterViewInit {
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.productTitle
+          data.productDescription
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          new Date(data.dateCreated)
+          new Date(data.createdDateTime)
             .toLocaleDateString()
             .toString()
             .trim()
@@ -127,12 +135,12 @@ export class ProductSpecListComponent implements OnInit, AfterViewInit {
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.printingType
+          data.printType
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.version
+          data.versionNo
             .toString()
             .trim()
             .toLowerCase()
@@ -148,7 +156,7 @@ export class ProductSpecListComponent implements OnInit, AfterViewInit {
       if (this.tableFilters.createdDate !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          new Date(data.dateCreated)
+          new Date(data.createdDateTime)
             .toLocaleDateString()
             .trim()
             .indexOf(
@@ -159,7 +167,7 @@ export class ProductSpecListComponent implements OnInit, AfterViewInit {
       if (this.tableFilters.printingType !== '') {
         filterCounter++;
         matchedFilters = matchedFilters +  (
-          data.printingType
+          data.printType
             .toString()
             .trim()
             .toLowerCase()
@@ -199,4 +207,31 @@ export class ProductSpecListComponent implements OnInit, AfterViewInit {
   }
 
   handleModalRejectEvent(modalId: string) {}
+
+  goToDetails = (productId: string) => {
+    const product = this.dataArray.find(x => x.id === productId);
+    if (!product) {
+      this.snack.open('Unable to fetch details');
+      return;
+    }
+
+    // add to observable. current product record
+    // this.store.setCurrentProductSpecSelectedSubject(product);
+    // listen at create component.
+    const reqObj = {
+      isbn: product.isbn,
+      VersionNo: product.versionNo
+    };
+    this.productService.getProductDetails(reqObj).subscribe(resp => {
+      if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
+        const productDetails = resp.body.result[0];
+        const transformedProduct = this.helper.transProductDetailToVM(productDetails);
+      }
+    });
+    this.router.navigate(['admin/product-management/create']);
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
+  }
 }

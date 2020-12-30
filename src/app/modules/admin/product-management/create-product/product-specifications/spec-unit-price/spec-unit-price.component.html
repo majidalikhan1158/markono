@@ -9,7 +9,7 @@
 
         <div class="col-sm-12">
 
-            <mat-radio-group class="pt-3  display-flex-direction-column" [(ngModel)]="viewModal.priceType">
+            <mat-radio-group class="pt-3  display-flex-direction-column" [(ngModel)]="viewModal.priceType" (change)="handleUnitPriceChange()">
                 <mat-radio-button value="FIXED_PRICE">
                     Fixed Price
                 </mat-radio-button>
@@ -17,7 +17,7 @@
                 <div class="col-lg-3 pl-8 pt-3 pb-2">
                     <mat-form-field appearance="fill">
                         <mat-label>Enter Fixed Price</mat-label>
-                        <input matInput [(ngModel)]="viewModal.fixedPrice">
+                        <input matInput [(ngModel)]="viewModal.fixedPrice" (change)="handleUnitPriceChange()">
                     </mat-form-field>
                 </div>
                 <mat-radio-button value="PRICE_SCALE">

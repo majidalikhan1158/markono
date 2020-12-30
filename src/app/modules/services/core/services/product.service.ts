@@ -19,7 +19,7 @@ export class ProductService {
     private helper: HelperService
   ) { }
 
-  public getLiveVersion = (
+  getLiveVersion = (
     modal: ProductDetailsVM
   ): Observable<HttpResponse<ResponseModal>> => {
     const url = this.helper.createUrlWithQueryParameters(
@@ -32,7 +32,7 @@ export class ProductService {
     return this.http.get(url);
   }
 
-  public getProductVersions = (isbn: string): Observable<HttpResponse<ResponseModal>> => {
+  getProductVersions = (isbn: string): Observable<HttpResponse<ResponseModal>> => {
     const url = this.helper.createUrlWithQueryParameters(
       this.endPoint.getProductVersionUrl(),
       (qs: QueryStringParameters) => {
@@ -42,7 +42,7 @@ export class ProductService {
     return this.http.get(url);
   }
 
-  public getProducts = (isbn: string, versionNo: string, expand: string): Observable<HttpResponse<ResponseModal>> => {
+  getProducts = (isbn: string, versionNo: string, expand: string): Observable<HttpResponse<ResponseModal>> => {
     const url = this.helper.createUrlWithQueryParameters(
       this.endPoint.getProductsUrl(),
       (qs: QueryStringParameters) => {
@@ -113,6 +113,13 @@ export class ProductService {
     return this.http.get(decodeURI(urlWithParams));
   }
 
+  getUserFileCheck = (productId: string): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getFileCheckUrl();
+    const queryParams = `$filter=ProductId eq ${productId} &amp;$expand=fileCheckConfig($select=component,question,remark)`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
   getSpineWidth = (reqObj: SpineWidthParamHistory): Observable<HttpResponse<ProductResponseModal>> => {
     const obj = {
       noOfColourExtent: reqObj.noOfColourExtent,
@@ -130,8 +137,33 @@ export class ProductService {
   }
 
   createProduct = (reqObj: any): Observable<HttpResponse<any>> => {
-    const url = this.endPoint.createProductUrl();
+    const url = this.endPoint.getCreateProductUrl();
     return this.http.post(url, reqObj);
   }
 
+  getProductId = (reqObj) => {
+    const url = this.endPoint.getProductsUrl();
+    const queryParams = `$filter=isbn eq '${reqObj.ISBN}' and versionNo eq '${reqObj.versionNo}'
+     &$select=id`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  createCheckPrintFile = (reqObj: any): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getCreateCheckPrintFileUrl();
+    return this.http.post(url, reqObj);
+  }
+
+  getProductSpecList = (): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getProductsUrl();
+    return this.http.get(url);
+  }
+
+  getProductDetails = (reqObj: any): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getProductsUrl();
+    const queryParams = `$expand=productDetail,productWebCode,productAdditionalComponent,productVolumeSet,productCD($expand=ProductCDComponent)&
+    $filter=isbn eq '${reqObj.isbn}' and VersionNo eq '${reqObj.VersionNo}'`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
 }

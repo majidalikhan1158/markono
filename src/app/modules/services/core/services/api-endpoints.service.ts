@@ -77,9 +77,15 @@ export class ApiEndpointsService {
   getBookWeightUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getBookWeight}`
 
-  createProductUrl = () =>
+  getCreateProductUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.createProduct}`
 
   getFileCheckConfigUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getFileCheckConfig}`
+
+  getCreateCheckPrintFileUrl = () =>
+   `${this.getProductServicesEndpoint()}${Endpoints.product.getCreateCheckPrintFile}`
+
+  getFileCheckUrl = () =>
+   `${this.getProductServicesEndpoint()}${Endpoints.product.getFileCheck}`
 }

@@ -125,7 +125,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
       id: 1,
       productNumber: '',
       printingType: '',
-      productType: '',
+      productType: 0,
       externalPartNo: '',
       isbnOwner: '',
       journalTitleCode: '',
@@ -144,6 +144,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
       isChildIsbnAdded: false,
       isDvdAdded: false,
       isWebcodeAdded: false,
+      versionNo: ''
     };
   }
 
@@ -183,7 +184,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
 
   shouldShowJournalFields = () => {
     this.store.$productGroupList.subscribe(list => {
-      const obj = list.find(x => x.ProductName === this.generalVM.productType);
+      const obj = list.find(x => x.Id.toString() === this.generalVM.productType.toString());
       this.store.setShouldShowJournalFields(obj?.ProductName.toLowerCase() === this.productTypes.JOURNALS.toLowerCase());
     });
   }

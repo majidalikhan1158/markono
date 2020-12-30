@@ -138,10 +138,18 @@ export class SpecUnitPriceComponent implements OnInit, OnDestroy {
     };
   }
 
-  ngOnDestroy(): void {
+  handleUnitPriceChange = () => {
+    this.saveToStore();
+  }
+
+  saveToStore = () => {
     this.store.setProductSpecStore(
       this.viewModal,
       ProductSpecTypes.UNIT_PRICE
     );
+  }
+
+  ngOnDestroy(): void {
+    this.saveToStore();
   }
 }

@@ -32,6 +32,7 @@ export interface ProductVersions {
     CreatedDateTime: string;
     CreatedBy: string;
     VersionDescription: string;
+    active: boolean;
 }
 
 
@@ -60,4 +61,38 @@ export interface FileCheckConfig {
     updatedDateTime: string;
     updatedBy: string;
     toggleLabel: boolean;
+}
+
+export interface UserFileCheckConfig {
+    fileCheckConfigId: number;
+    checked: boolean;
+}
+
+export interface ProductSpecsList {
+    activeVersion: boolean;
+    createdBy: string;
+    createdDateTime: Date;
+    deleted: boolean;
+    externalPartNo: string;
+    isbn: string;
+    isbnOwner: string;
+    printType: string;
+    productDescription: string;
+    productGroup: string;
+    productGroupName: string;
+    layoutReady: boolean;
+    statusCode: number;
+    status: string;
+    updatedDateTime: Date;
+    versionNo: string;
+    versionDescription: string;
+    updatedBy: string;
+    fileChecked: boolean;
+    completeSetup: any;
+    productDetail: string;
+    productWebCode: string;
+    productVolumeSet: string;
+    productAdditionalComponent: string;
+    productCD: string;
+    id: string;
 }

@@ -4,6 +4,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { CreateProductTabs } from 'src/app/modules/shared/enums/app-constants';
+import { OnDestroy } from '@angular/core';
+import { ProductSpecStore } from '../../../shared/ui-services/product-spec.service';
 
 @Component({
   selector: 'app-create-product',
@@ -11,10 +13,13 @@ import { CreateProductTabs } from 'src/app/modules/shared/enums/app-constants';
   styleUrls: ['./create-product.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CreateProductComponent implements OnInit {
+export class CreateProductComponent implements OnInit, OnDestroy {
   createProductTabs = CreateProductTabs;
-  constructor() {
+  constructor(private store: ProductSpecStore) {
 
+  }
+  ngOnDestroy(): void {
+    this.store.reset();
   }
 
   ngOnInit(): void {

@@ -50,27 +50,6 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
     return {
       id: 1,
       fileCheckIds: [],
-      correctTitleISBN_Cover: false,
-      securityAllowedToChange_Cover: false,
-      correctTrimSize_Cover: false,
-      coverFormatMatch_Cover: false,
-      correctPrintingColor_Cover: false,
-      sufficientBleed_Cover: false,
-      fontEmbeddedOrOutlined_Cover: false,
-      imageResolutionLess300dpi_Cover: false,
-      lineThicknessless0088_Cover: false,
-      haveFinishingFiles_Cover: false,
-      enoughUniqueCodeQty_Cover: false,
-      correctSpineWidth_Cover: false,
-      securityAllowedToChange_Text: false,
-      correctExtent_Text: false,
-      correctTrimSize_Text: false,
-      correctPrintingColor_Text: false,
-      correctISBN_Text: false,
-      sufficientBleed_Text: false,
-      fontEmbeddedOrOutlined_Text: false,
-      imageResolutionLess300dpi_Text: false,
-      knownInsertOrStickerLocation_Text: false,
       checkBoxApproval: false,
       coverFile: null,
       textFile: null,
@@ -84,6 +63,8 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
     } else {
       this.viewModal.fileCheckIds.push(id);
     }
+
+    this.saveToStore();
   }
 
   handleFileInput = (files: FileList, type: string) => {
@@ -112,7 +93,10 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log(this.viewModal);
+    this.saveToStore();
+  }
+
+  saveToStore = () => {
     this.store.setProductSpecStore(
       this.viewModal,
       ProductSpecTypes.CHECK_PRINT_FILE

@@ -1,7 +1,8 @@
 import { ChildIsbnModal } from './../../../services/shared/classes/product-modals/product-modals';
 import { Injectable } from '@angular/core';
-import { WebCodeVM, DVDVM, OtherVM, GeneralVM, CoverVM, TextVM, BindingVM } from '../../models/product-spec';
-import { BindingType } from '../product-management/product-constants';
+import { WebCodeVM, DVDVM, OtherVM, GeneralVM, CoverVM, TextVM, BindingVM, ChildIsbnVM, UnitPriceVM } from '../../models/product-spec';
+import { BindingType, ProductSpecificationTypes } from '../product-management/product-constants';
+import { ProductSpecStore } from '../../ui-services/product-spec.service';
 import {
   BindingTypeCaseBound,
   BindingTypeFolding,
@@ -11,12 +12,14 @@ import {
   BindingTypeWireoBinding,
   ProductSpecStoreVM,
 } from '../../models/product-spec';
+import { ProductSpecTypes } from '../app-enums';
+import { parse } from 'path';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductSpecHelperService {
-  constructor() { }
+  constructor(private store: ProductSpecStore) { }
 
   getCaseBoundTypeObject = (): BindingTypeCaseBound => {
     return {
@@ -283,7 +286,8 @@ export class ProductSpecHelperService {
             endpaperNoOfColourExtent: this.getNumber(item.bindingVM?.caseBound?.noOfColourExtent),
             endpaperNoOfMonoExtent: this.getNumber(item.bindingVM?.caseBound?.noOfMonoExtent),
             endpaperTotalExtent: this.getNumber(item.bindingVM?.caseBound?.totalExtent),
-            endpaperNoOfColours: this.getNumber(item.bindingVM?.caseBound?.pantoneColour.length + item.bindingVM?.caseBound?.colorType.length),
+            endpaperNoOfColours: this.getNumber(item.bindingVM?.caseBound?.pantoneColour.length +
+              item.bindingVM?.caseBound?.colorType.length),
             endpaperSelectedColours: this.getString(item.bindingVM?.caseBound?.colorType?.join(',')),
             endpaperPantoneColours: item.bindingVM?.caseBound?.pantoneColour?.length > 0 ? true : false,
             // this.getString(item.bindingVM?.caseBound?.pantoneColour?.join(',')),
@@ -406,6 +410,46 @@ export class ProductSpecHelperService {
     const textVM = this.getTextVM(product);
     const bindingVM = this.getBindingVM(product);
     const webcodeVM = this.getWebcodeVM(product);
+    const childIsbnVM = this.getChildIsbnVM(product);
+    const dvdcdVM = this.getDVDCDVM(product);
+    const unitPriceVM = this.getUnitPriceVM(product);
+
+    this.store.getFileCheckConfig();
+
+    this.store.setProductSpecStore(generalVM, ProductSpecTypes.GENERAL);
+    this.store.setProductSpecStore(coverVM, ProductSpecTypes.COVER);
+    this.store.setProductSpecStore(textVM, ProductSpecTypes.TEXT);
+    this.store.setProductSpecStore(bindingVM, ProductSpecTypes.BINDING);
+    this.store.setProductSpecStore(webcodeVM, ProductSpecTypes.WEBCODE);
+    this.store.setProductSpecStore(childIsbnVM, ProductSpecTypes.CHILD_ISBN);
+    this.store.setProductSpecStore(dvdcdVM, ProductSpecTypes.DVD_CD);
+    this.store.setProductSpecStore(unitPriceVM, ProductSpecTypes.UNIT_PRICE);
+
+    this.store.getProductGroupList(generalVM);
+
+    this.store.getUserCheckFile(product.Id);
+
+    if (coverVM.coverType === '4pp cover') {
+      this.store.getCoverMaterialWeight('Cover',  ProductSpecTypes.COVER);
+      this.store.getFinishingTypes('Cover', ProductSpecTypes.COVER);
+    }
+
+    this.store.getCoverMaterialWeight('Text', ProductSpecTypes.TEXT);
+    this.store.getFinishingTypes('Text', ProductSpecTypes.TEXT);
+
+    this.store.getCoverMaterialWeight('SlipCase', ProductSpecTypes.CHILD_ISBN);
+    this.store.getFinishingTypes('SlipCase', ProductSpecTypes.CHILD_ISBN);
+
+    this.store.getCoverMaterialWeight('Endpaper', ProductSpecTypes.BINDING);
+    this.store.getFinishingTypes('Endpaper', ProductSpecTypes.BINDING);
+
+    this.store.getCoverMaterialWeight('Endpaper', ProductSpecTypes.OTHER_COMPONENT);
+    this.store.getFinishingTypes('Endpaper', ProductSpecTypes.OTHER_COMPONENT);
+
+    this.store.getCoverMaterialWeight('Endpaper', ProductSpecTypes.BINDING_DVD_CD);
+    this.store.getFinishingTypes('Endpaper', ProductSpecTypes.BINDING_DVD_CD);
+
+    this.store.setShouldShowJournalFields(generalVM?.productType === 11);
   }
 
   getGeneralVM = (product: any): GeneralVM => {
@@ -414,11 +458,10 @@ export class ProductSpecHelperService {
       id: 1,
       productNumber: product?.ISBN ?? '',
       printingType: product?.PrintType ?? '',
-      productType: product?.ProductGroup ?? '',
+      productType:  parseInt(product?.ProductGroup) ?? 0,
       externalPartNo: product?.ExternalPartNo ?? '',
       isbnOwner: product?.ISBNOwner ?? '',
       productDescription: product?.ProductDescription ?? '',
-
       journalTitleCode: p?.JournalTitleCode ?? '',
       volume: p?.JournalVolume ?? '',
       issue: p?.JournalIssue ?? '',
@@ -433,7 +476,8 @@ export class ProductSpecHelperService {
       spinWidth: p?.SpineWidth  ?? 0,
       isChildIsbnAdded: p?.AnyChildISBN  ?? false,
       isDvdAdded: p?.AnyCD ?? false,
-      isWebcodeAdded: p?.AnyWebCode ?? false
+      isWebcodeAdded: p?.AnyWebCode ?? false,
+      versionNo: product?.VersionNo ?? ''
     };
   }
 
@@ -449,12 +493,12 @@ export class ProductSpecHelperService {
       noOfMonoExtent: 0,
       totalExtent: 0,
       noOfColours: 0,
-      colorTypeOutside: p?.CvrOutsideSelectedColours?.toString().split(',') ?? [],
-      colorTypeInside: p?.CvrInsideSelectedColours?.toString().split(',') ?? [],
-      pantoneColourInside: p?.CvrInsidePantoneColoursNo?.toString().split(',') ?? [],
-      pantoneColourOutside: p?.CvrOutsidePantoneColoursNo?.toString().split(',') ?? [],
-      finishingTypeOutside: p?.CvrOutsideFinishing?.toString().split(',') ?? [],
-      finishingTypeInside: p?.CvrInsideFinishing?.toString().split(',') ?? [],
+      colorTypeOutside: this.getStringArray(p?.CvrOutsideSelectedColours?.toString()),
+      colorTypeInside: this.getStringArray(p?.CvrInsideSelectedColours?.toString()),
+      pantoneColourInside: this.getStringArray(p?.CvrInsidePantoneColoursNo?.toString()),
+      pantoneColourOutside: this.getStringArray(p?.CvrOutsidePantoneColoursNo?.toString()),
+      finishingTypeOutside: this.getStringArray(p?.CvrOutsideFinishing?.toString()),
+      finishingTypeInside: this.getStringArray(p?.CvrInsideFinishing?.toString()),
       specialInstructions: p?.CvrSpecialInstruction ?? ''
     };
   }
@@ -470,9 +514,9 @@ export class ProductSpecHelperService {
       noOfMonoExtent: p?.TxtNoOfMonoExtent ?? 0,
       totalExtent: p?.TxtTotalExtent ?? 0,
       noOfColours: p?.TxtNoOfColours ?? 0,
-      colorType: p?.TxtSelectedColours?.toString().split(',') ?? [],
-      pantoneColour: p?.TxtPantoneColoursNo?.toString().split(',') ?? [],
-      finishingType: p?.TxtFinishing?.toString().split(',') ?? [],
+      colorType: this.getStringArray(p?.TxtSelectedColours?.toString()),
+      pantoneColour: this.getStringArray(p?.TxtPantoneColoursNo?.toString()),
+      finishingType: this.getStringArray(p?.TxtFinishing?.toString()),
       specialInstructions: p?.TxtSpecialInstruction ?? ''
     };
   }
@@ -480,9 +524,9 @@ export class ProductSpecHelperService {
   getWebcodeVM = (product: any): WebCodeVM[] => {
     const p = product?.ProductWebCode;
     const list: WebCodeVM[] = [];
-    p.forEach(i => {
+    p?.forEach((i, index) => {
       list.push({
-        id: i + 1,
+        id: index + 1,
         webcodeLocation: i.Location ?? '',
         noOfWebcode: i.NoOfWebcode ?? 0,
         xCoordinate: i.Xcoordinate ?? 0,
@@ -493,17 +537,107 @@ export class ProductSpecHelperService {
     return list;
   }
 
+  getChildIsbnVM = (product: any): ChildIsbnVM => {
+    const p = product?.ProductVolumeSet;
+    const prd = product?.ProductDetail[0];
+    const list: ChildIsbnModal[] = [];
+
+    p?.forEach(i => {
+      list.push({
+        Id: '',
+        ISBN: i.ChildISBNNo,
+        VersionNo: i.ChildISBNVersionNo,
+      });
+    });
+
+    return {
+      id: 1,
+      childIsbns: list?.map(x => x.ISBN),
+      childIsbnsDetail: list,
+      isShrinkWrapTogether: prd?.VolSetShrinkWrapTogether ?? false,
+      specialInstruction1: prd?.VolSetShrinkSpecialInstruction ?? '',
+      isSlipCase: prd?.VolSetSlipcase  ?? false,
+      materialWeight: prd?.VolSetSlipCaseMaterialWeight  ?? '',
+      textMaterial: prd?.VolSetSlipCaseMaterial  ?? '',
+      materialBrand: prd?.VolSetSlipCaseMaterialBrand  ?? '',
+      greyboardThickness: prd?.VolSetGreyboardThickness  ?? '',
+      noOfColours: prd?.SlipCaseNoOfColours  ?? 0,
+      colorType: this.getStringArray(prd?.SlipCaseSelectedColours?.toString()),
+      pantoneColour: this.getStringArray(prd?.SlipCasePantoneColoursNo?.toString()),
+      finishingType: this.getStringArray(prd?.SlipCaseFinishing?.toString()),
+      specialInstructions2: prd?.TxtSpecialInstruction  ?? '',
+    };
+  }
+
+  getDVDCDVM = (product: any): DVDVM[] => {
+    const p = product?.ProductCD;
+    const list: DVDVM[] = [];
+    p?.forEach((i, index) => {
+      list.push({
+        id: index + 1,
+        type: i.TypeOfCD,
+        quantity: i.Quantity,
+        sleeveType: i.SleeveType,
+        componentType: this.getComponentTypeDvd(i),
+        orientationType:  '',
+        height:  0,
+        width:  0,
+        isOpenSize: false ,
+        openSizeHeight:  0,
+        openSizeWidth:  0,
+        textMaterialWeight:  '',
+        spineWidth:  0,
+        weight:  0,
+        textMaterial:  '',
+        materialBrand:  '',
+        noOfColourExtent:  0,
+        noOfMonoExtent:  0,
+        totalExtent:  0,
+        noOfColours:  0,
+        colorType:  [],
+        pantoneColour:  [],
+        finishingType:  [],
+        specialInstructions:  '',
+        bindingVM: null
+      });
+    });
+
+    return list;
+  }
+
+  getUnitPriceVM = (product: any): UnitPriceVM => {
+    const p = product?.ProductDetail[0];
+    return {
+      id: 1,
+      fixedPrice: p?.Price ?? 0,
+      priceType: p?.PriceMethod ?? '',
+    };
+  }
+
+  getComponentTypeDvd = (item: any) => {
+    if (item.FrontLay) {
+      return 'Front Lay';
+    } else if (item.BackLay) {
+      return 'Back Lay';
+    } else if (item.DVDInlay) {
+      return 'DVD InLay';
+    } else if (item.CDBooklet) {
+      return 'DVD Booklet';
+    }
+    return '';
+  }
+
   getBindingVM = (product: any): BindingVM => {
     const p = product?.ProductDetail[0];
     return {
       id: 1,
       bindingType: p?.BindingType ?? '',
-      caseBound: this.getCaseBound(p.BindingType, product), // BindingTypeCaseBound;
-      folding: this.getFolding(p.BindingType, product), // BindingTypeFolding;
-      paperBack: this.getPaperBack(p.BindingType, product), // BindingTypePaperBack;
-      saddleStich: this.saddleStitch(p.BindingType, product), // BindingTypeStichType;
-      spiralBound: this.spiralBound(p.BindingType, product), // BindingTypeSpiralBound;
-      wireoBinding: this.wireOBinding(p.BindingType, product), // BindingTypeWireoBinding;
+      caseBound: this.getCaseBound(p?.BindingType, product), // BindingTypeCaseBound;
+      folding: this.getFolding(p?.BindingType, product), // BindingTypeFolding;
+      paperBack: this.getPaperBack(p?.BindingType, product), // BindingTypePaperBack;
+      saddleStich: this.saddleStitch(p?.BindingType, product), // BindingTypeStichType;
+      spiralBound: this.spiralBound(p?.BindingType, product), // BindingTypeSpiralBound;
+      wireoBinding: this.wireOBinding(p?.BindingType, product), // BindingTypeWireoBinding;
     };
   }
 
@@ -520,7 +654,7 @@ export class ProductSpecHelperService {
       isRibbon: p?.BindingRibbon ?? false,
       greyboardThickness: p?.BindingGreyBoardThickness ?? '',
       specialInstruction1: p?.BindingTypeSpecialInstruction ?? '',
-      benchworkRequired: p?.BindingBenchworkRequired?.toString().split(',') ?? [],
+      benchworkRequired: this.getStringArray(p?.BindingBenchworkRequired?.toString()),
       specialInstruction2: p?.BindingBenchworkSpecialInstruction ?? '',
       endPaperWeight: p?.EndpaperMaterialWeight ?? '',
       endPaperMaterial: p?.EndpaperMaterial ?? '',
@@ -529,9 +663,9 @@ export class ProductSpecHelperService {
       noOfMonoExtent: p?.EndpaperNoOfMonoExtent ?? 0,
       totalExtent: p?.EndpaperTotalExtent ?? 0,
       noOfColours: p?.EndpaperNoOfColours ?? 0,
-      colorType: p?.EndpaperSelectedColours?.toString().split(',') ?? [],
-      pantoneColour: p?.EndpaperPantoneColourNo?.toString().split(',') ?? [],
-      finishingType: p?.EndpaperFinishing?.toString().split(',') ?? [],
+      colorType: this.getStringArray(p?.EndpaperSelectedColours?.toString()),
+      pantoneColour: this.getStringArray(p?.EndpaperPantoneColourNo?.toString()),
+      finishingType: this.getStringArray(p?.EndpaperFinishing?.toString()),
       specialInstructions3: p?.EndpaperSpecialInstruction ?? '',
     };
   }
@@ -542,7 +676,7 @@ export class ProductSpecHelperService {
       return null;
     }
     return {
-      benchworkRequired: p?.BindingBenchworkRequired?.toString().split(',') ?? [],
+      benchworkRequired: this.getStringArray(p?.BindingBenchworkRequired?.toString()),
       specialInstructions1: p?.BindingTypeSpecialInstruction ?? '',
       specialInstructions2: p?.BindingBenchworkSpecialInstruction ?? '',
     };
@@ -556,7 +690,7 @@ export class ProductSpecHelperService {
     return {
       bindingMethod: p?.BindingMethod ?? '',
       specialInstructions1: p?.BindingTypeSpecialInstruction ?? '',
-      benchworkRequired: p?.BindingBenchworkRequired?.toString().split(',') ?? [],
+      benchworkRequired: this.getStringArray(p?.BindingBenchworkRequired?.toString()),
       specialInstructions2: p?.BindingBenchworkSpecialInstruction ?? '',
     };
   }
@@ -569,7 +703,7 @@ export class ProductSpecHelperService {
     return {
       stichType: p?.BindingStitchType ?? '',
       specialInstructions1: p?.BindingTypeSpecialInstruction ?? '',
-      benchworkRequired: p?.BindingBenchworkRequired?.toString().split(',') ?? [],
+      benchworkRequired: this.getStringArray(p?.BindingBenchworkRequired?.toString()),
       specialInstructions2: p?.BindingBenchworkSpecialInstruction ?? '',
     };
   }
@@ -582,7 +716,7 @@ export class ProductSpecHelperService {
     return {
       coilColour: p?.BindingMethodCoil ?? '',
       specialInstructions1: p?.BindingTypeSpecialInstruction ?? '',
-      benchworkRequired: p?.BindingBenchworkRequired?.toString().split(',') ?? [],
+      benchworkRequired: this.getStringArray(p?.BindingBenchworkRequired?.toString()),
       specialInstructions2: p?.BindingBenchworkSpecialInstruction ?? '',
     };
   }
@@ -595,8 +729,16 @@ export class ProductSpecHelperService {
     return {
       wireColour: p?.BindingMethodWire ?? '',
       specialInstructions1: p?.BindingTypeSpecialInstruction ?? '',
-      benchworkRequired: p?.BindingBenchworkRequired?.toString().split(',') ?? [],
+      benchworkRequired: this.getStringArray(p?.BindingBenchworkRequired?.toString()),
       specialInstructions2: p?.BindingBenchworkSpecialInstruction ?? '',
     };
+  }
+
+  getStringArray = (value: string): string[] => {
+    if (!value || value.length === 0) {
+      return [];
+    }
+
+    return value.split(',');
   }
 }

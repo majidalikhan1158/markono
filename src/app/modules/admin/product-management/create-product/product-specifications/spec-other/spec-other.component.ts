@@ -123,7 +123,9 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
       if (resp && resp.otherVM && resp.otherVM.length > 0) {
         this.viewModal = resp.otherVM;
       } else {
-        this.viewModal.push(this.initialObject());
+        if (this.viewModal.length === 0) {
+          this.viewModal.push(this.initialObject());
+        }
       }
     });
   }

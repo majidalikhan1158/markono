@@ -205,7 +205,7 @@
             </div>
             <div class="col-lg-5">
                 <div class="scroll-bar">
-                    <mat-chip-list #pantoneColourchipList class="table-filter-chips">
+                    <mat-chip-list #pantoneColourchipList class="table-filter-chips" *ngIf="viewModal.caseBound.pantoneColour?.length > 0">
                         <mat-chip [removable]="true" [ngStyle]="{'background-color': item}"
                             *ngFor="let item of viewModal.caseBound.pantoneColour"
                             (removed)="removePantoneColourSelection(item)">

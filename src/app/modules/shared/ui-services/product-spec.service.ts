@@ -15,7 +15,9 @@ import {
   CheckPrintFileVM,
   UnitPriceVM,
 } from '../models/product-spec';
-import { ProductGroupDDL, MaterialDataList, ProductVersions, SpineWidthThicknessParamHistory, SpineWidthParamHistory, FileCheckConfig, ProductSpecsList } from '../../services/shared/classes/product-modals/product-modals';
+import { ProductGroupDDL, MaterialDataList, ProductVersions, SpineWidthThicknessParamHistory,
+  SpineWidthParamHistory, FileCheckConfig, ProductSpecsList, UserFileCheckConfig } from '../../services/shared/classes/product-modals/product-modals';
+import { AddRemoveSpecTypeEvent } from '../enums/product-management/product-interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +25,6 @@ import { ProductGroupDDL, MaterialDataList, ProductVersions, SpineWidthThickness
 export class ProductSpecStore {
   public productSpecStore: Observable<ProductSpecStoreVM>;
   private productSpecStoreSubject = new BehaviorSubject<ProductSpecStoreVM>(new ProductSpecStoreVM());
-  private currentProductSpecSelectedSubject = new BehaviorSubject<ProductSpecsList>(null);
 
   private currentProductSpecStoreState: ProductSpecStoreVM;
   private showJournaFieldsSubject = new BehaviorSubject<boolean>(false);
@@ -35,6 +36,7 @@ export class ProductSpecStore {
   private spineWidthParamHistorySubject = new BehaviorSubject<SpineWidthParamHistory>(null);
   private spinWidthThicknessSubject = new BehaviorSubject<number>(0);
   private productIdSubject = new BehaviorSubject<string>('');
+  private addRemoveSpecTypeEventSubject = new BehaviorSubject<AddRemoveSpecTypeEvent>(null);
 
   public $showJournaFields: Observable<boolean>;
   public $productGroupList: Observable<ProductGroupDDL[]>;
@@ -46,6 +48,7 @@ export class ProductSpecStore {
   public $fileCheckConfig: Observable<FileCheckConfig[]>;
   public $productId: Observable<string>;
   public $currentProductSpecSelected: Observable<ProductSpecsList>;
+  public $addRemoveSpecTypeEvent: Observable<AddRemoveSpecTypeEvent>;
 
   private coverMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private textMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
@@ -88,6 +91,7 @@ export class ProductSpecStore {
   private spineWidthThicknessParamHistory: SpineWidthThicknessParamHistory;
   private spineWidthParamHistory: SpineWidthParamHistory;
   private spineWidthThickness: number;
+
   constructor(private productService: ProductService) {
     this.$showJournaFields = this.showJournaFieldsSubject.asObservable();
     this.$productGroupList = this.productGroupListSubject.asObservable();
@@ -99,7 +103,7 @@ export class ProductSpecStore {
     this.$spinWidthThickness = this.spinWidthThicknessSubject.asObservable();
     this.$fileCheckConfig = this.fileCheckConfigListSubject.asObservable();
     this.$productId = this.productIdSubject.asObservable();
-    this.$currentProductSpecSelected = this.currentProductSpecSelectedSubject.asObservable();
+    this.$addRemoveSpecTypeEvent = this.addRemoveSpecTypeEventSubject.asObservable();
 
     this.productSpecStore.subscribe((data) => {
       this.currentProductSpecStoreState = data;
@@ -134,6 +138,10 @@ export class ProductSpecStore {
     this.$bindingFinishingTypeList = this.bindingFinishingTypeListSubject.asObservable();
     this.$bindingDvdCdFinishingTypeList = this.bindingDvdCdFinishingTypeListSubject.asObservable();
     this.$bindingOtherComponentFinishingTypeList = this.bindingOtherComponentFinishingTypeListSubject.asObservable();
+  }
+
+  public reset = () => {
+    this.productSpecStoreSubject.next(new ProductSpecStoreVM());
   }
 
   public setProductSpecStore(data: any, type: ProductSpecTypes) {
@@ -227,8 +235,8 @@ export class ProductSpecStore {
     this.productIdSubject.next(productId);
   }
 
-  setCurrentProductSpecSelectedSubject = (product: ProductSpecsList) => {
-    this.currentProductSpecSelectedSubject.next(product);
+  setAddSpecType = (event: AddRemoveSpecTypeEvent) => {
+    this.addRemoveSpecTypeEventSubject.next(event);
   }
 
   /** PRODUCT SPEC UI observables */
@@ -345,6 +353,27 @@ export class ProductSpecStore {
     }));
   }
 
+  getUserCheckFile = (productId: string) => {
+    this.productService.getUserFileCheck(productId).subscribe((resp => {
+      const result = (resp.body.result as unknown) as UserFileCheckConfig[];
+      const fileCheckIds: number[] = [];
+      result.forEach(item => {
+        if (item.checked) {
+          fileCheckIds.push(item.fileCheckConfigId);
+        }
+      });
+      const fileCheckVM: CheckPrintFileVM = {
+        id: 1,
+        fileCheckIds,
+        checkBoxApproval: false,
+        othersFile: '',
+        textFile: '',
+        coverFile: ''
+      };
+      this.setCheckPrintFile(fileCheckVM);
+    }));
+  }
+
   handleSpineWidthApi = () => {
     const textVM = this.currentProductSpecStoreState.textVM;
     // return if textVM model is emtpy/null/undefined
@@ -435,12 +464,17 @@ export class ProductSpecStore {
     // if (!this.isValueChangedForSpineWidthApi()) {
     //   return;
     // }
+    if (!this.currentProductSpecStoreState.generalVM) {
+      return;
+    }
     this.setRequestObjectForSpineWidthApiCall();
-    // console.log(this.spineWidthParamHistory)
     this.productService.getSpineWidth(this.spineWidthParamHistory).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.data) {
         const attributes = resp.body.result.data.attributes;
         const generalVM = this.currentProductSpecStoreState.generalVM;
+        if (!generalVM) {
+          return;
+        }
         let spineWidth = 0;
         if (attributes) {
           spineWidth = attributes['spine-width'];
@@ -459,10 +493,14 @@ export class ProductSpecStore {
     if (!reqObj.bindingType) {
       return;
     }
+    
     this.productService.getBookWeight(reqObj).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.data) {
         const attributes = resp.body.result.data.attributes;
         const generalVM = this.currentProductSpecStoreState.generalVM;
+        if (!this.currentProductSpecStoreState.generalVM) {
+          return;
+        }
         let bookWeight = 0;
         if (attributes) {
           bookWeight = attributes['book-weight'];

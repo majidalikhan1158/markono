@@ -82,7 +82,6 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.handleComponentType();
     this.getApiData();
-    this.getDefaultRecord();
     this.handleBindingTypeFilterAutoComplete();
     this.handleCaseBoundBenchWorkFilterAutoComplete();
     this.handleFoldingBenchWorkFilterAutoComplete();
@@ -90,6 +89,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     this.handleWireoBindingBenchWorkFilterAutoComplete();
     this.handleSpiralBoundBenchworkFilterAutoComplete();
     this.handlePaperBoundBenchworkFilterAutoComplete();
+    this.getDefaultRecord();
   }
 
   handleComponentType = () => {

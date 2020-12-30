@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ProductVersions } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
+import { GeneralVM } from '../../../../shared/models/product-spec';
 
 @Component({
   selector: 'app-product-versions',
@@ -12,6 +13,7 @@ export class ProductVersionsComponent implements OnInit {
   displayedColumns = ['versionNo', 'dateCreated', 'createdBy', 'versionDescription', 'isSpecsInView'];
   productIsbnNumber: string;
   productVersionList: ProductVersions[];
+  selectedVersion: string;
   constructor(public store: ProductSpecStore) { }
 
   ngOnInit() {
@@ -19,6 +21,7 @@ export class ProductVersionsComponent implements OnInit {
     this.store.productSpecStore.subscribe(resp => {
       if (resp && resp.generalVM && resp.generalVM.productNumber && this.productIsbnNumber !== resp.generalVM.productNumber) {
         this.productIsbnNumber = resp.generalVM.productNumber;
+        this.selectedVersion = resp.generalVM.versionNo;
         this.store.getVersions(this.productIsbnNumber);
       }
     });
@@ -26,7 +29,12 @@ export class ProductVersionsComponent implements OnInit {
 
   getVersions = () => {
     this.store.$productVersionList.subscribe(resp => {
-      console.log(resp);
+      resp.forEach(item => {
+        if (item.VersionNo === this.selectedVersion) {
+          item.active = true;
+          this.handleVersionSelection(item.Id);
+        }
+      });
       this.productVersionList = resp;
     });
   }

@@ -113,6 +113,13 @@ export class ProductService {
     return this.http.get(decodeURI(urlWithParams));
   }
 
+  getUserFileCheck = (productId: string): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getFileCheckUrl();
+    const queryParams = `$filter=ProductId eq ${productId} &amp;$expand=fileCheckConfig($select=component,question,remark)`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
   getSpineWidth = (reqObj: SpineWidthParamHistory): Observable<HttpResponse<ProductResponseModal>> => {
     const obj = {
       noOfColourExtent: reqObj.noOfColourExtent,

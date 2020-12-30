@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatSelectionListChange } from '@angular/material/list';
 import {
@@ -23,7 +23,7 @@ import { ProductVersions } from '../../../../services/shared/classes/product-mod
   styleUrls: ['./product-specifications.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ProductSpecificationsComponent implements OnInit {
+export class ProductSpecificationsComponent implements OnInit, OnDestroy {
   @ViewChild('matExpansionPanel', { static: true })
   matExpansionPanelElement: MatExpansionPanel;
   productSpecTypesConstant = ProductSpecificationTypes;
@@ -42,15 +42,41 @@ export class ProductSpecificationsComponent implements OnInit {
     private snack: SnackBarService
   ) {}
 
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
   ngOnInit(): void {
     this.selectedProductSpecType = this.productSpecTypesConstant.GENERAL;
     this.subscription = this.store.productSpecStore.subscribe((resp) => {
       this.productSpecData = resp;
+      this.setChildSections();
     });
 
     this.subscription = this.store.$productId.subscribe(resp => {
       this.productId = resp;
     });
+  }
+
+  setChildSections = () => {
+
+    if (this.productSpecData?.generalVM?.isChildIsbnAdded) {
+      this.addProductSpecType({ productSpecType: ProductSpecificationTypes.CHILD_ISBN, isAdded: true });
+    } else {
+      this.addProductSpecType({ productSpecType: ProductSpecificationTypes.CHILD_ISBN, isAdded: false });
+    }
+
+    if (this.productSpecData?.generalVM?.isWebcodeAdded) {
+      this.addProductSpecType({ productSpecType: ProductSpecificationTypes.WEB_CODE, isAdded: true });
+    } else {
+      this.addProductSpecType({ productSpecType: ProductSpecificationTypes.WEB_CODE, isAdded: false });
+    }
+
+    if (this.productSpecData?.generalVM?.isDvdAdded) {
+      this.addProductSpecType({ productSpecType: ProductSpecificationTypes.DVD_CD, isAdded: true });
+    } else {
+      this.addProductSpecType({ productSpecType: ProductSpecificationTypes.DVD_CD, isAdded: false });
+    }
   }
 
   handleProductSpecTypeChange(

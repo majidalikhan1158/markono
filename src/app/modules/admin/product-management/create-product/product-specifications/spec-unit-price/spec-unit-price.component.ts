@@ -143,7 +143,6 @@ export class SpecUnitPriceComponent implements OnInit, OnDestroy {
   }
 
   saveToStore = () => {
-    console.log(this.viewModal);
     this.store.setProductSpecStore(
       this.viewModal,
       ProductSpecTypes.UNIT_PRICE

@@ -225,7 +225,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
     this.productService.getProductDetails(reqObj).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
         const productDetails = resp.body.result[0];
-        const transformedProduct = this.helper.transProductDetailToVM(productDetails);
+        this.helper.transProductDetailToVM(productDetails);
       }
     });
     this.router.navigate(['admin/product-management/create']);

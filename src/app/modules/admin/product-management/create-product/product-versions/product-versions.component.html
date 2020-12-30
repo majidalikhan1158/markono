@@ -28,7 +28,7 @@
     <ng-container matColumnDef="isSpecsInView">
         <mat-header-cell *matHeaderCellDef> Specs in View </mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <mat-radio-button (change)="handleVersionSelection(element.Id)" [checked]="false"></mat-radio-button>
+            <mat-radio-button (change)="handleVersionSelection(element.Id)" [checked]="element.active"></mat-radio-button>
         </mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

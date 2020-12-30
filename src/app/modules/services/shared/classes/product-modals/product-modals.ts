@@ -32,6 +32,7 @@ export interface ProductVersions {
     CreatedDateTime: string;
     CreatedBy: string;
     VersionDescription: string;
+    active: boolean;
 }
 
 
@@ -60,6 +61,11 @@ export interface FileCheckConfig {
     updatedDateTime: string;
     updatedBy: string;
     toggleLabel: boolean;
+}
+
+export interface UserFileCheckConfig {
+    fileCheckConfigId: number;
+    checked: boolean;
 }
 
 export interface ProductSpecsList {

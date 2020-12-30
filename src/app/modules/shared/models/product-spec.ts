@@ -14,7 +14,7 @@ export interface GeneralVM {
   id: number;
   productNumber: string;
   printingType: string;
-  productType: string;
+  productType: number;
   externalPartNo: string;
   isbnOwner: string;
   journalTitleCode: string;
@@ -33,6 +33,7 @@ export interface GeneralVM {
   isChildIsbnAdded: boolean;
   isDvdAdded: boolean;
   isWebcodeAdded: boolean;
+  versionNo: string;
 }
 
 export interface TextVM {

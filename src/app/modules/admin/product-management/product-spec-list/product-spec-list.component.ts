@@ -215,9 +215,6 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // add to observable. current product record
-    // this.store.setCurrentProductSpecSelectedSubject(product);
-    // listen at create component.
     const reqObj = {
       isbn: product.isbn,
       VersionNo: product.versionNo

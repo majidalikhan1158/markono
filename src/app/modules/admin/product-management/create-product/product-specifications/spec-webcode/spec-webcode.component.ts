@@ -19,7 +19,7 @@ export class SpecWebcodeComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.productSpecStore.subscribe(resp => {
+    this.store.$productSpecStore.subscribe(resp => {
       if (resp && resp.webCodeVM && resp.webCodeVM.length > 0) {
         this.viewModal = resp.webCodeVM;
       } else {

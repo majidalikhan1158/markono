@@ -37,7 +37,7 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.productSpecStore.subscribe((resp) => {
+    this.store.$productSpecStore.subscribe((resp) => {
       if (resp && resp.checkPrintFileVM && resp.checkPrintFileVM.id > 0) {
         this.viewModal = resp.checkPrintFileVM;
       } else {

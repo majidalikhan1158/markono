@@ -119,7 +119,7 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.productSpecStore.subscribe((resp) => {
+    this.store.$productSpecStore.subscribe((resp) => {
       if (resp && resp.otherVM && resp.otherVM.length > 0) {
         this.viewModal = resp.otherVM;
       } else {

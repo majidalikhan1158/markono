@@ -50,7 +50,7 @@ export class SpecUnitPriceComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.productSpecStore.subscribe((resp) => {
+    this.store.$productSpecStore.subscribe((resp) => {
       if (resp && resp.unitPriceVM && resp.unitPriceVM.id > 0) {
         this.viewModal = resp.unitPriceVM;
       } else {

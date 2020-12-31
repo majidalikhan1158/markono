@@ -18,7 +18,7 @@ export class ProductVersionsComponent implements OnInit {
 
   ngOnInit() {
     this.getVersions();
-    this.store.productSpecStore.subscribe(resp => {
+    this.store.$productSpecStore.subscribe(resp => {
       if (resp && resp.generalVM && resp.generalVM.productNumber && this.productIsbnNumber !== resp.generalVM.productNumber) {
         this.productIsbnNumber = resp.generalVM.productNumber;
         this.selectedVersion = resp.generalVM.versionNo;

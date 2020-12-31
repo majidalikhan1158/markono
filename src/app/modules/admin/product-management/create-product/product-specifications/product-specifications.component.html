@@ -12,7 +12,7 @@
 
                 <mat-selection-list [multiple]="false" class="pt-0 pb-0 sub-types"
                     (selectionChange)="handleProductSpecTypeChange($event, productSpecTypesArray)">
-                    <mat-list-option class="text-color" *ngFor="let types of productSpecTypesArray"
+                    <mat-list-option class="text-color" *ngFor="let types of store.$productSpecTypeObjectList | async"
                         [selected]="types.isSelected" [value]="types.enum">
                         <div class="mat-list-option-number"
                             [ngClass]="{'mat-list-option-number-visited': types.isVisited}">

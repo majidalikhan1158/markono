@@ -1,7 +1,7 @@
 import { ChildIsbnModal } from './../../../services/shared/classes/product-modals/product-modals';
 import { Injectable } from '@angular/core';
 import { WebCodeVM, DVDVM, OtherVM, GeneralVM, CoverVM, TextVM, BindingVM, ChildIsbnVM, UnitPriceVM } from '../../models/product-spec';
-import { BindingType, ProductSpecificationTypes } from '../product-management/product-constants';
+import { BindingType, ProductSpecificationTypes, ProductSpecificationTypesArray } from '../product-management/product-constants';
 import { ProductSpecStore } from '../../ui-services/product-spec.service';
 import {
   BindingTypeCaseBound,
@@ -13,7 +13,6 @@ import {
   ProductSpecStoreVM,
 } from '../../models/product-spec';
 import { ProductSpecTypes } from '../app-enums';
-import { parse } from 'path';
 
 @Injectable({
   providedIn: 'root',
@@ -413,6 +412,10 @@ export class ProductSpecHelperService {
     const childIsbnVM = this.getChildIsbnVM(product);
     const dvdcdVM = this.getDVDCDVM(product);
     const unitPriceVM = this.getUnitPriceVM(product);
+
+    this.store.reset();
+    const list = ProductSpecificationTypesArray;
+    this.store.setProductSpecTypeList(list);
 
     this.store.getFileCheckConfig();
 

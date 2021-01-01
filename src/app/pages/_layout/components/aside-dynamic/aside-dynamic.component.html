@@ -54,8 +54,16 @@
     <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
       <a class="menu-link" [routerLink]="item.page" [ngClass]="{ 'active ': isMenuItemActive(item.page) }"
         routerLinkActive="active">
-        <img class="png-icon" *ngIf="!activeMenu" src="{{item.png}}" />
-        <img class="png-icon" *ngIf="activeMenu" src="{{item.selected}}" />&nbsp;
+        <ng-container *ngIf="item.title=='Platemaking'">
+          <img class="png-icon" style="height: 16px !important;" *ngIf="!isMenuItemActive(item.page)"
+            src="{{item.png}}" />
+          <img class="png-icon" style="height: 16px !important;" *ngIf="isMenuItemActive(item.page)"
+            src="{{item.selected}}" />
+        </ng-container>
+        <ng-container *ngIf="item.title!='Platemaking'">
+          <img class="png-icon" *ngIf="!isMenuItemActive(item.page)" src="{{item.png}}" />
+          <img class="png-icon" *ngIf="isMenuItemActive(item.page)" src="{{item.selected}}" />
+        </ng-container>
         <!-- <span [inlineSVG]="item.svg" cacheSVG="true" class="svg-icon menu-icon"></span> -->
         <span class="menu-text" [translate]="item.translate">{{item.title}}</span>
       </a>
@@ -69,9 +77,9 @@
       [ngClass]="{ 'menu-item-open': isMenuItemActive(item.page) }" routerLinkActive="menu-item-open">
       <a class="menu-link menu-toggle" [attr.href]="item.page" routerLinkActive="active"
         [ngClass]="{ 'active ': isMenuItemActive(item.page) }">
-        <img class="png-icon" *ngIf="!activeMenu" src="{{item.png}}" />
-        <img class="png-icon" *ngIf="activeMenu" src="{{item.selected}}" />&nbsp;
-        <!-- <span class="menu-icon">item.svg</span> -->
+        <img class="png-icon" *ngIf="!isMenuItemActive(item.page)" src="{{item.png}}" />
+        <img class="png-icon" *ngIf="isMenuItemActive(item.page)" src="{{item.selected}}" />
+        <!-- <span [inlineSVG]="item.svg" cacheSVG="false" class="svg-icon menu-icon"></span> -->
         <span class="menu-text" [translate]="item.translate">{{
           item.title
           }}</span>

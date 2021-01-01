@@ -1,6 +1,7 @@
 app-platemaking {
     .platemaking-table-card {
         width: 100%;
+        min-width: 1050px;
     }
     .expandable-row mat-cell:last-of-type,
     mat-header-cell:last-of-type,
@@ -132,6 +133,7 @@ app-platemaking {
         background: #ffffff 0% 0% no-repeat padding-box;
         border-radius: 6px;
         opacity: 1;
+        min-width: 1050px;
     }
     .font-size-h {
         font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-bold) 32px/38px

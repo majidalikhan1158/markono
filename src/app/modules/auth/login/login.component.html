@@ -3,20 +3,21 @@
   <!--begin::Title-->
   <img src="assets/media/login-slider/Logo.png" />
   <br>
-  <span class="text-muted font-weight-bold font-size-h4">Powered By MoonShot Innovations
-    <!-- <a routerLink="/auth/registration" id="kt_login_signup" class="text-primary font-weight-bolder">{{
-          "AUTH.GENERAL.SIGNUP_BUTTON" | translate }}</a> -->
-  </span>
+  <!--  <span class="text-muted font-weight-bold font-size-h4">Powered By MoonShot Innovations
+    <a routerLink="/auth/registration" id="kt_login_signup" class="text-primary font-weight-bolder">{{
+          "AUTH.GENERAL.SIGNUP_BUTTON" | translate }}</a> 
+  </span>-->
 
   <!--end::Title-->
   <!--begin::Form-->
   <form class="form" [formGroup]="loginForm" novalidate="novalidate" id="kt_login_signin_form" (ngSubmit)="submit()">
-    <div class="pb-13 pt-lg-0 pt-5">
-      <h4 class="login-title"> Login</h4>
-      <h5 class="login-subtitle">Login with your Username and Password
-        <!-- <a routerLink="/auth/registration" id="kt_login_signup" class="text-primary font-weight-bolder">{{
-            "AUTH.GENERAL.SIGNUP_BUTTON" | translate }}</a> -->
-      </h5>
+    <div class="pt-lg-0 pt-5">
+      <h4 class="login-title"> Welcome Back</h4>
+      <!--   <h5 class="login-subtitle">Login with your Username and Password
+        <a routerLink="/auth/registration" id="kt_login_signup" class="text-primary font-weight-bolder">{{
+            "AUTH.GENERAL.SIGNUP_BUTTON" | translate }}</a> 
+      </h5>-->
+
     </div>
 
     <!-- begin::Alert info-->
@@ -103,7 +104,11 @@
         [disabled]="loginForm.invalid">
         Sign In
       </button>
-
+      <br>
+      <div class="form-group" style="text-align: center;">
+        <a href="#" style="color: black;text-decoration: underline;"><span>Forgot
+            Password?</span></a>
+      </div>
       <!-- <button type="button" class="btn btn-light-primary font-weight-bolder px-8 py-4 my-3 font-size-lg">
         <span class="svg-icon svg-icon-md">
           <img src="./assets/media/svg/social-icons/google.svg" />

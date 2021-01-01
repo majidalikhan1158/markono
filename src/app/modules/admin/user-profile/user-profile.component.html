@@ -1,0 +1,79 @@
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card card-custom example example-compact gutter-b personal-info-card">
+            <div class="card-header">
+                <div class="card-title">
+                    <h3 class="card-label">Personal Info</h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>User Id</mat-label>
+                            <input matInput placeholder="User Id" value="SeanMicheal22" class="txtReferenceNo"
+                                [disabled]="disabled">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Full Name</mat-label>
+                            <input matInput value="Sean Micheal" placeholder="Full Name" class="txtReferenceNo"
+                                [disabled]="disabled">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>User Role</mat-label>
+                            <input matInput value="Super" placeholder="User Role" class="txtReferenceNo"
+                                [disabled]="disabled">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Email</mat-label>
+                            <input matInput value="seanm@gmail.com" placeholder="Email" class="txtReferenceNo"
+                                [disabled]="disabled">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card card-custom example example-compact gutter-b update-password-card">
+            <div class="card-header">
+                <div class="card-title">
+                    <h3 class="card-label">Update Password</h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter Current Password</mat-label>
+                            <input matInput placeholder="Enter Current Password" class="txtReferenceNo">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter New Password</mat-label>
+                            <input matInput placeholder="Enter New Password" class="txtReferenceNo">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Confirm New Password</mat-label>
+                            <input matInput placeholder="Confirm New Password" class="txtReferenceNo">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-right">
+        <button mat-button class="btn btn-primary stepper-next-button">Save</button>
+    </div>

@@ -6,6 +6,7 @@ import { ShopFloorCollectionComponent } from './shop-floor-collection/shop-floor
 import { CreateCaseComponent } from './case-management/create-case/create-case.component';
 import { AppDashboardComponent } from './app-dashboard/app-dashboard.component';
 import { PlatemakingComponent } from './platemaking/platemaking.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 const routes: Routes = [
   {
@@ -43,9 +44,14 @@ const routes: Routes = [
         component: CreateCaseComponent
       },
       {
+        path: 'user-profile',
+        component: UserProfileComponent,
+      },
+      {
         path: '**',
         component: Error404Component,
       },
+
     ]
   }
 ];

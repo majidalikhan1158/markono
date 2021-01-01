@@ -6,6 +6,9 @@ app-auth {
   .carousel-indicators {
     padding-right: 164px;
   }
+  .mat-focus-indicator {
+    color: gray !important;
+  }
   // margin-top: -126px !important;
   // @include media-breakpoint-between(lg, xl) {
   //   .flex-center {

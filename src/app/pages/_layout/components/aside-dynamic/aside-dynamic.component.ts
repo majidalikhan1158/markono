@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { LayoutService, DynamicAsideMenuService, DynamicHeaderMenuService } from '../../../../_metronic/core';
 import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-headers.config';
-
+import { $ } from 'protractor';
 @Component({
   selector: 'app-aside-dynamic',
   templateUrl: './aside-dynamic.component.html',
@@ -24,10 +24,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   brandClasses: string;
   asideMenuScroll = 1;
   asideSelfMinimizeToggle = false;
-
   currentUrl: string;
-  activeMenu: boolean = true;
-
   constructor(
     private layout: LayoutService,
     private router: Router,
@@ -133,9 +130,10 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     if (this.currentUrl.indexOf(path) > -1) {
       return true;
     }
-    this.activeMenu = !this.activeMenu;
     return false;
   }
+
+
 
   ngOnDestroy() {
     this.subscriptions.forEach(sb => sb.unsubscribe());

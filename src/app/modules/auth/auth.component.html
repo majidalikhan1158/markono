@@ -4,25 +4,24 @@
     <!--begin::Aside-->
     <div class="login-aside d-flex flex-column flex-row-auto" style="justify-content: center;align-items: center;">
       <!--begin::Content body-->
-      <div class="d-flex flex-column-fluid flex-center" style="margin-top: -126px !important;">
+      <div class="d-flex flex-column-fluid flex-center" style="width: 250px;">
         <router-outlet></router-outlet>
       </div>
       <!--end::Content body-->
 
       <!--begin::Content footer-->
-      <!-- <div class="d-flex justify-content-lg-start justify-content-center align-items-end py-7 py-lg-0">
-        <a href="#" class="text-primary font-weight-bolder font-size-h5">Terms</a>
-        <a href="#" class="text-primary ml-10 font-weight-bolder font-size-h5">Plans</a>
-        <a href="#" class="text-primary ml-10 font-weight-bolder font-size-h5">Contact Us</a>
-      </div> -->
+      <div class="d-flex justify-content-lg-start justify-content-center align-items-end" style="padding-bottom: 55px;">
+        <a href="#" style="color: #cdcdcd;">A Future-ready Print Production
+          Automation
+          Solution</a>
+      </div>
       <!--end::Content footer-->
     </div>
     <!--begin::Content-->
-    <div
-      class="login-content flex-row-fluid d-flex flex-column justify-content-center position-relative overflow-hidden mx-auto">
+    <div class="login-content flex-row-fluid d-flex flex-column justify-content-center">
       <mat-carousel proportion="100" timings="200ms ease-in" [hideArrows]="true" [hideIndicators]="false"
-        [useKeyboard]="true" [useMouseWheel]="false" [autoplay]="true" interval="6000" color="black">
-        <mat-carousel-slide *ngFor="let slide of slides; let i = index" [image]="slide.image" [hideOverlay]="false">
+        [useKeyboard]="true" [useMouseWheel]="false" [autoplay]="true" interval="6000">
+        <mat-carousel-slide *ngFor="let slide of slides; let i = index" [image]="slide.image" [hideOverlay]="true">
         </mat-carousel-slide>
       </mat-carousel>
     </div>

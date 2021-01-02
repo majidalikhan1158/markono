@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { QuotationDataList } from 'src/app/modules/shared/mock-data/quotation-data-list';
 import { StatusTypes } from 'src/app/modules/shared/enums/case-management/quotation-constants';
 import { QuotationListVM } from 'src/app/modules/shared/models/create-case';
+import { OrderType } from 'src/app/modules/shared/models/order-management';
 
 @Component({
   selector: 'app-quotation-list',
@@ -47,6 +48,7 @@ export class QuotationListComponent implements OnInit {
   };
   tableFilterTypes = QuotationSpecFilterTypes;
   statusTypes = StatusTypes;
+  orderTypes = OrderType;
   selectedStatus = '';
   globalFilter = '';
   totalRecordsCount = 22;

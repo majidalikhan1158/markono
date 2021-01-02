@@ -17,6 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PlatemakingComponent } from './platemaking/platemaking.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { OrderManagementModule } from './order-management/order-management.module';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -30,6 +31,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CaseManagementModule,
     ProductManagementModule,
     MaterialUiModule,
+    OrderManagementModule,
     NgApexchartsModule,
     PerfectScrollbarModule, SharedModule, SplashScreenModule, MatProgressSpinnerModule,
     OverlayModule,

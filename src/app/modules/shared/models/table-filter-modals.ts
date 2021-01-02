@@ -27,7 +27,7 @@ export const QuotationSpecFilterTypes = {
     SALESPERSON: 'SALESPERSON',
     CUSTOMER: 'CUSTOMER',
 };
-
+//Platemaking
 export interface PlatemakingSearchFilters {
     currentSelectedFilter: string;
     jobNo: string;
@@ -44,5 +44,23 @@ export const PlatemakingnSearchFilterTypes = {
     SCHEDULEDPRINTING_DATE: 'SCHEDULEDPRINTING_DATE',
     CUSTOMER: 'CUSTOMER',
 };
+//Orders
 
+export interface OrderSearchFilters {
+    currentSelectedFilter: string;
+    orderType: string;
+    customerPoNo: string;
+    customerName: string;
+    orderDate: string;
+    rddDate: string;
+    status: string;
+}
 
+export const OrderSearchFilterTypes = {
+    ORDER_TYPE: 'ORDER_TYPE',
+    CUSTOMER_PONO: 'CUSTOMER_PONO',
+    ORDER_DATE: 'ORDER_DATE',
+    STATUS: 'STATUS',
+    CUSTOMER_NAME: 'CUSTOMER_NAME',
+    RDD_DATE: 'RDD_DATE'
+};

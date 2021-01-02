@@ -8,12 +8,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class UserProfileComponent implements OnInit {
   disabled = true;
-  isShow: boolean = false;
   constructor() { }
 
   ngOnInit(): void {
-  }
-  changePassword = () => {
-    this.isShow = !this.isShow;
   }
 }

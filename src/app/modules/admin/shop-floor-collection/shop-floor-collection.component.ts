@@ -76,7 +76,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   intervalCurrentJobId;
   intervalIdList = [];
   tokenIntervalId: any;
-  subscriptions: Subscription;2
+  subscriptions: Subscription;
   selectedProductSpec = 'Main Component';
   constructor(private layout: LayoutService,
               private auth: AppAuthService,

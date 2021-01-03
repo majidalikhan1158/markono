@@ -1,4 +1,7 @@
 <div class="row spec-general">
+    <div class="col-lg-12 pb-3">
+        <span class="font-16px font-roboto-bold">General</span>
+    </div>
     <div class="col-lg-12 display-flex pl-0">
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
@@ -8,55 +11,74 @@
         </div>
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
-                <mat-label>Printing Type</mat-label>
-                <mat-select [(ngModel)]="generalVM.printingType">
-                    <mat-option value="Offset">Offset</mat-option>
-                    <mat-option value="Digital">Digital</mat-option>
-                    <mat-option value="POD">POD</mat-option>  
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Product Type</mat-label>
-                <mat-select [(ngModel)]="generalVM.productType">
-                    <mat-option [value]="item.enum" *ngFor="let item of productTypeList">{{item.text}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
                 <mat-label>External Part No.</mat-label>
                 <input matInput [(ngModel)]="generalVM.externalPartNo">
+            </mat-form-field>
+        </div>
+        <div class="col-lg-3 pr-0">
+            <mat-form-field appearance="fill">
+                <mat-label>Printing Type</mat-label>
+                <mat-select [(ngModel)]="generalVM.printingType" (selectionChange)="handlePrintTypeChange()">
+                    <mat-option value="Offset">Offset</mat-option>
+                    <mat-option value="Digital">Digital</mat-option>
+                    <mat-option value="POD">POD</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-lg-3 pr-0">
+            <mat-form-field appearance="fill">
+                <mat-label>ISBN Owner</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input matInput [(ngModel)]="generalVM.isbnOwner" [value] = "generalVM.isbnOwner"
+                #trigger="matAutocompleteTrigger" 
+                [formControl]="isbnOwnerSearchCtrl"
+                [matAutocomplete]="auto"
+                (keyup)='handleCustomerSearch()'>
+                <mat-autocomplete  #auto="matAutocomplete" [displayWith]="displayFn" showPanel="true" (optionSelected)='handleSelectedIsbnOwner($event.option.value)'>
+                    <mat-option *ngIf="isLoading" class="is-loading" value="0">Loading...</mat-option>
+                    <ng-container *ngIf="!isLoading">
+                      <mat-option *ngFor="let item of isbnOwnerList" [value]="item.CompanyCode">
+                        <span><b>{{item.CompanyCode}}</b>_{{item.CompanyName}}</span>
+                      </mat-option> 
+                    </ng-container>
+                  </mat-autocomplete>
             </mat-form-field>
         </div>
     </div>
     <div class="col-lg-12 display-flex pl-0">
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
-                <mat-label>ISBN Owner</mat-label>
-                <mat-icon matPrefix>search</mat-icon>
-                <input matInput [(ngModel)]="generalVM.isbnOwner">
+                <mat-label>Product Type</mat-label>
+                <mat-select [(ngModel)]="generalVM.productType" (selectionChange)="shouldShowJournalFields()">
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="productTypeFltrCtrl" placeholderLabel="Search..">
+                        </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option [value]="item.Id" *ngFor="let item of store.$productGroupList | async">{{item.ProductName}}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
-        <div class="col-lg-3 pr-0" *ngIf="generalVM.productType === productTypes.JOURNALS">
-            <mat-form-field appearance="fill">
-                <mat-label>Journal Title Code</mat-label>
-                <input matInput [(ngModel)]="generalVM.journalTitleCode">
-            </mat-form-field>
-        </div>
-        <div class="col-lg-3 pr-0" *ngIf="generalVM.productType === productTypes.JOURNALS">
-            <mat-form-field appearance="fill">
-                <mat-label>Volume</mat-label>
-                <input matInput [(ngModel)]="generalVM.volume">
-            </mat-form-field>
-        </div>
-        <div class="col-lg-3 pr-0" *ngIf="generalVM.productType === productTypes.JOURNALS">
-            <mat-form-field appearance="fill">
-                <mat-label>Issue</mat-label>
-                <input matInput [(ngModel)]="generalVM.issue">
-            </mat-form-field>
-        </div>
+        <ng-container *ngIf="store.$showJournaFields | async">
+            <div class="col-lg-3 pr-0" >
+                <mat-form-field appearance="fill">
+                    <mat-label>Journal Title Code</mat-label>
+                    <input matInput [(ngModel)]="generalVM.journalTitleCode">
+                </mat-form-field>
+            </div>
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Volume</mat-label>
+                    <input matInput [(ngModel)]="generalVM.volume">
+                </mat-form-field>
+            </div>
+            <div class="col-lg-3 pr-0">
+                <mat-form-field appearance="fill">
+                    <mat-label>Issue</mat-label>
+                    <input matInput [(ngModel)]="generalVM.issue">
+                </mat-form-field>
+            </div>
+        </ng-container>
     </div>
     <div class="col-lg-12 display-flex">
         <mat-form-field appearance="fill">
@@ -73,19 +95,19 @@
         <div class="col-lg-6 display-flex-direction-column">
             <span class="labels">Orientation</span>
             <mat-radio-group class="pt-3" [(ngModel)]="generalVM.orientationType">
-             <mat-radio-button  value="Portrait">Portrait</mat-radio-button>
-             <mat-radio-button  value="Landscape">Landscape</mat-radio-button>
-             <mat-radio-button  value="Square">Square</mat-radio-button>
-           </mat-radio-group>
+                <mat-radio-button value="Portrait">Portrait</mat-radio-button>
+                <mat-radio-button value="Landscape">Landscape</mat-radio-button>
+                <mat-radio-button value="Square">Square</mat-radio-button>
+            </mat-radio-group>
         </div>
         <div class="col-lg-6 display-flex-direction-column">
             <span class="labels">FSC?</span>
             <mat-radio-group class="pt-3" [(ngModel)]="generalVM.fscType">
-             <mat-radio-button  value="No">No</mat-radio-button>
-             <mat-radio-button  value="FSC-Mix">FSC-Mix</mat-radio-button>
-             <mat-radio-button  value="FSC-100%">FSC-100%</mat-radio-button>
-             <mat-radio-button  value="FSC-Recycled">FSC-Recycled</mat-radio-button>
-           </mat-radio-group>
+                <mat-radio-button value="No">No</mat-radio-button>
+                <mat-radio-button value="FSC-Mix">FSC-Mix</mat-radio-button>
+                <mat-radio-button value="FSC-100%">FSC-100%</mat-radio-button>
+                <mat-radio-button value="FSC-Recycled">FSC-Recycled</mat-radio-button>
+            </mat-radio-group>
         </div>
     </div>
 
@@ -94,53 +116,57 @@
     </div>
 
     <div class="col-lg-12 display-flex pl-0">
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Height(mm)</mat-label>
-                <input matInput [(ngModel)]="generalVM.height">
-            </mat-form-field>
+        <div class="col-lg-6">
+            <span class="labels">Close Size</span>
+            <div class="row pt-5">
+                <div class="col-lg-6 pr-0">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Height(mm)</mat-label>
+                        <input matInput [(ngModel)]="generalVM.height" type="number" min="0">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 pr-0">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Width(mm)</mat-label>
+                        <input matInput [(ngModel)]="generalVM.width" type="number" min="0">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 pr-0">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Weight(kg)</mat-label>
+                        <input matInput [(ngModel)]="generalVM.weight" type="number" min="0" readonly="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 pr-0">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Spine Width</mat-label>
+                        <input matInput [(ngModel)]="generalVM.spinWidth" type="number" min="0" readonly="true">
+                    </mat-form-field>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Width(mm)</mat-label>
-                <input matInput [(ngModel)]="generalVM.width">
-            </mat-form-field>
-        </div>
-    </div>
+        <div class="col-lg-6">
+            <div class="col-lg-12 display-flex pl-0">
+                <div class="col-lg-12">
+                    <mat-slide-toggle [(ngModel)]="generalVM.isOpenSize" labelPosition="before">Open Size
+                    </mat-slide-toggle>
+                </div>
+            </div>
+            <div class="col-lg-12 display-flex pt-3" *ngIf="generalVM.isOpenSize">
+                <div class="col-lg-6 pr-0">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Open Size Height(mm)</mat-label>
+                        <input matInput [(ngModel)]="generalVM.openSizeHeight" type="number" min="0">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 pr-0">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Open Size Width(mm)</mat-label>
+                        <input matInput [(ngModel)]="generalVM.openSizeWidth" type="number" min="0">
+                    </mat-form-field>
+                </div>
+            </div>
 
-    <div class="col-lg-12 display-flex pl-0 pb-5 pt-5">
-        <div class="col-lg-3">
-            <mat-slide-toggle [(ngModel)]="generalVM.isOpenSize" labelPosition="before">Open Size</mat-slide-toggle>
-        </div>
-    </div>
-
-    <div class="col-lg-12 display-flex pl-0" *ngIf="generalVM.isOpenSize">
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Open Size Height(mm)</mat-label>
-                <input matInput [(ngModel)]="generalVM.openSizeHeight">
-            </mat-form-field>
-        </div>
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Open Size Width(mm)</mat-label>
-                <input matInput [(ngModel)]="generalVM.openSizeWidth">
-            </mat-form-field>
-        </div>
-    </div>
-
-    <div class="col-lg-12 display-flex pl-0">
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Weight(kg)</mat-label>
-                <input matInput [(ngModel)]="generalVM.weight">
-            </mat-form-field>
-        </div>
-        <div class="col-lg-3 pr-0">
-            <mat-form-field appearance="fill">
-                <mat-label>Spine Width</mat-label>
-                <input matInput [(ngModel)]="generalVM.spinWidth">
-            </mat-form-field>
         </div>
     </div>
 
@@ -150,13 +176,19 @@
 
     <div class="col-lg-12 display-flex pl-0">
         <div class="col-lg-3">
-            <mat-slide-toggle [(ngModel)]="generalVM.isChildIsbnAdded" (change)="handleSpecAddToggle(productSpecTypesConstant.CHILD_ISBN)" labelPosition="before">Add Child ISBN</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="generalVM.isChildIsbnAdded"
+                (change)="handleSpecAddToggle(productSpecTypesConstant.CHILD_ISBN)" labelPosition="before">Add Child
+                ISBN</mat-slide-toggle>
         </div>
         <div class="col-lg-3">
-            <mat-slide-toggle [(ngModel)]="generalVM.isDvdAdded" (change)="handleSpecAddToggle(productSpecTypesConstant.DVD_CD)" labelPosition="before">Add DVD/CD</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="generalVM.isDvdAdded"
+                (change)="handleSpecAddToggle(productSpecTypesConstant.DVD_CD)" labelPosition="before">Add DVD/CD
+            </mat-slide-toggle>
         </div>
         <div class="col-lg-3">
-            <mat-slide-toggle [(ngModel)]="generalVM.isWebcodeAdded"  (change)="handleSpecAddToggle(productSpecTypesConstant.WEB_CODE)" labelPosition="before">Add WebCode</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="generalVM.isWebcodeAdded"
+                (change)="handleSpecAddToggle(productSpecTypesConstant.WEB_CODE)" labelPosition="before">Add WebCode
+            </mat-slide-toggle>
         </div>
     </div>
 </div>

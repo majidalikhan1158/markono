@@ -6,7 +6,8 @@ export const DynamicAsideMenuConfig = {
       bullet: 'dot',
       page: '/admin/app-dashboard',
       icon: 'flaticon2-browser-2',
-      svg: './assets/media/svg/icons/Design/Cap-2.svg',
+      png: './assets/media/menu-logos/ic_dashboard.png',
+      selected: './assets/media/menu-logos/ic_dashboard_Selected.png',
       permission: 'accessToAppDashboard'
     },
     {
@@ -15,7 +16,8 @@ export const DynamicAsideMenuConfig = {
       bullet: 'dot',
       page: '/material',
       icon: 'flaticon2-browser-2',
-      svg: './assets/media/svg/icons/Design/Cap-2.svg',
+      png: './assets/media/menu-logos/ic_casemanagement.png',
+      selected: './assets/media/menu-logos/ic_casemanagement_Selected.png',
       submenu: [
         {
           title: 'Create Case',
@@ -35,7 +37,8 @@ export const DynamicAsideMenuConfig = {
       bullet: 'dot',
       page: '/material',
       icon: 'flaticon2-browser-2',
-      svg: './assets/media/svg/icons/Design/Cap-2.svg',
+      png: './assets/media/menu-logos/ic_productLib.png',
+      selected: './assets/media/menu-logos/ic_productLib_Selected.png',
       submenu: [
         {
           title: 'Add Product',
@@ -50,8 +53,19 @@ export const DynamicAsideMenuConfig = {
       bullet: 'dot',
       page: '/admin/shopfloor-collection',
       icon: 'flaticon2-browser-2',
-      svg: './assets/media/svg/icons/Design/Cap-2.svg',
+      png: './assets/media/menu-logos/ic_shopfloorcollection.png',
+      selected: './assets/media/menu-logos/ic_shopfloorcollection_Selected.png',
       permission: 'accessToShopFloorCollection'
+    },
+    {
+      title: 'Platemaking',
+      root: true,
+      bullet: 'dot',
+      page: '/admin/platemaking',
+      icon: 'flaticon2-browser-2',
+      png: './assets/media/menu-logos/ic_platemaking.png',
+      selected: './assets/media/menu-logos/ic_platemaking_Selected.png',
+      permission: 'accessToPlatemaking'
     },
   ]
 };

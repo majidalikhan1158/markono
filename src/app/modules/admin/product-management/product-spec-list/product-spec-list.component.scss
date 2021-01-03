@@ -106,5 +106,18 @@ app-product-spec-list {
     .mat-form-field-wrapper {
       padding-bottom: 0px !important;
     }
+
+    .product-table-card .mat-row:hover {
+      background-color: whitesmoke;
+      cursor: pointer;
+    }
+    // .product-table-card a {
+    //   color: #5FACE2 !important;
+    //   cursor: pointer;
+    // }
+
+    // .product-table-card a:hover {
+    // //  text-decoration: underline !important;
+    // }
   }
   

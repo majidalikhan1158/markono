@@ -1,0 +1,19 @@
+app-user-profile {
+    .mat-form-field {
+        display: block !important;
+    }
+    .card-header {
+        min-height: 45px !important;
+    }
+
+    .card-header .card-title h3.card-label {
+        font-size: 20px !important;
+        font-family: "Roboto-Bold" !important;
+        font-weight: bold !important;
+    }
+
+    //   .personal-info-card .card-body {
+    //     padding-top: 18px !important;
+    //     padding-bottom: 18px !important;
+    //   }
+}

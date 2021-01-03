@@ -56,21 +56,24 @@
                                                     (change)="handleOrderQuantityChange(productDetailsVMList[i].id)"
                                                     [(ngModel)]="productDetailsVMList[i].sellingPrice"
                                                     [disabled]="disabled">
+                                                <span matPrefix>$&nbsp;</span>
+                                                <span matSuffix>.00</span>
                                             </mat-form-field>
                                         </td>
                                         <td>{{productDetailsVMList[i].subTotal}}</td>
                                         <td class="action-column pb-0 ">
-                                            <span class="material-icons delete-icon pr-2 cursor-pointer" 
-                                                (click)="deleteProductDetails(productDetailsVMList[i].id)" *ngIf="createCaseMode !== createCaseModes.EDIT && productDetailsVMList.length > 1"> 
+                                            <span class="material-icons delete-icon pr-2 cursor-pointer"
+                                                (click)="deleteProductDetails(productDetailsVMList[i].id)"
+                                                *ngIf="createCaseMode !== createCaseModes.EDIT && productDetailsVMList.length > 1">
                                                 delete
                                             </span>
                                             <span class="material-icons expansion-icon"
                                                 (click)="showProductDetails(productDetailsVMList[i].id)">
-                                                {{ 
-                                                productDetailsVMList[i].id == rowIdToExpand ? 
-                                                ExpansionIcons.KEYBOARD_ARROW_UP : 
-                                                ExpansionIcons.KEYBOARD_ARROW_DOWN 
-                                            }}
+                                                {{
+                                                productDetailsVMList[i].id == rowIdToExpand ?
+                                                ExpansionIcons.KEYBOARD_ARROW_UP :
+                                                ExpansionIcons.KEYBOARD_ARROW_DOWN
+                                                }}
                                             </span>
                                         </td>
                                     </tr>
@@ -191,13 +194,16 @@
                                                     <div class="col-lg-2 pr-0">
                                                         <p class="info-label">Est. Price</p>
                                                         <p class="info-label-value font-12px">
+                                                            $
                                                             {{productDetailsVMList[i].productISBNDetail.estimatedPrice}}
+                                                            .00
                                                         </p>
                                                     </div>
                                                     <div class="col-lg-2 pr-0">
                                                         <p class="info-label">Additional Unit price</p>
                                                         <p class="info-label-value font-12px">
-                                                            {{productDetailsVMList[i].productISBNDetail.additionalUnitPrice}}
+                                                            $
+                                                            {{productDetailsVMList[i].productISBNDetail.additionalUnitPrice}}.00
                                                         </p>
                                                     </div>
                                                     <div class="col-lg-2 pr-0">
@@ -250,9 +256,7 @@
 
 
 <app-modal id="ADD_BLUEPRINT_MODAL" size="modal-lg">
-    <app-add-blueprint-modal 
-    (acceptEvent)="handleAddBluePrintEvent($event)"
-    ></app-add-blueprint-modal>
+    <app-add-blueprint-modal (acceptEvent)="handleAddBluePrintEvent($event)"></app-add-blueprint-modal>
 </app-modal>
 
 <app-modal id="ADD_SAMPLES_MODAL" size="modal-lg">

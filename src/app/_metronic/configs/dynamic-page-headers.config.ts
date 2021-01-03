@@ -10,11 +10,11 @@ export const DynamicPageHeaderLabels = {
       page: '/admin/case-management/quotation-list',
     },
     {
-      title: 'Product Specs',
+      title: 'Add Product',
       page: '/admin/product-management/list',
     },
     {
-      title: 'Create Product Spec',
+      title: 'Add Product',
       page: '/admin/product-management/create',
     },
     {
@@ -24,6 +24,14 @@ export const DynamicPageHeaderLabels = {
     {
       title: 'Dashboard',
       page: '/admin/app-dashboard',
+    },
+    {
+      title: 'Platemaking',
+      page: '/admin/platemaking',
+    },
+    {
+      title: 'Profile',
+      page: '/admin/user-profile',
     }
   ]
 };

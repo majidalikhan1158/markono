@@ -40,5 +40,9 @@ export enum ProductSpecTypes {
     CHILD_ISBN,
     DVD_CD,
     WEBCODE,
-    UNIT_PRICE
+    UNIT_PRICE,
+    OTHER_COMPONENT,
+    CHECK_PRINT_FILE,
+    BINDING_OTHER_COMPONENT,
+    BINDING_DVD_CD
 }

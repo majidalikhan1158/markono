@@ -14,3 +14,11 @@ export interface SelectionList {
   text: string;
   enum: string;
 }
+
+export interface ProductSpecTypeObject {
+  value: string;
+  id: number;
+  enum: string;
+  isSelected: boolean;
+  isVisited: boolean;
+}

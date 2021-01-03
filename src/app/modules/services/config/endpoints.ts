@@ -4,7 +4,7 @@ export const Endpoints = {
     authentication: {
         getOrderServicesToken: 'Authentication/GetToken',
         getProductServicesToken: 'GetToken',
-        getShopFloorCollectionToken: `https://cors-anywhere.herokuapp.com/https://keycloak.markono.com/auth/realms/${environment.SHOP_FLOOR_AUTH_REALM}/protocol/openid-connect/token`
+        getShopFloorCollectionToken: `https://keycloak.markono.com/auth/realms/${environment.SHOP_FLOOR_AUTH_REALM}/protocol/openid-connect/token`
     },
     case: {
         getCaseType: 'Case/GetCaseType',
@@ -12,12 +12,23 @@ export const Endpoints = {
         getShipmentTerm: 'ShippingTerms/GetShippingTerms',
         getShipmentAgent: 'ShippingAgent/GetShippingAgent',
         getCustomerDetail: 'https://cors-anywhere.herokuapp.com/http://app.markono.com/PODUAT/Case/GetCustomerData',
-        createCase : 'Case/CreateCase'
+        createCase: 'Case/CreateCase'
 
     },
     product: {
         getLiveVersion: 'GetLiveVersion',
-        getProductVersions: 'GetProductVersions'
+        getProductVersions: 'GetProductVersions',
+        getProducts: 'getProducts',
+        getProductGroups: 'GetProductGroups',
+        getPaperMaterial: 'GetPaperMaterials',
+        getFinishingType: 'GetFinishings',
+        getBindingType: 'GetBindings',
+        getSpineWidth: 'GetSpineWidth',
+        getBookWeight: 'GetBookWeight',
+        createProduct: 'CreateProduct',
+        getFileCheckConfig: 'GetFileCheckConfig',
+        getCreateCheckPrintFile: 'CreateFileCheck',
+        getFileCheck: 'GetFileCheck'
     },
     shopFloor: {
         getMachinesList: 'machines?filter[active]=true&filter[sdcFlag]=true&sort=seq'

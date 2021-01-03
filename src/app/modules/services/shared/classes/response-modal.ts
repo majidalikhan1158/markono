@@ -1,10 +1,10 @@
 export interface ResponseModal {
-    error: any;
     result: {
         data: any,
         status: number,
         errors: any
     };
+    error: any;
     success: boolean;
     targetUrl: string;
     unAuthorizedRequest: boolean;

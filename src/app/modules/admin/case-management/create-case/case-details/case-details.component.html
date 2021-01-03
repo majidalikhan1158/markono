@@ -3,11 +3,12 @@
         <div class="col-lg-2 padding-l-0px" [hidden]="isShippingDetails && createCaseMode !== createCaseModes.EDIT">
             <div class="card card-custom example example-compact gutter-b case-details-types">
                 <div class="card-body">
-                    <mat-selection-list #caseDetailTypeList [multiple]="false"  (selectionChange)="handleCaseDetailTypeChange($event)">
+                    <mat-selection-list #caseDetailTypeList [multiple]="false"
+                        (selectionChange)="handleCaseDetailTypeChange($event)">
                         <mat-list-option *ngFor="let types of caseDetailTypesArray" class="font-14px"
-                        [selected]="types.isSelected" [value]="types.enum">
+                            [selected]="types.isSelected" [value]="types.enum">
                             {{types.value}}
-                            <span  *ngIf="createCaseMode === createCaseModes.EDIT"
+                            <span *ngIf="createCaseMode === createCaseModes.EDIT"
                                 (click)="redirectToSection($event, types.enum)"
                                 class="material-icons cursor-pointer font-14px float-right">
                                 edit
@@ -18,44 +19,38 @@
             </div>
         </div>
         <div
-        [ngClass]="isShippingDetails && createCaseMode !== createCaseModes.EDIT ? 'col-lg-12 pr-0' : 'col-lg-10 pr-0'">
-            <app-customer-info 
-                [createCaseMode]="createCaseMode" 
+            [ngClass]="isShippingDetails && createCaseMode !== createCaseModes.EDIT ? 'col-lg-12 pr-0' : 'col-lg-10 pr-0'">
+            <app-customer-info [createCaseMode]="createCaseMode"
                 *ngIf="(createCaseMode === createCaseModes.EDIT && currentSelectedType === caseDetailTypesConstant.CUSTOMER_INFO)">
             </app-customer-info>
-            <app-product-details 
-                [createCaseMode]="createCaseMode" 
+            <app-product-details [createCaseMode]="createCaseMode"
                 *ngIf="(currentSelectedType === caseDetailTypesConstant.PRODUCT_DETAILS) && !isShippingDetails">
             </app-product-details>
-            <app-shipping-info 
-                [createCaseMode]="createCaseMode" 
-                [isShippingDetails] = "isShippingDetails"
+            <app-shipping-info [createCaseMode]="createCaseMode" [isShippingDetails]="isShippingDetails"
                 *ngIf="(currentSelectedType === caseDetailTypesConstant.SHIPPING_INFO)">
             </app-shipping-info>
-            <app-misc-cost 
-                [createCaseMode]="createCaseMode" 
+            <app-misc-cost [createCaseMode]="createCaseMode"
                 *ngIf="(currentSelectedType === caseDetailTypesConstant.MISC_COST) && !isShippingDetails">
             </app-misc-cost>
-            <app-special-instructions 
-                [createCaseMode]="createCaseMode" 
+            <app-special-instructions [createCaseMode]="createCaseMode"
                 *ngIf="(currentSelectedType === caseDetailTypesConstant.SPECIAL_INSTRUCTIONS) && !isShippingDetails">
             </app-special-instructions>
-            <app-invoice 
-                [createCaseMode]="createCaseMode" 
+            <app-invoice [createCaseMode]="createCaseMode"
                 *ngIf="(currentSelectedType === caseDetailTypesConstant.INVOICE) && !isShippingDetails">
             </app-invoice>
         </div>
     </div>
 </div>
 
-<div class="row" *ngIf="(createCaseMode !== createCaseModes.EDIT || 
+<div class="row"
+    *ngIf="(createCaseMode !== createCaseModes.EDIT || 
     (createCaseMode === createCaseModes.EDIT && currentSelectedType === caseDetailTypesConstant.PRODUCT_DETAILS)) && !isShippingDetails">
     <div class="col-lg-12">
         <div class="card card-custom example example-compact gutter-b overall-cost-card">
             <div class="card-header">
-              <div class="card-title">
-                <h3 class="card-label">Overall Cost</h3>
-              </div>
+                <div class="card-title">
+                    <h3 class="card-label">Overall Cost</h3>
+                </div>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -64,46 +59,47 @@
                             Print & Bind
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
-                            {{overAllCostVM.printAndBind}}
+
+                            $ {{overAllCostVM.printAndBind}} .00
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
                         <mat-expansion-panel (opened)="panelOpenState" class="mat-expansion-panel"
-                        (closed)="panelOpenState = false">
-                        <mat-expansion-panel-header class="mat-expansion-panel-header">
-                          <mat-panel-title>
-                            Other Charges
-                          </mat-panel-title>
-                          <mat-panel-description>
-                            <span class="font-roboto-regular font-14px float-right" style="margin-left: 95%">
-                                {{overAllCostVM.otherChargesTotal}}
-                            </span>
-                          </mat-panel-description>
-                        </mat-expansion-panel-header>
-                        <ng-container *ngFor="let item of overAllCostVM.otherCharges">
-                           <div class="mb-2">
-                            <span class="span-grey material-icons pr-2">
-                                stop_circle
-                            </span>
-                            <span class="font-roboto-regular font-14px">
-                                {{item.type}}
-                            </span>
-                            <span class="font-roboto-regular font-14px float-right">
-                                {{item.total}}
-                            </span>
-                           </div>
-                        </ng-container>
-                      </mat-expansion-panel>
-                      
+                            (closed)="panelOpenState = false">
+                            <mat-expansion-panel-header class="mat-expansion-panel-header">
+                                <mat-panel-title class="font-roboto-regular font-14px float-right">
+                                    Other Charges
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    <span class="font-roboto-regular font-14px float-right" style="margin-left: 93%">
+                                        $ {{overAllCostVM.otherChargesTotal}}.00
+                                    </span>
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <ng-container *ngFor="let item of overAllCostVM.otherCharges">
+                                <div class="mb-2">
+                                    <span class="span-grey material-icons pr-2">
+                                        stop_circle
+                                    </span>
+                                    <span class="font-roboto-regular font-14px">
+                                        {{item.type}}
+                                    </span>
+                                    <span class="font-roboto-regular font-14px float-right">
+                                        {{item.total}}
+                                    </span>
+                                </div>
+                            </ng-container>
+                        </mat-expansion-panel>
+
                         <mat-divider class="mt-4"></mat-divider>
                     </div>
-                   
+
                     <div class="col-lg-12 mb-3">
                         <span class="font-roboto-regular font-14px">
                             Sub-total
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
-                            {{overAllCostVM.subTotal}}
+                            $ {{overAllCostVM.subTotal}}.00
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
@@ -112,18 +108,21 @@
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
                             <mat-form-field appearance="fill" class="width-90">
-                                <input type="number" min="0" matInput 
-                                (change)="handleDiscountChange()"  
-                                [(ngModel)]="overAllCostVM.discount">
-                            </mat-form-field> 
+                                <input type="number" min="0" matInput (change)="handleDiscountChange()"
+                                    [(ngModel)]="overAllCostVM.discount">
+                                <span matPrefix>$&nbsp;</span>
+                                <span matSuffix>.00</span>
+                            </mat-form-field>
                         </span>
+                        <mat-divider class="mt-4"></mat-divider>
                     </div>
+
                     <div class="col-lg-12 mb-3">
                         <span class="font-roboto-regular font-14px">
                             Tax (GST)
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
-                            {{overAllCostVM.tax}}
+                            $ {{overAllCostVM.tax}}.00
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
@@ -131,7 +130,7 @@
                             Total
                         </span>
                         <span class="font-roboto-bold font-14px float-right">
-                            {{overAllCostVM.total}}
+                            $ {{overAllCostVM.total}}.00
                         </span>
                     </div>
                 </div>

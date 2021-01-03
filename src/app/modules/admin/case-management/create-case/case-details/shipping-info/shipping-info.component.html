@@ -6,8 +6,9 @@
                     <div class="card card-custom example example-compact shipping-info-details-card">
                         <div class="card-header">
                             <div class="card-title">
-                            <h3 class="card-label" *ngIf="!isShippingDetails">Shipment {{shipment.boxId}}</h3>
-                            <h3 class="card-label" *ngIf="isShippingDetails && customerInfoVM">{{customerInfoVM.referenceNumber}}</h3>
+                                <h3 class="card-label" *ngIf="!isShippingDetails">Shipment {{shipment.boxId}}</h3>
+                                <h3 class="card-label" *ngIf="isShippingDetails && customerInfoVM">
+                                    {{customerInfoVM.referenceNumber}}</h3>
                             </div>
                             <div class="card-title">
                                 <span class="font-12px color-AFAFAF pr-2">Category: </span>
@@ -22,15 +23,17 @@
                                 <span class="font-12px card-label">{{getTotalShipmentQty(shipment.shipmentId)}}</span>
                             </div>
                             <div class="card-toolbar" *ngIf="!isShippingDetails">
-                                <span class="material-icons delete-icon pr-2 cursor-pointer" 
-                                    (click)="deleteShipment(shipment.shipmentId)" *ngIf="createCaseMode !== createCaseModes.EDIT"> 
+                                <span class="material-icons delete-icon pr-2 cursor-pointer"
+                                    (click)="deleteShipment(shipment.shipmentId)"
+                                    *ngIf="createCaseMode !== createCaseModes.EDIT">
                                     delete
                                 </span>
-                                <span class="material-icons expansion-icon cursor-pointer" (click)="displayShipmentDetails(shipment.shipmentId)">
-                                    {{ 
-                                        shipment.boxId == boxIdToExpand ? 
-                                        ExpansionIcons.KEYBOARD_ARROW_UP : 
-                                        ExpansionIcons.KEYBOARD_ARROW_DOWN 
+                                <span class="material-icons expansion-icon cursor-pointer"
+                                    (click)="displayShipmentDetails(shipment.shipmentId)">
+                                    {{
+                                    shipment.boxId == boxIdToExpand ?
+                                    ExpansionIcons.KEYBOARD_ARROW_UP :
+                                    ExpansionIcons.KEYBOARD_ARROW_DOWN
                                     }}
                                 </span>
                             </div>
@@ -38,19 +41,21 @@
                         <div class="card-body" *ngIf="shouldShowShipmentDetails && shipment.boxId === boxIdToExpand">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <span class="span-yellow material-icons pr-2" *ngIf="createCaseMode !== createCaseModes.EDIT">
+                                    <span class="span-yellow material-icons pr-2"
+                                        *ngIf="createCaseMode !== createCaseModes.EDIT">
                                         stop_circle
-                                      </span>
+                                    </span>
                                     <span class="card-body-header">Shipping Details</span>
                                 </div>
                             </div>
-                            
+
                             <div class="row pt-3">
                                 <div class="col-lg-12 display-flex">
                                     <div class="col-lg-3 pl-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Billable?</mat-label>
-                                            <mat-select [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.billable" [disabled]="disabled">
+                                            <mat-select [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.billable"
+                                                [disabled]="disabled">
                                                 <mat-option value="true">Yes</mat-option>
                                                 <mat-option value="false">No</mat-option>
                                             </mat-select>
@@ -59,63 +64,80 @@
                                     <div class="col-lg-3 pr-0 pl-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipment Promised Date</mat-label>
-                                            <input matInput [matDatepicker]="picker" 
-                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippmentPromisedDate" [disabled]="disabled">
+                                            <input matInput [matDatepicker]="picker"
+                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippmentPromisedDate"
+                                                [disabled]="disabled">
                                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                             <mat-datepicker #picker></mat-datepicker>
-                                        </mat-form-field> 
+                                        </mat-form-field>
                                     </div>
                                     <div class="col-lg-3 pr-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipment Mode</mat-label>
-                                            <mat-select  (selectionChange)="handleShipmentModeChange($event,shipment.shipmentId)" 
-                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shipmentMode" [disabled]="disabled">
-                                                <mat-option *ngFor="let item of shipmentModeList" [value]="item.id" >{{item.attributes.description}}</mat-option>
+                                            <mat-select
+                                                (selectionChange)="handleShipmentModeChange($event,shipment.shipmentId)"
+                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shipmentMode"
+                                                [disabled]="disabled">
+                                                <mat-option *ngFor="let item of shipmentModeList" [value]="item.id">
+                                                    {{item.attributes.description}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-lg-3 pr-0" *ngIf="!shipment.shippingDetails.isShipmentModeInternalTransfer && !shipment.shippingDetails.isShipmentModeLibrary">
+                                    <div class="col-lg-3 pr-0"
+                                        *ngIf="!shipment.shippingDetails.isShipmentModeInternalTransfer && !shipment.shippingDetails.isShipmentModeLibrary">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipping Terms</mat-label>
-                                            <mat-select  [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingTerms" [disabled]="disabled">
-                                                <mat-option *ngFor="let item of shipmentTermList" [value]="item.id" >{{item.attributes.code}}</mat-option>
+                                            <mat-select
+                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingTerms"
+                                                [disabled]="disabled">
+                                                <mat-option *ngFor="let item of shipmentTermList" [value]="item.id">
+                                                    {{item.attributes.code}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-lg-3 pr-0" *ngIf="shipment.shippingDetails.isShipmentModeInternalTransfer">
+                                    <div class="col-lg-3 pr-0"
+                                        *ngIf="shipment.shippingDetails.isShipmentModeInternalTransfer">
                                         <mat-form-field appearance="fill" class="">
                                             <mat-label>Storer Key</mat-label>
                                             <input matInput placeholder="Storer Key"
-                                            [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.storerKey" [disabled]="disabled">
+                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.storerKey"
+                                                [disabled]="disabled">
                                         </mat-form-field>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row pt-3">
-                                <div class="col-lg-12 display-flex" *ngIf="!shipment.shippingDetails.isShipmentModeInternalTransfer && !shipment.shippingDetails.isShipmentModeLibrary">
+                                <div class="col-lg-12 display-flex"
+                                    *ngIf="!shipment.shippingDetails.isShipmentModeInternalTransfer && !shipment.shippingDetails.isShipmentModeLibrary">
                                     <div class="col-lg-3 pl-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipping Agent</mat-label>
-                                            <mat-select  [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingAgent" [disabled]="disabled">
-                                                <mat-option *ngFor="let item of shipmentAgentList" [value]="item.id" >{{item.attributes.description}}</mat-option>
+                                            <mat-select
+                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingAgent"
+                                                [disabled]="disabled">
+                                                <mat-option *ngFor="let item of shipmentAgentList" [value]="item.id">
+                                                    {{item.attributes.description}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
                                     <div class="col-lg-3 pr-0 pl-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Account No</mat-label>
-                                            <input matInput  [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.accountNumber" [disabled]="disabled">
+                                            <input matInput
+                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.accountNumber"
+                                                [disabled]="disabled">
                                         </mat-form-field>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row pt-5">
                                 <div class="col-lg-12">
-                                    <span class="span-yellow material-icons pr-2" *ngIf="createCaseMode !== createCaseModes.EDIT">
+                                    <span class="span-yellow material-icons pr-2"
+                                        *ngIf="createCaseMode !== createCaseModes.EDIT">
                                         stop_circle
-                                      </span>
+                                    </span>
                                     <span class="card-body-header">Items</span>
                                 </div>
                             </div>
@@ -124,58 +146,61 @@
                                     <div class="tab-content">
                                         <!--begin::Table-->
                                         <div class="table-responsive">
-                                        <table class="table table-head-custom table-vertical-center
+                                            <table class="table table-head-custom table-vertical-center
                                         shipping-info-details-table">
-                                            <thead>
-                                            <tr class="text-left">
-                                                <th>#</th>
-                                                <th>ISBN/Product No</th>
-                                                <th>Title</th>
-                                                <th>Available Qty</th>
-                                                <th>This Shipment Qty</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                <ng-container *ngFor="let shipmentItem of shipmentsInfoVMList[i].shippingItems;let k = index;">
-                                                    <tr>
-                                                        <td>{{shipmentItem.id}}</td>
-                                                        <td>
-                                                            <ng-container *ngIf="isShippingDetails">
-                                                                <mat-form-field appearance="fill" class="">
-                                                                    <mat-label>Product ISBN</mat-label>
-                                                                    <input matInput 
-                                                                    [disabled]="disabled" 
-                                                                    [(ngModel)]="shipmentItem.productNumber">
-                                                                </mat-form-field>
-                                                            </ng-container>
-                                                            <ng-container *ngIf="!isShippingDetails">
-                                                                {{shipmentItem.productNumber}}
-                                                            </ng-container>
-                                                        </td>
-                                                        <td>{{isShippingDetails ? '-': shipmentItem.title}}</td>
-                                                        <td>{{isShippingDetails ? '-' : shipmentItem.availableQty}}</td>
-                                                        <td>
-                                                            <mat-form-field appearance="fill" class="" *ngIf="!isShippingDetails">
-                                                                <mat-label>Shipment Qty</mat-label>
-                                                                <input matInput type="number"
-                                                                (change)="handleShipmentQtyChange(shipment.shipmentId, shipmentItem.id, $event)" 
-                                                                value="{{getShipmentItemQty(shipment.shipmentId, shipmentItem.id)}}"
-                                                                [disabled]="disabled || !(shipmentItem.maximumAllowed > 0)" 
-                                                                min="0" max="{{shipmentItem.maximumAllowed}}">
-                                                            </mat-form-field>
-                                                            <mat-form-field appearance="fill" class="" *ngIf="isShippingDetails">
-                                                                <mat-label>Shipment Qty</mat-label>
-                                                                <input matInput type="number"
-                                                                (change)="handleShipmentQtyChange(shipment.shipmentId, shipmentItem.id, $event)" 
-                                                                value="{{getShipmentItemQty(shipment.shipmentId, shipmentItem.id)}}"
-                                                                [disabled]="disabled">
-                                                            </mat-form-field>
-                                                        </td>
+                                                <thead>
+                                                    <tr class="text-left">
+                                                        <th>#</th>
+                                                        <th>ISBN/Product No</th>
+                                                        <th>Title</th>
+                                                        <th>Available Qty</th>
+                                                        <th>This Shipment Qty</th>
                                                     </tr>
-                                                </ng-container>
-                                            </tbody>
-                                        </table>
-                        
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container
+                                                        *ngFor="let shipmentItem of shipmentsInfoVMList[i].shippingItems;let k = index;">
+                                                        <tr>
+                                                            <td>{{shipmentItem.id}}</td>
+                                                            <td>
+                                                                <ng-container *ngIf="isShippingDetails">
+                                                                    <mat-form-field appearance="fill" class="">
+                                                                        <mat-label>Product ISBN</mat-label>
+                                                                        <input matInput [disabled]="disabled"
+                                                                            [(ngModel)]="shipmentItem.productNumber">
+                                                                    </mat-form-field>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="!isShippingDetails">
+                                                                    {{shipmentItem.productNumber}}
+                                                                </ng-container>
+                                                            </td>
+                                                            <td>{{isShippingDetails ? '-': shipmentItem.title}}</td>
+                                                            <td>{{isShippingDetails ? '-' : shipmentItem.availableQty}}
+                                                            </td>
+                                                            <td>
+                                                                <mat-form-field appearance="fill" class=""
+                                                                    *ngIf="!isShippingDetails">
+                                                                    <mat-label>Shipment Qty</mat-label>
+                                                                    <input matInput type="number"
+                                                                        (change)="handleShipmentQtyChange(shipment.shipmentId, shipmentItem.id, $event)"
+                                                                        value="{{getShipmentItemQty(shipment.shipmentId, shipmentItem.id)}}"
+                                                                        [disabled]="disabled || !(shipmentItem.maximumAllowed > 0)"
+                                                                        min="0" max="{{shipmentItem.maximumAllowed}}">
+                                                                </mat-form-field>
+                                                                <mat-form-field appearance="fill" class=""
+                                                                    *ngIf="isShippingDetails">
+                                                                    <mat-label>Shipment Qty</mat-label>
+                                                                    <input matInput type="number"
+                                                                        (change)="handleShipmentQtyChange(shipment.shipmentId, shipmentItem.id, $event)"
+                                                                        value="{{getShipmentItemQty(shipment.shipmentId, shipmentItem.id)}}"
+                                                                        [disabled]="disabled">
+                                                                </mat-form-field>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </tbody>
+                                            </table>
+
                                         </div>
                                         <!--end::Table-->
                                     </div>
@@ -184,9 +209,10 @@
 
                             <div class="row pt-5">
                                 <div class="col-lg-12">
-                                    <span class="span-yellow material-icons pr-2" *ngIf="createCaseMode !== createCaseModes.EDIT">
+                                    <span class="span-yellow material-icons pr-2"
+                                        *ngIf="createCaseMode !== createCaseModes.EDIT">
                                         stop_circle
-                                      </span>
+                                    </span>
                                     <span class="card-body-header">Shipment Specific Costs</span>
                                 </div>
                             </div>
@@ -195,68 +221,80 @@
                                     <div class="tab-content">
                                         <!--begin::Table-->
                                         <div class="">
-                                        <table class="table table-head-custom table-vertical-center
+                                            <table class="table table-head-custom table-vertical-center
                                         shipping-info-details-table">
-                                            <thead>
-                                            <tr class="text-left">
-                                                <th>#</th>
-                                                <th>Cost Category</th>
-                                                <th>Description</th>
-                                                <th>Sub-Total</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr *ngFor="let rowId of shipmentsInfoVMList[i].shippingSpecificCost;let j = index;">
-                                                <td>{{rowId.id}}</td>
-                                                <td>
-                                                    <mat-form-field appearance="fill">
-                                                        <mat-label>Choose</mat-label>
-                                                        <mat-select  [(ngModel)]="rowId.costCategory" [disabled]="disabled">
-                                                            <mat-option value="Filfillment">Filfillment</mat-option>
-                                                            <mat-option value="Fulfillment">Fulfillment</mat-option>
-                                                            <mat-option value="Packing Materials">Packing Materials</mat-option>
-                                                            <mat-option value="Order Handling">Order Handling</mat-option>
-                                                            <mat-option value="Shipping">Shipping</mat-option>
-                                                            <mat-option value="Storage Charges">Storage Charges</mat-option>
-                                                            <mat-option value="Value Added Services">Value Added Services</mat-option>
-                                                        </mat-select>
-                                                    </mat-form-field>
-                                                </td>
-                                                <td>
-                                                    <mat-form-field appearance="fill">
-                                                        <mat-label>Write Description</mat-label>
-                                                        <input matInput   [(ngModel)]="rowId.description" [disabled]="disabled">
-                                                    </mat-form-field>
-                                                </td>
-                                                <td>
-                                                    <mat-form-field appearance="fill">
-                                                        <mat-label>Sub total</mat-label>
-                                                        <input matInput [(ngModel)]="rowId.subTotal" [disabled]="disabled"
-                                                        (change)="handleSubTotalCost()">
-                                                    </mat-form-field>
-                                                </td>
-                                                <td>
-                                                    <span class="material-icons delete-icon pr-2 cursor-pointer pt-3"
-                                                     (click)="deleteRow(shipment.shipmentId,rowId.id)" 
-                                                     *ngIf="shipmentsInfoVMList[i].shippingSpecificCost.length > 1 && createCaseMode !== createCaseModes.EDIT">
-                                                        delete
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                            <tr  *ngIf="createCaseMode !== createCaseModes.EDIT">
-                                                <td colspan="5" class="pb-3">
-                                                    <a (click)="addRow(shipment.shipmentId)">
-                                                        <span class="material-icons add-icon pr-2 cursor-pointer">
-                                                            add_circle_outline
-                                                        </span>
-                                                        <span class="font-14px blue-link ">ADD ANOTHER</span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                        
+                                                <thead>
+                                                    <tr class="text-left">
+                                                        <th>#</th>
+                                                        <th>Cost Category</th>
+                                                        <th>Description</th>
+                                                        <th>Sub-Total</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr
+                                                        *ngFor="let rowId of shipmentsInfoVMList[i].shippingSpecificCost;let j = index;">
+                                                        <td>{{rowId.id}}</td>
+                                                        <td>
+                                                            <mat-form-field appearance="fill">
+                                                                <mat-label>Choose</mat-label>
+                                                                <mat-select [(ngModel)]="rowId.costCategory"
+                                                                    [disabled]="disabled">
+                                                                    <mat-option value="Filfillment">Filfillment
+                                                                    </mat-option>
+                                                                    <mat-option value="Fulfillment">Fulfillment
+                                                                    </mat-option>
+                                                                    <mat-option value="Packing Materials">Packing
+                                                                        Materials</mat-option>
+                                                                    <mat-option value="Order Handling">Order Handling
+                                                                    </mat-option>
+                                                                    <mat-option value="Shipping">Shipping</mat-option>
+                                                                    <mat-option value="Storage Charges">Storage Charges
+                                                                    </mat-option>
+                                                                    <mat-option value="Value Added Services">Value Added
+                                                                        Services</mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </td>
+                                                        <td>
+                                                            <mat-form-field appearance="fill">
+                                                                <mat-label>Write Description</mat-label>
+                                                                <input matInput [(ngModel)]="rowId.description"
+                                                                    [disabled]="disabled">
+                                                            </mat-form-field>
+                                                        </td>
+                                                        <td>
+                                                            <mat-form-field appearance="fill">
+                                                                <mat-label>Sub total</mat-label>
+                                                                <input matInput [(ngModel)]="rowId.subTotal"
+                                                                    [disabled]="disabled"
+                                                                    (change)="handleSubTotalCost()">
+                                                            </mat-form-field>
+                                                        </td>
+                                                        <td>
+                                                            <span
+                                                                class="material-icons delete-icon pr-2 cursor-pointer pt-3"
+                                                                (click)="deleteRow(shipment.shipmentId,rowId.id)"
+                                                                *ngIf="shipmentsInfoVMList[i].shippingSpecificCost.length > 1 && createCaseMode !== createCaseModes.EDIT">
+                                                                delete
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngIf="createCaseMode !== createCaseModes.EDIT">
+                                                        <td colspan="5" class="pb-3">
+                                                            <a (click)="addRow(shipment.shipmentId)">
+                                                                <span
+                                                                    class="material-icons add-icon pr-2 cursor-pointer">
+                                                                    add_circle_outline
+                                                                </span>
+                                                                <span class="font-14px blue-link ">ADD ANOTHER</span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
                                         </div>
                                         <!--end::Table-->
                                     </div>
@@ -264,9 +302,10 @@
                             </div>
                             <div class="display-flex pt-5">
                                 <div class="col-lg-6 pl-0">
-                                    <span class="span-yellow material-icons pr-2" *ngIf="createCaseMode !== createCaseModes.EDIT">
+                                    <span class="span-yellow material-icons pr-2"
+                                        *ngIf="createCaseMode !== createCaseModes.EDIT">
                                         stop_circle
-                                      </span>
+                                    </span>
                                     <span class="card-body-header">Shipment to Address</span>
                                     <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0">
@@ -286,7 +325,8 @@
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Email</mat-label>
-                                                <input type="email" matInput [(ngModel)]="shipment.shipmentAddress.Email">
+                                                <input type="email" matInput
+                                                    [(ngModel)]="shipment.shipmentAddress.Email">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pl-0">
@@ -334,27 +374,31 @@
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Country</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentAddress.CountryRegionCode">
+                                                <input matInput
+                                                    [(ngModel)]="shipment.shipmentAddress.CountryRegionCode">
                                             </mat-form-field>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 pl-0 pr-0">
-                                    <span class="span-yellow material-icons pr-2" *ngIf="createCaseMode !== createCaseModes.EDIT">
+                                    <span class="span-yellow material-icons pr-2"
+                                        *ngIf="createCaseMode !== createCaseModes.EDIT">
                                         stop_circle
-                                      </span>
+                                    </span>
                                     <span class="card-body-header">Billing Details</span>
                                     <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Bill-to No</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.BillToNumber">
+                                                <input matInput
+                                                    [(ngModel)]="shipment.shipmentBillingDetails.BillToNumber">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Attention To</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.AttentionTo">
+                                                <input matInput
+                                                    [(ngModel)]="shipment.shipmentBillingDetails.AttentionTo">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -368,7 +412,8 @@
                                         <div class="col-lg-6 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Email</mat-label>
-                                                <input type="email" matInput [(ngModel)]="shipment.shipmentBillingDetails.Email">
+                                                <input type="email" matInput
+                                                    [(ngModel)]="shipment.shipmentBillingDetails.Email">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -418,13 +463,15 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Country</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.CountryRegionCode">
+                                                <input matInput
+                                                    [(ngModel)]="shipment.shipmentBillingDetails.CountryRegionCode">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Co-ordinator</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.Coordinator">
+                                                <input matInput
+                                                    [(ngModel)]="shipment.shipmentBillingDetails.Coordinator">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -432,7 +479,8 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Sales Person</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.SalesPerson">
+                                                <input matInput
+                                                    [(ngModel)]="shipment.shipmentBillingDetails.SalesPerson">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -440,22 +488,24 @@
                             </div>
                         </div>
                     </div>
-                 </ng-container>
+                </ng-container>
             </div>
         </div>
-        <div class="row pt-4" style="margin: auto">
-            <div class="col-lg-12 padding-0px"  *ngIf="createCaseMode !== createCaseModes.EDIT" [hidden]="isShippingDetails">
+        <div class="row sticky-bottom full-width pt-4" style="margin: auto">
+            <div class="col-lg-12 padding-0px" *ngIf="createCaseMode !== createCaseModes.EDIT"
+                [hidden]="isShippingDetails">
                 <div class="col-lg-4">
                     <mat-form-field appearance="fill" class="selectBoxShippingType">
                         <mat-label>Add Shipment Type</mat-label>
                         <mat-select (selectionChange)="handleShipmentTypeChange($event)" [compareWith]="compare"
-                        [formControl]="shipmentSelectedTypeFormControl" >
-                            <mat-option  [value]="item.value"  *ngFor="let item of shipmentTypesArray"> {{item.text}}</mat-option>
+                            [formControl]="shipmentSelectedTypeFormControl">
+                            <mat-option [value]="item.value" *ngFor="let item of shipmentTypesArray"> {{item.text}}
+                            </mat-option>
                         </mat-select>
                     </mat-form-field>
-                  
+
                 </div>
             </div>
-        </div> 
+        </div>
     </div>
-</div> 
+</div>

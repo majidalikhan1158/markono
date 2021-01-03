@@ -3,7 +3,6 @@
 // Pages SASS files are compiled into separate css files
 //
 
-
 // Initialization of global variables, mixins and functions
 @import "../../init";
 
@@ -69,16 +68,16 @@
     .login.login-1 {
         .login-aside {
             width: 100%;
-            max-width: 600px;
+            max-width: 710px !important;
         }
 
         .login-content {
             width: 100%;
-            max-width: 500px;
+            // max-width: 500px;
 
             .login-form {
                 width: 100%;
-                max-width: 450px;
+                //  max-width: 450px;
             }
         }
     }
@@ -89,7 +88,7 @@
     .login.login-1 {
         .login-aside {
             width: 100%;
-            max-width: 450px;
+            // max-width: 450px;
         }
     }
 }

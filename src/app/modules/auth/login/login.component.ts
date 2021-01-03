@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     password: 'demo',
   };
   loginForm: FormGroup;
-  hasError: boolean;
+  hasError: boolean = false;
   returnUrl: string;
   isLoading$: Observable<boolean>;
 

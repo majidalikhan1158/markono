@@ -5,49 +5,54 @@
                 <div class="tab-content">
                     <!--begin::Table-->
                     <div class="">
-                      <table class="table table-head-custom  table-vertical-center
+                        <table class="table table-head-custom  table-vertical-center
                       special-instruction-table">
-                        <thead>
-                          <tr class="text-left text-uppercase">
-                            <th *ngFor="let item of columnsToDisplay"> {{item}}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            <ng-container *ngFor="let rowId of rowsToDisplay;let i = index;">
-                                <tr class="outer-row">
-                                    <td>
-                                        {{rowsToDisplay[i].id}}
-                                    <td>
-                                        <mat-form-field appearance="fill">
-                                            <input 
+                            <thead>
+                                <tr class="text-left text-uppercase">
+                                    <th *ngFor="let item of columnsToDisplay"> {{item}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngFor="let rowId of rowsToDisplay;let i = index;">
+                                    <tr class="outer-row">
+                                        <td>
+                                            {{rowsToDisplay[i].id}}
+                                        <td>
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Dept. Name</mat-label>
+                                                <mat-select [(ngModel)]="rowsToDisplay[i].department"
+                                                    (selectionChange)="handleChangeToSyncWithStore()">
+                                                    <mat-option></mat-option>
+                                                </mat-select>
+                                                <!-- <input 
                                                 [(ngModel)]="rowsToDisplay[i].department"
                                                 matInput [disabled]="disabled"
                                                 (change)="handleChangeToSyncWithStore()"
-                                                placeholder="Dept. Name">
-                                        </mat-form-field>
-                                    </td>
-                                    <td class="width-590">
-                                        <mat-form-field appearance="fill">
-                                            <input 
-                                                [(ngModel)]="rowsToDisplay[i].instructions"
-                                                matInput   [disabled]="disabled"
-                                                (change)="handleChangeToSyncWithStore()"
-                                                placeholder="Write Instructions">
-                                        </mat-form-field>
-                                    </td>
-                                    <td>
-                                        <span class="material-icons delete-icon pr-2 cursor-pointer" (click)="deleteRow(rowsToDisplay[i].id)" *ngIf="rowsToDisplay.length > 1">
-                                            delete
-                                        </span>
-                                    </td>
-                                </tr> 
-                            </ng-container>
-                        </tbody>
-                      </table>
-      
+                                                placeholder="Dept. Name"> -->
+                                            </mat-form-field>
+                                        </td>
+                                        <td class="width-590">
+                                            <mat-form-field appearance="fill">
+                                                <input [(ngModel)]="rowsToDisplay[i].instructions" matInput
+                                                    [disabled]="disabled" (change)="handleChangeToSyncWithStore()"
+                                                    placeholder="Write Instructions">
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <span class="material-icons delete-icon pr-2 cursor-pointer"
+                                                (click)="deleteRow(rowsToDisplay[i].id)"
+                                                *ngIf="rowsToDisplay.length > 1">
+                                                delete
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+
                     </div>
                     <!--end::Table-->
-                  </div>
+                </div>
             </div>
         </div>
         <br><br>
@@ -58,8 +63,8 @@
                         add_circle_outline
                     </span>
                     <span class="font-14px blue-link ">ADD ANOTHER</span>
-                </a> 
+                </a>
             </div>
         </div>
     </div>
-</div> 
+</div>

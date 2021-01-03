@@ -12,7 +12,7 @@ export class HeaderMobileComponent implements OnInit, AfterViewInit {
   headerMenuSelfDisplay = true;
   headerMobileClasses = '';
   headerMobileAttributes = {};
-  constructor(private layout: LayoutService) {}
+  constructor(private layout: LayoutService) { }
 
   ngOnInit(): void {
     // build view by layout config settings
@@ -36,14 +36,14 @@ export class HeaderMobileComponent implements OnInit, AfterViewInit {
   private getLogoUrl() {
     const headerSelfTheme = this.layout.getProp('header.self.theme') || '';
     const brandSelfTheme = this.layout.getProp('brand.self.theme') || '';
-    let result = 'logo-light.png';
+    let result = 'PrintAI.png';
     if (!this.asideSelfDisplay) {
       if (headerSelfTheme === 'light') {
-        result = 'logo-dark.png';
+        result = 'PrintAI.png';
       }
     } else {
       if (brandSelfTheme === 'light') {
-        result = 'logo-dark.png';
+        result = 'PrintAI.png';
       }
     }
     return `./assets/media/logos/${result}`;

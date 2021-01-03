@@ -1,27 +1,17 @@
 <!--begin::Container-->
-<div
-  [ngClass]="headerContainerCSSClasses"
-  class="d-flex align-items-stretch justify-content-between"
->
+<div [ngClass]="headerContainerCSSClasses" class="d-flex align-items-stretch justify-content-between">
   <ng-container *ngIf="loader$ | async as _loader">
-    <ngb-progressbar
-      class="loading-bar"
-      height="3px"
-      [value]="_loader"
-    ></ngb-progressbar>
+    <ngb-progressbar class="loading-bar" height="3px" [value]="_loader"></ngb-progressbar>
   </ng-container>
 
   <ng-container *ngIf="headerMenuSelfDisplay">
     <!--begin::Header Menu Wrapper-->
-    <div
-      class="header-menu-wrapper header-menu-wrapper-left"
-      id="kt_header_menu_wrapper"
-    >
+    <div class="header-menu-wrapper header-menu-wrapper-left" id="kt_header_menu_wrapper">
       <ng-container *ngIf="!asideSelfDisplay">
         <!--begin::Header Logo-->
         <div class="header-logo">
           <a routerLink="/">
-            <img alt="Logo" [attr.src]="headerLogo" />
+            <img alt="Logo" [attr.src]="headerLogo" width="100px" />
           </a>
         </div>
         <!--end::Header Logo-->
@@ -30,12 +20,8 @@
       <!--begin::Header Menu-->
       <!-- Don't change id => 'kt_header_menu' -->
       <!-- STATIC MENU -->
-      <app-header-menu
-        #ktHeaderMenu
-        id="kt_header_menu"
-        class="header-menu header-menu-mobile"
-        [ngClass]="headerMenuCSSClasses"
-      ></app-header-menu>
+      <app-header-menu #ktHeaderMenu id="kt_header_menu" class="header-menu header-menu-mobile"
+        [ngClass]="headerMenuCSSClasses"></app-header-menu>
     </div>
     <!--end::Header Menu Wrapper-->
   </ng-container>

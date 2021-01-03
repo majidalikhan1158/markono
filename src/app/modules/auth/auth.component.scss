@@ -1,5 +1,18 @@
 @import "../../../assets/sass/pages/login/login-1.scss";
-
-:host {
-  height: 100%;
+app-auth {
+  :host {
+    height: 100%;
+  }
+  .carousel-indicators {
+    padding-right: 164px;
+  }
+  .mat-focus-indicator {
+    color: gray !important;
+  }
+  // margin-top: -126px !important;
+  // @include media-breakpoint-between(lg, xl) {
+  //   .flex-center {
+  //     padding-top: 0px;
+  //   }
+  // }
 }

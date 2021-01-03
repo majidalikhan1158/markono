@@ -154,7 +154,7 @@
   <div class="topbar-item">
     <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2">
       <button class="mat-focus-indicator btn btn-primary mat-button mat-button-base text-upper-case"
-        (click)="openCreateProductSpecModal('ADD_PRODUCT_SPEC_MODAL')">+ Create Product Specs</button>
+        (click)="openCreateProductSpecModal('ADD_PRODUCT_SPEC_MODAL')">+ Add Product</button>
     </div>
   </div>
 </ng-container>
@@ -189,19 +189,19 @@
 </ng-container>
 
 <ng-container *ngIf="extrasUserDisplay">
-  <ng-container *ngIf="extrasUserLayout === 'offcanvas'">
+  <ng-container *ngIf="extrasUserLayout === 'dropdown'">
     <ng-container *ngIf="user$ | async as _user">
       <!--begin::User-->
       <div class="topbar-item">
         <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2"
           id="kt_quick_user_toggle">
           <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,</span>
-          <span
-            class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{ _user.fullname }}</span>
+          <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{ _user.fullname
+            }}</span>
           <span class="symbol symbol-lg-35 symbol-25 symbol-light-success">
             <span class="symbol-label font-size-h5 font-weight-bold">{{
               _user.fullname | firstLetter
-            }}</span>
+              }}</span>
           </span>
         </div>
       </div>
@@ -209,27 +209,43 @@
     </ng-container>
   </ng-container>
 
-  <ng-container *ngIf="extrasUserLayout === 'dropdown'">
+  <ng-container *ngIf="extrasUserLayout === 'offcanvas'">
     <!--begin::User-->
     <ng-container *ngIf="user$ | async as _user">
       <div class="dropdown" ngbDropdown placement="bottom-right">
         <div class="topbar-item" data-toggle="dropdown" data-offset="0px,0px" ngbDropdownToggle>
           <div class="btn btn-icon w-auto btn-clean d-flex align-items-center btn-lg px-2">
             <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,</span>
-            <span
-              class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{ _user.fullname }}</span>
+            <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{ _user.fullname
+              }}</span>
             <span class="symbol symbol-35 symbol-light-success">
               <span class="symbol-label font-size-h5 font-weight-bold">{{
                 _user.fullname | firstLetter
-              }}</span>
+                }}</span>
             </span>
           </div>
         </div>
         <!--end::Toggle-->
         <!--begin::Dropdown-->
-        <div ngbDropdownMenu
-          class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg p-0">
-          <app-user-dropdown-inner></app-user-dropdown-inner>
+        <div ngbDropdownMenu class="dropdown-menu p-0 m-0 dropdown-menu-anim-up dropdown-menu-sm dropdown-menu-right">
+          <ul class="navi navi-hover py-4">
+            <li class="navi-item">
+              <a href="javascript:;" class="navi-link" [routerLink]='["/admin/user-profile"]'>
+                <span class="symbol symbol-20 mr-3">
+                  <mat-icon>person</mat-icon>
+                </span>
+                <span class="navi-text">My Profile</span>
+              </a>
+            </li>
+            <li class="navi-item">
+              <a href="javascript:;" class="navi-link">
+                <span class="symbol symbol-20 mr-3">
+                  <mat-icon>exit_to_app</mat-icon>
+                </span>
+                <span class="navi-text">Logout</span>
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
       <!--end::Dropdown-->

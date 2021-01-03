@@ -104,7 +104,13 @@
       <div class="card card-custom example example-compact gutter-b onthe-machine-card">
         <div class="card-header">
           <div class="card-title">
-            <h3 class="card-label">On The Machine</h3>
+            <div style="width: inherit;">
+              <h3 class="card-label">On The Machine</h3>
+            </div>
+            <div class="text-right" style="width: inherit;" *ngIf="machineCurrentJobVM">
+              <span>Status: </span>
+              <span>{{machineCurrentJobVM.jobStatus}}</span>
+            </div>
           </div>
         </div>
         <div class="card-body">
@@ -139,12 +145,12 @@
               </div>
               <div class="col-lg-3 padding-l-0px padding-r-0px">
                 <div class="margin-t-22px text-right">
-                  <button class="pr-2 job-status-action-buttons"
+                  <button class="pr-2 job-status-action-buttons" title="Stop the job"
                     (click)="handleJobActionState(machineCurrentJobVM?.jobActionStop, 'stopped')"
                     [disabled]="machineCurrentJobVM?.jobReadOnly">
                     <img src="./assets/media/custom-icons/stop-icon.png" />
                   </button>
-                  <button class="job-status-action-buttons"
+                  <button class="job-status-action-buttons" title="Pause the job"
                     (click)="handleJobActionState(machineCurrentJobVM?.jobActionPause, 'paused')"
                     [disabled]="machineCurrentJobVM?.jobReadOnly">
                     <img src="./assets/media/custom-icons/pause-icon.png" />

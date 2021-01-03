@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { LayoutService, DynamicAsideMenuService, DynamicHeaderMenuService } from '../../../../_metronic/core';
 import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-headers.config';
-
+import { $ } from 'protractor';
 @Component({
   selector: 'app-aside-dynamic',
   templateUrl: './aside-dynamic.component.html',
@@ -24,9 +24,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   brandClasses: string;
   asideMenuScroll = 1;
   asideSelfMinimizeToggle = false;
-
   currentUrl: string;
-
   constructor(
     private layout: LayoutService,
     private router: Router,
@@ -113,13 +111,14 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
 
   private getLogo() {
     if (this.brandSkin === 'light') {
-      return './assets/media/logos/logo-dark.png';
+      return './assets/media/logos/PrintAI.png';
     } else {
-      return './assets/media/logos/logo-light.png';
+      return './assets/media/logos/PrintAI.png';
     }
   }
 
   isMenuItemActive(path) {
+
     if (!this.currentUrl || !path) {
       return false;
     }
@@ -131,9 +130,10 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     if (this.currentUrl.indexOf(path) > -1) {
       return true;
     }
-
     return false;
   }
+
+
 
   ngOnDestroy() {
     this.subscriptions.forEach(sb => sb.unsubscribe());

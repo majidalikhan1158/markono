@@ -86,16 +86,15 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       'header_menu'
     );
   }
-
   private getLogoURL(): string {
-    let result = 'logo-light.png';
+    let result = 'PrintAI.png';
 
     if (this.headerSelfTheme && this.headerSelfTheme === 'light') {
-      result = 'logo-dark.png';
+      result = 'PrintAI.png';
     }
 
     if (this.headerSelfTheme && this.headerSelfTheme === 'dark') {
-      result = 'logo-dark.png';
+      result = 'PrintAI.png';
     }
 
     return `./assets/media/logos/${result}`;

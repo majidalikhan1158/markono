@@ -14,12 +14,15 @@ import { ModalComponent } from '../shared/ui-modals/modal/modal.component';
 import { SharedModule } from '../shared/shared.module';
 import { SplashScreenModule } from './../../_metronic/partials/layout/splash-screen/splash-screen.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { OverlayModule } from '@angular/cdk/overlay'
+import { OverlayModule } from '@angular/cdk/overlay';
+import { PlatemakingComponent } from './platemaking/platemaking.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
+
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };
 @NgModule({
-  declarations: [AdminComponent, ShopFloorCollectionComponent, AppDashboardComponent],
+  declarations: [AdminComponent, ShopFloorCollectionComponent, AppDashboardComponent, PlatemakingComponent, UserProfileComponent],
   imports: [
     RouterModule,
     CommonModule,
@@ -29,7 +32,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MaterialUiModule,
     NgApexchartsModule,
     PerfectScrollbarModule, SharedModule, SplashScreenModule, MatProgressSpinnerModule,
-    OverlayModule
+    OverlayModule,
   ],
   exports: [RouterModule],
   providers: [

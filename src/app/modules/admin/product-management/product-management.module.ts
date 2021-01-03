@@ -16,16 +16,39 @@ import { SpecChildIsbnComponent } from './create-product/product-specifications/
 import { SpecDvdCdComponent } from './create-product/product-specifications/spec-dvd-cd/spec-dvd-cd.component';
 import { SpecWebcodeComponent } from './create-product/product-specifications/spec-webcode/spec-webcode.component';
 import { SpecUnitPriceComponent } from './create-product/product-specifications/spec-unit-price/spec-unit-price.component';
-
+import { SpecOtherComponent } from './create-product/product-specifications/spec-other/spec-other.component';
+import { SpecCheckPrintFileComponent } from './create-product/product-specifications/spec-check-print-file/spec-check-print-file.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { SpecLayoutPrepComponent } from './create-product/product-specifications/spec-layout-prep/spec-layout-prep.component';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 
 @NgModule({
-  declarations: [CreateProductComponent, ProductSpecListComponent, ProductVersionsComponent, PastOrdersComponent, ProductSpecificationsComponent, SpecGeneralComponent, SpecCoverComponent, SpecTextComponent, SpecBindingComponent, SpecChildIsbnComponent, SpecDvdCdComponent, SpecWebcodeComponent, SpecUnitPriceComponent],
+  declarations: [
+    CreateProductComponent,
+    ProductSpecListComponent,
+    ProductVersionsComponent,
+    PastOrdersComponent,
+    ProductSpecificationsComponent,
+    SpecGeneralComponent,
+    SpecCoverComponent,
+    SpecTextComponent,
+    SpecBindingComponent,
+    SpecChildIsbnComponent,
+    SpecDvdCdComponent,
+    SpecWebcodeComponent,
+    SpecUnitPriceComponent,
+    SpecOtherComponent,
+    SpecCheckPrintFileComponent,
+    SpecLayoutPrepComponent
+  ],
   imports: [
     ProductManagementRoutingModule,
     CommonModule,
     MaterialUiModule,
-    SharedModule
+    SharedModule,
+    NgApexchartsModule,
+    NgxMatSelectSearchModule
   ]
 })
-export class ProductManagementModule { }
+export class ProductManagementModule {}

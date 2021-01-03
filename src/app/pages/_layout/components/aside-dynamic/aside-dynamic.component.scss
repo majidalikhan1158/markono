@@ -10,5 +10,14 @@
   // fixed text line break issue on minimized aside hover
   .menu-text {
     white-space: nowrap;
+    align-items: baseline !important;
+  }
+  .no-child {
+    align-items: center !important;
+  }
+  .png-icon {
+    width: 18px;
+    height: 18px;
+    margin-inline: 10px;
   }
 }

@@ -66,6 +66,20 @@ export const DynamicAsideMenuConfig = {
       png: './assets/media/menu-logos/ic_platemaking.png',
       selected: './assets/media/menu-logos/ic_platemaking_Selected.png',
       permission: 'accessToPlatemaking'
+    }, {
+      title: 'Order Management',
+      root: true,
+      bullet: 'dot',
+      page: '/material',
+      icon: 'flaticon2-browser-2',
+      png: './assets/media/menu-logos/ic_productLib.png',
+      selected: './assets/media/menu-logos/ic_productLib_Selected.png',
+      submenu: [
+        {
+          title: 'Orders',
+          page: '/admin/order-management/orders',
+        },
+      ]
     },
   ]
 };

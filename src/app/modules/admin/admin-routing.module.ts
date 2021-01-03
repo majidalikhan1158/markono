@@ -26,6 +26,12 @@ const routes: Routes = [
           import('../admin/product-management/product-management.module').then(
             (m) => m.ProductManagementModule
           ),
+      }, {
+        path: 'order-management',
+        loadChildren: () =>
+          import('../admin/order-management/order-management.module').then(
+            (m) => m.OrderManagementModule
+          ),
       },
       {
         path: 'shopfloor-collection',

@@ -118,7 +118,7 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.productSpecStore.subscribe((resp) => {
+    this.store.$productSpecStore.subscribe((resp) => {
       if (resp && resp.dvdCdVM && resp.dvdCdVM.length > 0) {
         this.viewModal = resp.dvdCdVM;
       } else {

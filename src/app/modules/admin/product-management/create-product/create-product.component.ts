@@ -18,6 +18,7 @@ export class CreateProductComponent implements OnInit, OnDestroy {
   constructor(private store: ProductSpecStore) {
 
   }
+
   ngOnDestroy(): void {
     this.store.reset();
   }

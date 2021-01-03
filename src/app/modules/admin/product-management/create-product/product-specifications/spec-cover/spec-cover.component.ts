@@ -129,7 +129,7 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.productSpecStore.subscribe((resp) => {
+    this.store.$productSpecStore.subscribe((resp) => {
       if (resp && resp.coverVM && resp.coverVM.id > 0) {
         this.viewModal = resp.coverVM;
         this.handleMaterialWeightChange('MATERIALWEIGHT');

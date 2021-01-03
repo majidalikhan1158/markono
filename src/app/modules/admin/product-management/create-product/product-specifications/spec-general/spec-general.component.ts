@@ -111,7 +111,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.productSpecStore.subscribe(resp => {
+    this.store.$productSpecStore.subscribe(resp => {
       if (resp && resp.generalVM && resp.generalVM.id > 0) {
         this.generalVM = resp.generalVM;
       } else {

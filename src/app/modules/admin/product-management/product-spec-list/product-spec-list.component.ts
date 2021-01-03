@@ -208,8 +208,8 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
 
   handleModalRejectEvent(modalId: string) {}
 
-  goToDetails = (productId: string) => {
-    const product = this.dataArray.find(x => x.id === productId);
+  goToDetails = (row: ProductSpecsList) => {
+    const product = this.dataArray.find(x => x.id === row.id);
     if (!product) {
       this.snack.open('Unable to fetch details');
       return;

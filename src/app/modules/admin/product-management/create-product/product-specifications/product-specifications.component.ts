@@ -36,19 +36,28 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
   productId: string;
   subscription: Subscription;
   constructor(
-    private store: ProductSpecStore,
+    public store: ProductSpecStore,
     private productservice: ProductService,
     private productHelper: ProductSpecHelperService,
     private snack: SnackBarService
-  ) {}
+  ) {
+    this.store.setProductSpecTypeList(this.productSpecTypesArray);
+    this.subscription = this.store.$productSpecTypeObjectList.subscribe(resp => {
+      this.productSpecTypesArray = resp;
+    });
+  }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+    this.selectedProductSpecType = '';
+    this.store.setProductSpecTypeList([]);
+    this.productSpecTypesArray = ProductSpecificationTypesArray;
+    this.productSpecTypeOtherArray = ProductSpecificationTypeOtherArray;
   }
 
   ngOnInit(): void {
     this.selectedProductSpecType = this.productSpecTypesConstant.GENERAL;
-    this.subscription = this.store.productSpecStore.subscribe((resp) => {
+    this.subscription = this.store.$productSpecStore.subscribe((resp) => {
       this.productSpecData = resp;
       this.setChildSections();
     });
@@ -105,10 +114,6 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
       selectedTypeObject.enum === this.productSpecTypesConstant.UNIT_PRICE;
 
     arrayToWork.forEach((item) => {
-      if (item.id <= selectedTypeObject.id) {
-        item.isVisited = true;
-      }
-
       if (item.enum === this.selectedProductSpecType) {
         item.isSelected = true;
       } else {
@@ -118,6 +123,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
 
     if (!this.shouldExpandedPanelClose) {
       this.productSpecTypesArray = arrayToWork;
+      this.store.setProductSpecTypeList(this.productSpecTypesArray);
       this.productSpecTypeOtherArray.forEach((item) => {
         item.isSelected = false;
       });
@@ -126,6 +132,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
       this.productSpecTypesArray.forEach((item) => {
         item.isSelected = false;
       });
+      this.store.setProductSpecTypeList(this.productSpecTypesArray);
     }
   }
 
@@ -178,16 +185,8 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
       if (isExistAlread) {
         return;
       }
-      // obj.id = this.productSpecTypesArray.length;
-      // this.productSpecTypesArray.splice(
-      //   this.productSpecTypesArray.length - 1,
-      //   0,
-      //   obj
-      // );
       this.productSpecTypesArray.push(obj);
-      // this.productSpecTypesArray.find(
-      //   (x) => x.enum === this.productSpecTypesConstant.UNIT_PRICE
-      // ).id = this.productSpecTypesArray.length;
+      this.store.setProductSpecTypeList(this.productSpecTypesArray);
     }
   }
 

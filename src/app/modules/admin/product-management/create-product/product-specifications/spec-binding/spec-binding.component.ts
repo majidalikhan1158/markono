@@ -198,7 +198,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
       this.handleMaterialWeightChange('MATERIALWEIGHT');
       this.handleMaterialWeightChange('MATERIAL');
     } else {
-      this.store.productSpecStore.subscribe((resp) => {
+      this.store.$productSpecStore.subscribe((resp) => {
         if (resp && resp.bindingVM && resp.bindingVM.id > 0) {
           this.viewModal = resp.bindingVM;
           this.handleMaterialWeightChange('MATERIALWEIGHT');

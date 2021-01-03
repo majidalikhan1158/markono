@@ -61,7 +61,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
       this.handleFinishingTypeFilterAutoComplete();
     });
 
-    this.subscription = this.store.productSpecStore.subscribe(data => {
+    this.subscription = this.store.$productSpecStore.subscribe(data => {
       this.generalVM = data.generalVM;
     });
   }
@@ -156,7 +156,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.subscription = this.store.productSpecStore.subscribe((resp) => {
+    this.subscription = this.store.$productSpecStore.subscribe((resp) => {
       if (resp && resp.childIsbnVM && resp.childIsbnVM.id > 0) {
         this.viewModal = resp.childIsbnVM;
         this.handleMaterialWeightChange('MATERIALWEIGHT');

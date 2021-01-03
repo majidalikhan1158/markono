@@ -1,7 +1,7 @@
 import { ChildIsbnModal } from './../../../services/shared/classes/product-modals/product-modals';
 import { Injectable } from '@angular/core';
 import { WebCodeVM, DVDVM, OtherVM, GeneralVM, CoverVM, TextVM, BindingVM, ChildIsbnVM, UnitPriceVM } from '../../models/product-spec';
-import { BindingType, ProductSpecificationTypes, ProductSpecificationTypesArray } from '../product-management/product-constants';
+import { BindingType, ProductSpecificationTypesArray } from '../product-management/product-constants';
 import { ProductSpecStore } from '../../ui-services/product-spec.service';
 import {
   BindingTypeCaseBound,
@@ -461,7 +461,7 @@ export class ProductSpecHelperService {
       id: 1,
       productNumber: product?.ISBN ?? '',
       printingType: product?.PrintType ?? '',
-      productType:  parseInt(product?.ProductGroup) ?? 0,
+      productType:  parseInt(product?.ProductGroup, 2) ?? 0,
       externalPartNo: product?.ExternalPartNo ?? '',
       isbnOwner: product?.ISBNOwner ?? '',
       productDescription: product?.ProductDescription ?? '',

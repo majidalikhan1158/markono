@@ -187,9 +187,1350 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row pt-8">
+                    <div class="col-lg-8">
+                      <div class="col-lg-12 display-flex padding-0px">
+                        <span class="font-14px font-roboto-bold">Units Produced (Every Minute)</span>
+                      </div>
+                      <div class="col-lg-12 padding-0px" *ngIf="machineCurrentJobUnitsVM && unitsProducedChartOptions">
+                        <div id="kt_stats_widget_11_chart" class="card-rounded-bottom units-produced-chart">
+                          <apx-chart [series]="unitsProducedChartOptions.series" [chart]="unitsProducedChartOptions.chart"
+                            [dataLabels]="unitsProducedChartOptions.dataLabels"
+                            [plotOptions]="unitsProducedChartOptions.plotOptions" [yaxis]="unitsProducedChartOptions.yaxis"
+                            [legend]="unitsProducedChartOptions.legend" [fill]="unitsProducedChartOptions.fill"
+                            [stroke]="unitsProducedChartOptions.stroke" [tooltip]="unitsProducedChartOptions.tooltip"
+                            [xaxis]="unitsProducedChartOptions.xaxis">
+                          </apx-chart>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 padding-0px">
+                      <div class="col-lg-12 display-flex padding-0px">
+                        <span class="font-14px font-roboto-bold">Cumulative Output</span>
+                        <span class="font-12px font-roboto-bold"
+                          style="float:right; margin: auto">{{machineCommulativeOutputVM?.totalVal}}</span>
+                      </div>
+                      <div class="col-lg-12 padding-0px" *ngIf="machineCommulativeOutputVM && commulativeOutputChartOptions">
+                        <div id="kt_stats_widget_11_chart" class="card-rounded-bottom comulative-chart">
+                          <apx-chart [series]="commulativeOutputChartOptions.series"
+                            [chart]="commulativeOutputChartOptions.chart" [xaxis]="commulativeOutputChartOptions.xaxis"
+                            [yaxis]="commulativeOutputChartOptions.yaxis"
+                            [dataLabels]="commulativeOutputChartOptions.dataLabels"
+                            [stroke]="commulativeOutputChartOptions.stroke" [legend]="commulativeOutputChartOptions.legend"
+                            [fill]="commulativeOutputChartOptions.fill" [states]="commulativeOutputChartOptions.states"
+                            [tooltip]="commulativeOutputChartOptions.tooltip" [colors]="commulativeOutputChartOptions.colors"
+                            [markers]="commulativeOutputChartOptions.markers"
+                            [plotOptions]="commulativeOutputChartOptions.plotOptions">
+                          </apx-chart>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </mat-tab>
-                <mat-tab label="Job Sheet">Content 2</mat-tab>
-                <mat-tab label="Product Specs">Content 2</mat-tab>
+                <mat-tab label="Job Sheet">
+                  <div class="row tab-job-sheet">
+                    <div class="col-lg-6">
+                      <div class="row pr-3 pb-2">
+                        <div class="col-lg-12 header-box mb-3">
+                          <mat-toolbar>
+                            <span class="span-yellow material-icons pr-2 pl-2">
+                              stop_circle
+                            </span>
+                            <span class="font-12px">General</span>
+                          </mat-toolbar>
+                        </div>
+                        <div class="row pl-6">
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">RDD</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">RDD</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">FSC</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">FSC</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">PO no.</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">PO no.</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Order Type</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Order Type</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Qty</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Qty</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Print Quality</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Print Quality</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Job Type</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Job Type</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Created Date</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Created Date</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0">
+                              <span class="txt-label">Journal Title Code</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Journal Title Code</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Created By</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Created By</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Volume</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Volume</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Issue</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Issue</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row pr-3 pb-2">
+                        <div class="col-lg-12 header-box mb-3">
+                          <mat-toolbar>
+                            <span class="span-yellow material-icons pr-2 pl-2">
+                              stop_circle
+                            </span>
+                            <span class="font-12px">Others</span>
+                          </mat-toolbar>
+                        </div>
+                        <div class="row pl-6">
+                          <div class="col-lg-12 pb-2 pt-2">
+                            <span class="txt-value">Samples</span>
+                          </div>
+                          <div class="col-lg-11 d-flex pt-2 pb-2">
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-label">For</span>
+                            </div>
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-value">For</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Qty</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Qty</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">RD</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Date</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-11 d-flex pt-2 pb-2">
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-label">Special Instructions</span>
+                            </div>
+                            <div class="col-lg-9 d-flex pl-0 pr-0">
+                              <span class="txt-value">Special Instructions</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-12 pb-2 pt-2">
+                            <span class="txt-value">Blueprint</span>
+                          </div>
+                          <div class="col-lg-11 d-flex pt-2 pb-2">
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-label">For</span>
+                            </div>
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-value">For</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Qty</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Qty</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">RD</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Date</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-11 d-flex pt-2 pb-2">
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-label">Special Instructions</span>
+                            </div>
+                            <div class="col-lg-9 d-flex pl-0 pr-0">
+                              <span class="txt-value">Special Instructions</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-12 pb-2 pt-2">
+                            <span class="txt-value">F&G</span>
+                          </div>
+                          <div class="col-lg-11 d-flex pt-2 pb-2">
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-label">For</span>
+                            </div>
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-value">For</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Qty</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Qty</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">RD</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Date</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-11 d-flex pt-2 pb-2">
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-label">Special Instructions</span>
+                            </div>
+                            <div class="col-lg-9 d-flex pl-0 pr-0">
+                              <span class="txt-value">Special Instructions</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-12 pb-2 pt-2">
+                            <span class="txt-value">Advances</span>
+                          </div>
+                          <div class="col-lg-11 d-flex pt-2 pb-2">
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-label">For</span>
+                            </div>
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-value">For</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Qty</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Qty</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">RD</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Date</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-11 d-flex pt-2 pb-2">
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-label">Special Instructions</span>
+                            </div>
+                            <div class="col-lg-9 d-flex pl-0 pr-0">
+                              <span class="txt-value">Special Instructions</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="row pl-2 pb-2">
+                        <div class="col-lg-12 header-box mb-3">
+                          <mat-toolbar>
+                            <span class="span-yellow material-icons pr-2 pl-2">
+                              stop_circle
+                            </span>
+                            <span class="font-12px">Customer</span>
+                          </mat-toolbar>
+                        </div>
+                        <div class="row pl-6">
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Cust Name.</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Cust Name</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Sell-to-no.</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Sell-to-no.</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Salesperson</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Salesperson</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Acct Manager</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Acct Manager</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">PE Name</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">PE Name</span>
+                            </div>
+                          </div>
+                          
+                        </div>
+                      </div>
+                      <div class="row pl-2 pb-2">
+                        <div class="col-lg-12 header-box mb-3">
+                          <mat-toolbar>
+                            <span class="span-yellow material-icons pr-2 pl-2">
+                              stop_circle
+                            </span>
+                            <span class="font-12px">Product Info</span>
+                          </mat-toolbar>
+                        </div>
+                        <div class="row pl-6">
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Product Group.</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Product Group</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">ISBN</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">ISBN</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Title</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Title</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Parent ISBN</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">ISBN</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Ext. Part no</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Ext. Part no</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 d-flex pt-2 pb-2">
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-label">Set</span>
+                            </div>
+                            <div class="col-lg-6 d-flex pl-0 pr-0">
+                              <span class="txt-value">Set</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row pl-2 pb-2">
+                        <div class="col-lg-12 header-box mb-3">
+                          <mat-toolbar>
+                            <span class="span-yellow material-icons pr-2 pl-2">
+                              stop_circle
+                            </span>
+                            <span class="font-12px">Special Instructions for the order</span>
+                          </mat-toolbar>
+                        </div>
+                        <div class="row pl-6">
+                          <div class="col-lg-11 d-flex pt-2 pb-2">
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-label">QA</span>
+                            </div>
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-value">QA</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-11 d-flex pt-2 pb-2">
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-label">Acct. Mgmt</span>
+                            </div>
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-value">Acct. Mgmt</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-11 d-flex pt-2 pb-2">
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-label">Binding</span>
+                            </div>
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-value">Binding</span>
+                            </div>
+                          </div>
+                          <div class="col-lg-11 d-flex pt-2 pb-2">
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-label">Prepress</span>
+                            </div>
+                            <div class="col-lg-3 d-flex pl-0 pr-0">
+                              <span class="txt-value">Prepress</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </mat-tab>
+                <mat-tab label="Product Specs">
+                  <div class="row tab-product-spec pl-3">
+                    <div class="col-lg-12 mb-4">
+                      <button mat-stroked-button [ngClass]="{'mr-2 active-button': selectedProductSpec === 'Main Component', 'mr-2': selectedProductSpec !== 'Main Component'}" (click)="handleProductSpecTab('Main Component')">Main Component</button>
+                      <button mat-stroked-button [ngClass]="{'mr-2 active-button': selectedProductSpec === 'Jacket', 'mr-2': selectedProductSpec !== 'Jacket'}" (click)="handleProductSpecTab('Jacket')">Jacket</button>
+                      <button mat-stroked-button [ngClass]="{'mr-2 active-button': selectedProductSpec === 'CD', 'mr-2': selectedProductSpec !== 'CD'}" (click)="handleProductSpecTab('CD')">CD</button>
+                      <button mat-stroked-button [ngClass]="{'mr-2 active-button': selectedProductSpec === 'Booklet', 'mr-2': selectedProductSpec !== 'Booklet'}" (click)="handleProductSpecTab('Booklet')">Booklet</button>
+                    </div>
+                    <ng-container *ngIf="selectedProductSpec === 'Main Component'">
+                      <div class="row tab-job-sheet">
+                        <div class="col-lg-6">
+                          <div class="row pr-3 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">General</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row pl-6">
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">ISBN</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">9833238328</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Ext. Part no.</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">123ABC</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Description</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Lorem ipsum dolor imit</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Height</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Height</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Width</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Width</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Open Height</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Open Height</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Open Width</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Open Width</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Orientation</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Orientation</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0">
+                                  <span class="txt-label">Fsc</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Yes</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Spine Width (mm)</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Spine Width</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Spine (kg)</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Weight</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row pr-3 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">Volume Set</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row pl-6">
+                              <div class="col-lg-12 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Child ISBNS</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value"></span>
+                                </div>
+                              </div>
+                              <div class="col-lg-12 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Shrinkwrap</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value"></span>
+                                </div>
+                              </div>
+                              <div class="col-lg-12 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Special Instructions</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value"></span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row pl-2 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">Other Component - EndPaper</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row pl-6">
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Colour(4)</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Cyan, Magenta, Yellow</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Pantone</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">123ABC</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Material</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Weight, Material, Brand </span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Greyboard</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">2.5mm</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Pantone</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">123ABC</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Finishing</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Lamination, Spot, UV</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Special Instructions</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">123ABC</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="row pl-4 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">Cover Printing</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row col-lg-12 pr-0">
+                              <div class="col-lg-6 d-flex pt-2 pb-2 pl-0">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Type</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Cover Type</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2 pr-0">
+                                <div class="col-lg-4 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Colour</span>
+                                </div>
+                                <div class="col-lg-8 d-flex pl-0 pr-0">
+                                  <span class="txt-value">4c x 4c</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2 pl-0">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Material</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Cover Weight, Material, Brand</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 pb-2 pt-2 pl-0">
+                                <span class="txt-value">Outside Cover</span>
+                              </div>
+                              <div class="col-lg-6 pb-2 pt-2">
+                                <span class="txt-value">Inside Cover</span>
+                              </div>
+                              <!--left column will be outside and right column will be for inside -->
+                              <div class="col-lg-6 d-flex pt-2 pb-2 pl-0">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Colour</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">3(Cyan, Magenta, Yellow)</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2 pr-0">
+                                <div class="col-lg-4 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Colour</span>
+                                </div>
+                                <div class="col-lg-8 d-flex pl-0 pr-0">
+                                  <span class="txt-value">3(Cyan, Magenta, Yellow)</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2 pl-0">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Pantone</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">#DB282C</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2 pr-0">
+                                <div class="col-lg-4 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Pantone</span>
+                                </div>
+                                <div class="col-lg-8 d-flex pl-0 pr-0">
+                                  <span class="txt-value">#DB282C</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2 pl-0">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Finishing</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Lamination, Spot, UV</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2 pr-0">
+                                <div class="col-lg-4 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Finishing</span>
+                                </div>
+                                <div class="col-lg-8 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Lamination, Spot, UV</span>
+                                </div>
+                              </div>
+                              
+                            </div>
+                          </div>
+                          <div class="row pl-4 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">Benchwork</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row">
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Benchwork Required</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pr-0">
+                                  <span class="txt-value">-</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Special Instructions</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pr-0">
+                                  <span class="txt-value">-</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="selectedProductSpec === 'Jacket'">
+                      <div class="row tab-job-sheet">
+                        <div class="col-lg-6">
+                          <div class="row pr-3 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">Other Component - Insert</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row pl-6">
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Height</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Height</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Width</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Width</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Open Height</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">OpenHeight</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Open Width</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Open Width</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Material</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Weight, Material, Brand</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Extent</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">2(1 mono, 1 Colour)</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Finishing</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Finishing</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0">
+                                  <span class="txt-label">Orientation</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Orientation</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 pb-2 pt-2">
+                                <span class="txt-value">Outside Component</span>
+                              </div>
+                              <div class="col-lg-6 pb-2 pt-2">
+                                <span class="txt-value">Inside Component</span>
+                              </div>
+                              <!--left column will be outside and right column will be for inside -->
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Colour</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">3(Cyan, Magenta, Yellow)</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Colour</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">3(Cyan, Magenta, Yellow)</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Pantone</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">#DB282C</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Pantone</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">#DB282C</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Finishing</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Lamination, Spot, UV</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Finishing</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Lamination, Spot, UV</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Special Instructions</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Lamination, Spot, UV</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="row pl-4 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">Binding - For Insert</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row">
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Type</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Binding Type</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-4 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Method</span>
+                                </div>
+                                <div class="col-lg-8 d-flex pl-0 pr-0">
+                                  <span class="txt-value">PUR Binding</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Spine Type</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Book Spine type</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-4 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Spine Width</span>
+                                </div>
+                                <div class="col-lg-8 d-flex pl-0 pr-0">
+                                  <span class="txt-value">-</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">H/T Brand</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">H/T brand colour</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-4 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Ribbon</span>
+                                </div>
+                                <div class="col-lg-8 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Ribbon colour</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Greyboard</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Greyboard thickness</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0">
+                                  <span class="txt-label">Special Instructions</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Special Instructions</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row pl-4 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">Endpaper - For Insert</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row">
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Material</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pr-0">
+                                  <span class="txt-value">Weight, Material, brand</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Extent</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pr-0">
+                                  <span class="txt-value">Total Extent(xx mono + xx colour)</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Colour</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pr-0">
+                                  <span class="txt-value">3(Cyan, Magenta, Yellow)</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-4 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Pantone</span>
+                                </div>
+                                <div class="col-lg-8 d-flex pr-0">
+                                  <span class="txt-value">#DB282C</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Finishing</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pr-0">
+                                  <span class="txt-value">Laminatino, Spot, UV</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0">
+                                  <span class="txt-label">Special Instructions</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pr-0">
+                                  <span class="txt-value">Special Instructions</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row pl-4 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">Benchwork - For insert</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row">
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Benchwork Required</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pr-0">
+                                  <span class="txt-value">-</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Special Instructions</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pr-0">
+                                  <span class="txt-value">-</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="selectedProductSpec === 'CD'">
+                      <div class="row tab-job-sheet">
+                        <div class="col-lg-6">
+                          <div class="row pr-3 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">Other Component - Insert</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row col-lg-12 pl-6">
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Type</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Type</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Qty</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Qty</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Sleeve Type</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Sleeve Type</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row pr-3 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">Component - Component Type</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row pl-6">
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Component Type</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Component Type</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Orientation</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Orientation</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Material</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Weight, Material, Brand</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Height</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Height</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Width</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Width</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Open Height</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">OpenHeight</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Open Width</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">OpenWidth</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Extent</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">2(1 mono,1 colour)</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">No. of colours</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">No. of colours</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Colour</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Cyan, Magenta, Yellow</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Pantone</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Pantone colour no.</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Finishing</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Finishing</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Special Instructions</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Special Instructions</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="row pl-2 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">Binding - Component Type</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row">
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Type</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Binding Type</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-6 d-flex pt-2 pb-2">
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Stitch Type</span>
+                                </div>
+                                <div class="col-lg-6 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Stitch Type</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0">
+                                  <span class="txt-label">Special Instructions</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pl-0 pr-0">
+                                  <span class="txt-value">Special Instructions</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row pl-2 pb-2">
+                            <div class="col-lg-12 header-box mb-3">
+                              <mat-toolbar>
+                                <span class="span-yellow material-icons pr-2 pl-2">
+                                  stop_circle
+                                </span>
+                                <span class="font-12px">Benchwork</span>
+                              </mat-toolbar>
+                            </div>
+                            <div class="row">
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Benchwork Required</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pr-0">
+                                  <span class="txt-value">-</span>
+                                </div>
+                              </div>
+                              <div class="col-lg-11 d-flex pt-2 pb-2">
+                                <div class="col-lg-3 d-flex pl-0 pr-0">
+                                  <span class="txt-label">Special Instructions</span>
+                                </div>
+                                <div class="col-lg-9 d-flex pr-0">
+                                  <span class="txt-value">-</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </mat-tab>
                 <mat-tab label="Customer">Content 2</mat-tab>
               </mat-tab-group>
             </div>
@@ -197,45 +1538,7 @@
           <br>
           <br>
           <br>
-          <div class="row" style="padding-bottom: 25px;">
-            <div class="col-lg-8">
-              <div class="col-lg-12 display-flex padding-0px">
-                <span class="font-14px font-roboto-bold">Units Produced (Every Minute)</span>
-              </div>
-              <div class="col-lg-12 padding-0px" *ngIf="machineCurrentJobUnitsVM && unitsProducedChartOptions">
-                <div id="kt_stats_widget_11_chart" class="card-rounded-bottom units-produced-chart">
-                  <apx-chart [series]="unitsProducedChartOptions.series" [chart]="unitsProducedChartOptions.chart"
-                    [dataLabels]="unitsProducedChartOptions.dataLabels"
-                    [plotOptions]="unitsProducedChartOptions.plotOptions" [yaxis]="unitsProducedChartOptions.yaxis"
-                    [legend]="unitsProducedChartOptions.legend" [fill]="unitsProducedChartOptions.fill"
-                    [stroke]="unitsProducedChartOptions.stroke" [tooltip]="unitsProducedChartOptions.tooltip"
-                    [xaxis]="unitsProducedChartOptions.xaxis">
-                  </apx-chart>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 padding-0px">
-              <div class="col-lg-12 display-flex padding-0px">
-                <span class="font-14px font-roboto-bold">Cumulative Output</span>
-                <span class="font-12px font-roboto-bold"
-                  style="float:right; margin: auto">{{machineCommulativeOutputVM?.totalVal}}</span>
-              </div>
-              <div class="col-lg-12 padding-0px" *ngIf="machineCommulativeOutputVM && commulativeOutputChartOptions">
-                <div id="kt_stats_widget_11_chart" class="card-rounded-bottom comulative-chart">
-                  <apx-chart [series]="commulativeOutputChartOptions.series"
-                    [chart]="commulativeOutputChartOptions.chart" [xaxis]="commulativeOutputChartOptions.xaxis"
-                    [yaxis]="commulativeOutputChartOptions.yaxis"
-                    [dataLabels]="commulativeOutputChartOptions.dataLabels"
-                    [stroke]="commulativeOutputChartOptions.stroke" [legend]="commulativeOutputChartOptions.legend"
-                    [fill]="commulativeOutputChartOptions.fill" [states]="commulativeOutputChartOptions.states"
-                    [tooltip]="commulativeOutputChartOptions.tooltip" [colors]="commulativeOutputChartOptions.colors"
-                    [markers]="commulativeOutputChartOptions.markers"
-                    [plotOptions]="commulativeOutputChartOptions.plotOptions">
-                  </apx-chart>
-                </div>
-              </div>
-            </div>
-          </div>
+         
         </div>
       </div>
     </div>

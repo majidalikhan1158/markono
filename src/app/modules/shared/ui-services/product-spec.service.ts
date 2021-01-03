@@ -582,7 +582,7 @@ export class ProductSpecStore {
   }
 
   isValidModal = (obj: any): boolean => {
-    let isValid = true;
+    const isValid = true;
     // for (const key in obj) {
     //   console.log(key, '-------------------', obj[key], '-----------------------------', typeof obj[key]);
     //   if (typeof obj[key] === 'number' && obj[key] <= 0 )

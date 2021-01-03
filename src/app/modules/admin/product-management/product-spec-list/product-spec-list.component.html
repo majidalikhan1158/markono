@@ -98,7 +98,7 @@
 
           <ng-container matColumnDef="productTitle">
             <th mat-header-cell *matHeaderCellDef> Product Title </th>
-            <td style="width: 170px !important;" mat-cell *matCellDef="let element"> {{element.productDescription}} </td>
+            <td class="text-truncate" style="max-width: 50px !important;" mat-cell *matCellDef="let element"> {{element.productDescription}} </td>
           </ng-container>
 
           <ng-container matColumnDef="dateCreated">

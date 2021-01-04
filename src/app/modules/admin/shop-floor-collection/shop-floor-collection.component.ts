@@ -18,6 +18,7 @@ import { CaseStore } from '../../shared/ui-services/create-case.service';
 import { ModalService } from '../../shared/ui-services/modal.service';
 import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
 import { SpinnerService } from './spinner.service';
+import { UnitsPerMinutesList } from '../../shared/models/shop-floor';
 
 const API_PING_TIME = 5000;
 
@@ -202,9 +203,24 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       this.snack.open('No action state link exist');
       return;
     }
+    let message = 'pause';
+    if (state === 'Paused') {
+      // set the job
+      const selectedJob = this.machineScheduleJobsVMList.find(x => x.jobNo === this.machineCurrentJobVM?.jobNo);
+      if (selectedJob) {
+        actionStateLink = selectedJob.links.setJob;
+        message = 'set';
+      }
+    } else if (state === 'Selected') {
+      // pause the job
+      message = 'pause';
+    } else {
+      // stop the job
+      message = 'stop';
+    }
     this.subscriptions = this.shopFloorService.setMachineJobActionState(actionStateLink).subscribe(resp => {
       if (resp && resp.body && resp.body.message === 'OK') {
-        this.snack.open(`Job action has been ${state} successfully`);
+        this.snack.open(`Job has been ${message} successfully`);
       }
     }, (err: HttpErrorResponse) => {
       this.snack.open(err.error.message);
@@ -318,9 +334,10 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
     this.subscriptions = this.shopFloorService.getCurrentJobUnits(currentJobUnitsLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data && resp.body.data.length > 0) {
         this.machineCurrentJobUnitsVM = this.helper.mapToMachineCurrentJobUnitsModal(resp.body.data);
+        const data = this.getUnitsProducedPerMinuteData(this.machineCurrentJobUnitsVM.unitsPerMinutesList);
         const unitsPerMinutes = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.count);
         const unitsFromDate = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.fromDate);
-        this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart(unitsPerMinutes, unitsFromDate) as UnitsProducedChartOptions;
+        this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart(unitsPerMinutes, data) as unknown as UnitsProducedChartOptions;
       } else {
         showMessage ? this.snack.open('Unable to get machine current job units') : this.emptyCall() ;
       }
@@ -329,6 +346,23 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
     }, (err: HttpErrorResponse) => {
       showMessage ? this.snack.open('Unable to get machine current job units') : this.emptyCall() ;
     });
+  }
+
+  getUnitsProducedPerMinuteData = (units: UnitsPerMinutesList[]) => {
+    if (!units || units.length === 0) {
+      return [];
+    }
+    const data = [];
+    units.forEach(item => {
+      // const count = Math.floor((Math.random() * 1000) + 1);
+      // data.push({
+      //   x: count,
+      //   y: count, // item.count,
+      //   description: `Count: ${count}, Date: ${item.fromDate.toLocaleString()}`
+      // });
+      data.push(item.fromDate.toLocaleString());
+    });
+    return data;
   }
 
   callToScheduleJobsSubscription = (jobsScheduleLink: string, showMessage = false) => {
@@ -707,12 +741,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
     return {
       series: [
         {
-          name: 'Units Produced',
           data: list
-        },
-        {
-          name: '',
-          data: fromDate
         }
       ],
       chart: {
@@ -739,26 +768,25 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
         colors: ['transparent'],
       },
       xaxis: {
-        categories: [
-          '',
-        ]
-      },
-      yaxis: {
-        title: {
-          text: '',
-        },
+        categories: [''],
       },
       fill: {
         opacity: 1,
         colors: ['#5FACE2'],
       },
-      tooltip: {
-        y: {
-          formatter(val) {
-            return `${val}`;
-          },
-        },
-      },
+      // tooltip: {
+      //   custom(opts) {
+      //     // const desc =
+      //     //   opts.ctx.w.config.series[opts.seriesIndex].data[
+      //     //     opts.dataPointIndex
+      //     //   ].description;
+      //     //   console.log('desc from tooltip:  ', desc)
+      //     // const value = opts.series[opts.seriesIndex][opts.dataPointIndex];
+
+      //     // return `${desc}`;
+      //     return opts.ctx.w.globals.labels[opts.dataPointIndex]
+      //   }
+      // },
     };
   }
 

@@ -150,10 +150,10 @@
                     [disabled]="machineCurrentJobVM?.jobReadOnly">
                     <img src="./assets/media/custom-icons/stop-icon.png" />
                   </button>
-                  <button class="job-status-action-buttons" title="Pause the job"
-                    (click)="handleJobActionState(machineCurrentJobVM?.jobActionPause, 'paused')"
+                  <button class="job-status-action-buttons" [title]="machineCurrentJobVM?.jobStatus !== 'Paused' ? 'Pause the job' : 'Set the job'"
+                    (click)="handleJobActionState(machineCurrentJobVM?.jobActionPause, machineCurrentJobVM?.jobStatus)"
                     [disabled]="machineCurrentJobVM?.jobReadOnly">
-                    <img src="./assets/media/custom-icons/pause-icon.png" />
+                    <img [src]="machineCurrentJobVM?.jobStatus !== 'Paused' ? './assets/media/custom-icons/pause-icon.png' : './assets/media/custom-icons/play-icon.png'" />
                   </button>
                 </div>
               </div>

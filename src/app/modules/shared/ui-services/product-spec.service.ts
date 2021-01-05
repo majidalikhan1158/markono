@@ -171,7 +171,7 @@ export class ProductSpecStore {
       this.setWebCodeVM(data as WebCodeVM[]);
     } else if (type === ProductSpecTypes.OTHER_COMPONENT) {
       this.setOtherVM(data as OtherVM[]);
-    } else if (type === ProductSpecTypes.CHECK_PRINT_FILE) {
+    } else if (type === ProductSpecTypes.VERIFY_PRINT_FILE) {
       this.setCheckPrintFile(data as CheckPrintFileVM);
     } else if (type === ProductSpecTypes.UNIT_PRICE) {
       this.setUnitPriceVM(data as UnitPriceVM);

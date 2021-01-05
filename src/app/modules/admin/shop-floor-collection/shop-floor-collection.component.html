@@ -1546,16 +1546,16 @@
       <div class="card card-custom example example-compact gutter-b jobs-schedule-card">
         <div class="card-header">
           <div class="card-title">
-            <div *ngIf="!toggleSearch">
-              <h3 class="card-label">Jobs Schedule</h3>
+            <div class="col-lg-4 pr-0 pl-0" *ngIf="!toggleSearch">
+              <div>
+                <h3 class="card-label">Jobs Schedule</h3>
+              </div>
             </div>
 
-            <div>
-              <mat-toolbar-row>
-                <button mat-icon-button *ngIf="!toggleSearch" (click)="openSearch()">
-                  <mat-icon class="font-20px" style="color: #AFAFAF;">search</mat-icon>
-                </button>
-              </mat-toolbar-row>
+            <div class="col-lg-4 pr-0 pl-0" *ngIf="!toggleSearch">
+              <button mat-icon-button  (click)="openSearch()" class="float-right">
+                <mat-icon class="font-20px" style="color: #AFAFAF;">search</mat-icon>
+              </button>
             </div>
             <mat-toolbar class="search-block" [class.active]="toggleSearch">
               <mat-toolbar-row>
@@ -1570,13 +1570,15 @@
                 </button>
               </mat-toolbar-row>
             </mat-toolbar>
-            <mat-form-field class="selectBoxJobSchedule">
-              <mat-select [(value)]="selectedMachineCode" (selectionChange)="handleMachineChange($event)">
-                <mat-option *ngFor="let item of machineVMList" [value]="item.machineCode">
-                  {{item.machineName}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <div class="col-lg-4 pr-0 pl-0">
+              <mat-form-field class="selectBoxJobSchedule">
+                <mat-select [(value)]="selectedMachineCode" (selectionChange)="handleMachineChange($event)">
+                  <mat-option *ngFor="let item of machineVMList" [value]="item.machineCode">
+                    {{item.machineName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
           </div>
         </div>
         <div class="card-body">

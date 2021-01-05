@@ -1554,13 +1554,13 @@
 
             <div class="col-lg-4 pr-0 pl-0" *ngIf="!toggleSearch">
               <button mat-icon-button  (click)="openSearch()" class="float-right">
-                <mat-icon class="font-20px" style="color: #AFAFAF;">search</mat-icon>
+                <mat-icon class="font-20px" style="color: #AFAFAF; font-size: 34px !important; line-height: 30px !important">search</mat-icon>
               </button>
             </div>
             <mat-toolbar class="search-block" [class.active]="toggleSearch">
               <mat-toolbar-row>
                 <button class="search-icon" mat-icon-button>
-                  <mat-icon>search</mat-icon>
+                  <mat-icon style="font-size: 25px !important">search</mat-icon>
                 </button>
                 <input class="search-control txtSearchWithJobNo" type="text" placeholder="Search with Job No." 
                 (keyup)="applySearch($event)">

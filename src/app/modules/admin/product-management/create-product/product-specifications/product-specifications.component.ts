@@ -109,7 +109,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
 
     this.shouldExpandedPanelClose =
       selectedTypeObject.enum ===
-        this.productSpecTypesConstant.CHECK_PRINT_FILE ||
+        this.productSpecTypesConstant.VERIFY_PRINT_FILE ||
       selectedTypeObject.enum === this.productSpecTypesConstant.LAYOUT_PREP ||
       selectedTypeObject.enum === this.productSpecTypesConstant.UNIT_PRICE;
 
@@ -197,7 +197,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
       this.saveFromUnitPrice();
     } else if (
       this.selectedProductSpecType ===
-      this.productSpecTypesConstant.CHECK_PRINT_FILE
+      this.productSpecTypesConstant.VERIFY_PRINT_FILE
     ) {
       this.saveFromCheckPrintFile();
     } else if (

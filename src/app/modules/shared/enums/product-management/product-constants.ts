@@ -17,7 +17,7 @@ export const ProductSpecificationTypes = {
   WEB_CODE: 'WEB_CODE',
   UNIT_PRICE: 'UNIT_PRICE',
   OTHER_COMPONENT: 'OTHER_COMPONENT',
-  CHECK_PRINT_FILE: 'CHECK_PRINT_FILE',
+  VERIFY_PRINT_FILE: 'VERIFY_PRINT_FILE',
   LAYOUT_PREP: 'LAYOUT_PREP'
 };
 
@@ -95,9 +95,9 @@ export const ProductSpecificationTypePartialArray: ProductSpecTypeObject[] = [
 
 export const ProductSpecificationTypeOtherArray: ProductSpecTypeObject[] = [
   {
-    value: 'Check Print File',
+    value: 'Verify Print File',
     id: 7,
-    enum: 'CHECK_PRINT_FILE',
+    enum: 'VERIFY_PRINT_FILE',
     isSelected: false,
     isVisited: false,
   },

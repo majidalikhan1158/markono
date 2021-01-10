@@ -1,5 +1,9 @@
 import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ReplaySubject, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
+import { WebCodeLocationList } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { WebCodeVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecStore } from '../../../../../shared/ui-services/product-spec.service';
 
@@ -12,9 +16,14 @@ import { ProductSpecStore } from '../../../../../shared/ui-services/product-spec
 export class SpecWebcodeComponent implements OnInit, OnDestroy {
   columnsToDisplay = ['#', 'WebCode Location', 'No. of WebCode', 'X Coordinate', 'Y Coordinate', 'Special Instruction'];
   viewModal: WebCodeVM[] = [];
+  webCodeLocationList = WebCodeLocationList.sort();
+  webCodeLocationFltrCtrl: FormControl = new FormControl();
+  filteredWebCodeLocationList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  protected onDestroy = new Subject<void>();
   constructor(private store: ProductSpecStore) { }
 
   ngOnInit(): void {
+    this.handleWebcodeLocationFilterAutoComplete();
     this.getDefaultRecord();
   }
 
@@ -50,6 +59,33 @@ export class SpecWebcodeComponent implements OnInit, OnDestroy {
       x.id = i + 1;
     });
     this.viewModal = filteredRows;
+  }
+
+  handleWebcodeLocationFilterAutoComplete = () => {
+    this.filteredWebCodeLocationList.next(this.webCodeLocationList.slice());
+    this.webCodeLocationFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterWebcodeLocation();
+      });
+  }
+
+  filterWebcodeLocation = () => {
+    if (!this.webCodeLocationList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.webCodeLocationFltrCtrl.value;
+    if (!search) {
+      this.filteredWebCodeLocationList.next(this.webCodeLocationList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredWebCodeLocationList.next(
+      this.webCodeLocationList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
   }
 
   ngOnDestroy(): void {

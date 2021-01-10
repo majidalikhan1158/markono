@@ -60,6 +60,7 @@ export interface BindingVM {
   saddleStich: BindingTypeStichType;
   spiralBound: BindingTypeSpiralBound;
   wireoBinding: BindingTypeWireoBinding;
+  others: BindingTypeOthers;
 }
 
 export interface BindingTypeCaseBound {
@@ -114,6 +115,12 @@ export interface BindingTypeSpiralBound {
 
 export interface BindingTypeWireoBinding {
   wireColour: string;
+  specialInstructions1: string;
+  benchworkRequired: string[];
+  specialInstructions2: string;
+}
+
+export interface BindingTypeOthers {
   specialInstructions1: string;
   benchworkRequired: string[];
   specialInstructions2: string;

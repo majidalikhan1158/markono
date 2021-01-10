@@ -18,6 +18,7 @@ import { ProductSpecStoreVM } from 'src/app/modules/shared/models/product-spec';
 import { Subscription } from 'rxjs';
 import { ProductVersions } from '../../../../services/shared/classes/product-modals/product-modals';
 import { ProductSpecStatus } from '../../../../shared/enums/product-management/product-interfaces';
+import { StorageKeys } from '../../../../shared/enums/app-constants';
 
 @Component({
   selector: 'app-product-specifications',
@@ -198,7 +199,12 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     this.selectedProductSpecType = nextSelectedTabObj
       ? nextSelectedTabObj.enum
       : this.selectedProductSpecType;
-    this.handleProductSpecChangeLogic(this.productSpecTypesArray);
+    if (!nextSelectedTabObj) {
+      this.selectedProductSpecType = this.productSpecTypesConstant.UNIT_PRICE;
+      this.handleProductSpecChangeLogic(this.productSpecTypeOtherArray);
+    } else {
+      this.handleProductSpecChangeLogic(this.productSpecTypesArray);
+    }
   }
 
   addProductSpecType(e: AddRemoveSpecTypeEvent) {
@@ -248,14 +254,40 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
           const result = response.body.result;
           if (result?.failureCount > 0) {
             this.snack.open(result?.title);
-          } else {
+          } else if (result?.errors) {
+            const errors = result?.errors;
+            const entries = Object.entries(errors);
+            const errorsList = [];
+            entries.forEach(error => {
+              const message = `Field: ${error[0]}, Message: ${error[1]}`;
+              this.snack.open(message, '', 'top', 5000, 'right');
+            });
+          } else{
             this.handleVersionSelection(result.customMessage);
             this.snack.open(result?.returnMessage);
           }
         }
       },
       (error: HttpErrorResponse) => {
-        this.snack.open('An error occured: ', 'Interal Server Error');
+        const errorString = localStorage.getItem(`${StorageKeys.SUFFIX}_${StorageKeys.APP_ERRORS}`);
+        const errorObject = JSON.parse(errorString);
+        const result = errorObject?.result;
+        const timeOut = 5000;
+        if (result) {
+          const errors = result?.errors;
+          const entries = Object.entries(errors) ?? [];
+          const errorsList = [];
+          entries.forEach((error, i) => {
+            const message = `${error[1]}`;
+            setTimeout(() => {
+              this.snack.open(message, '', 'top', 5000, 'right');
+            }, i * (timeOut + 500));
+          });
+          localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.APP_ERRORS}`, '');
+        } else {
+          localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.APP_ERRORS}`, '');
+        }
+        // this.snack.open('An error occured: ', 'Interal Server Error');
       }
     );
   }

@@ -9,6 +9,7 @@ import { MaterialDataList } from 'src/app/modules/services/shared/classes/produc
 import { FormControl } from '@angular/forms';
 import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
 
 @Component({
   selector: 'app-spec-dvd-cd',
@@ -33,8 +34,12 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
   selectedFinishingTypes: string[] = [];
 
   materialWeightFltrCtrl: FormControl = new FormControl();
+  materialFltrCtrl: FormControl = new FormControl();
+  materialBrandFltrCtrl: FormControl = new FormControl();
   finishingTypeFltrCtrl: FormControl = new FormControl();
   filteredMaterialWeightList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredMaterialList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredMaterialBrandList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredFinishingTypeList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
 
   bindingTypeList = BindingTypeList;
@@ -42,7 +47,7 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
   parentRecordId: number;
   subscription: Subscription;
   protected onDestroy = new Subject<void>();
-  constructor(private store: ProductSpecStore) { }
+  constructor(private store: ProductSpecStore, private helper: ProductSpecHelperService) { }
 
   ngOnInit(): void {
     this.store.getCoverMaterialWeight('Text', ProductSpecTypes.DVD_CD);
@@ -54,12 +59,12 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
   getApiData = () => {
     this.subscription = this.store.$dvdCdMaterialDataList.subscribe(list => {
       this.materialDataList = list;
-      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))];
+      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort();
       this.handleMaterialWeightFilterAutoComplete();
     });
 
     this.subscription = this.store.$dvdCdFinishingTypeList.subscribe(list => {
-      this.finishingTypeList = list;
+      this.finishingTypeList = list.sort();
       this.handleFinishingTypeFilterAutoComplete();
     });
   }
@@ -84,10 +89,12 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
   handleMaterialWeightChange = (type: string, index: number) => {
     if (type === 'MATERIALWEIGHT') {
       const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal[index].textMaterialWeight);
-      this.materialList = [...new Set(records.map(x => x.PaperMaterial))];
+      this.materialList = [...new Set(records.map(x => x.PaperMaterial))].sort();
+      this.handleMaterialFilterAutoComplete();
     } else if (type === 'MATERIAL') {
       const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal[index].textMaterial);
-      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))];
+      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))].sort();
+      this.handleMaterialBrandFilterAutoComplete();
     }
   }
 
@@ -206,13 +213,31 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
     );
   }
 
-
+  
   handleMaterialWeightFilterAutoComplete = () => {
     this.filteredMaterialWeightList.next(this.materialWeightList.slice());
-    this.subscription = this.materialWeightFltrCtrl.valueChanges
+    this.materialWeightFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
         this.filterMaterialWeight();
+      });
+  }
+
+  handleMaterialFilterAutoComplete = () => {
+    this.filteredMaterialList.next(this.materialList.slice());
+    this.materialFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterMaterial();
+      });
+  }
+
+  handleMaterialBrandFilterAutoComplete = () => {
+    this.filteredMaterialBrandList.next(this.materialBrandList.slice());
+    this.materialBrandFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterMaterialBrand();
       });
   }
 
@@ -232,6 +257,48 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
     this.filteredMaterialWeightList.next(
       this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
+  }
+
+  filterMaterial = () => {
+    if (!this.materialList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.materialFltrCtrl.value;
+    if (!search) {
+      this.filteredMaterialList.next(this.materialList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredMaterialList.next(
+      this.materialList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  filterMaterialBrand = () => {
+    if (!this.materialBrandList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.materialBrandFltrCtrl.value;
+    if (!search) {
+      this.filteredMaterialBrandList.next(this.materialBrandList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredMaterialList.next(
+      this.materialBrandList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+
+  handleColorSum = (index) => {
+    this.viewModal[index].totalExtent = this.helper.sum(this.viewModal[index].noOfColourExtent ?? 0,
+       this.viewModal[index].noOfMonoExtent ?? 0);
   }
 
 

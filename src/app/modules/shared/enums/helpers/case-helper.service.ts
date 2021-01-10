@@ -6,6 +6,8 @@ import {
   ProductISBNDetailVM,
   ProductVersionVM,
   ShippingInfoVM,
+  ShippingItemsModel,
+  ShippingSpecificCostModel,
   SpecialInstructionViewModel
 } from '../../models/create-case';
 
@@ -246,102 +248,129 @@ export class CaseHelperService {
   }
 
   // Create Shipment Api Intergation
-  public transToCreateShipment = (data: ShippingInfoVM) => {
-    return {
-      accountNo: data.shippingDetails.accountNumber,
-      actualShippingAgentCode: data.shippingDetails.shippingAgent,
-      actualShippedDate: data.shippingDetails.shippmentPromisedDate,
-      billable: data.shippingDetails.billable,
-      billToNo: data.shipmentBillingDetails.BillToNumber,
-      billToCompanyName: data.shipmentBillingDetails.CompanyName,
-      billToContactPerson: data.shipmentBillingDetails.Contact,
-      billToEmail: data.shipmentBillingDetails.Email,
-      billToPhoneNo: data.shipmentBillingDetails.PhoneNo,
-      billToAddress1: data.shipmentBillingDetails.Address,
-      billToAddress2: data.shipmentBillingDetails.Address2,
-      billToPostCode: data.shipmentBillingDetails.PostCode,
-      billToCity: data.shipmentBillingDetails.City,
-      billToState: data.shipmentBillingDetails.State,
-      billToCountry: data.shipmentBillingDetails.County,
-      billToCoordinator: data.shipmentBillingDetails.Coordinator,
-      billToSalesPerson: data.shipmentBillingDetails.SalesPerson,
-      sellToNo: '',
-      yourReference: '',
-      caseID: '',
-      createdByUser: '',
-      currentActivityId: '',
-      companyCode: data.shipmentBillingDetails.CompanyCode,
-      createdBy: '',
-      createdDateTime: '',
-      currentActivityStatus: '',
-      createdDateTimeGE: '',
-      createdDateTimeLE: '',
-      deliveryOrderNo: '',
-      expectedDeliveryDate: '',
-      id: '',
-      isDeleted: '',
-      glossWeightKg: '',
-      getStatus: '',
-      shipmentNo: '',
-      shipmentType: '',
-      shipmentTypeGroup: '',
-      shipmentPromisedDate: '',
-      shippingMethod: '',
-      shipmentMode: data.shippingDetails.shipmentMode,
-      shippingAgent: data.shippingDetails.shippingAgent,
-      shipToAttentionTo: '',
-      shipToCode: data.shipmentAddress.CompanyCode,
-      shipToContactNo: data.shipmentAddress.Contact,
-      shipToEmail: data.shipmentAddress.Email,
-      shipToAdd1: data.shipmentAddress.Address,
-      shipToAdd2: data.shipmentAddress.Address2,
-      shipToCity: data.shipmentAddress.City,
-      shipToPostCode: data.shipmentAddress.PostCode,
-      shipToState: data.shipmentAddress.State,
-      shipToCountry: data.shipmentAddress.County,
-      trackingNo: '',
-      updatedByUser: '',
-      updatedBy: '',
-      updatedDateTime: '',
-      wmsStorerKey: '',
-      miscBilling: [
+  public transToCreateShipment = (mainData: CreateCaseViewModel, caseId: string) => {
+    if (!mainData || !mainData.shippingInfoList || mainData.shippingInfoList.length === 0) {
+      return null;
+    }
+    const dataArray = [];
+    mainData.shippingInfoList.forEach(data => {
+      dataArray.push({
+        accountNo: data.shippingDetails.accountNumber,
+        actualShippingAgentCode: data.shippingDetails.shippingAgent,
+        actualShippedDate: data.shippingDetails.shippmentPromisedDate,
+        billable: data.shippingDetails.billable,
+        billToNo: data.shipmentBillingDetails.BillToNumber,
+        billToCompanyName: data.shipmentBillingDetails.CompanyName,
+        billToContactPerson: data.shipmentBillingDetails.Contact,
+        billToEmail: data.shipmentBillingDetails.Email,
+        billToPhoneNo: data.shipmentBillingDetails.PhoneNo,
+        billToAddress1: data.shipmentBillingDetails.Address,
+        billToAddress2: data.shipmentBillingDetails.Address2,
+        billToPostCode: data.shipmentBillingDetails.PostCode,
+        billToCity: data.shipmentBillingDetails.City,
+        billToState: data.shipmentBillingDetails.State,
+        billToCountry: data.shipmentBillingDetails.CountryRegionCode,
+        billToCoordinator: data.shipmentBillingDetails.Coordinator,
+        billToSalesPerson: data.shipmentBillingDetails.SalesPerson,
+        sellToNo: data.shipmentBillingDetails.BillToNumber,
+        caseID: caseId,
+        companyCode: data.shipmentBillingDetails.CompanyCode,
+        shipmentType: data.shippingDetails.shipmentCategory,
+        shipmentPromisedDate: data.shippingDetails.shippmentPromisedDate,
+        shipmentMode: data.shippingDetails.shipmentMode,
+        shippingAgent: data.shippingDetails.shippingAgent,
+        shipToAttentionTo: data.shipmentAddress.AttentionTo,
+        shipToCode: data.shipmentAddress.CompanyCode,
+        shipToContactNo: data.shipmentAddress.Contact,
+        shipToEmail: data.shipmentAddress.Email,
+        shipToAdd1: data.shipmentAddress.Address,
+        shipToAdd2: data.shipmentAddress.Address2,
+        shipToCity: data.shipmentAddress.City,
+        shipToPostCode: data.shipmentAddress.PostCode,
+        shipToState: data.shipmentAddress.State,
+        shipToCountry: data.shipmentAddress.CountryRegionCode,
+        yourReference: mainData.customerInfo?.referenceNumber,
+        createdByUser: 'DevUI',
+        currentActivityId: caseId,
+        createdBy: 'DevUI',
+        createdDateTime: new Date(),
+        currentActivityStatus: '',
+        createdDateTimeGE: '',
+        createdDateTimeLE: '',
+        deliveryOrderNo: '',
+        expectedDeliveryDate: '',
+        id: caseId,
+        isDeleted: false,
+        glossWeightKg: '',
+        getStatus: '',
+        shipmentNo: '',
+        shipmentTypeGroup: '',
+        shippingMethod: '',
+        trackingNo: '',
+        updatedByUser: 'DevUI',
+        updatedBy: 'DevUI',
+        updatedDateTime: new Date(),
+        wmsStorerKey: '',
+        miscBilling: this.getShipmentSpecificCost(data.shippingSpecificCost, caseId),
+        noOfCartons: '',
+        netWeightKg: '',
+        shipmentDetail: this.getShipmentItems(data.shippingItems, caseId)
+      });
+    });
+    return dataArray;
+  }
+
+  getShipmentSpecificCost = (data: ShippingSpecificCostModel[], caseId: string) => {
+    if ( !data || data.length === 0) {
+      return [];
+    }
+    const dataArray = [];
+    data.forEach(item => {
+      dataArray.push({
+        description: item.description,
+        item: item.costCategory,
+        value: item.subTotal,
+        id: caseId,
+        shipmentOrderID: caseId
+      });
+    });
+    return dataArray;
+  }
+
+  getShipmentItems = (data: ShippingItemsModel[], caseId: string) => {
+    if ( !data || data.length === 0) {
+      return [];
+    }
+    const dataArray = [];
+    data.forEach(item => {
+      dataArray.push(
         {
-          description: '',
-          id: '',
-          item: '',
-          shipmentOrderID: '',
-          value: ''
-        }
-      ],
-      noOfCartons: '',
-      netWeightKg: '',
-      shipmentDetail: [
-        {
-          actualShippedDate: '',
-          currentActivityId: '',
+          actualShippedDate: new Date(),
+          currentActivityId: caseId,
           ediKey: '',
           currentActivityStatus: '',
-          createdByUser: '',
-          createdBy: '',
-          createdDateTime: '',
-          id: '',
+          createdByUser: 'DevUI',
+          createdBy: 'DevUI',
+          createdDateTime: new Date(),
+          id: caseId,
           lnNo: '',
-          shipmentOrderId: '',
+          shipmentOrderId: caseId,
           shipmentDetailNo: '',
-          iSBNPartNo: '',
-          isDeleted: '',
+          iSBNPartNo: item.productNumber,
+          isDeleted: false,
           jobNo: '',
-          requestedQty: '',
-          requestedDate: '',
-          shippedQty: '',
-          title: '',
-          totalRemaining: '',
-          updatedByUser: '',
-          updatedBy: '',
-          updatedDateTime: ''
+          requestedQty: item.shipmentQty,
+          requestedDate: new Date(),
+          shippedQty: item.shipmentQty,
+          title: item.title,
+          totalRemaining: item.availableQty,
+          updatedByUser: 'DevUI',
+          updatedBy: 'DevUI',
+          updatedDateTime: new Date()
         }
-      ]
-    };
+      );
+    });
+    return dataArray;
   }
 
   getShipmentDetails = (data: CreateCaseViewModel) => {

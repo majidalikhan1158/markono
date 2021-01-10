@@ -29,7 +29,7 @@ import { AddReasonModalComponent } from './ui-modals/platemaking/add-reason-moda
     ViewOperatorsModalComponent,
     AddReasonModalComponent,
   ],
-  imports: [CommonModule, MaterialUiModule, NgbDropdownModule, SumPipeModule],
+  imports: [CommonModule, MaterialUiModule, NgbDropdownModule, SumPipeModule ],
   exports: [
     AddCustomerModalComponent,
     AddBlueprintModalComponent,
@@ -45,7 +45,7 @@ import { AddReasonModalComponent } from './ui-modals/platemaking/add-reason-moda
   providers: [
     { provide: MAT_SNACK_BAR_DATA, useValue: {} },
     SumPipeModule,
-    SnackBarService,
+    SnackBarService
   ],
 })
 export class SharedModule { }

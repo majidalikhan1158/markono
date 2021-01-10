@@ -279,6 +279,16 @@ export const BindingMethodList: SelectionList[] = [
   }
 ];
 
+export const OtherComponentChooseList = [
+'Insert',
+'Jacket',
+'Other Special Instruction',
+'Others',
+'Slip case',
+'Sticker',
+'Tip-In'
+];
+
 export const BookSpineTypeList: SelectionList[] = [
   {
     value: 1,
@@ -583,7 +593,8 @@ export const BindingType = {
   SADDLESTITCH: 'Saddle Stitch',
   SPIRALBOUND: 'Spiral Bound',
   TRIMTOSIZE: 'Trim to size',
-  WIREOBINDING: 'Wire-O Binding'
+  WIREOBINDING: 'Wire-O Binding',
+  OTHER: 'OTHER'
 };
 
 export const ImpositionLayoutList = [
@@ -694,3 +705,14 @@ export const ProductSpecStatusTypes = {
   InComplete: 'Incomplete',
   Complete: 'Complete'
 };
+
+export const WebCodeLocationList = [
+  'Front cover',
+  'Inside front cover',
+  'Back cover',
+  'Inside back cover',
+  'Text',
+  'Front endpaper',
+  'Back Endpaper',
+  'Others'
+]

@@ -13,18 +13,17 @@
         </div>
     </div>
 
-    <ng-container *ngIf="viewModal.coverType=='4pp cover'">
+    <ng-container *ngIf="viewModal.coverType && viewModal.coverType !=='Self-cover'">
         <div class="col-lg-12 display-flex pl-0 pt-2">
             <div class="col-lg-3 pr-0">
                 <mat-form-field appearance="fill">
                     <mat-label>Cover Material Weight</mat-label>
                     <mat-select [(ngModel)]="viewModal.coverMaterialWeight" (selectionChange)="handleMaterialWeightChange('MATERIALWEIGHT')">
                         <mat-option>
-                            <ngx-mat-select-search [formControl]="materialFltrCtrl" placeholderLabel="Search..">
+                            <ngx-mat-select-search [formControl]="materialWeightFltrCtrl" placeholderLabel="Search..">
                             </ngx-mat-select-search>
                         </mat-option>
-                        <mat-option [value]="item" *ngFor="let item of filteredMaterialList| async ">{{item}}
-                        </mat-option>
+                        <mat-option [value]="item" *ngFor="let item of filteredMaterialWeightList | async ">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -34,7 +33,11 @@
                     <mat-select (selectionChange)="handleMaterialWeightChange('MATERIAL')"
                         [(ngModel)]="viewModal.coverMaterial" 
                         [disabled]="!viewModal.coverMaterialWeight">
-                        <mat-option [value]="item" *ngFor="let item of materialList">{{item}}</mat-option>
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="materialFltrCtrl" placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item" *ngFor="let item of filteredMaterialList | async">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -43,7 +46,11 @@
                     <mat-label>Material Brand</mat-label>
                     <mat-select [(ngModel)]="viewModal.materialBrand"
                         [disabled]="!viewModal.coverMaterialWeight || !viewModal.coverMaterial">
-                        <mat-option [value]="item" *ngFor="let item of materialBrandList">{{item}}</mat-option>
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="materialBrandFltrCtrl" placeholderLabel="Search..">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option [value]="item" *ngFor="let item of filteredMaterialBrandList | async">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -53,9 +60,18 @@
             <mat-divider></mat-divider>
         </div>
         <!--outside-->
-        <div class="col-lg-12 pb-3">
-            <span class="labels">Outside Cover</span>&nbsp;&nbsp;
-            <mat-hint class="font-10px">No. of colours ({{viewModal.pantoneColourOutside.length + viewModal.colorTypeOutside.length}})</mat-hint>
+        <div class="col-lg-12 pb-1">
+            <span class="labels">Outside Cover</span>
+        </div>
+
+        <div class="col-lg-12 d-flex pb-2">
+            <div class="col-lg-4 pl-0">
+                <mat-hint class="font-10px">No. of colours</mat-hint>
+                <!-- ({{viewModal.pantoneColourOutside.length + viewModal.colorTypeOutside.length}}) -->
+            </div>
+            <div class="col-lg-6 pl-1">
+                <mat-hint class="font-10px">Pantone Colours</mat-hint>
+            </div>
         </div>
 
         <div class="col-lg-12 display-flex pl-0">
@@ -128,12 +144,21 @@
 
         <!--inside-->
 
-        <div class="col-lg-12">
-            <span class="labels">Inside Cover</span>&nbsp;&nbsp;
-            <mat-hint class="font-10px">No. of colours ({{viewModal.colorTypeInside.length + viewModal.pantoneColourInside.length}})</mat-hint>
+        <div class="col-lg-12 pb-1">
+            <span class="labels">Inside Cover</span>
         </div>
 
-        <div class="col-lg-12 display-flex pl-0 pt-3">
+        <div class="col-lg-12 d-flex pb-2">
+            <div class="col-lg-4 pl-0">
+                <mat-hint class="font-10px">No. of colours</mat-hint>
+                <!-- ({{viewModal.colorTypeInside.length + viewModal.pantoneColourInside.length}}) -->
+            </div>
+            <div class="col-lg-6 pl-1">
+                <mat-hint class="font-10px">Pantone Colours</mat-hint>
+            </div>
+        </div>
+
+        <div class="col-lg-12 display-flex pl-0 ">
             <div class="col-lg-4 pr-0">
                 <div class="color-type-options display-flex pb-4">
                     <span *ngFor="let item of colorTypeList"

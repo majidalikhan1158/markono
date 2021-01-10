@@ -176,6 +176,9 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
   }
 
   getApisData = () => {
+    this.subscription = this.store.$productGroupList.subscribe(resp => {
+      this.productTypeList = resp.sort((a, b) => a.Id - b.Id);
+    });
   }
 
   handlePrintTypeChange = () => {

@@ -18,14 +18,11 @@
                             <mat-form-field appearance="fill">
                                 <mat-label>Choose Location</mat-label>
                                 <mat-select [(ngModel)]="viewModal[i].webcodeLocation">
-                                    <mat-option value="Front cover">Front cover</mat-option>
-                                    <mat-option value="Inside front cover">Inside front cover</mat-option>
-                                    <mat-option value="Back cover">Back cover</mat-option>
-                                    <mat-option value="Inside back cover">Inside back cover</mat-option>
-                                    <mat-option value="Text">Text</mat-option>
-                                    <mat-option value="Front endpaper">Front endpaper</mat-option>
-                                    <mat-option value="Back Endpaper">Back Endpaper</mat-option>
-                                    <mat-option value="Others">Others</mat-option>
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="webCodeLocationFltrCtrl" placeholderLabel="Search..">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option [value]="item" *ngFor="let item of filteredWebCodeLocationList | async">{{item}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>

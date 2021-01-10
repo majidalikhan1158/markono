@@ -1,6 +1,6 @@
 import { ChildIsbnModal } from './../../../services/shared/classes/product-modals/product-modals';
 import { Injectable } from '@angular/core';
-import { WebCodeVM, DVDVM, OtherVM, GeneralVM, CoverVM, TextVM, BindingVM, ChildIsbnVM, UnitPriceVM } from '../../models/product-spec';
+import { WebCodeVM, DVDVM, OtherVM, GeneralVM, CoverVM, TextVM, BindingVM, ChildIsbnVM, UnitPriceVM, BindingTypeOthers } from '../../models/product-spec';
 import { BindingType, ProductSpecificationTypesArray } from '../product-management/product-constants';
 import { ProductSpecStore } from '../../ui-services/product-spec.service';
 import {
@@ -52,6 +52,15 @@ export class ProductSpecHelperService {
       specialInstructions2: '',
     };
   }
+
+  getOtherTypeObject = (): BindingTypeOthers => {
+    return {
+      specialInstructions1: '',
+      benchworkRequired: [],
+      specialInstructions2: '',
+    };
+  }
+
 
   getSaddleStitchTypeObject = (): BindingTypeStichType => {
     return {
@@ -521,7 +530,7 @@ export class ProductSpecHelperService {
       materialBrand: p?.TxtMaterialBrand ?? '',
       noOfColourExtent: p?.TxtNoOfColourExtent ?? 0,
       noOfMonoExtent: p?.TxtNoOfMonoExtent ?? 0,
-      totalExtent: p?.TxtTotalExtent ?? 0,
+      totalExtent: this.sum(p?.TxtNoOfColourExtent ?? 0,p?.TxtNoOfMonoExtent ?? 0) ,
       noOfColours: p?.TxtNoOfColours ?? 0,
       colorType: this.getStringArray(p?.TxtSelectedColours?.toString()),
       pantoneColour: this.getStringArray(p?.TxtPantoneColoursNo?.toString()),
@@ -647,6 +656,7 @@ export class ProductSpecHelperService {
       saddleStich: this.saddleStitch(p?.BindingType, product), // BindingTypeStichType;
       spiralBound: this.spiralBound(p?.BindingType, product), // BindingTypeSpiralBound;
       wireoBinding: this.wireOBinding(p?.BindingType, product), // BindingTypeWireoBinding;
+      others: this.getOtherType(p?.BindingType, product)
     };
   }
 
@@ -670,7 +680,7 @@ export class ProductSpecHelperService {
       materialBrand: p?.EndpaperMaterialBrand ?? '',
       noOfColourExtent: p?.EndpaperNoOfColourExtent ?? 0,
       noOfMonoExtent: p?.EndpaperNoOfMonoExtent ?? 0,
-      totalExtent: p?.EndpaperTotalExtent ?? 0,
+      totalExtent: this.sum(p?.EndpaperNoOfColourExtent ?? 0, p?.EndpaperNoOfMonoExtent ?? 0),
       noOfColours: p?.EndpaperNoOfColours ?? 0,
       colorType: this.getStringArray(p?.EndpaperSelectedColours?.toString()),
       pantoneColour: this.getStringArray(p?.EndpaperPantoneColourNo?.toString()),
@@ -743,11 +753,41 @@ export class ProductSpecHelperService {
     };
   }
 
+  getOtherType = (bindingType: string, product: any): BindingTypeOthers => {
+    const p = product?.ProductDetail[0];
+    if (bindingType !== BindingType.OTHER) {
+      return null;
+    }
+    return {
+      specialInstructions1: p?.BindingTypeSpecialInstruction ?? '',
+      benchworkRequired: this.getStringArray(p?.BindingBenchworkRequired?.toString()),
+      specialInstructions2: p?.BindingBenchworkSpecialInstruction ?? '',
+    };
+  }
+
   getStringArray = (value: string): string[] => {
     if (!value || value.length === 0) {
       return [];
     }
 
     return value.split(',');
+  }
+
+  sum = (firstNumber: number, secondNumber: number) => {
+    // tslint:disable-next-line: radix
+    firstNumber = parseFloat(firstNumber.toString());
+    // tslint:disable-next-line: radix
+    secondNumber = parseFloat(secondNumber.toString());
+    // tslint:disable-next-line: radix
+    return parseFloat(firstNumber.toFixed(0)) + parseFloat(secondNumber.toFixed(0));
+  }
+
+  minus = (firstNumber: number, secondNumber: number) => {
+    // tslint:disable-next-line: radix
+    firstNumber = parseFloat(firstNumber.toString());
+    // tslint:disable-next-line: radix
+    secondNumber = parseFloat(secondNumber.toString());
+    // tslint:disable-next-line: radix
+    return parseFloat(firstNumber.toFixed(0)) - parseFloat(secondNumber.toFixed(0));
   }
 }

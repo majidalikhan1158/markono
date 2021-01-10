@@ -22,8 +22,8 @@
                         </span>
                     </span>
                     <div class="d-flex flex-column">
-                        <span class="text-muted font-weight-bold mt-2">OUTSTANDING</span>
-                        <span class="text-dark-75 font-weight-bolder font-size-h">3216</span>
+                        <span class="text-muted font-weight-bold mt-2">OVERDUE</span>
+                        <span class="text-dark-75 font-weight-bolder font-size-h">28857</span>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">
@@ -53,9 +53,9 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <span class="symbol symbol-square symbol-50 symbol-light-success mr-2">
+                    <span class="symbol symbol-square symbol-50 symbol-light-danger mr-2">
                         <span class="symbol-label">
-                            <span class="svg-icon svg-icon-success svg-icon-2x">
+                            <span class="svg-icon svg-icon-danger svg-icon-2x">
                                 <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo2/dist/../src/media/svg/icons/Code/Done-circle.svg--><svg
                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                     width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -72,29 +72,32 @@
                         </span>
                     </span>
                     <div class="d-flex flex-column">
-                        <span class="text-muted font-weight-bold mt-2">OVERDUE</span>
-                        <span class="text-dark-75 font-weight-bolder font-size-h">313</span>
+                        <span class="text-muted font-weight-bold mt-2">OUTSTANDING DUE TODAY</span>
+                        <span class="text-dark-75 font-weight-bolder font-size-h">0</span>
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">
                     <span class="symbol symbol-square symbol-50 symbol-light-danger mr-2">
                         <span class="symbol-label">
                             <span class="svg-icon svg-icon-danger svg-icon-2x">
-                                <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo2/dist/../src/media/svg/icons/Code/Stop.svg--><svg
+                                <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo2/dist/../src/media/svg/icons/Code/Done-circle.svg--><svg
                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                     width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <rect x="0" y="0" width="24" height="24" />
+                                        <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
                                         <path
-                                            d="M12,22 C6.4771525,22 2,17.5228475 2,12 C2,6.4771525 6.4771525,2 12,2 C17.5228475,2 22,6.4771525 22,12 C22,17.5228475 17.5228475,22 12,22 Z M12,20 C16.418278,20 20,16.418278 20,12 C20,7.581722 16.418278,4 12,4 C7.581722,4 4,7.581722 4,12 C4,16.418278 7.581722,20 12,20 Z M19.0710678,4.92893219 L19.0710678,4.92893219 C19.4615921,5.31945648 19.4615921,5.95262146 19.0710678,6.34314575 L6.34314575,19.0710678 C5.95262146,19.4615921 5.31945648,19.4615921 4.92893219,19.0710678 L4.92893219,19.0710678 C4.5384079,18.6805435 4.5384079,18.0473785 4.92893219,17.6568542 L17.6568542,4.92893219 C18.0473785,4.5384079 18.6805435,4.5384079 19.0710678,4.92893219 Z"
-                                            fill="#000000" fill-rule="nonzero" opacity="0.3" />
+                                            d="M16.7689447,7.81768175 C17.1457787,7.41393107 17.7785676,7.39211077 18.1823183,7.76894473 C18.5860689,8.1457787 18.6078892,8.77856757 18.2310553,9.18231825 L11.2310553,16.6823183 C10.8654446,17.0740439 10.2560456,17.107974 9.84920863,16.7592566 L6.34920863,13.7592566 C5.92988278,13.3998345 5.88132125,12.7685345 6.2407434,12.3492086 C6.60016555,11.9298828 7.23146553,11.8813212 7.65079137,12.2407434 L10.4229928,14.616916 L16.7689447,7.81768175 Z"
+                                            fill="#000000" fill-rule="nonzero" />
                                     </g>
                                 </svg>
                                 <!--end::Svg Icon-->
-                            </span></span></span>
+                            </span>
+                        </span>
+                    </span>
                     <div class="d-flex flex-column">
-                        <span class="text-muted font-weight-bold mt-2">SHIPPED LAST 3 DAYS</span>
-                        <span class="text-dark-75 font-weight-bolder font-size-h">2984</span>
+                        <span class="text-muted font-weight-bold mt-2">OUTSTANDING JOBS</span>
+                        <span class="text-dark-75 font-weight-bolder font-size-h">313</span>
                     </div>
                 </div>
             </div>
@@ -105,22 +108,11 @@
 
 <div class="row pt-5">
     <div class="col-lg-12 display-flex">
-        <div class="card card-custom example example-compact gutter-b orders-table-card">
+        <div class="card card-custom example example-compact gutter-b orders-issue-table-card">
             <div class="card-header pr-0">
                 <div class="row full-width">
                     <div class="col-lg-12 pt-2 pb-2 pr-0">
                         <div class="float-left display-flex">
-                            <span style="padding-top: 10px;font-size: 15px;color: #AFAFAF;">View
-                                By:&nbsp;</span>
-                            <mat-form-field appearance="fill" class="font-12px pr-2">
-                                <mat-label>Status</mat-label>
-                                <mat-select [(ngModel)]="viewByFilter"
-                                    (ngModelChange)="viewByFilterChange($event,tableFilterTypes.STATUS)">
-                                    <mat-option [value]="item.value" *ngFor="let item of statusTypesList">
-                                        {{item.text}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
                             <mat-chip-list #chipList class="table-filter-chips">
                                 <mat-chip [removable]="true" *ngIf="tableFilters.customerPoNo != ''"
                                     (removed)="removeFilter(tableFilterTypes.CUSTOMER_PONO)">
@@ -142,9 +134,19 @@
                                     {{tableFilters.status }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
-                                <mat-chip [removable]="true" *ngIf="tableFilters.customerName != ''"
-                                    (removed)="removeFilter(tableFilterTypes.CUSTOMER_NAME)">
-                                    {{tableFilters.customerName }}
+                                <mat-chip [removable]="true" *ngIf="tableFilters.isbn != ''"
+                                    (removed)="removeFilter(tableFilterTypes.ISBN)">
+                                    {{tableFilters.isbn }}
+                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                </mat-chip>
+                                <mat-chip [removable]="true" *ngIf="tableFilters.printVisJobNo != ''"
+                                    (removed)="removeFilter(tableFilterTypes.PRINT_VIS_JOBNO)">
+                                    {{tableFilters.printVisJobNo }}
+                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                </mat-chip>
+                                <mat-chip [removable]="true" *ngIf="tableFilters.printAiJobNo != ''"
+                                    (removed)="removeFilter(tableFilterTypes.PRINTAI_JOBNO)">
+                                    {{tableFilters.printAiJobNo }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.orderType != ''"
@@ -177,12 +179,32 @@
                                             Clear Filters
                                         </a>
                                     </div>
-
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Cust PO No.</mat-label>
                                         <mat-icon matPrefix>search</mat-icon>
                                         <input matInput [(ngModel)]="tableFilters.customerPoNo"
                                             (ngModelChange)="tableFilterChange($event,tableFilterTypes.CUSTOMER_PONO)">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="fill" class="font-12px pb-4">
+                                        <mat-label>PrintVis Job No.</mat-label>
+                                        <mat-icon matPrefix>search</mat-icon>
+                                        <input matInput [(ngModel)]="tableFilters.printVisJobNo"
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.PRINT_VIS_JOBNO)">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="fill" class="font-12px pb-4">
+                                        <mat-label>Printai Job No.</mat-label>
+                                        <mat-icon matPrefix>search</mat-icon>
+                                        <input matInput [(ngModel)]="tableFilters.printAiJobNo"
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.PRINTAI_JOBNO)">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="fill" class="font-12px pb-4">
+                                        <mat-label>ISBN</mat-label>
+                                        <mat-icon matPrefix>search</mat-icon>
+                                        <input matInput [(ngModel)]="tableFilters.isbn"
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.ISBN)">
                                     </mat-form-field>
 
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
@@ -213,17 +235,9 @@
                                         </mat-select>
                                     </mat-form-field>
 
-                                    <mat-form-field appearance="fill" class="font-12px pb-4">
-                                        <mat-label>Customer name</mat-label>
-                                        <mat-icon matPrefix>search</mat-icon>
-                                        <input matInput [(ngModel)]="tableFilters.customerName"
-                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.CUSTOMER_NAME)">
-                                    </mat-form-field>
-
                                     <span class="filter-menu-heading font-14px pb-4">
                                         Order Type
                                     </span>
-
                                     <div class="printing-type-options display-flex pb-4">
                                         <span class="option-item mr-2"
                                             [ngClass]="{'option-item-selected': selectedStatus == orderTypes.PRINT, 'option-item mr-2': true}"
@@ -246,6 +260,13 @@
                         <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
                     </ng-container>
 
+                    <ng-container matColumnDef="jobNo">
+                        <mat-header-cell *matHeaderCellDef>Job No.</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.jobNo }}
+                        </mat-cell>
+                    </ng-container>
+
                     <ng-container matColumnDef="customerPoNo">
                         <mat-header-cell *matHeaderCellDef>Customer PO No.</mat-header-cell>
                         <mat-cell *matCellDef="let element">
@@ -253,6 +274,15 @@
                             <span class="cutomer-name">
                                 {{ getCustomerName(element.customerPoNo)}}
                             </span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="isbn">
+                        <mat-header-cell *matHeaderCellDef>ISBN </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.isbn }}
+                            <!-- <p #tooltip="matTooltip" matTooltip="Info about the action"
+                                [matTooltipPosition]="position.value" matTooltipHideDelay="100000"
+                                class="example-button"></p> -->
                         </mat-cell>
                     </ng-container>
 
@@ -265,11 +295,6 @@
                         <mat-header-cell *matHeaderCellDef> RDD </mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.rdd | date:'shortDate'}}
                         </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="noOfTitles">
-                        <mat-header-cell *matHeaderCellDef> No. of Titles </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.noOfTitles}} </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="qty">
@@ -296,25 +321,14 @@
                     <ng-container matColumnDef="status">
                         <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                            <div class="status-options" *ngIf="element.status == 'Pending File Prep'">
+                            <div class="status-options" *ngIf="element.status == 'Revised'">
                                 <span style="width: 100px;">
-                                    <span class="label label-lg label-light-orange label-inline">Pending File
-                                        Prep</span>
+                                    <span class="label label-lg label-light-orange label-inline">Revised</span>
                                 </span>
                             </div>
-                            <div class="status-options" *ngIf="element.status == 'Order Confirmed'">
+                            <div class="status-options" *ngIf="element.status == 'New Title'">
                                 <span style="width: 100px;">
-                                    <span class="label label-lg label-light-green label-inline">Order Confirmed</span>
-                                </span>
-                            </div>
-                            <div class="status-options" *ngIf="element.status == 'Planning'">
-                                <span style="width: 100px;">
-                                    <span class="label label-lg label-light-purple label-inline">Planning</span>
-                                </span>
-                            </div>
-                            <div class="status-options" *ngIf="element.status == 'Scheduling'">
-                                <span style="width: 100px;">
-                                    <span class="label label-lg label-light-blue label-inline">Scheduling</span>
+                                    <span class="label label-lg label-light-blue label-inline">New Title</span>
                                 </span>
                             </div>
                         </mat-cell>

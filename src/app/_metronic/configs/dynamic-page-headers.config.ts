@@ -36,6 +36,18 @@ export const DynamicPageHeaderLabels = {
     {
       title: 'Orders',
       page: '/admin/order-management/orders',
+    },
+    {
+      title: 'Order Detail',
+      page: '/admin/order-management/order-details',
+    },
+    {
+      title: 'Orders With Issues',
+      page: '/admin/order-management/orders-with-issues',
+    },
+    {
+      title: 'Job Detail',
+      page: '/admin/order-management/job-details',
     }
   ]
 };

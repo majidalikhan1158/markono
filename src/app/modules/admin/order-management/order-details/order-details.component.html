@@ -1,0 +1,860 @@
+<div class="row">
+    <!--order info-->
+    <div class="col-xl-12">
+        <div class="card card-custom example example-compact gutter-b order-info-card">
+            <div class="card-header">
+                <div class="card-title">
+                    <h3 class="card-label">Order Info.</h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <mat-table #table [dataSource]="dataSource" class="order-info-table-card">
+
+                    <ng-container matColumnDef="customerPoNo">
+                        <mat-header-cell *matHeaderCellDef>Customer PO No.</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.customerPoNo }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="orderDate">
+                        <mat-header-cell *matHeaderCellDef> Order Date </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.orderDate | date:'shortDate'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rdd">
+                        <mat-header-cell *matHeaderCellDef> RDD </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.rdd | date:'shortDate'}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="qty">
+                        <mat-header-cell *matHeaderCellDef>Qty </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.qty}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="type">
+                        <mat-header-cell *matHeaderCellDef> Type</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <div *ngIf="element.type == 'Print'">
+                                <a href="javascript:;" routerLink="/admin/order-management/order-details">
+                                    <img src="./../../../../../assets/media/misc/ic_print.png">
+                                </a>
+                                <span style="padding-left: 12px;">Print</span>
+                            </div>
+                            <div *ngIf="element.type == 'Warehouse'">
+                                <a href="javascript:;" routerLink="/admin/order-management/order-details">
+                                    <img src="./../../../../../assets/media/misc/ic_warehouse.png">
+                                </a>
+                                <span style="padding-left: 12px;">Warehouse</span>
+                            </div>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef> Order Status </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <div class="status-options" *ngIf="element.status == 'Pending File Prep'">
+                                <span style="width: 100px;">
+                                    <span class="label label-lg label-light-orange label-inline">Pending File
+                                        Prep</span>
+                                </span>
+                            </div>
+                            <div class="status-options" *ngIf="element.status == 'Shipped'">
+                                <span style="width: 100px;">
+                                    <span class="label label-lg label-light-green label-inline">Shipped</span>
+                                </span>
+                            </div>
+                            <div class="status-options" *ngIf="element.status == 'Planning'">
+                                <span style="width: 100px;">
+                                    <span class="label label-lg label-light-purple label-inline">Planning</span>
+                                </span>
+                            </div>
+                            <div class="status-options" *ngIf="element.status == 'Scheduling'">
+                                <span style="width: 100px;">
+                                    <span class="label label-lg label-light-blue label-inline">Scheduling</span>
+                                </span>
+                            </div>
+                        </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumnsOrderInfo"></mat-header-row>
+                    <!--  (click)="toggleExpandable(row.id)" -->
+                    <mat-row *matRowDef="let row; columns: displayedColumnsOrderInfo;"> </mat-row>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell text-center" colspan="8">No data matching the filter</td>
+                    </tr>
+                </mat-table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 display-flex">
+        <div class="col-lg-2 padding-l-0px">
+            <div class="card card-custom example example-compact gutter-b order-details-types">
+                <div class="card-body">
+                    <mat-selection-list [multiple]="false" (selectionChange)="handleOrderDetailTypeChange($event)">
+                        <mat-list-option *ngFor="let types of orderDetailTypesArray" class="font-14px"
+                            [selected]="types.isSelected" [value]="types.enum">
+                            {{types.value}}
+                        </mat-list-option>
+                    </mat-selection-list>
+                </div>
+            </div>
+        </div>
+        <!--job-->
+        <div *ngIf="(currentSelectedType === orderDetailTypesConstant.JOBS)" class="col-lg-10 padding-l-0px">
+            <div class="card card-custom example example-compact gutter-b orders-job-table-card">
+                <div class="card-header pr-0">
+                    <div class="row full-width">
+                        <div class="col-lg-12 pt-2 pb-2 pr-0">
+                            <div class="float-left display-flex">
+                                <mat-chip-list #chipList class="table-filter-chips">
+                                    <mat-chip [removable]="true" *ngIf="tableFilters.jobNo != ''"
+                                        (removed)="removeFilter(tableFilterTypes.JOBNO)">
+                                        {{tableFilters.jobNo}}
+                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                    </mat-chip>
+                                    <mat-chip [removable]="true" *ngIf="tableFilters.orderDate != ''"
+                                        (removed)="removeFilter(tableFilterTypes.ORDER_DATE)">
+                                        {{tableFilters.orderDate | date:'shortDate'}}
+                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                    </mat-chip>
+                                    <mat-chip [removable]="true" *ngIf="tableFilters.rddDate != ''"
+                                        (removed)="removeFilter(tableFilterTypes.RDD_DATE)">
+                                        {{tableFilters.rddDate | date:'shortDate' }}
+                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                    </mat-chip>
+                                    <mat-chip [removable]="true" *ngIf="tableFilters.isbn != ''"
+                                        (removed)="removeFilter(tableFilterTypes.ISBN)">
+                                        {{tableFilters.isbn }}
+                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                    </mat-chip>
+                                    <mat-chip [removable]="true" *ngIf="tableFilters.qty != ''"
+                                        (removed)="removeFilter(tableFilterTypes.QTY)">
+                                        {{tableFilters.qty }}
+                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                    </mat-chip>
+                                    <mat-chip [removable]="true" *ngIf="tableFilters.jobType != ''"
+                                        (removed)="removeFilter(tableFilterTypes.JOB_TYPE)">
+                                        {{tableFilters.jobType }}
+                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                    </mat-chip>
+                                    <mat-chip [removable]="true" *ngIf="tableFilters.status != ''"
+                                        (removed)="removeFilter(tableFilterTypes.STATUS)">
+                                        {{tableFilters.status }}
+                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                            <div class="float-right display-flex">
+                                <mat-form-field appearance="fill" class="font-12px pr-2">
+                                    <mat-label>Search</mat-label>
+                                    <mat-icon matPrefix>search</mat-icon>
+                                    <input matInput placeholder="Search" (keyup)="applySearch($event)"
+                                        #tableSearchInput>
+                                </mat-form-field>
+                                <!-- <mat-search-bar></mat-search-bar> -->
+                                <button mat-icon-button [matMenuTriggerFor]="menu">
+                                    <mat-icon>filter_list</mat-icon>
+                                </button>
+
+                                <mat-menu #menu="matMenu" class="filter-menu">
+                                    <div class="filter-menu-content" (click)="$event.stopPropagation();">
+                                        <div>
+                                            <span class="filter-menu-heading pb-4">
+                                                Advance Filters
+                                            </span>
+                                            <a class="clear-filter pb-4"
+                                                style="padding-left: 161px;display: inline-block;font: normal normal normal 14px/17px Roboto;"
+                                                (click)="removeFilter('1')">
+                                                Clear Filters
+                                            </a>
+                                        </div>
+                                        <mat-form-field appearance="fill" class="font-12px pb-4">
+                                            <mat-label>Job No.</mat-label>
+                                            <mat-icon matPrefix>search</mat-icon>
+                                            <input matInput [(ngModel)]="tableFilters.jobNo"
+                                                (ngModelChange)="tableFilterChange($event,tableFilterTypes.JOBNO)">
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="fill" class="font-12px pb-4">
+                                            <mat-label>ISBN</mat-label>
+                                            <mat-icon matPrefix>search</mat-icon>
+                                            <input matInput [(ngModel)]="tableFilters.isbn"
+                                                (ngModelChange)="tableFilterChange($event,tableFilterTypes.ISBN)">
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="fill" class="font-12px pb-4">
+                                            <mat-label>Choose Order Date Range</mat-label>
+                                            <input [matDatepicker]="pickerorder" matInput
+                                                [(ngModel)]="tableFilters.orderDate"
+                                                (ngModelChange)="tableFilterChange($event,tableFilterTypes.ORDER_DATE)">
+                                            <mat-datepicker-toggle matSuffix [for]="pickerorder">
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker #pickerorder></mat-datepicker>
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="fill" class="font-12px pb-4">
+                                            <mat-label>Choose RDD Range</mat-label>
+                                            <input [matDatepicker]="pickerrdd" matInput
+                                                [(ngModel)]="tableFilters.rddDate"
+                                                (ngModelChange)="tableFilterChange($event,tableFilterTypes.RDD_DATE)">
+                                            <mat-datepicker-toggle matSuffix [for]="pickerrdd"></mat-datepicker-toggle>
+                                            <mat-datepicker #pickerrdd></mat-datepicker>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="fill" class="font-12px pb-4">
+                                            <mat-label>Qty.</mat-label>
+                                            <mat-icon matPrefix>search</mat-icon>
+                                            <input matInput [(ngModel)]="tableFilters.qty"
+                                                (ngModelChange)="tableFilterChange($event,tableFilterTypes.QTY)">
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="fill" class="font-12px pb-4">
+                                            <mat-label>Job Type</mat-label>
+                                            <mat-icon matPrefix>search</mat-icon>
+                                            <input matInput [(ngModel)]="tableFilters.jobType"
+                                                (ngModelChange)="tableFilterChange($event,tableFilterTypes.JOB_TYPE)">
+                                        </mat-form-field>
+
+
+
+                                        <mat-form-field appearance="fill" class="font-12px pb-4">
+                                            <mat-label>Status</mat-label>
+                                            <mat-select [(ngModel)]="tableFilters.status"
+                                                (ngModelChange)="tableFilterChange($event,tableFilterTypes.STATUS)">
+                                                <mat-option [value]="item.value" *ngFor="let item of statusTypesList">
+                                                    {{item.text}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+
+                                        <span class="filter-menu-heading font-14px pb-4">
+                                            Job Type
+                                        </span>
+                                        <div class="printing-type-options display-flex pb-4">
+                                            <span class="option-item mr-2"
+                                                [ngClass]="{'option-item-selected': selectedStatus == jobTypes.OFFSET, 'option-item mr-2': true}"
+                                                (click)="tableFilterChange(jobTypes.OFFSET,tableFilterTypes.JOB_TYPE)">Offset</span>
+                                        </div>
+                                    </div>
+                                </mat-menu>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <mat-table #table [dataSource]="dataSourceJob" class="orders-table">
+
+                        <ng-container matColumnDef="id">
+                            <mat-header-cell *matHeaderCellDef style="padding-left: 20px !important;"> #
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="jobNo">
+                            <mat-header-cell *matHeaderCellDef>Job No.</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                {{element.jobNo }}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="isbn">
+                            <mat-header-cell *matHeaderCellDef>ISBN </mat-header-cell>
+                            <mat-cell [matTooltip]="getToolTipData(element.isbn )" *matCellDef="let element">
+                                {{element.isbn }}
+                                <p #tooltip="matTooltip" matTooltip="Info about the action"
+                                    [matTooltipPosition]="position.value" matTooltipHideDelay="100000"
+                                    class="example-button"></p>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="orderDate">
+                            <mat-header-cell *matHeaderCellDef> Order Date </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.orderDate | date:'shortDate'}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="rdd">
+                            <mat-header-cell *matHeaderCellDef> RDD </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.rdd | date:'shortDate'}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="qty">
+                            <mat-header-cell *matHeaderCellDef>Qty </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.qty}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="jobType">
+                            <mat-header-cell *matHeaderCellDef> Job Type</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                {{element.jobType}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="status">
+                            <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <div class="status-options" *ngIf="element.status == 'Shipped'">
+                                    <span style="width: 100px;">
+                                        <span class="label label-lg label-light-green label-inline">Shipped</span>
+                                    </span>
+                                </div>
+                                <div class="status-options" *ngIf="element.status == 'Printing'">
+                                    <span style="width: 100px;">
+                                        <span class="label label-lg label-light-purple label-inline">Printing</span>
+                                    </span>
+                                </div>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="actions">
+                            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <mat-form-field appearance="fill" class="font-12px pb-4"
+                                    style="width: -webkit-fill-available;">
+                                    <mat-label>Choose</mat-label>
+                                    <mat-select [(ngModel)]="chooseList"
+                                        (selectionChange)="chooseSelectionChange($event)">
+                                        <mat-option value="Complete">
+                                            Complete
+                                        </mat-option>
+                                        <mat-option value="Processing">
+                                            Processing
+                                        </mat-option>
+                                        <mat-option value="Hold">
+                                            Hold
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- <button class="btn btn-light" (click)="Choose()">Choose
+                                    <span class="svg-icon svg-icon-2x">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                            width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <polygon points="0 0 24 0 24 24 0 24" />
+                                                <path
+                                                    d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z"
+                                                    fill="#000000" fill-rule="nonzero"
+                                                    transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999) " />
+                                            </g>
+                                        </svg>
+                                    </span>
+                                </button> -->
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumnsJob"></mat-header-row>
+                        <!--  (click)="toggleExpandable(row.id)" -->
+                        <mat-row *matRowDef="let row; columns: displayedColumnsJob;" (click)="getJobInfo()"> </mat-row>
+
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell text-center" colspan="8">No data matching the filter
+                                "{{tableSearchInput.value}}"</td>
+                        </tr>
+                    </mat-table>
+
+                    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </div>
+            </div>
+        </div>
+        <!--Customer-->
+        <div *ngIf="(currentSelectedType === orderDetailTypesConstant.CUSTOMER)" class="col-lg-10 padding-l-0px">
+            <div class="row">
+                <!--customer info-->
+                <div class="col-lg-6">
+                    <div class="card card-custom example example-compact gutter-b customer-info-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <h3 class="card-label">Customer Info.</h3>
+                            </div>
+                            <div class="card-toolbar">
+                                <h6>Sell-to-No: DPC149 </h6>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p class="info-title">
+                                        <span class="span-yellow material-icons">
+                                            stop_circle
+                                        </span>
+                                        General Info
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row display-flex">
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Company Name</p>
+                                    <p class="info-label-value">CPI - Elsevier Ltd</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Contact Person</p>
+                                    <p class="info-label-value">CPIANTONYROWE</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Email</p>
+                                    <p class="info-label-value">-</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Phone No</p>
+                                    <p class="info-label-value">-</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Co-ordinator</p>
+                                    <p class="info-label-value">-</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Sales Person</p>
+                                    <p class="info-label-value">-</p>
+                                </div>
+                            </div>
+
+                            <hr style=" border-top: 1px dashed #beb5b2;">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p class="info-title">
+                                        <span class="span-yellow material-icons">
+                                            stop_circle
+                                        </span>
+                                        Address
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row display-flex">
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Address 1</p>
+                                    <p class="info-label-value">422 Than Road</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Address 2</p>
+                                    <p class="info-label-value" style="width: 134px;">CC Industrial Building Lorem Ipsum
+                                    </p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Postcode</p>
+                                    <p class="info-label-value">332143</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">City</p>
+                                    <p class="info-label-value">UK</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">State</p>
+                                    <p class="info-label-value">-</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Country</p>
+                                    <p class="info-label-value">United Kingdom</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--billing info-->
+                <div class="col-lg-6">
+                    <div class="card card-custom example example-compact gutter-b customer-info-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <h3 class="card-label">Billing Info.</h3>
+                            </div>
+                            <div class="card-toolbar">
+                                <h6>Bill-to-No: DPC149 </h6>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p class="info-title">
+                                        <span class="span-yellow material-icons">
+                                            stop_circle
+                                        </span>
+                                        General Info
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row display-flex">
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Company Name</p>
+                                    <p class="info-label-value">CPI - Elsevier Ltd</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Contact Person</p>
+                                    <p class="info-label-value">CPIANTONYROWE</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Email</p>
+                                    <p class="info-label-value">N/A</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Phone No</p>
+                                    <p class="info-label-value">-</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Co-ordinator</p>
+                                    <p class="info-label-value">-</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Sales Person</p>
+                                    <p class="info-label-value">-</p>
+                                </div>
+                            </div>
+
+                            <hr style=" border-top: 1px dashed #beb5b2;">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p class="info-title">
+                                        <span class="span-yellow material-icons">
+                                            stop_circle
+                                        </span>
+                                        Address
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row display-flex">
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Address 1</p>
+                                    <p class="info-label-value">422 Than Road</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Address 2</p>
+                                    <p class="info-label-value" style="width: 134px;">CC Industrial Building</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Postcode</p>
+                                    <p class="info-label-value">332143</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">City</p>
+                                    <p class="info-label-value">UK</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">State</p>
+                                    <p class="info-label-value">-</p>
+                                </div>
+                                <div class="col-lg-4 col-4">
+                                    <p class="info-label">Country</p>
+                                    <p class="info-label-value">United Kingdom</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Shipping Details-->
+        <div *ngIf="(currentSelectedType === orderDetailTypesConstant.SHIPPING_DETAILS)"
+            class="col-lg-10 padding-l-0px">
+            <div class="row">
+                <div class="col-lg-12">
+                    <ng-container>
+                        <div class="card card-custom example example-compact shipping-info-details-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <h3 class="card-label">Shipment 1</h3>
+                                </div>
+                                <div class="card-title">
+                                    <span class="font-12px color-AFAFAF pr-2">Category: </span>
+                                    <span class="font-12px card-label">Samples</span>
+                                </div>
+                                <div class="card-title">
+                                    <span class="font-12px color-AFAFAF pr-2">Attention To: </span>
+                                    <span class="font-12px card-label">Ariadne Pte Ltd</span>
+                                </div>
+                                <div class="card-title">
+                                    <span class="font-12px color-AFAFAF pr-2">Shipment Qty: </span>
+                                    <span class="font-12px card-label">180</span>
+                                </div>
+                                <div class="card-toolbar">
+                                    <span class="material-icons expansion-icon" (click)="toggleExpandable(1)">
+                                        {{
+                                        rowIdToExpand== 1 ?
+                                        ExpansionIcons.KEYBOARD_ARROW_UP :
+                                        ExpansionIcons.KEYBOARD_ARROW_DOWN
+                                        }}
+                                    </span>
+                                    <!-- <span class="material-icons delete-icon pr-2 cursor-pointer"
+                                        (click)="deleteShipment(shipment.shipmentId)"
+                                        *ngIf="createCaseMode !== createCaseModes.EDIT">
+                                        delete
+                                    </span>
+                                    <span class="material-icons expansion-icon cursor-pointer"
+                                        (click)="displayShipmentDetails(shipment.shipmentId)">
+                                        {{
+                                        shipment.boxId == boxIdToExpand ?
+                                        ExpansionIcons.KEYBOARD_ARROW_UP :
+                                        ExpansionIcons.KEYBOARD_ARROW_DOWN
+                                        }}
+                                    </span> -->
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <span class="span-yellow material-icons pr-2">
+                                            stop_circle
+                                        </span>
+                                        <span class="card-body-header">Shipping
+                                            Details</span>
+                                    </div>
+                                </div>
+
+                                <div class="row pt-3">
+                                    <div class="col-lg-12 display-flex">
+                                        <div class="col-lg-3 pl-0">
+                                            <p class="info-label">Billable?</p>
+                                            <p class="info-label-value">Yes</p>
+                                        </div>
+                                        <div class="col-lg-3 pr-0 pl-0">
+                                            <p class="info-label">Shipment Promised Date</p>
+                                            <p class="info-label-value">10/22/2020</p>
+                                        </div>
+                                        <div class="col-lg-3 pr-0">
+                                            <p class="info-label">Expected Delivery Date</p>
+                                            <p class="info-label-value">10/22/2020</p>
+                                        </div>
+                                        <div class="col-lg-3 pr-0">
+                                            <p class="info-label">Shipment Mode Date</p>
+                                            <p class="info-label-value">Air Freight</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row pt-3">
+                                    <div class="col-lg-12 display-flex">
+                                        <div class="col-lg-3 pl-0">
+                                            <p class="info-label">Shipping Terms</p>
+                                            <p class="info-label-value">CIF</p>
+                                        </div>
+                                        <div class="col-lg-3 pr-0 pl-0">
+                                            <p class="info-label">Shipping Agent</p>
+                                            <p class="info-label-value">YFE</p>
+                                        </div>
+                                        <div class="col-lg-3 pr-0">
+                                            <p class="info-label">Account No.</p>
+                                            <p class="info-label-value">0123018248</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row pt-5">
+                                    <div class="col-lg-12">
+                                        <span class="span-yellow material-icons pr-2">
+                                            stop_circle
+                                        </span>
+                                        <span class="card-body-header">Items</span>
+                                    </div>
+                                </div>
+                                <div class="row pt-3">
+                                    <div class="col-lg-12">
+                                        <div class="tab-content">
+                                            <!--begin::Table-->
+                                            <div class="table-responsive">
+                                                <table class="table table-head-custom table-vertical-center
+                                                    shipping-info-details-table">
+                                                    <thead>
+                                                        <tr class="text-left">
+                                                            <th>#</th>
+                                                            <th>ISBN/Product No</th>
+                                                            <th>Title</th>
+                                                            <th>Available Qty</th>
+                                                            <th>This Shipment Qty</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ng-container>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td>9781760422791</td>
+                                                                <td>Passer: Psychology 3e</td>
+                                                                <td>140</td>
+                                                                <td>120</td>
+                                                            </tr>
+                                                        </ng-container>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                            <!--end::Table-->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row pt-5">
+                                    <div class="col-lg-12">
+                                        <span class="span-yellow material-icons pr-2">
+                                            stop_circle
+                                        </span>
+                                        <span class="card-body-header">Misc. Billing</span>
+                                    </div>
+                                </div>
+                                <div class="row pt-3">
+                                    <div class="col-lg-12">
+                                        <div class="tab-content">
+                                            <!--begin::Table-->
+                                            <div class="">
+                                                <table class="table table-head-custom table-vertical-center
+                                                    shipping-info-details-table">
+                                                    <thead>
+                                                        <tr class="text-left">
+                                                            <th>#</th>
+                                                            <th>Cost Category</th>
+                                                            <th>Description</th>
+                                                            <th>Sub-Total</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>Filfillment</td>
+                                                            <td>Lorem ipum dolor imit</td>
+                                                            <td>50.00</td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                            <!--end::Table-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="display-flex pt-5">
+                                    <div class="col-lg-12 pl-0">
+                                        <span class="span-yellow material-icons pr-2">
+                                            stop_circle
+                                        </span>
+                                        <span class="card-body-header">Ship to Address</span>
+                                        <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
+                                            <div class="col-lg-3 pl-0">
+                                                <p class="info-label">Attention To</p>
+                                                <p class="info-label-value">Ariadne Pte Ltd</p>
+                                            </div>
+                                            <div class="col-lg-3 pl-0">
+                                                <p class="info-label">Contact Person</p>
+                                                <p class="info-label-value">Desmond Foo</p>
+                                            </div>
+                                            <div class="col-lg-3 pl-0">
+                                                <p class="info-label">Email</p>
+                                                <p class="info-label-value">desmond@ariadne.sg</p>
+                                            </div>
+                                            <div class="col-lg-3 pl-0">
+                                                <p class="info-label">Phone</p>
+                                                <p class="info-label-value">-</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
+                                            <div class="col-lg-3 pl-0">
+                                                <p class="info-label">Address 1</p>
+                                                <p class="info-label-value">50 Tagore Lane</p>
+                                            </div>
+                                            <div class="col-lg-3 pl-0">
+                                                <p class="info-label">Address 2</p>
+                                                <p class="info-label-value">#02-10G</p>
+                                            </div>
+                                            <div class="col-lg-3 pl-0">
+                                                <p class="info-label">City</p>
+                                                <p class="info-label-value">Singapore</p>
+                                            </div>
+                                            <div class="col-lg-3 pl-0">
+                                                <p class="info-label">Postcode</p>
+                                                <p class="info-label-value">787494</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
+                                            <div class="col-lg-3 pl-0">
+                                                <p class="info-label">State</p>
+                                                <p class="info-label-value">-</p>
+                                            </div>
+                                            <div class="col-lg-3 pl-0">
+                                                <p class="info-label">Country</p>
+                                                <p class="info-label-value">-</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="display-flex pt-5">
+                                    <div class="col-lg-12 pl-0 pr-0">
+                                        <span class="span-yellow material-icons pr-2">
+                                            stop_circle
+                                        </span>
+                                        <span class="card-body-header">Billing Details</span>
+                                        <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
+                                            <div class="col-lg-3 pl-0 pr-0">
+                                                <p class="info-label">Bill-to No</p>
+                                                <p class="info-label-value">DPA152</p>
+                                            </div>
+                                            <div class="col-lg-3 pr-0">
+                                                <p class="info-label">Attention To</p>
+                                                <p class="info-label-value">Ariadne Pte Ltd</p>
+                                            </div>
+                                            <div class="col-lg-3 pl-0 pr-0">
+                                                <p class="info-label">Contact Person</p>
+                                                <p class="info-label-value">Desmond Foo</p>
+                                            </div>
+                                            <div class="col-lg-3 pr-0">
+                                                <p class="info-label">Email</p>
+                                                <p class="info-label-value">desmond@ariadne.sg</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
+                                            <div class="col-lg-3 pl-0 pr-0">
+                                                <p class="info-label">Phone</p>
+                                                <p class="info-label-value">-</p>
+                                            </div>
+                                            <div class="col-lg-3 pr-0">
+                                                <p class="info-label">Address 1</p>
+                                                <p class="info-label-value">50 Tagore Lane</p>
+                                            </div>
+                                            <div class="col-lg-3 pl-0 pr-0">
+                                                <p class="info-label">Address 2</p>
+                                                <p class="info-label-value">#02-10G</p>
+                                            </div>
+                                            <div class="col-lg-3 pr-0">
+                                                <p class="info-label">City</p>
+                                                <p class="info-label-value">Singapore</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
+                                            <div class="col-lg-3 pl-0 pr-0">
+                                                <p class="info-label">Postcode</p>
+                                                <p class="info-label-value">787494</p>
+                                            </div>
+                                            <div class="col-lg-3 pr-0">
+                                                <p class="info-label">State</p>
+                                                <p class="info-label-value">-</p>
+                                            </div>
+                                            <div class="col-lg-3 pl-0 pr-0">
+                                                <p class="info-label">Country</p>
+                                                <p class="info-label-value">-</p>
+                                            </div>
+                                            <div class="col-lg-3 pr-0">
+                                                <p class="info-label">Co-ordinator</p>
+                                                <p class="info-label-value">-</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
+                                            <div class="col-lg-6 pl-0 pr-0">
+                                                <p class="info-label">Sales Person</p>
+                                                <p class="info-label-value">Dosmond Chew</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

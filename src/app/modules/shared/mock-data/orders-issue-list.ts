@@ -1,52 +1,57 @@
-export const OrdersModelDataList = [
+export const OrdersIssueDataList = [
     {
         id: 1,
+        jobNo: '984789',
         customerPoNo: '20005838',
+        isbn: '9780124059351',
         orderDate: Date.now(),
         rdd: Date.now(),
-        noOfTitles: '22',
         qty: '50,120',
         type: 'warehouse',
-        status: 'Pending File Prep'
+        status: 'Revised'
     },
     {
         id: 2,
+        jobNo: '984789',
         customerPoNo: '20005838',
+        isbn: '9780124059351',
         orderDate: Date.now(),
         rdd: Date.now(),
-        noOfTitles: '22',
         qty: '50,120',
         type: 'print',
-        status: 'Order Confirmed'
+        status: 'Revised'
     },
     {
         id: 3,
+        jobNo: '984789',
         customerPoNo: '20005838',
+        isbn: '9780124059351',
         orderDate: Date.now(),
         rdd: Date.now(),
-        noOfTitles: '22',
         qty: '50,120',
         type: 'warehouse',
-        status: 'Planning'
+        status: 'New Title'
     },
     {
         id: 4,
+        jobNo: '984789',
         customerPoNo: '20005838',
+        isbn: '9780124059351',
         orderDate: Date.now(),
         rdd: Date.now(),
-        noOfTitles: '22',
         qty: '50,120',
         type: 'print',
-        status: 'Scheduling'
+        status: 'New Title'
     },
     {
         id: 5,
+        jobNo: '984789',
         customerPoNo: '20005838',
+        isbn: '9780124059351',
         orderDate: Date.now(),
         rdd: Date.now(),
-        noOfTitles: '22',
         qty: '50,120',
-        type: 'print',
-        status: 'Pending File Prep'
+        type: 'warehouse',
+        status: 'Revised'
     },
 ];

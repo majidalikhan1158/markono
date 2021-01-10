@@ -20,7 +20,7 @@ import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
 import { SpinnerService } from './spinner.service';
 import { UnitsPerMinutesList } from '../../shared/models/shop-floor';
 
-const API_PING_TIME = 500000;
+const API_PING_TIME = 5000;
 
 @Component({
   selector: 'app-shop-floor-collection',

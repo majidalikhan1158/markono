@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ModalService } from '../../../ui-services/modal.service';
 import { UIModalID } from '../../../enums/app-constants';
 import { ChildIsbnModal } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
@@ -17,7 +17,7 @@ import { SnackBarService } from '../../../ui-services/snack-bar.service';
   styleUrls: ['./create-product-spec-modal.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CreateProductSpecModalComponent implements OnInit {
+export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
   @Output() acceptEvent = new EventEmitter();
   @ViewChild('trigger1') trigger1: MatAutocompleteTrigger;
   @ViewChild('trigger2') trigger2: MatAutocompleteTrigger;
@@ -32,6 +32,8 @@ export class CreateProductSpecModalComponent implements OnInit {
   previousValue1: string;
   previousValue2: string;
   subscription: Subscription;
+  selection: ChildIsbnModal = {ISBN: '', VersionNo: '', Id: ''};
+  selectedType: number;
   constructor(private modalService: ModalService,
               private store: ProductSpecStore,
               private ref: ChangeDetectorRef,
@@ -108,19 +110,30 @@ export class CreateProductSpecModalComponent implements OnInit {
       : setTimeout(_ => this.trigger2.openPanel());
       return;
     }
-    const isbnData = isbnOwner as ChildIsbnModal;
-    console.log(isbnData);
+    const isbnData = this.selection = isbnOwner as ChildIsbnModal;
+    this.selectedType = type;
 
     // type === 1, move to view product spec
     // type === 2, move to view product spec with empty isbn field in general
+  }
+
+  closeModal() {
+    this.modalService.close(UIModalID.ADD_PRODUCT_SPEC_MODAL);
+  }
+
+  handleExistingTemplate() {
+    this.useExistingTemplate = !this.useExistingTemplate;
+  }
+
+  createProductSpec() {
     const reqObj = {
-      isbn: isbnData.ISBN,
-      VersionNo: isbnData.VersionNo
+      isbn: this.selection.ISBN,
+      VersionNo: this.selection.VersionNo
     };
     this.productService.getProductDetails(reqObj).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
         const productDetails = resp.body.result[0];
-        if (type === 1) {
+        if (this.selectedType === 1) {
           this.store.setProductSpecReadonly(true);
           this.helper.transProductDetailToVM(productDetails);
         } else {
@@ -134,15 +147,8 @@ export class CreateProductSpecModalComponent implements OnInit {
     });
   }
 
-  closeModal() {
-    this.modalService.close(UIModalID.ADD_PRODUCT_SPEC_MODAL);
-  }
-
-  handleExistingTemplate() {
-    this.useExistingTemplate = !this.useExistingTemplate;
-  }
-
-  createProductSpec() {
+  ngOnDestroy(): void {
     this.acceptEvent.emit();
+    // this.router.navigate(['admin/product-management/view']);
   }
 }

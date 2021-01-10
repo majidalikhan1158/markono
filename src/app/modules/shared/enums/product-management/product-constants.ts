@@ -688,3 +688,9 @@ export const NoOfColorsList = [
   '8',
   '9'
 ];
+
+export const ProductSpecStatusTypes = {
+  Live: 'Live',
+  InComplete: 'Incomplete',
+  Complete: 'Complete'
+};

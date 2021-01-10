@@ -60,7 +60,7 @@
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
 
-                            $ {{overAllCostVM.printAndBind}} .00
+                            $ {{overAllCostVM.printAndBind}}
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
@@ -71,8 +71,8 @@
                                     Other Charges
                                 </mat-panel-title>
                                 <mat-panel-description>
-                                    <span class="font-roboto-regular font-14px float-right" style="margin-left: 93%">
-                                        $ {{overAllCostVM.otherChargesTotal}}.00
+                                    <span class="font-roboto-regular font-14px float-right" style="margin-left: 92%">
+                                        $ {{overAllCostVM.otherChargesTotal}}
                                     </span>
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
@@ -99,7 +99,7 @@
                             Sub-total
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
-                            $ {{overAllCostVM.subTotal}}.00
+                            $ {{overAllCostVM.subTotal}}
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
@@ -108,10 +108,10 @@
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
                             <mat-form-field appearance="fill" class="width-90">
-                                <input type="number" min="0" matInput (change)="handleDiscountChange()"
-                                    [(ngModel)]="overAllCostVM.discount">
+                                <input type="number" #discountField min="0" matInput (change)="handleDiscountChange(discountField.value)"
+                                    [value]="discountPercentage">
                                 <span matPrefix>$&nbsp;</span>
-                                <span matSuffix>.00</span>
+                                <!-- <span matSuffix>.00</span> -->
                             </mat-form-field>
                         </span>
                         <mat-divider class="mt-4"></mat-divider>
@@ -122,7 +122,7 @@
                             Tax (GST)
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
-                            $ {{overAllCostVM.tax}}.00
+                            $ {{overAllCostVM.tax}}
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
@@ -130,7 +130,7 @@
                             Total
                         </span>
                         <span class="font-roboto-bold font-14px float-right">
-                            $ {{overAllCostVM.total}}.00
+                            $ {{totalAmout}}
                         </span>
                     </div>
                 </div>

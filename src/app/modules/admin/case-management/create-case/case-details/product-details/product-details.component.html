@@ -57,7 +57,7 @@
                                                     [(ngModel)]="productDetailsVMList[i].sellingPrice"
                                                     [disabled]="disabled">
                                                 <span matPrefix>$&nbsp;</span>
-                                                <span matSuffix>.00</span>
+                                                <!-- <span matSuffix>.00</span> -->
                                             </mat-form-field>
                                         </td>
                                         <td>{{productDetailsVMList[i].subTotal}}</td>
@@ -196,14 +196,13 @@
                                                         <p class="info-label-value font-12px">
                                                             $
                                                             {{productDetailsVMList[i].productISBNDetail.estimatedPrice}}
-                                                            .00
                                                         </p>
                                                     </div>
                                                     <div class="col-lg-2 pr-0">
                                                         <p class="info-label">Additional Unit price</p>
                                                         <p class="info-label-value font-12px">
                                                             $
-                                                            {{productDetailsVMList[i].productISBNDetail.additionalUnitPrice}}.00
+                                                            {{productDetailsVMList[i].productISBNDetail.additionalUnitPrice}}
                                                         </p>
                                                     </div>
                                                     <div class="col-lg-2 pr-0">

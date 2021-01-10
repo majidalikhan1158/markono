@@ -403,7 +403,7 @@ export class ProductSpecHelperService {
     return '';
   }
 
-  transProductDetailToVM = (product: any) => {
+  transProductDetailToVM = (product: any, editModeType = 0) => {
     const generalVM = this.getGeneralVM(product);
     const coverVM = this.getCoverVM(product);
     const textVM = this.getTextVM(product);
@@ -453,6 +453,12 @@ export class ProductSpecHelperService {
     this.store.getFinishingTypes('Endpaper', ProductSpecTypes.BINDING_DVD_CD);
 
     this.store.setShouldShowJournalFields(generalVM?.productType === 11);
+
+    // editModeType === 2, coming from add-product-spec-modal and selected use existing template option
+    if (editModeType === 2) {
+      generalVM.productNumber = '';
+      this.store.setProductSpecStore(generalVM, ProductSpecTypes.GENERAL);
+    }
   }
 
   getGeneralVM = (product: any): GeneralVM => {

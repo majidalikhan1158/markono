@@ -6,6 +6,7 @@ import {
   ProductSpecificationTypePartialArray,
   ProductSpecificationTypes,
   ProductSpecificationTypeOtherArray,
+  ProductSpecStatusTypes,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { AddRemoveSpecTypeEvent, ProductSpecTypeObject } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import { ProductSpecStore } from '../../../../shared/ui-services/product-spec.service';
@@ -16,6 +17,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ProductSpecStoreVM } from 'src/app/modules/shared/models/product-spec';
 import { Subscription } from 'rxjs';
 import { ProductVersions } from '../../../../services/shared/classes/product-modals/product-modals';
+import { ProductSpecStatus } from '../../../../shared/enums/product-management/product-interfaces';
 
 @Component({
   selector: 'app-product-specifications',
@@ -34,6 +36,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
   shouldExpandedPanelClose = false;
   productSpecData: ProductSpecStoreVM;
   productId: string;
+  shouldReadonly: boolean;
   subscription: Subscription;
   constructor(
     public store: ProductSpecStore,
@@ -65,6 +68,14 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     this.subscription = this.store.$productId.subscribe(resp => {
       this.productId = resp;
     });
+
+    this.subscription = this.store.$productSpecReadonly.subscribe(resp => {
+      this.shouldReadonly = resp;
+    });
+
+    if (!this.shouldReadonly){
+      this.handleProductSpecStatus();
+    }
   }
 
   setChildSections = () => {
@@ -95,6 +106,9 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     if (event.option.value != null) {
       this.selectedProductSpecType = event.option.value;
       this.handleProductSpecChangeLogic(arrayToWork);
+      if (!this.shouldReadonly){
+        this.handleProductSpecStatus();
+      }
     }
   }
 
@@ -134,6 +148,26 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
       });
       this.store.setProductSpecTypeList(this.productSpecTypesArray);
     }
+
+  }
+
+  handleProductSpecStatus = () => {
+    const obj: ProductSpecStatus = {
+      status: '',
+      tooltipMessage: ''
+    };
+    if (this.selectedProductSpecType === this.productSpecTypesConstant.LAYOUT_PREP) {
+      obj.tooltipMessage = '';
+      obj.status = ProductSpecStatusTypes.Live;
+      this.store.setProductSpecStatus(obj);
+    } else if (this.selectedProductSpecType === this.productSpecTypesConstant.VERIFY_PRINT_FILE) {
+      obj.tooltipMessage = '';
+      obj.status = ProductSpecStatusTypes.Complete;
+    } else {
+      obj.tooltipMessage = '';
+      obj.status = ProductSpecStatusTypes.InComplete;
+    }
+    this.store.setProductSpecStatus(obj);
   }
 
   handleAddOtherComponent() {}

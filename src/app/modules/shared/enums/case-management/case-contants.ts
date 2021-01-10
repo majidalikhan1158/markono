@@ -102,3 +102,14 @@ export const ShipmentTypes = [
     enum: 'OTHERS',
   },
 ];
+
+export const Departments = [
+  'Prepress',
+  'Press',
+  'Binding',
+  'Planning',
+  'Folding',
+  'CCE',
+  'Finance',
+  'Fulfilment'
+];

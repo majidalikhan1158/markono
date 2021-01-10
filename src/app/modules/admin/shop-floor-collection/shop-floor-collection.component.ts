@@ -20,7 +20,7 @@ import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
 import { SpinnerService } from './spinner.service';
 import { UnitsPerMinutesList } from '../../shared/models/shop-floor';
 
-const API_PING_TIME = 5000;
+const API_PING_TIME = 500000;
 
 @Component({
   selector: 'app-shop-floor-collection',
@@ -996,7 +996,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   }
 
   callToCurretnMachineJobSubscription = (machineCurrentJobLink: string) => {
-    this.shopFloorService.getCurretnMachineJob(machineCurrentJobLink).subscribe(resp => {
+    this.subscriptions = this.shopFloorService.getCurretnMachineJob(machineCurrentJobLink).subscribe(resp => {
       if (resp && resp.body && resp.body.data && resp.body.data.id) {
         this.machineCurrentJobVM = this.helper.mapToMachineCurrentJobModal(resp.body.data);
         const activeAction = this.machineCurrentJobVM.machineJobActionsList.find(x => x.active);

@@ -17,7 +17,7 @@ import {
 } from '../models/product-spec';
 import { ProductGroupDDL, MaterialDataList, ProductVersions, SpineWidthThicknessParamHistory,
   SpineWidthParamHistory, FileCheckConfig, ProductSpecsList, UserFileCheckConfig } from '../../services/shared/classes/product-modals/product-modals';
-import { AddRemoveSpecTypeEvent, ProductSpecTypeObject } from '../enums/product-management/product-interfaces';
+import { AddRemoveSpecTypeEvent, ProductSpecStatus, ProductSpecTypeObject } from '../enums/product-management/product-interfaces';
 import { ProductSpecificationTypes } from '../enums/product-management/product-constants';
 
 @Injectable({
@@ -37,6 +37,8 @@ export class ProductSpecStore {
   private spinWidthThicknessSubject = new BehaviorSubject<number>(0);
   private productIdSubject = new BehaviorSubject<string>('');
   private addRemoveSpecTypeEventSubject = new BehaviorSubject<AddRemoveSpecTypeEvent>(null);
+  private productSpecStatusSubject = new BehaviorSubject<ProductSpecStatus>(null);
+  private ProductSpecReadonlySubject = new BehaviorSubject<boolean>(false);
 
   public $productSpecStore: Observable<ProductSpecStoreVM>;
   public $showJournaFields: Observable<boolean>;
@@ -51,6 +53,8 @@ export class ProductSpecStore {
   public $currentProductSpecSelected: Observable<ProductSpecsList>;
   public $addRemoveSpecTypeEvent: Observable<AddRemoveSpecTypeEvent>;
   public $productSpecTypeObjectList: Observable<ProductSpecTypeObject[]>;
+  public $productSpecStatus: Observable<ProductSpecStatus>;
+  public $productSpecReadonly: Observable<boolean>;
 
   private coverMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private textMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
@@ -109,6 +113,8 @@ export class ProductSpecStore {
     this.$productId = this.productIdSubject.asObservable();
     this.$addRemoveSpecTypeEvent = this.addRemoveSpecTypeEventSubject.asObservable();
     this.$productSpecTypeObjectList = this.productSpecTypeObjectListSubject.asObservable();
+    this.$productSpecStatus = this.productSpecStatusSubject.asObservable();
+    this.$productSpecReadonly = this.ProductSpecReadonlySubject.asObservable();
 
     this.$productSpecStore.subscribe((data) => {
       this.currentProductSpecStoreState = data;
@@ -278,6 +284,9 @@ export class ProductSpecStore {
   /** PRODUCT SPEC UI observables */
   setShouldShowJournalFields = (flag: boolean) => this.showJournaFieldsSubject.next(flag);
 
+  setProductSpecStatus = (status: ProductSpecStatus) => this.productSpecStatusSubject.next(status);
+
+  setProductSpecReadonly = (flag: boolean) => this.ProductSpecReadonlySubject.next(flag);
   /* PRODUCT API CALLS */
   getProductGroupList = (generalVM: GeneralVM) => {
     const reqObj = {

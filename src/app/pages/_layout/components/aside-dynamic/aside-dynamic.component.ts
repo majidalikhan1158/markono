@@ -5,6 +5,7 @@ import { filter } from 'rxjs/operators';
 import { LayoutService, DynamicAsideMenuService, DynamicHeaderMenuService } from '../../../../_metronic/core';
 import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-headers.config';
 import { $ } from 'protractor';
+import { PageHeader } from '../../../../modules/shared/models/app-modal';
 @Component({
   selector: 'app-aside-dynamic',
   templateUrl: './aside-dynamic.component.html',
@@ -74,7 +75,8 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     DynamicPageHeaderLabels.items.forEach(element => {
       if (element.page === this.currentUrl) {
         pageLabelFound = true;
-        this.dynamicHeaderMenuService.setHeaderLabel(element.title);
+        const obj: PageHeader = { headerText: element.title, breadCrumb: element.breadCrumb};
+        this.dynamicHeaderMenuService.setHeaderLabel(obj);
       }
     });
     if (this.currentUrl === '/admin/product-management/list') {
@@ -93,7 +95,8 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(false);
     // }
     if (!pageLabelFound) {
-      this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
+      const obj: PageHeader = { headerText: 'App', breadCrumb: ''};
+      this.dynamicHeaderMenuService.setHeaderLabel(obj);
     }
   }
 
@@ -118,7 +121,6 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   }
 
   isMenuItemActive(path) {
-
     if (!this.currentUrl || !path) {
       return false;
     }

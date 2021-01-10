@@ -15,4 +15,32 @@ app-create-product {
   .create-product-spec-card .mat-tab-label-active{
     color:#5FACE2 !important;
   }
+
+  .create-product-spec-card .status-box {
+    width: 100px;
+    height: 30px;
+    font-family: 'Roboto-Regular' !important;
+    border-radius: 6px !important;
+    line-height: 28px !important;
+  }
+
+  .create-product-spec-card .status-incomplete {
+    color: #FFA800 !important;
+    background-color: #FFF4DE !important;
+  }
+
+  .create-product-spec-card .status-complete {
+    color: #0FE848 !important;
+    background-color: #E6FDEC !important;
+  }
+
+  .create-product-spec-card .status-live {
+    background-color: #E1F0FF !important;
+    color: #3699FF !important;
+  }
+
+  .create-product-spec-card .mat-tab-label.mat-tab-disabled {
+    padding: 0px;
+    width: 100%;
+  }
 }

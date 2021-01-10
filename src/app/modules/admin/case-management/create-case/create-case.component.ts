@@ -99,6 +99,7 @@ export class CreateCaseComponent implements OnInit {
           const response = resp.body.result as any;
           if (response.message && response.message === 'Successful') {
             this.snack.open('Case has been created successfully');
+            location.reload();
             this.shouldDisplayCreateCaseButton = false;
             this.createShipment(data);
             this.ref.detectChanges();
@@ -134,6 +135,7 @@ export class CreateCaseComponent implements OnInit {
   }
 
   createShipment = (data) => {
-
+    const mappedData = this.caseHelper.transToCreateShipment(data);
+    this.subscription = this.orderService.create
   }
 }

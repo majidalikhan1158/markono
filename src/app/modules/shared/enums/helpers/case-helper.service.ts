@@ -293,4 +293,22 @@ export class CaseHelperService {
     });
     return obj;
   }
+
+  sum = (firstNumber: number, secondNumber: number) => {
+    // tslint:disable-next-line: radix
+    firstNumber = parseFloat(firstNumber.toString());
+    // tslint:disable-next-line: radix
+    secondNumber = parseFloat(secondNumber.toString());
+    // tslint:disable-next-line: radix
+    return parseFloat(firstNumber.toFixed(2)) + parseFloat(secondNumber.toFixed(2));
+  }
+
+  minus = (firstNumber: number, secondNumber: number) => {
+    // tslint:disable-next-line: radix
+    firstNumber = parseFloat(firstNumber.toString());
+    // tslint:disable-next-line: radix
+    secondNumber = parseFloat(secondNumber.toString());
+    // tslint:disable-next-line: radix
+    return parseFloat(firstNumber.toFixed(2)) - parseFloat(secondNumber.toFixed(2));
+  }
 }

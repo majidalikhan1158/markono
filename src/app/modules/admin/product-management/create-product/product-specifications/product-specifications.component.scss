@@ -90,6 +90,11 @@ app-product-specifications {
     width: inherit;
   }
 
+  .product-spec-details.readonly-box {
+    pointer-events: none !important;
+    opacity: 0.5;
+  }
+
   .product-spec-types .mat-expansion-panel-body {
     padding-left: 0px;
     padding-right: 0px;

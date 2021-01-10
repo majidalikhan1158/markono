@@ -3,9 +3,10 @@
   <!-- begin::1 Level -->
   <li class="menu-item menu-item-rel" routerLinkActive="menu-item-active">
     <h3>
-      <span class="menu-text" style="font-family: 'Roboto-Bold'; font-size: 24px;">{{dynamicHeaderMenuService.headerLabel$ | async}}</span>
-      <ng-container *ngIf="rootArrowEnabled">
-        <i class="menu-arrow"></i>
+      <span class="menu-text" style="font-family: 'Roboto-Bold'; font-size: 24px;">{{headerLabel?.headerText}}</span>
+      <ng-container *ngIf="headerLabel?.breadCrumb">
+        <mat-icon class="pl-2 pr-7 font-20px">keyboard_arrow_right</mat-icon>
+        <span class="menu-text" style="font-family: 'Roboto-Bold'; font-size: 20px;">{{headerLabel?.breadCrumb}}</span>
       </ng-container>
     </h3>
   </li>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { LayoutService, DynamicHeaderMenuService } from '../../../../../_metronic/core';
 import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-headers.config';
+import { PageHeader } from 'src/app/modules/shared/models/app-modal';
 
 function getCurrentURL(location) {
   return location.split(/[?#]/)[0];
@@ -17,8 +18,8 @@ export class HeaderMenuComponent implements OnInit {
   rootArrowEnabled: boolean;
   location: Location;
   headerMenuDesktopToggle: string;
-  headerLabel: string;
-  constructor(private layout: LayoutService, private loc: Location, public dynamicHeaderMenuService: DynamicHeaderMenuService) {
+  headerLabel: PageHeader;
+  constructor(private layout: LayoutService, private loc: Location, private dynamicHeaderMenuService: DynamicHeaderMenuService) {
     this.location = this.loc;
   }
 
@@ -28,6 +29,9 @@ export class HeaderMenuComponent implements OnInit {
     this.headerMenuDesktopToggle = this.layout.getProp(
       'header.menu.desktop.toggle'
     );
+    this.dynamicHeaderMenuService.headerLabel$.subscribe(resp => {
+      this.headerLabel = resp;
+    });
     this.setHeaderLabel();
     this.handlerShopFloorScreen();
   }
@@ -39,7 +43,8 @@ export class HeaderMenuComponent implements OnInit {
     DynamicPageHeaderLabels.items.forEach(element => {
       if (element.page === current) {
         pageLabelFound = true;
-        this.dynamicHeaderMenuService.setHeaderLabel(element.title);
+        const obj: PageHeader = { headerText: element.title, breadCrumb: element.breadCrumb};
+        this.dynamicHeaderMenuService.setHeaderLabel(obj);
       }
     });
     if (current === '/admin/product-management/list') {
@@ -58,7 +63,8 @@ export class HeaderMenuComponent implements OnInit {
     //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(false);
     // }
     if (!pageLabelFound) {
-      this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
+      const obj: PageHeader = { headerText: 'Create Case', breadCrumb: ''};
+      this.dynamicHeaderMenuService.setHeaderLabel(obj);
     }
   }
 

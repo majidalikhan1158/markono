@@ -29,6 +29,7 @@ import {
   ShippingSpecificCostModel,
 } from 'src/app/modules/shared/models/create-case';
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
+import { CaseHelperService } from 'src/app/modules/shared/enums/helpers/case-helper.service';
 @Component({
   selector: 'app-case-details',
   templateUrl: './case-details.component.html',
@@ -48,10 +49,13 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
   panelOpenState = false;
   shipmentInfoVMList: ShippingInfoVM[];
   overAllCostVM: OverAllCostVM;
+  totalAmout: number;
+  discountPercentage: number;
   constructor(
     private ref: ChangeDetectorRef,
     private store: CaseStore,
-    private snack: SnackBarService
+    private snack: SnackBarService,
+    private helper: CaseHelperService
   ) {}
 
   ngOnInit(): void {
@@ -178,8 +182,8 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
         data.shippingInfoList.forEach((shipment) => {
           shipment.shippingSpecificCost.forEach((cost) => {
             if (cost && cost.subTotal) {
-              // tslint:disable-next-line: radix
-            totalCost = parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
+              totalCost = this.helper.sum(totalCost, cost.subTotal);
+            // totalCost = parseInt(totalCost.toFixed(2)) + parseInt(cost.subTotal.toFixed(2));
             }
           });
           if (totalCost > 0) {
@@ -195,8 +199,8 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       if (data && data.miscCostList && data.miscCostList.length > 0) {
         data.miscCostList.forEach((cost) => {
           if (cost && cost.subTotal) {
-            // tslint:disable-next-line: radix
-            totalCost = parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
+            totalCost = this.helper.sum(totalCost, cost.subTotal);
+            // totalCost = parseInt(totalCost.toString()) + parseInt(cost.subTotal.toString());
           }
 
           if (totalCost > 0) {
@@ -216,30 +220,48 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       ) {
         this.overAllCostVM.printAndBind = 0;
         data.productDetailsList.forEach((item) => {
-          this.overAllCostVM.printAndBind = +this.overAllCostVM.printAndBind + item.subTotal;
+          // this.overAllCostVM.printAndBind = +this.overAllCostVM.printAndBind + item.subTotal;
+          this.overAllCostVM.printAndBind = this.helper.sum(this.overAllCostVM.printAndBind, item.subTotal);
         });
       }
       this.overAllCostVM.otherChargesTotal = 0;
+      let otherChargesTotal = 0;
       if (this.overAllCostVM.otherCharges.length > 0) {
         this.overAllCostVM.otherCharges.forEach((cost) => {
-          // tslint:disable-next-line: radix
-          subTotal = parseInt(subTotal.toString()) + parseInt(cost.total.toString());
-          // tslint:disable-next-line: radix
+          // subTotal = parseInt(subTotal.toString()) + parseInt(cost.total.toString());
+          subTotal = this.helper.sum(subTotal, cost.total);
           // tslint:disable-next-line: max-line-length
-          this.overAllCostVM.otherChargesTotal = parseInt(this.overAllCostVM.otherChargesTotal.toString()) + parseInt(cost.total.toString());
+          // this.overAllCostVM.otherChargesTotal = parseInt(this.overAllCostVM.otherChargesTotal.toString()) + parseInt(cost.total.toString());
+          otherChargesTotal = this.helper.sum(otherChargesTotal, cost.total);
         });
+        this.overAllCostVM.otherChargesTotal = parseFloat(otherChargesTotal.toFixed(2)); 
       }
-      // tslint:disable-next-line: radix
-      this.overAllCostVM.subTotal = parseInt(subTotal.toString()) + parseInt(this.overAllCostVM.printAndBind.toString());
+
+      // this.overAllCostVM.subTotal = parseInt(subTotal.toString()) + parseInt(this.overAllCostVM.printAndBind.toString());
+      this.overAllCostVM.subTotal = this.helper.sum(subTotal, this.overAllCostVM.printAndBind);
       // CALCULATE DISCOUNT
       this.overAllCostVM.total = this.overAllCostVM.subTotal;
 
-      if (this.overAllCostVM.discount > 0) {
-        const discountedPrice = (this.overAllCostVM.total * this.overAllCostVM.discount) / 100;
-        if (discountedPrice < this.overAllCostVM.total) {
-          // tslint:disable-next-line: radix
-          this.overAllCostVM.total = parseInt(this.overAllCostVM.total.toString()) - parseInt(discountedPrice.toString());
+      if (this.overAllCostVM.discount > 0 || this.discountPercentage > 0) {
+        let discount = 0;
+        if (this.discountPercentage > 0) {
+          discount = this.discountPercentage;
         }
+
+        if (this.overAllCostVM.discount > 0) {
+          discount = this.overAllCostVM.discount;
+        }
+
+        const discountedPrice = parseFloat(((this.overAllCostVM.total * discount) / 100).toFixed(2));
+        if (discountedPrice < this.overAllCostVM.total) {
+          // this.overAllCostVM.total = parseInt(this.overAllCostVM.total.toString()) - parseInt(discountedPrice.toString());
+          this.overAllCostVM.total = this.helper.minus(this.overAllCostVM.total, discountedPrice);
+          this.totalAmout = this.overAllCostVM.total;
+          this.discountPercentage = this.overAllCostVM.discount = discount;
+          this.ref.detectChanges();
+        }
+      } else {
+        this.totalAmout = this.overAllCostVM.total;
       }
 
       if (
@@ -252,12 +274,16 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
     });
   }
 
-  handleDiscountChange = () => {
-    if (this.overAllCostVM.discount > 0) {
-      const discountedPrice = (this.overAllCostVM.total * this.overAllCostVM.discount) / 100;
+  handleDiscountChange = (discount: number) => {
+    if (discount > 0) {
+      const discountedPrice = (this.overAllCostVM.total * discount) / 100;
       if (discountedPrice < this.overAllCostVM.total) {
-        // tslint:disable-next-line: radix
-        this.overAllCostVM.total = parseInt(this.overAllCostVM.total.toString()) - parseInt(discountedPrice.toString());
+        // this.overAllCostVM.total = parseInt(this.overAllCostVM.total.toString()) - parseInt(discountedPrice.toString());
+        this.overAllCostVM.total = this.helper.sum(this.overAllCostVM.total, discountedPrice);
+        this.overAllCostVM.discount = discount;
+
+        this.totalAmout = this.overAllCostVM.total;
+        this.discountPercentage = this.overAllCostVM.discount = discount;
         this.ref.detectChanges();
         this.pushToStore();
       } else {
@@ -267,7 +293,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
   }
 
 
-  
+
   pushToStore = () => {
     this.store.setCreateCaseDataSource(
       this.overAllCostVM,

@@ -12,6 +12,15 @@
           <mat-tab label="{{createProductTabs.PAST_ORDERS}}">
             <app-past-orders></app-past-orders>
           </mat-tab>
+          <mat-tab [disabled]="true" style="padding-left: 0px !important;padding-right: 0px !important;">
+            <ng-template mat-tab-label>
+              <button *ngIf="shouldReadonly" mat-button (click)="handleEditMode()" style="margin-left: 350px;"
+              class="btn btn-primary mr-2">Edit</button>
+
+              <span [class]="statusClass" *ngIf="productSpecStatus" [style]="shouldReadonly ? 'margin-left: 10px': 'margin-left: 440px'"
+                matTooltip="{{productSpecTooltip}}">{{productSpecStatus}}</span>
+            </ng-template>
+          </mat-tab>
         </mat-tab-group>
       </div>
     </div>

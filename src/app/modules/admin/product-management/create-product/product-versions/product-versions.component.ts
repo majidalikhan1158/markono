@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ProductVersions } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { GeneralVM } from '../../../../shared/models/product-spec';
+import { SnackBarService } from '../../../../shared/ui-services/snack-bar.service';
 
 @Component({
   selector: 'app-product-versions',
@@ -14,7 +15,7 @@ export class ProductVersionsComponent implements OnInit {
   productIsbnNumber: string;
   productVersionList: ProductVersions[];
   selectedVersion: string;
-  constructor(public store: ProductSpecStore) { }
+  constructor(public store: ProductSpecStore, private snak: SnackBarService) { }
 
   ngOnInit() {
     this.getVersions();
@@ -42,6 +43,7 @@ export class ProductVersionsComponent implements OnInit {
   handleVersionSelection = (versionId: string) => {
     const selectedVersion = this.productVersionList.find(x => x.Id === versionId);
     this.store.setSelectedVersion(selectedVersion);
+    this.snak.open(`Version has been selected susccesfully to ${selectedVersion}`);
   }
 
 }

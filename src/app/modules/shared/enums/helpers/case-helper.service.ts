@@ -5,6 +5,7 @@ import {
   ProductDetailModals,
   ProductISBNDetailVM,
   ProductVersionVM,
+  ShippingInfoVM,
   SpecialInstructionViewModel
 } from '../../models/create-case';
 
@@ -244,54 +245,142 @@ export class CaseHelperService {
     return list;
   }
 
-  transToCreateShipment = (data: CreateCaseViewModel) => {
-    if (!data.productDetailsList || data.productDetailsList.length === 0) {
+  // Create Shipment Api Intergation
+  public transToCreateShipment = (data: ShippingInfoVM) => {
+    return {
+      accountNo: data.shippingDetails.accountNumber,
+      actualShippingAgentCode: data.shippingDetails.shippingAgent,
+      actualShippedDate: data.shippingDetails.shippmentPromisedDate,
+      billable: data.shippingDetails.billable,
+      billToNo: data.shipmentBillingDetails.BillToNumber,
+      billToCompanyName: data.shipmentBillingDetails.CompanyName,
+      billToContactPerson: data.shipmentBillingDetails.Contact,
+      billToEmail: data.shipmentBillingDetails.Email,
+      billToPhoneNo: data.shipmentBillingDetails.PhoneNo,
+      billToAddress1: data.shipmentBillingDetails.Address,
+      billToAddress2: data.shipmentBillingDetails.Address2,
+      billToPostCode: data.shipmentBillingDetails.PostCode,
+      billToCity: data.shipmentBillingDetails.City,
+      billToState: data.shipmentBillingDetails.State,
+      billToCountry: data.shipmentBillingDetails.County,
+      billToCoordinator: data.shipmentBillingDetails.Coordinator,
+      billToSalesPerson: data.shipmentBillingDetails.SalesPerson,
+      sellToNo: '',
+      yourReference: '',
+      caseID: '',
+      createdByUser: '',
+      currentActivityId: '',
+      companyCode: data.shipmentBillingDetails.CompanyCode,
+      createdBy: '',
+      createdDateTime: '',
+      currentActivityStatus: '',
+      createdDateTimeGE: '',
+      createdDateTimeLE: '',
+      deliveryOrderNo: '',
+      expectedDeliveryDate: '',
+      id: '',
+      isDeleted: '',
+      glossWeightKg: '',
+      getStatus: '',
+      shipmentNo: '',
+      shipmentType: '',
+      shipmentTypeGroup: '',
+      shipmentPromisedDate: '',
+      shippingMethod: '',
+      shipmentMode: data.shippingDetails.shipmentMode,
+      shippingAgent: data.shippingDetails.shippingAgent,
+      shipToAttentionTo: '',
+      shipToCode: data.shipmentAddress.CompanyCode,
+      shipToContactNo: data.shipmentAddress.Contact,
+      shipToEmail: data.shipmentAddress.Email,
+      shipToAdd1: data.shipmentAddress.Address,
+      shipToAdd2: data.shipmentAddress.Address2,
+      shipToCity: data.shipmentAddress.City,
+      shipToPostCode: data.shipmentAddress.PostCode,
+      shipToState: data.shipmentAddress.State,
+      shipToCountry: data.shipmentAddress.County,
+      trackingNo: '',
+      updatedByUser: '',
+      updatedBy: '',
+      updatedDateTime: '',
+      wmsStorerKey: '',
+      miscBilling: [
+        {
+          description: '',
+          id: '',
+          item: '',
+          shipmentOrderID: '',
+          value: ''
+        }
+      ],
+      noOfCartons: '',
+      netWeightKg: '',
+      shipmentDetail: [
+        {
+          actualShippedDate: '',
+          currentActivityId: '',
+          ediKey: '',
+          currentActivityStatus: '',
+          createdByUser: '',
+          createdBy: '',
+          createdDateTime: '',
+          id: '',
+          lnNo: '',
+          shipmentOrderId: '',
+          shipmentDetailNo: '',
+          iSBNPartNo: '',
+          isDeleted: '',
+          jobNo: '',
+          requestedQty: '',
+          requestedDate: '',
+          shippedQty: '',
+          title: '',
+          totalRemaining: '',
+          updatedByUser: '',
+          updatedBy: '',
+          updatedDateTime: ''
+        }
+      ]
+    };
+  }
+
+  getShipmentDetails = (data: CreateCaseViewModel) => {
+    if (!data.shippingInfoList || data.shippingInfoList.length === 0) {
       return this.getCaseDetailsFromShippingDetails(data);
     }
     const obj = [];
-    data.productDetailsList.forEach(item => {
+    data.shippingInfoList.forEach(item => {
       obj.push({
-        caseDetailNo: '',
-        type: data.customerInfo.caseType,
-        sellToNo: item.productISBNDetail.owner,
-        iSBNPartNo: item.isbn,
-        printType: item.printType,
-        productVersion: item.productISBNDetail.specsVersionNo,
-        parentISBN: '',
-        jobType: item.productISBNDetail.jobType,
-        productGroup: item.productISBNDetail.productGroup,
-        title: item.productISBNDetail.title,
-        lnNo: item.id,
-        extLnNo: 0,
-        bindingType: item.productISBNDetail.bindingType,
-        totalExtent: item.productISBNDetail.totalExtent,
-        weight: item.productISBNDetail.weight,
-        spine: item.productISBNDetail.spineWidth,
-        additionalUnitPrice: 0.0,
-        additionalQty: 0,
-        margin: item.margin,
-        orderQuantity: item.orderQty,
-        productionQuantity: item.prodQty,
-        estimatedPrice: item.productISBNDetail.estimatedPrice,
-        quotedPrice: 0.0,
-        sellingPrice: item.sellingPrice,
-        subTotal: item.subTotal,
-        samplesRequired: item.productISBNDetail.samplesRequired,
-        bluePrintRequired: item.productISBNDetail.bluePrintRequired,
-        fGRequired: item.productISBNDetail.fGRequired,
-        advancesRequired: item.productISBNDetail.advancesRequired,
-        carrierSheet: '',
-        createdByUser: 'DevUI',
-        createdBy: 'DevUI',
-        updatedByUser: 'DevUI',
-        updatedBy: 'DevUI',
-        samplesReq: this.getModalData(item.productISBNDetail.advancesList, 'Sample'),
-        bluePrintReq: this.getModalData(item.productISBNDetail.bluePrintList, 'BluePrint'),
-        fgReq: this.getModalData(item.productISBNDetail.fgList, 'FG'),
-        advancesReq: this.getModalData(item.productISBNDetail.advancesList, 'AD'),
+        shipmentId: '',
+        boxId: '',
+        shippingDetails: this.getShippingDetails(),
+        shippingItems: this.getShippingItems(),
+        shippingSpecificCost: this.getShippingSpecificCost(),
+        shipmentAddress: this.getShippingAddress(),
+        shipmentBillingDetails: this.getShippingBillingDetails()
       });
     });
     return obj;
+  }
+
+  getShippingDetails = () => {
+
+  }
+
+  getShippingItems = () => {
+
+  }
+
+  getShippingSpecificCost = () => {
+
+  }
+
+  getShippingAddress = () => {
+
+  }
+
+  getShippingBillingDetails = () => {
+
   }
 
   sum = (firstNumber: number, secondNumber: number) => {

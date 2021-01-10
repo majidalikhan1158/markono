@@ -136,6 +136,19 @@ export class CreateCaseComponent implements OnInit {
 
   createShipment = (data) => {
     const mappedData = this.caseHelper.transToCreateShipment(data);
-    this.subscription = this.orderService.create
+    this.orderService.createShipment(mappedData).subscribe(resp => {
+      if (resp && resp.body.result && resp.body.result) {
+        const response = resp.body.result as any;
+        if (response.message && response.message === 'Successful') {
+          this.snack.open('Shipping Info has been created successfully');
+          this.ref.detectChanges();
+        } else {
+          this.snack.open(response);
+        }
+        this.subscription.unsubscribe();
+      }
+    }, (err: HttpErrorResponse) => {
+      this.snack.open(err.error);
+    });
   }
 }

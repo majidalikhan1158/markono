@@ -137,6 +137,7 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
           this.store.setProductSpecReadonly(true);
           this.helper.transProductDetailToVM(productDetails);
         } else {
+          this.store.setProductSpecReadonly(false);
           this.helper.transProductDetailToVM(productDetails, 2);
         }
         this.store.setProductSpecStatus({status: productDetails.Status, tooltipMessage: '' });

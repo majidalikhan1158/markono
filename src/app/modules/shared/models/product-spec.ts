@@ -69,6 +69,7 @@ export interface BindingTypeCaseBound {
   isHeadTailBand: boolean;
   headTailBandColour: string;
   isRibbon: boolean;
+  ribbonColour: string;
   greyboardThickness: string;
   specialInstruction1: string;
   benchworkRequired: string[];

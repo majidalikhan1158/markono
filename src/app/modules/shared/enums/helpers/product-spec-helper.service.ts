@@ -42,6 +42,7 @@ export class ProductSpecHelperService {
       pantoneColour: [],
       finishingType: [],
       specialInstructions3: '',
+      ribbonColour: ''
     };
   }
 
@@ -198,7 +199,7 @@ export class ProductSpecHelperService {
       volSetSpecialInstruction: this.getString(data.childIsbnVM?.specialInstructions2),
       otherSpecialInstruction: this.getString(''),
 
-      bindingRibbonColour: this.getString(''),
+      bindingRibbonColour: this.getString(data.bindingVM?.caseBound?.ribbonColour),
       bindingRibbon: data.bindingVM?.caseBound?.isRibbon,
 
       additionalComponentsList: this.getAdditionalComponentList(data.otherVM),
@@ -284,7 +285,7 @@ export class ProductSpecHelperService {
             bindingMethodCoil: this.getString(''),
             bindingMethodWire: this.getString(''),
             bindingRibbon: item.bindingVM?.caseBound?.isRibbon,
-            bindingRibbonColour: this.getString(''),
+            bindingRibbonColour: this.getString(item.bindingVM?.caseBound?.ribbonColour),
             bindingTypeSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstruction1),
             bindingBenchworkRequired: this.getString(item.bindingVM?.caseBound?.benchworkRequired.join(',')),
             bindingBenchworkSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstruction2),
@@ -354,7 +355,7 @@ export class ProductSpecHelperService {
         bindingMethodCoil: this.getString(''),
         bindingMethodWire: this.getString(''),
         bindingRibbon: item.bindingVM?.caseBound?.isRibbon,
-        bindingRibbonColour: this.getString(''),
+        bindingRibbonColour: this.getString(item.bindingVM?.caseBound?.ribbonColour),
         bindingTypeSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstruction1),
         bindingBenchworkRequired: this.getString(item.bindingVM?.caseBound?.benchworkRequired.join('')),
         bindingBenchworkSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstruction2),
@@ -530,7 +531,7 @@ export class ProductSpecHelperService {
       materialBrand: p?.TxtMaterialBrand ?? '',
       noOfColourExtent: p?.TxtNoOfColourExtent ?? 0,
       noOfMonoExtent: p?.TxtNoOfMonoExtent ?? 0,
-      totalExtent: this.sum(p?.TxtNoOfColourExtent ?? 0,p?.TxtNoOfMonoExtent ?? 0) ,
+      totalExtent: this.sum(p?.TxtNoOfColourExtent ?? 0, p?.TxtNoOfMonoExtent ?? 0) ,
       noOfColours: p?.TxtNoOfColours ?? 0,
       colorType: this.getStringArray(p?.TxtSelectedColours?.toString()),
       pantoneColour: this.getStringArray(p?.TxtPantoneColoursNo?.toString()),
@@ -686,6 +687,7 @@ export class ProductSpecHelperService {
       pantoneColour: this.getStringArray(p?.EndpaperPantoneColourNo?.toString()),
       finishingType: this.getStringArray(p?.EndpaperFinishing?.toString()),
       specialInstructions3: p?.EndpaperSpecialInstruction ?? '',
+      ribbonColour: p?.BindingRibbonColour ?? ''
     };
   }
 

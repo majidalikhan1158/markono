@@ -53,10 +53,15 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-
             <div class="col-lg-3 pr-0">
                 <mat-slide-toggle [(ngModel)]="viewModal.caseBound.isRibbon" class="pt-4" labelPosition="before">Ribbon
                 </mat-slide-toggle>
+            </div>
+            <div class="col-lg-3 pr-0" *ngIf="viewModal.caseBound.isRibbon">
+                <mat-form-field appearance="fill">
+                    <mat-label>Ribbon Colour</mat-label>
+                    <input matInput [(ngModel)]="viewModal.caseBound.ribbonColour">
+                </mat-form-field>
             </div>
         </div>
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Location } from '@angular/common';
 import { LayoutService, DynamicHeaderMenuService } from '../../../../../_metronic/core';
 import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-headers.config';
@@ -19,7 +19,8 @@ export class HeaderMenuComponent implements OnInit {
   location: Location;
   headerMenuDesktopToggle: string;
   headerLabel: PageHeader;
-  constructor(private layout: LayoutService, private loc: Location, private dynamicHeaderMenuService: DynamicHeaderMenuService) {
+  constructor(private layout: LayoutService, private loc: Location,
+              private dynamicHeaderMenuService: DynamicHeaderMenuService, private cf: ChangeDetectorRef) {
     this.location = this.loc;
   }
 
@@ -31,6 +32,8 @@ export class HeaderMenuComponent implements OnInit {
     );
     this.dynamicHeaderMenuService.headerLabel$.subscribe(resp => {
       this.headerLabel = resp;
+      console.log(this.headerLabel);
+      this.cf.detectChanges();
     });
     this.setHeaderLabel();
     this.handlerShopFloorScreen();
@@ -46,6 +49,10 @@ export class HeaderMenuComponent implements OnInit {
         const obj: PageHeader = { headerText: element.title, breadCrumb: element.breadCrumb};
         this.dynamicHeaderMenuService.setHeaderLabel(obj);
       }
+      // else {
+      //   const obj: PageHeader = { headerText: element.title, breadCrumb: ''};
+      //   this.dynamicHeaderMenuService.setHeaderLabel(obj);
+      // }
     });
     if (current === '/admin/product-management/list') {
       this.dynamicHeaderMenuService.displayProductSpecButton(true);
@@ -63,7 +70,7 @@ export class HeaderMenuComponent implements OnInit {
     //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(false);
     // }
     if (!pageLabelFound) {
-      const obj: PageHeader = { headerText: 'Create Case', breadCrumb: ''};
+      const obj: PageHeader = { headerText: 'Dashboard', breadCrumb: ''};
       this.dynamicHeaderMenuService.setHeaderLabel(obj);
     }
   }

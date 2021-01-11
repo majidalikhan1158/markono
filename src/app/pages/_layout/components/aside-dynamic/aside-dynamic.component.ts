@@ -77,7 +77,11 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
         pageLabelFound = true;
         const obj: PageHeader = { headerText: element.title, breadCrumb: element.breadCrumb};
         this.dynamicHeaderMenuService.setHeaderLabel(obj);
-      }
+      } 
+      // else {
+      //   const obj: PageHeader = { headerText: element.title, breadCrumb: ''};
+      //   this.dynamicHeaderMenuService.setHeaderLabel(obj);
+      // }
     });
     if (this.currentUrl === '/admin/product-management/list') {
       this.dynamicHeaderMenuService.displayProductSpecButton(true);
@@ -95,7 +99,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(false);
     // }
     if (!pageLabelFound) {
-      const obj: PageHeader = { headerText: 'App', breadCrumb: ''};
+      const obj: PageHeader = { headerText: 'Dashboard', breadCrumb: ''};
       this.dynamicHeaderMenuService.setHeaderLabel(obj);
     }
   }

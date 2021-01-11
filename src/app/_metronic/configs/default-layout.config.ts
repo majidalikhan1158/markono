@@ -86,7 +86,7 @@ export const DefaultLayoutConfig = {
       self: {
         display: true,
         layout: 'default', // tab/default,
-        rootArrow: true,
+        rootArrow: false,
         iconStyle: 'duotone', // duotone, line, bold, solid
       },
 

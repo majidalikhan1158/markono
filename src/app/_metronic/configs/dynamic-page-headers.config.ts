@@ -2,14 +2,14 @@
 export const DynamicPageHeaderLabels = {
   items: [
     {
-      title: 'Create Case',
+      title: 'Case Management',
       page: '/admin/case-management/create',
-      breadCrumb: ''
+      breadCrumb: 'Create Case'
     },
     {
-      title: 'Quotations',
+      title: 'Case Management',
       page: '/admin/case-management/quotation-list',
-      breadCrumb: ''
+      breadCrumb: 'Quotations'
     },
     {
       title: 'Product Specs',
@@ -49,7 +49,7 @@ export const DynamicPageHeaderLabels = {
     {
       title: 'Orders',
       page: '/admin/order-management/orders',
-      breadCrumb: ''
+      breadCrumb: 'List'
     }
   ]
 };

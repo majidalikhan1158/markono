@@ -47,7 +47,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        component: CreateCaseComponent
+        component: AppDashboardComponent
       },
       {
         path: 'user-profile',

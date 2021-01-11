@@ -8,6 +8,10 @@ import { OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ProductSpecStore } from '../../../shared/ui-services/product-spec.service';
 import { Subscription } from 'rxjs';
 import { ProductSpecStatusTypes } from '../../../shared/enums/product-management/product-constants';
+import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-headers.config';
+import { PageHeader } from 'src/app/modules/shared/models/app-modal';
+import { DynamicHeaderMenuService } from 'src/app/_metronic/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-product',
@@ -24,7 +28,9 @@ export class CreateProductComponent implements OnInit, OnDestroy {
   statusClass: string;
   statusTypes = ProductSpecStatusTypes;
   shouldReadonly: boolean;
-  constructor(private store: ProductSpecStore, private cf: ChangeDetectorRef) {
+  constructor(private store: ProductSpecStore, private cf: ChangeDetectorRef,
+              private dynamicHeaderMenuService: DynamicHeaderMenuService,  private router: Router) {
+                this.setHeaderLabel();
   }
 
   ngOnDestroy(): void {
@@ -53,6 +59,18 @@ export class CreateProductComponent implements OnInit, OnDestroy {
 
   handleEditMode = () => {
     this.store.setProductSpecReadonly(false);
+  }
+
+  private setHeaderLabel() {
+    const currentUrl = this.router.url.split(/[?#]/)[0];
+    let pageLabelFound = false;
+    DynamicPageHeaderLabels.items.forEach(element => {
+      if (element.page === currentUrl) {
+        pageLabelFound = true;
+        const obj: PageHeader = { headerText: element.title, breadCrumb: element.breadCrumb};
+        this.dynamicHeaderMenuService.setHeaderLabel(obj);
+      }
+    });
   }
 
 }

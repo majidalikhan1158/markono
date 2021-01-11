@@ -72,7 +72,7 @@
                                 </mat-panel-title>
                                 <mat-panel-description>
                                     <span class="font-roboto-regular font-14px float-right" style="margin-left: 92%">
-                                        $ {{overAllCostVM.otherChargesTotal.toFixed(2)}}
+                                        $ {{overAllCostVM.otherChargesTotal?.toFixed(2)}}
                                     </span>
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
@@ -99,7 +99,7 @@
                             Sub-total
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
-                            $ {{overAllCostVM.subTotal.toFixed(2)}}
+                            $ {{overAllCostVM.subTotal?.toFixed(2)}}
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
@@ -109,7 +109,7 @@
                         <span class="font-roboto-regular font-14px float-right">
                             <mat-form-field appearance="fill" class="width-90">
                                 <input type="number" #discountField min="0" matInput (change)="handleDiscountChange(discountField.value)"
-                                    [value]="discountPercentage.toFixed(2)">
+                                    [value]="discountPercentage?.toFixed(2)">
                                 <span matPrefix>$&nbsp;</span>
                                 <!-- <span matSuffix>.00</span> -->
                             </mat-form-field>
@@ -130,7 +130,7 @@
                             Total
                         </span>
                         <span class="font-roboto-bold font-14px float-right">
-                            $ {{totalAmout.toFixed(2)}}
+                            $ {{totalAmout?.toFixed(2)}}
                         </span>
                     </div>
                 </div>

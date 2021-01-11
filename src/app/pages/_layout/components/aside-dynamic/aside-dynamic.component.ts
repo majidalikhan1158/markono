@@ -77,11 +77,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
         pageLabelFound = true;
         const obj: PageHeader = { headerText: element.title, breadCrumb: element.breadCrumb};
         this.dynamicHeaderMenuService.setHeaderLabel(obj);
-      } 
-      // else {
-      //   const obj: PageHeader = { headerText: element.title, breadCrumb: ''};
-      //   this.dynamicHeaderMenuService.setHeaderLabel(obj);
-      // }
+      }
     });
     if (this.currentUrl === '/admin/product-management/list') {
       this.dynamicHeaderMenuService.displayProductSpecButton(true);

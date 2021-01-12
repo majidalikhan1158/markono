@@ -79,6 +79,10 @@ export const DynamicAsideMenuConfig = {
           title: 'Orders',
           page: '/admin/order-management/orders',
         },
+        {
+          title: 'Orders With Issues',
+          page: '/admin/order-management/orders-with-issues',
+        }
       ]
     },
   ]

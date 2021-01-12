@@ -4,7 +4,7 @@
         <div class="card card-custom example example-compact gutter-b orders-header-card">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
-                    <span class="symbol symbol-circle symbol-50 symbol-light-warning mr-2">
+                    <span class="symbol symbol-square symbol-50 symbol-light-warning mr-2">
                         <span class="symbol-label">
                             <span class="svg-icon svg-icon-warning svg-icon-2x">
                                 <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo2/dist/../src/media/svg/icons/Code/Warning-1-circle.svg-->
@@ -173,16 +173,18 @@
                                         </span>
                                         <a class="clear-filter pb-4"
                                             style="padding-left: 161px;display: inline-block;font: normal normal normal 14px/17px Roboto;"
-                                            (click)="removeFilter('1')">
+                                            (click)="removeFilter('clear')">
                                             Clear Filters
                                         </a>
                                     </div>
+
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Cust PO No.</mat-label>
                                         <mat-icon matPrefix>search</mat-icon>
                                         <input matInput [(ngModel)]="tableFilters.customerPoNo"
                                             (ngModelChange)="tableFilterChange($event,tableFilterTypes.CUSTOMER_PONO)">
                                     </mat-form-field>
+
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Choose Order Date Range</mat-label>
                                         <input [matDatepicker]="pickerorder" matInput
@@ -210,15 +212,18 @@
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
+
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Customer name</mat-label>
                                         <mat-icon matPrefix>search</mat-icon>
                                         <input matInput [(ngModel)]="tableFilters.customerName"
                                             (ngModelChange)="tableFilterChange($event,tableFilterTypes.CUSTOMER_NAME)">
                                     </mat-form-field>
+
                                     <span class="filter-menu-heading font-14px pb-4">
                                         Order Type
                                     </span>
+
                                     <div class="printing-type-options display-flex pb-4">
                                         <span class="option-item mr-2"
                                             [ngClass]="{'option-item-selected': selectedStatus == orderTypes.PRINT, 'option-item mr-2': true}"
@@ -243,7 +248,12 @@
 
                     <ng-container matColumnDef="customerPoNo">
                         <mat-header-cell *matHeaderCellDef>Customer PO No.</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.customerPoNo}} </mat-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.customerPoNo }}
+                            <span class="cutomer-name">
+                                {{ getCustomerName(element.customerPoNo)}}
+                            </span>
+                        </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="orderDate">
@@ -269,7 +279,18 @@
 
                     <ng-container matColumnDef="type">
                         <mat-header-cell *matHeaderCellDef> Type</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.type }} </mat-cell>
+                        <mat-cell *matCellDef="let element">
+                            <div *ngIf="element.type == 'print'">
+                                <!-- <a href="javascript:;" routerLink="/admin/order-management/order-details"> -->
+                                <img src="./../../../../../assets/media/misc/ic_print.png">
+                                <!-- </a> -->
+                            </div>
+                            <div *ngIf="element.type == 'warehouse'">
+                                <!-- <a href="javascript:;" routerLink="/admin/order-management/order-details"> -->
+                                <img src="./../../../../../assets/media/misc/ic_warehouse.png">
+                                <!-- </a> -->
+                            </div>
+                        </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="status">
@@ -336,7 +357,7 @@
 
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <!--  (click)="toggleExpandable(row.id)" -->
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"> </mat-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getOrdersInfo()"> </mat-row>
 
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>

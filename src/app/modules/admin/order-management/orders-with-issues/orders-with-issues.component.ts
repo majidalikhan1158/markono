@@ -1,4 +1,3 @@
-
 import {
   Component,
   OnInit,
@@ -10,104 +9,71 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import {
-  PlatemakingSearchFilters,
-  PlatemakingnSearchFilterTypes,
+  OrderSearchFilters,
+  OrdersWithIssueSearchFilters,
+  OrdersWithIssueSearchFilterTypes,
 } from 'src/app/modules/shared/models/table-filter-modals';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 import { Router } from '@angular/router';
-import { PlatemakingDataList } from 'src/app/modules/shared/mock-data/platemaking-data-list';
-import { StatusTypes, PlatemakingListModel, StatusTypesArray } from 'src/app/modules/shared/models/plate-making';
-import { OrderService } from 'src/app/modules/services/core/services/order.service';
+import { OrdersModelDataList } from 'src/app/modules/shared/mock-data/orders-data-list';
+import { ViewByArray, OrdersModel, StatusTypesArray, OrderType, OrdersIssueModel } from 'src/app/modules/shared/models/order-management';
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 import { Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TokenType } from 'src/app/modules/shared/enums/app-enums';
-import { AppAuthService } from '../../services/core/services/app-auth.service';
-import { CaseHelperService } from '../../shared/enums/helpers/case-helper.service';
-import {
-  ExpansionIcons,
-} from 'src/app/modules/shared/enums/app-constants';
-import { ProductSpecLayoutPrepCompBreakList } from '../../shared/mock-data/layout-prep-comp-break-list';
-import { MachineTypeList } from '../../shared/enums/product-management/product-constants';
-import { expandableRowAnimation } from './expandable-row.animation';
-@Component({
-  selector: 'app-platemaking',
-  templateUrl: './platemaking.component.html',
-  styleUrls: ['./platemaking.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+import { AppAuthService } from '../../../services/core/services/app-auth.service';
+import { CaseHelperService } from '../../../shared/enums/helpers/case-helper.service';
+import { OrdersIssueDataList } from 'src/app/modules/shared/mock-data/orders-issue-list';
 
-  animations: [expandableRowAnimation],
+@Component({
+  selector: 'app-orders-with-issues',
+  templateUrl: './orders-with-issues.component.html',
+  styleUrls: ['./orders-with-issues.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
-export class PlatemakingComponent implements OnInit {
+export class OrdersWithIssuesComponent implements OnInit {
   //#region declaration
   @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = [
     'id',
     'jobNo',
-    'customer',
+    'customerPoNo',
     'isbn',
-    'press',
-    'platesToBeReadyBy',
-    'printingDate',
+    'orderDate',
+    'rdd',
     'qty',
-    'webcode',
+    'type',
     'status',
-    'actions',
-    'expandRow',
-    //  'expandTable'
+    'actions'
   ];
-  columnsToDisplay = [
-    '#',
-    'Job No.',
-    'Customer',
-    'ISBN',
-    'Press',
-    'Plates to be ready by',
-    'Printing Date',
-    'Qty',
-    'Webcode',
-    'Status',
-  ]
-  columnsToDisplayCompBreakTable = [
-    'Id',
-    'Type',
-    'Component',
-    'Qty',
-    'Printing Sheets',
-    'Scrap',
-    'Total Sheets',
-    'Colour',
-    'Paper',
-    'Paper Size',
-    'Machine Type',
-  ];
-  productSpecLayoutPrepCompBreakList = ProductSpecLayoutPrepCompBreakList;
-  dataArray = PlatemakingDataList;
-  machineTypeList = MachineTypeList;
+  dataArray = OrdersIssueDataList;
   dataSource;
-  tableFilters: PlatemakingSearchFilters = {
+  tableFilters: OrdersWithIssueSearchFilters = {
     currentSelectedFilter: '',
-    jobNo: '',
-    customer: '',
-    platesToBeReadyBy: '',
-    printingDate: '',
-    status: ''
+    orderType: '',
+    customerPoNo: '',
+    orderDate: '',
+    rddDate: '',
+    status: '',
+    isbn: '',
+    printVisJobNo: '',
+    printAiJobNo: '',
   };
-  tableFilterTypes = PlatemakingnSearchFilterTypes;
-  statusTypes = StatusTypes;
+  tableFilterTypes = OrdersWithIssueSearchFilterTypes;
+  ViewByArray = ViewByArray;
   selectedStatus = '';
   globalFilter = '';
   statusTypesList = StatusTypesArray;
-  ExpansionIcons = ExpansionIcons;
+  orderTypes = OrderType;
   rowIdToExpand = 0;
   chooseList = '';
   viewByFilter = '';
-  machineType = '';
+  selectedOrderType = '';
   //#endregion
 
   constructor(private modalService: ModalService, private router: Router,
     private snack: SnackBarService,) {
-    this.dataSource = new MatTableDataSource<PlatemakingListModel>(this.dataArray);
+    this.dataSource = new MatTableDataSource<OrdersIssueModel>(this.dataArray);
   }
 
   ngOnInit(): void {
@@ -124,37 +90,46 @@ export class PlatemakingComponent implements OnInit {
   }
 
   tableFilterChange(filterValue: string, filterPropType: string) {
-    // if (filterPropType === this.tableFilterTypes.STATUS) {
-    //   this.tableFilters.status = this.selectedStatus = this.tableFilters.status === filterValue ? '' : filterValue;
-    // }
+    if (filterPropType === this.tableFilterTypes.ORDER_TYPE) {
+      this.tableFilters.orderType = this.selectedStatus = this.tableFilters.orderType === filterValue ? '' : filterValue;
+    }
     this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
 
   removeFilter(filterPropType: string) {
-    if (filterPropType === this.tableFilterTypes.PLATESTOBEREADBY_DATE) {
-      this.tableFilters.platesToBeReadyBy = '';
+    if (filterPropType === this.tableFilterTypes.ISBN) {
+      this.tableFilters.isbn = '';
     } else if (filterPropType === this.tableFilterTypes.STATUS) {
       this.tableFilters.status = this.selectedStatus = '';
-    } else if (filterPropType === this.tableFilterTypes.SCHEDULEDPRINTING_DATE) {
-      this.tableFilters.printingDate = '';
-    } else if (filterPropType === this.tableFilterTypes.CUSTOMER) {
-      this.tableFilters.customer = '';
-    } else if (filterPropType === this.tableFilterTypes.JOB_NO) {
-      this.tableFilters.jobNo = '';
+    } else if (filterPropType === this.tableFilterTypes.CUSTOMER_PONO) {
+      this.tableFilters.customerPoNo = '';
+    } else if (filterPropType === this.tableFilterTypes.ORDER_DATE) {
+      this.tableFilters.orderDate = '';
+    } else if (filterPropType === this.tableFilterTypes.ORDER_TYPE) {
+      this.tableFilters.orderType = this.selectedOrderType = '';
+    } else if (filterPropType === this.tableFilterTypes.PRINT_VIS_JOBNO) {
+      this.tableFilters.printVisJobNo = '';
+    } else if (filterPropType === this.tableFilterTypes.PRINTAI_JOBNO) {
+      this.tableFilters.printAiJobNo = '';
+    } else if (filterPropType === this.tableFilterTypes.RDD_DATE) {
+      this.tableFilters.rddDate = '';
     } else if (filterPropType == 'clear') {
-      this.tableFilters.platesToBeReadyBy = '';
+      this.tableFilters.isbn = '';
       this.tableFilters.status = this.selectedStatus = '';
-      this.tableFilters.printingDate = '';
-      this.tableFilters.customer = '';
-      this.tableFilters.jobNo = '';
+      this.tableFilters.customerPoNo = '';
+      this.tableFilters.orderDate = '';
+      this.tableFilters.orderType = '';
+      this.tableFilters.printVisJobNo = '';
+      this.tableFilters.printAiJobNo = '';
+      this.tableFilters.rddDate = '';
     }
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
 
   customFilterPredicate() {
     const myFilterPredicate = (
-      data: PlatemakingListModel,
+      data: OrdersIssueModel,
       filter: string
     ): boolean => {
       let globalMatch = !this.globalFilter;
@@ -162,24 +137,29 @@ export class PlatemakingComponent implements OnInit {
       if (this.globalFilter) {
         // search all text fields
         globalMatch =
-          new Date(data.platesToBeReadyBy)
+          new Date(data.rdd)
             .toLocaleDateString()
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          new Date(data.platesToBeReadyBy)
+          new Date(data.orderDate)
             .toLocaleDateString()
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.jobNo
+          data.customerPoNo
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.customer
+          data.type
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.isbn
             .toString()
             .trim()
             .toLowerCase()
@@ -194,63 +174,73 @@ export class PlatemakingComponent implements OnInit {
       if (!globalMatch) {
         return;
       }
-      const searchString = JSON.parse(filter) as PlatemakingSearchFilters;
+      const searchString = JSON.parse(filter) as OrdersWithIssueSearchFilters;
       let matchedFilters = 0;
       let filterCounter = 0;
-      if (this.tableFilters.platesToBeReadyBy !== '') {
+      if (this.tableFilters.orderDate !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          new Date(data.platesToBeReadyBy)
+          new Date(data.orderDate)
             .toLocaleDateString()
             .trim()
             .indexOf(
-              new Date(searchString.platesToBeReadyBy).toLocaleDateString()
+              new Date(searchString.orderDate).toLocaleDateString()
             ) !== -1 ? 1 : 0
         );
       }
-      if (this.tableFilters.printingDate !== '') {
+      if (this.tableFilters.rddDate !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          new Date(data.printingDate)
+          new Date(data.rdd)
             .toLocaleDateString()
             .trim()
             .indexOf(
-              new Date(searchString.printingDate).toLocaleDateString()
+              new Date(searchString.rddDate).toLocaleDateString()
             ) !== -1 ? 1 : 0
         );
       }
       if (this.tableFilters.status !== '') {
-        if (this.tableFilters.status == 'All') {
+        // if (this.tableFilters.status == 'All') {
 
-        } else {
-          filterCounter++;
-          matchedFilters = matchedFilters + (
-            data.status
-              .toString()
-              .trim()
-              .toLowerCase()
-              .indexOf(searchString.status.toLowerCase()) !== -1 ? 1 : 0
-          );
-        }
-      }
-      if (this.tableFilters.jobNo !== '') {
+        // } else {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.jobNo
+          data.status
             .toString()
             .trim()
             .toLowerCase()
-            .indexOf(searchString.jobNo.toLowerCase()) !== -1 ? 1 : 0
+            .indexOf(searchString.status.toLowerCase()) !== -1 ? 1 : 0
+        );
+        //   }
+      }
+      if (this.tableFilters.customerPoNo !== '') {
+        filterCounter++;
+        matchedFilters = matchedFilters + (
+          data.customerPoNo
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.customerPoNo.toLowerCase()) !== -1 ? 1 : 0
         );
       }
-      if (this.tableFilters.customer !== '') {
+      if (this.tableFilters.orderType !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.customer
+          data.type
             .toString()
             .trim()
             .toLowerCase()
-            .indexOf(searchString.customer.toLowerCase()) !== -1 ? 1 : 0
+            .indexOf(searchString.orderType.toLowerCase()) !== -1 ? 1 : 0
+        );
+      }
+      if (this.tableFilters.isbn !== '') {
+        filterCounter++;
+        matchedFilters = matchedFilters + (
+          data.isbn
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.isbn.toLowerCase()) !== -1 ? 1 : 0
         );
       }
 
@@ -274,11 +264,6 @@ export class PlatemakingComponent implements OnInit {
   }
 
   chooseSelectionChange(event: Event) {
-    this.modalService.open('ADD_REASON_MODAL');
-  }
-
-  handleAddReasonEvent(modalId: string) {
-    this.snack.open('Reason is Saved');
   }
 
   viewByFilterChange(filterValue: string, filterPropType: string) {
@@ -289,5 +274,9 @@ export class PlatemakingComponent implements OnInit {
     }
     //this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSource.filter = JSON.stringify(this.tableFilters);
+  }
+
+  getCustomerName(number) {
+    return ' Banta Global Turnkey (S) Pte Ltd';
   }
 }

@@ -64,3 +64,48 @@ export const OrderSearchFilterTypes = {
     CUSTOMER_NAME: 'CUSTOMER_NAME',
     RDD_DATE: 'RDD_DATE'
 };
+
+export interface OrdersWithIssueSearchFilters {
+    currentSelectedFilter: string;
+    orderType: string;
+    customerPoNo: string;
+    orderDate: string;
+    rddDate: string;
+    status: string;
+    isbn: string;
+    printVisJobNo: string;
+    printAiJobNo: string;
+}
+
+export const OrdersWithIssueSearchFilterTypes = {
+    ORDER_TYPE: 'ORDER_TYPE',
+    CUSTOMER_PONO: 'CUSTOMER_PONO',
+    ORDER_DATE: 'ORDER_DATE',
+    STATUS: 'STATUS',
+    RDD_DATE: 'RDD_DATE',
+    ISBN: 'ISBN',
+    PRINT_VIS_JOBNO: 'PRINT_VIS_JOBNO',
+    PRINTAI_JOBNO: 'PRINTAI_JOBNO'
+};
+
+export interface OrderInfoDetailSearchFilters {
+    currentSelectedFilter: string;
+    jobNo: string;
+    isbn: string;
+    orderDate: string;
+    rddDate: string;
+    qty: string;
+    jobType: string;
+    status: string;
+};
+
+export const OrdersInfoDetailSearchFilterTypes = {
+    ORDER_DATE: 'ORDER_DATE',
+    STATUS: 'STATUS',
+    RDD_DATE: 'RDD_DATE',
+    ISBN: 'ISBN',
+    JOBNO: 'JOBNO',
+    QTY: 'QTY',
+    JOB_TYPE: 'JOB_TYPE'
+};
+

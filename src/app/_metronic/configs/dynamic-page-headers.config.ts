@@ -50,6 +50,21 @@ export const DynamicPageHeaderLabels = {
       title: 'Orders',
       page: '/admin/order-management/orders',
       breadCrumb: 'List'
+    },
+    {
+      title: 'Orders',
+      page: '/admin/order-management/order-details',
+      breadCrumb: 'Order Detail'
+    },
+    {
+      title: 'Orders',
+      page: '/admin/order-management/orders-with-issues',
+      breadCrumb: 'Orders With Issues'
+    },
+    {
+      title: 'Orders',
+      page: '/admin/order-management/job-details',
+      breadCrumb: 'Job Detail'
     }
   ]
 };

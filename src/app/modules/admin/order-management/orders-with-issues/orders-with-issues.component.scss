@@ -1,4 +1,4 @@
-app-orders {
+app-orders-with-issues {
     .orders-header-card {
         top: 10px;
         width: 100%;
@@ -15,47 +15,47 @@ app-orders {
         display: inline-flex !important;
         padding-top: 17px !important;
     }
-    .orders-table-card {
+    .orders-issue-table-card {
         width: 100%;
         min-width: 1050px;
     }
-    .orders-table-card .card-body {
+    .orders-issue-table-card .card-body {
         padding-left: 5px !important;
         padding-right: 5px !important;
         padding-top: 0px !important;
         padding-bottom: 0px !important;
     }
-    .orders-table-card .orders-table {
+    .orders-issue-table-card .orders-table {
         width: 100%;
     }
-    .orders-table-card .mat-form-field.mat-paginator-page-size-select {
+    .orders-issue-table-card .mat-form-field.mat-paginator-page-size-select {
         margin-top: -12px;
     }
 
-    .orders-table-card .mat-form-field.mat-paginator-page-size-select .mat-form-field-flex {
+    .orders-issue-table-card .mat-form-field.mat-paginator-page-size-select .mat-form-field-flex {
         width: 70px;
     }
 
-    .orders-table-card .mat-form-field.mat-paginator-page-size-select .mat-form-field-infix {
+    .orders-issue-table-card .mat-form-field.mat-paginator-page-size-select .mat-form-field-infix {
         border: 1px solid #dfdfdf;
         padding-left: 10px;
         padding-right: 5px;
     }
 
-    .orders-table-card .mat-form-field.mat-paginator-page-size-select .mat-form-field-ripple {
+    .orders-issue-table-card .mat-form-field.mat-paginator-page-size-select .mat-form-field-ripple {
         background-color: transparent;
     }
 
-    .orders-table-card .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+    .orders-issue-table-card .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
         color: rgba(0, 0, 0, 0.54) !important;
     }
 
-    .orders-table-card .mat-paginator-container {
+    .orders-issue-table-card .mat-paginator-container {
         color: #343434;
         font-family: "Roboto-Regular";
         font-size: 14px;
     }
-    .orders-table-card .mat-form-field-wrapper {
+    .orders-issue-table-card .mat-form-field-wrapper {
         padding-bottom: 0px !important;
     }
     .mat-cell:last-of-type,
@@ -148,7 +148,7 @@ app-orders {
         padding-top: 6px;
     }
     .status-options {
-        width: 120px;
+        width: 85px;
     }
     .mat-column-customerPoNo {
         flex: none;
@@ -157,10 +157,6 @@ app-orders {
     .mat-column-status {
         flex: none;
         width: 145px;
-    }
-    .mat-row > .mat-column-status {
-        flex: none;
-        width: 157px;
     }
     .mat-column-actions {
         flex: none;
@@ -179,22 +175,12 @@ app-orders {
         margin-left: -63px;
         margin-top: 30px;
     }
-    .mat-row > .mat-column-qty {
+    .mat-column-isbn {
         flex: none;
-        width: 93px;
+        width: 120px;
     }
     .mat-column-type {
         flex: none;
-        width: 100px;
-    }
-    .mat-row > .mat-column-customerPoNo {
-        padding-bottom: 8px;
-    }
-    .mat-row > .mat-column-noOfTitles {
-        flex: none;
-        width: 86px;
-    }
-    .mat-row:hover {
-        background: #f5f5f5;
+        width: 50px;
     }
 }

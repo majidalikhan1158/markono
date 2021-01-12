@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   LayoutService,
@@ -15,11 +15,12 @@ import KTLayoutQuickUser from '../../../../../assets/js/layout/extended/quick-us
 import KTLayoutHeaderTopbar from '../../../../../assets/js/layout/base/header-topbar';
 import { KTUtil } from '../../../../../assets/js/components/util';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
-
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-topbar',
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TopbarComponent implements OnInit, AfterViewInit {
   user$: Observable<UserModel>;
@@ -41,7 +42,8 @@ export class TopbarComponent implements OnInit, AfterViewInit {
     private layout: LayoutService,
     private auth: AuthService,
     public dynamicHeaderMenuService: DynamicHeaderMenuService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private router: Router
   ) {
     this.user$ = this.auth.currentUserSubject.asObservable();
     this.dynamicHeaderMenuService.shouldDisplayEditEmbeddedLink$.subscribe(x => {
@@ -132,9 +134,15 @@ export class TopbarComponent implements OnInit, AfterViewInit {
   openAddNewQuotationModal(modalId: string) {
     this.modalService.openModalViaObservable(modalId);
   }
+
   handleEmbededLinkChange = () => {
     if (this.embededLinkModel !== '') {
       this.dynamicHeaderMenuService.setEditEmbeddedLink(this.embededLinkModel);
     }
+  }
+
+  logout() {
+    this.auth.logout();
+    document.location.reload();
   }
 }

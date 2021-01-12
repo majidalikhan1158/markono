@@ -14,10 +14,10 @@
           </mat-tab>
           <mat-tab [disabled]="true" style="padding-left: 0px !important;padding-right: 0px !important;">
             <ng-template mat-tab-label>
-              <button *ngIf="shouldReadonly" mat-button (click)="handleEditMode()" style="margin-left: 350px;"
+              <button *ngIf="shouldReadonly" mat-button (click)="handleEditMode()" style="margin-left: 180px;"
               class="btn btn-primary mr-2">Edit</button>
 
-              <span [class]="statusClass" *ngIf="productSpecStatus" [style]="shouldReadonly ? 'margin-left: 10px': 'margin-left: 440px'"
+              <span [class]="statusClass" *ngIf="productSpecStatus" [style]="shouldReadonly ? 'margin-left: 0px': 'margin-left: 260px'"
                 matTooltip="{{productSpecTooltip}}">{{productSpecStatus}}</span>
             </ng-template>
           </mat-tab>

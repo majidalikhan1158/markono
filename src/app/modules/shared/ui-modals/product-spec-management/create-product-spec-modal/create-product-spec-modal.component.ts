@@ -54,13 +54,14 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
   }
 
   manageProductIsbnSearch = () => {
-    if (this.childIsbnNumber1 && this.childIsbnNumber1 !== this.previousValue1 && this.childIsbnNumber1.length === 10) {
+    if (this.childIsbnNumber1 && this.childIsbnNumber1 !== this.previousValue1 && this.childIsbnNumber1.length >= 3) {
       this.isbnOwnerList1 = [];
       this.ref.detectChanges();
       this.previousValue1 = this.childIsbnNumber1;
       this.isLoading = true;
       setTimeout(_ => this.trigger1.openPanel());
       // call api to get customer results
+      this.subscription?.unsubscribe();
       this.subscription = this.store.getProducts(this.childIsbnNumber1).subscribe(resp => {
         const details = (resp.body.result as unknown) as ChildIsbnModal[];
         this.isbnOwnerList1 = details && details.length > 0 ? details : [];
@@ -75,13 +76,14 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
   }
 
   manageProductIsbnSearchForExisting = () => {
-    if (this.childIsbnNumber2 && this.childIsbnNumber2 !== this.previousValue2 && this.childIsbnNumber2.length === 10) {
+    if (this.childIsbnNumber2 && this.childIsbnNumber2 !== this.previousValue2 && this.childIsbnNumber2.length >= 3) {
       this.isbnOwnerList2 = [];
       this.ref.detectChanges();
       this.previousValue2 = this.childIsbnNumber2;
       this.isLoading = true;
       setTimeout(_ => this.trigger2.openPanel());
       // call api to get customer results
+      this.subscription?.unsubscribe();
       this.subscription = this.store.getProducts(this.childIsbnNumber2).subscribe(resp => {
         const details = (resp.body.result as unknown) as ChildIsbnModal[];
         this.isbnOwnerList2 = details && details.length > 0 ? details : [];

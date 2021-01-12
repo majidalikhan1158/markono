@@ -201,7 +201,7 @@
         </div>
 
         <div class="col-lg-12 d-flex pt-4">
-            <div class="col-lg-4 pl-0">
+            <div class="col-lg-6 pl-0">
                 <mat-hint class="font-10px">No. of colours</mat-hint>
                 <!-- ({{viewModal.caseBound.colorType.length + viewModal.caseBound.pantoneColour.length}}) -->
             </div>
@@ -211,7 +211,7 @@
         </div>
 
         <div class="col-lg-12 display-flex pl-0 pt-2">
-            <div class="col-lg-4 pr-0">
+            <div class="col-lg-6 pr-0">
                 <div class="color-type-options display-flex pb-4">
                     <span *ngFor="let item of colorTypeList"
                         [ngClass]="viewModal.caseBound.colorType.includes(item.text) ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"

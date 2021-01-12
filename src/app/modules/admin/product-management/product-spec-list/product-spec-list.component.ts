@@ -40,6 +40,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
   selectedPrintingType = '';
   globalFilter = '';
   subscription: Subscription;
+  isLoading = true;
   constructor(private modalService: ModalService,
               private router: Router,
               private productService: ProductService,
@@ -70,6 +71,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
     this.dataSource = new MatTableDataSource<ProductSpecsList>(this.dataArray);
     this.dataSource.paginator = this.paginator;
     this.dataSource.filterPredicate = this.customFilterPredicate();
+    this.isLoading = false;
     this.cd.detectChanges();
   }
 

@@ -71,6 +71,7 @@ export class CreateProductComponent implements OnInit, OnDestroy {
         this.dynamicHeaderMenuService.setHeaderLabel(obj);
       }
     });
+    this.dynamicHeaderMenuService.displayProductSpecButton(false);
   }
 
 }

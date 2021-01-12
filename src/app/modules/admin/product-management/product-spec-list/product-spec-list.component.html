@@ -98,7 +98,7 @@
 
           <ng-container matColumnDef="productTitle">
             <th mat-header-cell *matHeaderCellDef> Product Title </th>
-            <td class="text-truncate" style="max-width: 450px !important;" mat-cell *matCellDef="let element"> {{element.productDescription}} </td>
+            <td class="text-truncate" style="max-width: 340px !important;" mat-cell *matCellDef="let element"> {{element.productDescription}} </td>
           </ng-container>
 
           <ng-container matColumnDef="dateCreated">
@@ -138,7 +138,12 @@
             <td class="mat-cell text-center" colspan="8">No data matching the filter "{{tableSearchInput.value}}"</td>
           </tr>
         </table>
-
+        <div *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
+          <mat-progress-spinner 
+            color="primary" 
+            mode="indeterminate">
+          </mat-progress-spinner>
+        </div>
         <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
       </div>
     </div>

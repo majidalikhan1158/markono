@@ -337,7 +337,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
         const data = this.getUnitsProducedPerMinuteData(this.machineCurrentJobUnitsVM.unitsPerMinutesList);
         const unitsPerMinutes = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.count);
         const unitsFromDate = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.fromDate);
-        this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart(unitsPerMinutes, data) as unknown as UnitsProducedChartOptions;
+        this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart(unitsPerMinutes, unitsFromDate) as unknown as UnitsProducedChartOptions;
       } else {
         showMessage ? this.snack.open('Unable to get machine current job units') : this.emptyCall() ;
       }
@@ -741,7 +741,8 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
     return {
       series: [
         {
-          data: list
+          name: 'Units produced',
+          data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87, 65, 35]
         }
       ],
       chart: {
@@ -1015,6 +1016,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
     this.intervalCurrentJobId = setInterval(() => {
       this.callToCurretnMachineJobSubscription(machineCurrentJobLink);
     }, API_PING_TIME);
+    this.intervalIdList.push(this.intervalCurrentJobId);
   }
 
   handleProductSpecTab = (tab: string) => {

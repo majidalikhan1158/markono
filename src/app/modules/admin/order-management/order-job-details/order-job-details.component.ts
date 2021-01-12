@@ -145,7 +145,7 @@ export class OrderJobDetailsComponent implements OnInit {
       this.tableFilters.qty = '';
     } else if (filterPropType === this.tableFilterTypes.RDD_DATE) {
       this.tableFilters.rddDate = '';
-    } else {
+    } else if (filterPropType == 'clear') {
       this.tableFilters.isbn = '';
       this.tableFilters.status = this.selectedStatus = '';
       this.tableFilters.qty = '';
@@ -154,7 +154,6 @@ export class OrderJobDetailsComponent implements OnInit {
       this.tableFilters.jobNo = '';
       this.tableFilters.isbn = '';
       this.tableFilters.rddDate = '';
-      this.dataSourceJobInfoDetail.filter = JSON.stringify(this.tableFilters);
     }
     this.dataSourceJobInfoDetail.filter = JSON.stringify(this.tableFilters);
   }

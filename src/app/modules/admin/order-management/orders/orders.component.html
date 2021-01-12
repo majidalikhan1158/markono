@@ -173,7 +173,7 @@
                                         </span>
                                         <a class="clear-filter pb-4"
                                             style="padding-left: 161px;display: inline-block;font: normal normal normal 14px/17px Roboto;"
-                                            (click)="removeFilter('1')">
+                                            (click)="removeFilter('clear')">
                                             Clear Filters
                                         </a>
                                     </div>
@@ -281,14 +281,14 @@
                         <mat-header-cell *matHeaderCellDef> Type</mat-header-cell>
                         <mat-cell *matCellDef="let element">
                             <div *ngIf="element.type == 'print'">
-                                <a href="javascript:;" routerLink="/admin/order-management/order-details">
-                                    <img src="./../../../../../assets/media/misc/ic_print.png">
-                                </a>
+                                <!-- <a href="javascript:;" routerLink="/admin/order-management/order-details"> -->
+                                <img src="./../../../../../assets/media/misc/ic_print.png">
+                                <!-- </a> -->
                             </div>
                             <div *ngIf="element.type == 'warehouse'">
-                                <a href="javascript:;" routerLink="/admin/order-management/order-details">
-                                    <img src="./../../../../../assets/media/misc/ic_warehouse.png">
-                                </a>
+                                <!-- <a href="javascript:;" routerLink="/admin/order-management/order-details"> -->
+                                <img src="./../../../../../assets/media/misc/ic_warehouse.png">
+                                <!-- </a> -->
                             </div>
                         </mat-cell>
                     </ng-container>
@@ -357,7 +357,7 @@
 
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <!--  (click)="toggleExpandable(row.id)" -->
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"> </mat-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getOrdersInfo()"> </mat-row>
 
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>

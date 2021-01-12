@@ -132,15 +132,13 @@ export class OrderDetailsComponent implements OnInit {
       this.tableFilters.jobNo = '';
     } else if (filterPropType === this.tableFilterTypes.ORDER_DATE) {
       this.tableFilters.orderDate = '';
-    } else if (filterPropType === this.tableFilterTypes.ISBN) {
-      this.tableFilters.isbn = '';
     } else if (filterPropType === this.tableFilterTypes.JOB_TYPE) {
       this.tableFilters.jobType = '';
     } else if (filterPropType === this.tableFilterTypes.QTY) {
       this.tableFilters.qty = '';
     } else if (filterPropType === this.tableFilterTypes.RDD_DATE) {
       this.tableFilters.rddDate = '';
-    } else {
+    } else if (filterPropType == 'clear') {
       this.tableFilters.isbn = '';
       this.tableFilters.status = this.selectedStatus = '';
       this.tableFilters.qty = '';
@@ -149,7 +147,6 @@ export class OrderDetailsComponent implements OnInit {
       this.tableFilters.jobNo = '';
       this.tableFilters.isbn = '';
       this.tableFilters.rddDate = '';
-      this.dataSourceJob.filter = JSON.stringify(this.tableFilters);
     }
     this.dataSourceJob.filter = JSON.stringify(this.tableFilters);
   }

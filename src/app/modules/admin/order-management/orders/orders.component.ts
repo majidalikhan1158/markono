@@ -104,13 +104,13 @@ export class OrdersComponent implements OnInit {
       this.tableFilters.orderType = '';
     } else if (filterPropType === this.tableFilterTypes.RDD_DATE) {
       this.tableFilters.rddDate = '';
-    } else {
+    } else if (filterPropType == 'clear') {
       this.tableFilters.customerName = '';
       this.tableFilters.status = this.selectedStatus = '';
       this.tableFilters.customerPoNo = '';
       this.tableFilters.orderDate = '';
       this.tableFilters.orderType = '';
-      this.dataSource.filter = JSON.stringify(this.tableFilters);
+      this.tableFilters.rddDate = '';
     }
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
@@ -250,5 +250,9 @@ export class OrdersComponent implements OnInit {
 
   getCustomerName(number) {
     return ' Banta Global Turnkey (S) Pte Ltd';
+  }
+
+  getOrdersInfo() {
+    this.router.navigate(['/admin/order-management/order-details']);
   }
 }

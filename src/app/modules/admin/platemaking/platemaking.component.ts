@@ -142,13 +142,12 @@ export class PlatemakingComponent implements OnInit {
       this.tableFilters.customer = '';
     } else if (filterPropType === this.tableFilterTypes.JOB_NO) {
       this.tableFilters.jobNo = '';
-    } else {
+    } else if (filterPropType == 'clear') {
       this.tableFilters.platesToBeReadyBy = '';
       this.tableFilters.status = this.selectedStatus = '';
       this.tableFilters.printingDate = '';
       this.tableFilters.customer = '';
       this.tableFilters.jobNo = '';
-      this.dataSource.filter = JSON.stringify(this.tableFilters);
     }
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }

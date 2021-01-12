@@ -8,7 +8,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <mat-table #table [dataSource]="dataSourceJobInfo" class="order-info-table-card">
+                <mat-table #table [dataSource]="dataSourceJobInfo" class="orders-job-info-table-card">
 
                     <ng-container matColumnDef="custPoNo">
                         <mat-header-cell *matHeaderCellDef>Customer PO No.</mat-header-cell>
@@ -118,7 +118,7 @@
             <div class="card card-custom example example-compact gutter-b orders-job-table-card">
                 <div class="card-header pr-0">
                     <div class="row full-width">
-                        <div class="col-lg-12 pt-2 pb-2 pr-0">
+                        <div class="col-lg-12 pt-2 pb-2 pr-0" style="padding-top: 0px !important;">
                             <div class="float-left display-flex">
                                 <mat-chip-list #chipList class="table-filter-chips">
                                     <mat-chip [removable]="true" *ngIf="tableFilters.jobNo != ''"
@@ -178,7 +178,7 @@
                                             </span>
                                             <a class="clear-filter pb-4"
                                                 style="padding-left: 161px;display: inline-block;font: normal normal normal 14px/17px Roboto;"
-                                                (click)="removeFilter('1')">
+                                                (click)="removeFilter('clear')">
                                                 Clear Filters
                                             </a>
                                         </div>
@@ -421,8 +421,8 @@
                                     <p class="info-label-value">-</p>
                                 </div>
                             </div>
-
-                            <hr style=" border-top: 1px dashed #beb5b2;">
+                            <br>
+                            <br>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <p class="info-title">
@@ -512,8 +512,8 @@
                                     <p class="info-label-value">-</p>
                                 </div>
                             </div>
-
-                            <hr style=" border-top: 1px dashed #beb5b2;">
+                            <br>
+                            <br>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <p class="info-title">
@@ -941,8 +941,7 @@
 
                         <!-- Row shown when there is no matching data. -->
                         <tr class="mat-row" *matNoDataRow>
-                            <td class="mat-cell text-center" colspan="8">No data matching the filter
-                                "{{tableSearchInput.value}}"</td>
+                            <div><span style="color: #a6a6a6;">No data to show</span></div>
                         </tr>
                     </mat-table>
 

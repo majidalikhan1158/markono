@@ -114,7 +114,7 @@ export class OrdersWithIssuesComponent implements OnInit {
       this.tableFilters.printAiJobNo = '';
     } else if (filterPropType === this.tableFilterTypes.RDD_DATE) {
       this.tableFilters.rddDate = '';
-    } else {
+    } else if (filterPropType == 'clear') {
       this.tableFilters.isbn = '';
       this.tableFilters.status = this.selectedStatus = '';
       this.tableFilters.customerPoNo = '';
@@ -123,7 +123,6 @@ export class OrdersWithIssuesComponent implements OnInit {
       this.tableFilters.printVisJobNo = '';
       this.tableFilters.printAiJobNo = '';
       this.tableFilters.rddDate = '';
-      this.dataSource.filter = JSON.stringify(this.tableFilters);
     }
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }

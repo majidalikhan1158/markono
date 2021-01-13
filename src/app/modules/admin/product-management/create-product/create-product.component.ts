@@ -7,7 +7,7 @@ import { CreateProductTabs } from 'src/app/modules/shared/enums/app-constants';
 import { OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ProductSpecStore } from '../../../shared/ui-services/product-spec.service';
 import { Subscription } from 'rxjs';
-import { ProductSpecStatusTypes } from '../../../shared/enums/product-management/product-constants';
+import { ProductSpecStatusTypes, StatusList } from '../../../shared/enums/product-management/product-constants';
 import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-headers.config';
 import { PageHeader } from 'src/app/modules/shared/models/app-modal';
 import { DynamicHeaderMenuService } from 'src/app/_metronic/core';
@@ -24,6 +24,7 @@ export class CreateProductComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   productSpecStatus: string;
   productSpecTooltip: string;
+  statusesList = StatusList;
   baseClass = 'status-box';
   statusClass: string;
   statusTypes = ProductSpecStatusTypes;
@@ -41,8 +42,9 @@ export class CreateProductComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.store.$productSpecStatus.subscribe(resp => {
      if (resp){
+      const status = this.statusesList.find(x => x.status === resp.status);
       this.productSpecStatus = resp.status;
-      this.productSpecTooltip = resp.tooltipMessage;
+      this.productSpecTooltip = status.message;
       this.statusClass = resp.status === this.statusTypes.Live
       ? `${this.baseClass} status-live`
       : resp.status === this.statusTypes.Complete
@@ -59,7 +61,6 @@ export class CreateProductComponent implements OnInit, OnDestroy {
 
   handleEditMode = () => {
     this.store.setProductSpecReadonly(false);
-    // this.store.setProductSpecUpdateButton(true);
   }
 
   private setHeaderLabel() {

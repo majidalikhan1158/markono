@@ -24,6 +24,7 @@ export class SnackBarService {
       duration,
       horizontalPosition: 'center',
       verticalPosition: 'top',
+      panelClass: ['success-snackbar']
     });
   }
 }

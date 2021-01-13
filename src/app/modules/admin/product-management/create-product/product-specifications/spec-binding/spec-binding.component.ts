@@ -10,6 +10,7 @@ import {
   WireOColorList,
   CoilColorList,
   BindingType,
+  ProductSpecificationTypes,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { BindingVM, DvdCDBindingMapper } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
@@ -17,7 +18,7 @@ import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spe
 import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { MaterialDataList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 export interface ComponentType {
   text: string;
@@ -37,6 +38,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   @Input() parentRecordIndex: number;
   @Output() childComponentDataBindingType = new EventEmitter<DvdCDBindingMapper>();
 
+  productSpecTypesConstant = ProductSpecificationTypes;
   materialDataList: MaterialDataList[];
   materialWeightList: string[];
   materialList: string[];
@@ -83,9 +85,11 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   protected onDestroy = new Subject<void>();
   countNoOfColors = 0;
   componentType: ComponentType;
+  subscription: Subscription;
   constructor(public store: ProductSpecStore, private helper: ProductSpecHelperService) { }
 
   ngOnInit(): void {
+    this.handleUpdateStore();
     this.handleComponentType();
     this.getApiData();
     this.handleBindingTypeFilterAutoComplete();
@@ -97,6 +101,14 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     this.handleSpiralBoundBenchworkFilterAutoComplete();
     this.handlePaperBoundBenchworkFilterAutoComplete();
     this.getDefaultRecord();
+  }
+
+  handleUpdateStore = () => {
+    this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
+      if (resp && resp === this.productSpecTypesConstant.BINDING ) {
+        this.pushToStore();
+      }
+    });
   }
 
   handleComponentType = () => {
@@ -586,6 +598,10 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.onDestroy.next();
     this.onDestroy.complete();
+    this.pushToStore();
+  }
+
+  pushToStore = () => {
     if (this.isOtherComponent) {
       const obj: DvdCDBindingMapper = { index: this.parentRecordIndex, bindingVM: this.viewModal };
       this.childComponentDataBindingType.emit(obj);

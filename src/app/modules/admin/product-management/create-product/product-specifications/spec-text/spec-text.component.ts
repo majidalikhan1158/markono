@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ColorTypeList} from 'src/app/modules/shared/enums/product-management/product-constants';
+import { ColorTypeList, ProductSpecificationTypes} from 'src/app/modules/shared/enums/product-management/product-constants';
 import { TextVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { MaterialDataList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 import { ProductSpecHelperService } from '../../../../../shared/enums/helpers/product-spec-helper.service';
 @Component({
@@ -16,6 +16,7 @@ import { ProductSpecHelperService } from '../../../../../shared/enums/helpers/pr
 })
 export class SpecTextComponent implements OnInit, OnDestroy {
 
+  productSpecTypesConstant = ProductSpecificationTypes;
   materialDataList: MaterialDataList[];
   materialWeightList: string[];
   materialList: string[];
@@ -27,21 +28,31 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   materialWeightFltrCtrl: FormControl = new FormControl();
   materialFltrCtrl: FormControl = new FormControl();
   materialBrandFltrCtrl: FormControl = new FormControl();
-  
+
   filteredMaterialWeightList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredMaterialList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredMaterialBrandList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
 
   finishingTypeFltrCtrl: FormControl = new FormControl();
   filteredFinishingTypeList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  subscription: Subscription;
   protected onDestroy = new Subject<void>();
   constructor(private store: ProductSpecStore, private helper: ProductSpecHelperService) { }
 
   ngOnInit(): void {
+    this.handleUpdateStore();
     this.store.getCoverMaterialWeight('Text', ProductSpecTypes.TEXT);
     this.store.getFinishingTypes('Text', ProductSpecTypes.TEXT);
     this.getApiData();
     this.getDefaultRecord();
+  }
+
+  handleUpdateStore = () => {
+    this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
+      if (resp && resp === this.productSpecTypesConstant.TEXT ) {
+        this.pushToStore();
+      }
+    });
   }
 
   getApiData = () => {
@@ -236,9 +247,13 @@ export class SpecTextComponent implements OnInit, OnDestroy {
     this.viewModal.totalExtent = this.helper.sum(this.viewModal.noOfColourExtent ?? 0, this.viewModal.noOfMonoExtent ?? 0);
   }
 
+  pushToStore = () => {
+    this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.TEXT);
+  }
+
   ngOnDestroy(): void {
     this.onDestroy.next();
     this.onDestroy.complete();
-    this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.TEXT);
+    this.pushToStore();
   }
 }

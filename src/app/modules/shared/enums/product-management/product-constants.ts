@@ -715,4 +715,22 @@ export const WebCodeLocationList = [
   'Front endpaper',
   'Back Endpaper',
   'Others'
+];
+
+export const StatusList = [
+  {
+    status: 'Incomplete',
+    message: 'Min. specs not completed',
+    hint: 'e.g material, binding type, size'
+  },
+  {
+    status: 'Complete',
+    message: 'Min. specs AND layout AND File verification completed',
+    hint: ''
+  },
+  {
+    status: 'Live',
+    message: 'Min. specs AND layout AND file specs verified AND File approved',
+    hint: ''
+  }
 ]

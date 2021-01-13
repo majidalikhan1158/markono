@@ -32,7 +32,6 @@ export class HeaderMenuComponent implements OnInit {
     );
     this.dynamicHeaderMenuService.headerLabel$.subscribe(resp => {
       this.headerLabel = resp;
-      console.log(this.headerLabel);
       this.cf.detectChanges();
     });
     this.setHeaderLabel();

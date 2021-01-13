@@ -239,7 +239,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     if (
       this.selectedProductSpecType === this.productSpecTypesConstant.UNIT_PRICE
     ) {
-      this.saveFromUnitPrice();
+      this.handleCreateButtonClick();
     } else if (
       this.selectedProductSpecType ===
       this.productSpecTypesConstant.VERIFY_PRINT_FILE
@@ -252,7 +252,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
   }
 
   updateProductSpec = () => {
-    this.saveFromUnitPrice();
+    this.handleCreateButtonClick();
   }
 
   saveFromUnitPrice = () => {
@@ -376,5 +376,15 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     }, (errOr: HttpErrorResponse) => {
       this.snack.open('Unable to create record');
     });
+  }
+
+  handleCreateButtonClick = () => {
+    this.store.updateStoreByComponentType(this.selectedProductSpecType);
+    const validationErrors = this.productHelper.validateStoreModal(this.productSpecData);
+    if (validationErrors && validationErrors.length > 0) {
+      this.snack.open(validationErrors.join('.\n'));
+      return;
+    }
+    this.saveFromUnitPrice();
   }
 }

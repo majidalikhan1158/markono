@@ -77,7 +77,7 @@
                 <div class="col-lg-12 pt-10 text-right">
                     <button mat-button (click)="handleBackEvent()"
                         *ngIf="selectedProductSpecType !== productSpecTypesConstant.GENERAL && selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE"
-                        [ngClass]="shouldDisplayUpdateButton ? 'btn btn-primary stepper-back-button mr-2 float-left' : 'btn btn-primary stepper-back-button mr-2'">Back</button>
+                        [ngClass]="shouldDisplayUpdateButton ? 'btn btn-primary stepper-back-button mr-2 float-left' : 'btn btn-primary stepper-back-button mr-2 float-left'">Back</button>
                     
                     <button mat-button *ngIf="shouldDisplayUpdateButton && 
                             selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
@@ -86,16 +86,22 @@
                         class="btn btn-success mr-4">
                         Update
                     </button>
+
+                    <button mat-button (click)="handleCreateButtonClick()"
+                        *ngIf="!shouldDisplayUpdateButton && 
+                            (selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP || 
+                            selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE)"
+                        class="btn btn-success stepper-next-button mr-2">Create</button>
                     
                     <button mat-button (click)="handleNextEvent()"
                         *ngIf="selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && 
                             selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
                             selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE"
                         class="btn btn-primary stepper-next-button">Next</button>
-                    
+
+
                     <button mat-button (click)="createProductSpec()"
-                        *ngIf="(selectedProductSpecType === productSpecTypesConstant.UNIT_PRICE && !shouldDisplayUpdateButton) || 
-                            selectedProductSpecType === productSpecTypesConstant.LAYOUT_PREP || 
+                        *ngIf="selectedProductSpecType === productSpecTypesConstant.LAYOUT_PREP || 
                             selectedProductSpecType === productSpecTypesConstant.VERIFY_PRINT_FILE"
                         class="btn btn-primary stepper-next-button">Save</button>
                 </div>

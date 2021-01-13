@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { GreyboardThicknessList, ColorTypeList } from 'src/app/modules/shared/enums/product-management/product-constants';
+import { GreyboardThicknessList, ColorTypeList, ProductSpecificationTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { ChildIsbnVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
@@ -17,6 +17,7 @@ import { GeneralVM } from '../../../../../shared/models/product-spec';
 })
 export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   @ViewChild('trigger') trigger: MatAutocompleteTrigger;
+  productSpecTypesConstant = ProductSpecificationTypes;
   materialDataList: MaterialDataList[];
   materialWeightList: string[];
   materialList: string[];
@@ -30,7 +31,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   materialFltrCtrl: FormControl = new FormControl();
   materialBrandFltrCtrl: FormControl = new FormControl();
   finishingTypeFltrCtrl: FormControl = new FormControl();
-  
+
   filteredMaterialWeightList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredMaterialList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredMaterialBrandList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
@@ -48,10 +49,19 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   constructor(private store: ProductSpecStore, private ref: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    this.handleUpdateStore();
     this.store.getCoverMaterialWeight('SlipCase', ProductSpecTypes.CHILD_ISBN);
     this.store.getFinishingTypes('SlipCase', ProductSpecTypes.CHILD_ISBN);
     this.getApiData();
     this.getDefaultRecord();
+  }
+
+  handleUpdateStore = () => {
+    this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
+      if (resp && resp === this.productSpecTypesConstant.CHILD_ISBN ) {
+        this.pushToStore();
+      }
+    });
   }
 
   getApiData = () => {
@@ -221,7 +231,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     );
   }
 
-  
+
   handleMaterialWeightFilterAutoComplete = () => {
     this.filteredMaterialWeightList.next(this.materialWeightList.slice());
     this.materialWeightFltrCtrl.valueChanges
@@ -307,6 +317,10 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
     this.onDestroy.complete();
     this.subscription.unsubscribe();
+    this.pushToStore();
+  }
+
+  pushToStore = () => {
     this.store.setProductSpecStore(
       this.viewModal,
       ProductSpecTypes.CHILD_ISBN

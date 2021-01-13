@@ -1,6 +1,7 @@
+import { ProductSpecificationTypes } from './../../../../../shared/enums/product-management/product-constants';
 import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { WebCodeLocationList } from 'src/app/modules/shared/enums/product-management/product-constants';
@@ -14,19 +15,31 @@ import { ProductSpecStore } from '../../../../../shared/ui-services/product-spec
   encapsulation: ViewEncapsulation.None,
 })
 export class SpecWebcodeComponent implements OnInit, OnDestroy {
+
+  productSpecTypesConstant = ProductSpecificationTypes;
   columnsToDisplay = ['#', 'WebCode Location', 'No. of WebCode', 'X Coordinate', 'Y Coordinate', 'Special Instruction'];
   viewModal: WebCodeVM[] = [];
   webCodeLocationList = WebCodeLocationList.sort();
   webCodeLocationFltrCtrl: FormControl = new FormControl();
   filteredWebCodeLocationList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   protected onDestroy = new Subject<void>();
+  subscription: Subscription;
   constructor(private store: ProductSpecStore) { }
 
   ngOnInit(): void {
+    this.handleUpdateStore();
     this.handleWebcodeLocationFilterAutoComplete();
     this.getDefaultRecord();
   }
 
+  handleUpdateStore = () => {
+    this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
+      if (resp && resp === this.productSpecTypesConstant.WEB_CODE ) {
+        this.pushToStore();
+      }
+    });
+  }
+  
   getDefaultRecord = () => {
     this.store.$productSpecStore.subscribe(resp => {
       if (resp && resp.webCodeVM && resp.webCodeVM.length > 0) {
@@ -88,8 +101,12 @@ export class SpecWebcodeComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {
+  pushToStore = () =>{
     this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.WEBCODE);
+  }
+
+  ngOnDestroy(): void {
+    this.pushToStore();
   }
 
 }

@@ -1,6 +1,7 @@
 import { ChildIsbnModal } from './../../../services/shared/classes/product-modals/product-modals';
 import { Injectable } from '@angular/core';
-import { WebCodeVM, DVDVM, OtherVM, GeneralVM, CoverVM, TextVM, BindingVM, ChildIsbnVM, UnitPriceVM, BindingTypeOthers } from '../../models/product-spec';
+import { WebCodeVM, DVDVM, OtherVM, GeneralVM, CoverVM, TextVM, BindingVM, ChildIsbnVM,
+   UnitPriceVM, BindingTypeOthers, ProductSpecStoreVM } from '../../models/product-spec';
 import { BindingType, ProductSpecificationTypesArray } from '../product-management/product-constants';
 import { ProductSpecStore } from '../../ui-services/product-spec.service';
 import {
@@ -10,7 +11,6 @@ import {
   BindingTypeSpiralBound,
   BindingTypeStichType,
   BindingTypeWireoBinding,
-  ProductSpecStoreVM,
 } from '../../models/product-spec';
 import { ProductSpecTypes } from '../app-enums';
 
@@ -469,6 +469,8 @@ export class ProductSpecHelperService {
       generalVM.productNumber = '';
       this.store.setProductSpecStore(generalVM, ProductSpecTypes.GENERAL);
     }
+
+    this.store.updateStoreByComponentType(null);
   }
 
   getGeneralVM = (product: any): GeneralVM => {
@@ -791,5 +793,82 @@ export class ProductSpecHelperService {
     secondNumber = parseFloat(secondNumber.toString());
     // tslint:disable-next-line: radix
     return parseFloat(firstNumber.toFixed(0)) - parseFloat(secondNumber.toFixed(0));
+  }
+
+  validateStoreModal = (storeData: ProductSpecStoreVM) => {
+    const errorArrays = [];
+    if (!storeData) {
+      errorArrays.push('Please fill up the data');
+      return errorArrays;
+    }
+
+    const generalVM = storeData.generalVM;
+
+    if (!generalVM?.productType || generalVM.productType.toString() === '0') {
+      errorArrays.push('General: Product Type is required field');
+    }
+
+    if (!generalVM?.isbnOwner) {
+      errorArrays.push('General: ISBN Owner is required field');
+    }
+
+    if (!generalVM?.productNumber) {
+      errorArrays.push('General: ISBN/Product number is required field');
+    }
+
+    if (!generalVM?.productDescription) {
+      errorArrays.push('General: Product Description is required field');
+    }
+
+    if (errorArrays.length > 0) {
+      return errorArrays;
+    }
+    const coverVM = storeData.coverVM;
+    if (generalVM.printingType === 'POD' && coverVM && coverVM?.coverType !== 'Self-cover') {
+
+      const noOfColoursOutside = coverVM?.colorTypeOutside?.length ?? 0;
+      if (noOfColoursOutside === 0) {
+        errorArrays.push('Outside Cover: No of colour selection is required');
+      }
+
+      const finishingCount = coverVM?.finishingTypeOutside?.length ?? 0;
+      if (finishingCount) {
+        errorArrays.push('Outside: Finishing is required');
+      }
+    }
+
+    if (generalVM.printingType === 'POD' && coverVM && generalVM.productType.toString() !== '21') {
+
+      if (generalVM?.width ?? 0 === 0) {
+        errorArrays.push('General: Width(mm) is required field');
+      }
+
+      if (generalVM?.height ?? 0 === 0) {
+        errorArrays.push('General: Height(mm) is required field');
+      }
+
+      const textVM = storeData.textVM;
+      if (textVM?.noOfColourExtent ?? 0 === 0) {
+        errorArrays.push('Text: No. of Colour Extent is required field');
+      }
+
+      if (textVM?.noOfMonoExtent ?? 0 === 0) {
+        errorArrays.push('Text: No. of Mono Extent is required field');
+      }
+
+      if (storeData?.bindingVM?.bindingType  ?? '' === '') {
+        errorArrays.push('Binding: Binding Type is required field');
+      }
+
+      if ((generalVM?.isWebcodeAdded ?? false) && (storeData?.webCodeVM?.length  ?? 0 === 0)) {
+        errorArrays.push('Webcode: Must add a record in Webcode Location tab');
+      }
+
+      if ((generalVM?.isChildIsbnAdded ?? false) && (storeData?.childIsbnVM?.childIsbns?.length  ?? 0 === 0)) {
+        errorArrays.push('Child ISBN: Must add a record in Child ISBN tab');
+      }
+    }
+
+    return errorArrays;
   }
 }

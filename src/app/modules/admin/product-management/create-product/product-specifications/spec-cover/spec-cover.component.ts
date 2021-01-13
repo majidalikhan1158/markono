@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   ColorTypeList,
   CoverTypeList,
+  ProductSpecificationTypes,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { MatSelectChange } from '@angular/material/select';
 import { CoverVM } from 'src/app/modules/shared/models/product-spec';
@@ -19,6 +20,7 @@ import { MaterialDataList } from '../../../../../services/shared/classes/product
 })
 export class SpecCoverComponent implements OnInit, OnDestroy {
 
+  productSpecTypesConstant = ProductSpecificationTypes;
   materialDataList: MaterialDataList[];
   materialWeightList: string[];
   materialList: string[];
@@ -47,8 +49,17 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   constructor(public store: ProductSpecStore) { }
 
   ngOnInit(): void {
+    this.handleUpdateStore();
     this.getCoverSectionApiData();
     this.getDefaultRecord();
+  }
+
+  handleUpdateStore = () => {
+    this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
+      if (resp && resp === this.productSpecTypesConstant.COVER ) {
+        this.pushToStore();
+      }
+    });
   }
 
   getCoverSectionApiData = () => {
@@ -309,11 +320,14 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
     );
   }
 
+  pushToStore = () => {
+    this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.COVER);
+  }
 
   ngOnDestroy(): void {
     this.onDestroy.next();
     this.onDestroy.complete();
-    this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.COVER);
+    this.pushToStore();
   }
 
 }

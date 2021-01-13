@@ -40,6 +40,7 @@ export class ProductSpecStore {
   private productSpecStatusSubject = new BehaviorSubject<ProductSpecStatus>(null);
   private ProductSpecReadonlySubject = new BehaviorSubject<boolean>(false);
   private ProductSpecUpdateButtonSubject = new BehaviorSubject<boolean>(false);
+  private ProductSpecStoreUpdateSubject = new BehaviorSubject<string>(null);
 
   public $productSpecStore: Observable<ProductSpecStoreVM>;
   public $showJournaFields: Observable<boolean>;
@@ -57,6 +58,7 @@ export class ProductSpecStore {
   public $productSpecStatus: Observable<ProductSpecStatus>;
   public $productSpecReadonly: Observable<boolean>;
   public $productSpecUpdateButton: Observable<boolean>;
+  public $productSpecStoreUpdate: Observable<string>;
 
   private coverMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private textMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
@@ -118,6 +120,7 @@ export class ProductSpecStore {
     this.$productSpecStatus = this.productSpecStatusSubject.asObservable();
     this.$productSpecReadonly = this.ProductSpecReadonlySubject.asObservable();
     this.$productSpecUpdateButton = this.ProductSpecUpdateButtonSubject.asObservable();
+    this.$productSpecStoreUpdate = this.ProductSpecStoreUpdateSubject.asObservable();
 
     this.$productSpecStore.subscribe((data) => {
       this.currentProductSpecStoreState = data;
@@ -289,10 +292,13 @@ export class ProductSpecStore {
 
   setProductSpecStatus = (status: ProductSpecStatus) => this.productSpecStatusSubject.next(status);
 
+  updateStoreByComponentType = (type: string) => this.ProductSpecStoreUpdateSubject.next(type);
+
   setProductSpecReadonly = (flag: boolean) => {
     this.ProductSpecReadonlySubject.next(flag);
     this.setProductSpecUpdateButton(!flag);
   }
+
 
   setProductSpecUpdateButton = (flag: boolean) => this.ProductSpecUpdateButtonSubject.next(flag);
   /* PRODUCT API CALLS */

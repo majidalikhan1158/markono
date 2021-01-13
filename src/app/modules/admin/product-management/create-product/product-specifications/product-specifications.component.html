@@ -88,7 +88,7 @@
                     </button>
 
                     <button mat-button (click)="handleCreateButtonClick()"
-                        *ngIf="!shouldDisplayUpdateButton && 
+                        *ngIf="(!shouldDisplayUpdateButton && !shouldReadonly) && 
                             (selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP || 
                             selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE)"
                         class="btn btn-success stepper-next-button mr-2">Create</button>

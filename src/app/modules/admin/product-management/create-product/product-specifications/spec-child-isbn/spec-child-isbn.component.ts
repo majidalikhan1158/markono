@@ -59,7 +59,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   handleUpdateStore = () => {
     this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
       if (resp && resp === this.productSpecTypesConstant.CHILD_ISBN ) {
-        this.pushToStore();
+        // this.pushToStore();
       }
     });
   }

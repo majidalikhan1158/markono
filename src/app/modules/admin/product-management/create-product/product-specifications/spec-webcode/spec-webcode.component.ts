@@ -35,7 +35,7 @@ export class SpecWebcodeComponent implements OnInit, OnDestroy {
   handleUpdateStore = () => {
     this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
       if (resp && resp === this.productSpecTypesConstant.WEB_CODE ) {
-        this.pushToStore();
+        // this.pushToStore();
       }
     });
   }

@@ -50,7 +50,7 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   handleUpdateStore = () => {
     this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
       if (resp && resp === this.productSpecTypesConstant.TEXT ) {
-        this.pushToStore();
+        // this.pushToStore();
       }
     });
   }

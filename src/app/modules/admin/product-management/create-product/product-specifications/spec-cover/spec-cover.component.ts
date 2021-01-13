@@ -57,7 +57,7 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   handleUpdateStore = () => {
     this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
       if (resp && resp === this.productSpecTypesConstant.COVER ) {
-        this.pushToStore();
+        // this.pushToStore();
       }
     });
   }

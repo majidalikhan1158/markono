@@ -134,7 +134,9 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
   }
 
   createProductSpec() {
-    if (!this.selection.ISBN || this.selection.VersionNo) {
+    if (!this.selection.ISBN || !this.selection.VersionNo) {
+      this.store.setProductSpecReadonly(false);
+      this.store.setProductSpecUpdateButton(false);
       this.router.navigate(['admin/product-management/create']);
       return;
     }

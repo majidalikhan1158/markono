@@ -47,8 +47,8 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
   }
 
   resetSubscribers = () => {
-    this.store.setProductSpecUpdateButton(false);
-    this.store.setProductSpecReadonly(false);
+    // this.store.setProductSpecUpdateButton(false);
+    // this.store.setProductSpecReadonly(false);
   }
 
   handleIsbnSearch(type: number) {

@@ -43,6 +43,12 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
               private snack: SnackBarService) { }
 
   ngOnInit(): void {
+    this.resetSubscribers();
+  }
+
+  resetSubscribers = () => {
+    this.store.setProductSpecUpdateButton(false);
+    this.store.setProductSpecReadonly(false);
   }
 
   handleIsbnSearch(type: number) {
@@ -128,6 +134,10 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
   }
 
   createProductSpec() {
+    if (!this.selection.ISBN || this.selection.VersionNo) {
+      this.router.navigate(['admin/product-management/create']);
+      return;
+    }
     const reqObj = {
       isbn: this.selection.ISBN,
       VersionNo: this.selection.VersionNo

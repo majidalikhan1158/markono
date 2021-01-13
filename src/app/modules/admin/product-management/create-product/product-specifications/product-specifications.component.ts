@@ -39,6 +39,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
   productId: string;
   shouldReadonly: boolean;
   subscription: Subscription;
+  shouldDisplayUpdateButton = false;
   constructor(
     public store: ProductSpecStore,
     private productservice: ProductService,
@@ -48,6 +49,10 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     this.store.setProductSpecTypeList(this.productSpecTypesArray);
     this.subscription = this.store.$productSpecTypeObjectList.subscribe(resp => {
       this.productSpecTypesArray = resp;
+    });
+
+    this.subscription = this.store.$productSpecUpdateButton.subscribe(resp => {
+      this.shouldDisplayUpdateButton = resp;
     });
   }
 
@@ -200,7 +205,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
       ? nextSelectedTabObj.enum
       : this.selectedProductSpecType;
     if (!nextSelectedTabObj) {
-      this.selectedProductSpecType = this.productSpecTypesConstant.UNIT_PRICE;
+      this.selectedProductSpecType = this.productSpecTypesConstant.VERIFY_PRINT_FILE;
       this.handleProductSpecChangeLogic(this.productSpecTypeOtherArray);
     } else {
       this.handleProductSpecChangeLogic(this.productSpecTypesArray);
@@ -246,6 +251,10 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     }
   }
 
+  updateProductSpec = () => {
+    this.saveFromUnitPrice();
+  }
+
   saveFromUnitPrice = () => {
     const transformedObj = this.productHelper.transCreateProductApiModal(this.productSpecData);
     this.productservice.createProduct(transformedObj).subscribe(
@@ -260,7 +269,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
             const errorsList = [];
             entries.forEach(error => {
               const message = `Field: ${error[0]}, Message: ${error[1]}`;
-              this.snack.open(message, '', 'top', 5000, 'right');
+              this.snack.open(message, '', 'top', 5000, 'center');
             });
           } else{
             this.handleVersionSelection(result.customMessage);

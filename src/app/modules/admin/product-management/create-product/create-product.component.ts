@@ -59,6 +59,7 @@ export class CreateProductComponent implements OnInit, OnDestroy {
 
   handleEditMode = () => {
     this.store.setProductSpecReadonly(false);
+    // this.store.setProductSpecUpdateButton(true);
   }
 
   private setHeaderLabel() {

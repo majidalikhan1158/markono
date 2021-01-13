@@ -39,6 +39,7 @@ export class ProductSpecStore {
   private addRemoveSpecTypeEventSubject = new BehaviorSubject<AddRemoveSpecTypeEvent>(null);
   private productSpecStatusSubject = new BehaviorSubject<ProductSpecStatus>(null);
   private ProductSpecReadonlySubject = new BehaviorSubject<boolean>(false);
+  private ProductSpecUpdateButtonSubject = new BehaviorSubject<boolean>(false);
 
   public $productSpecStore: Observable<ProductSpecStoreVM>;
   public $showJournaFields: Observable<boolean>;
@@ -55,6 +56,7 @@ export class ProductSpecStore {
   public $productSpecTypeObjectList: Observable<ProductSpecTypeObject[]>;
   public $productSpecStatus: Observable<ProductSpecStatus>;
   public $productSpecReadonly: Observable<boolean>;
+  public $productSpecUpdateButton: Observable<boolean>;
 
   private coverMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private textMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
@@ -115,6 +117,7 @@ export class ProductSpecStore {
     this.$productSpecTypeObjectList = this.productSpecTypeObjectListSubject.asObservable();
     this.$productSpecStatus = this.productSpecStatusSubject.asObservable();
     this.$productSpecReadonly = this.ProductSpecReadonlySubject.asObservable();
+    this.$productSpecUpdateButton = this.ProductSpecUpdateButtonSubject.asObservable();
 
     this.$productSpecStore.subscribe((data) => {
       this.currentProductSpecStoreState = data;
@@ -286,7 +289,12 @@ export class ProductSpecStore {
 
   setProductSpecStatus = (status: ProductSpecStatus) => this.productSpecStatusSubject.next(status);
 
-  setProductSpecReadonly = (flag: boolean) => this.ProductSpecReadonlySubject.next(flag);
+  setProductSpecReadonly = (flag: boolean) => {
+    this.ProductSpecReadonlySubject.next(flag);
+    this.setProductSpecUpdateButton(!flag);
+  }
+
+  setProductSpecUpdateButton = (flag: boolean) => this.ProductSpecUpdateButtonSubject.next(flag);
   /* PRODUCT API CALLS */
   getProductGroupList = (generalVM: GeneralVM) => {
     const reqObj = {

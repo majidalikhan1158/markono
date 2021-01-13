@@ -84,9 +84,9 @@ export class OrdersComponent implements OnInit {
   }
 
   tableFilterChange(filterValue: string, filterPropType: string) {
-    // if (filterPropType === this.tableFilterTypes.STATUS) {
-    //   this.tableFilters.status = this.selectedStatus = this.tableFilters.status === filterValue ? '' : filterValue;
-    // }
+    if (filterPropType === this.tableFilterTypes.ORDER_TYPE) {
+      this.tableFilters.orderType = this.selectedStatus = this.tableFilters.orderType === filterValue ? '' : filterValue;
+    }
     this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
@@ -102,13 +102,15 @@ export class OrdersComponent implements OnInit {
       this.tableFilters.orderDate = '';
     } else if (filterPropType === this.tableFilterTypes.ORDER_TYPE) {
       this.tableFilters.orderType = '';
-    } else {
+    } else if (filterPropType === this.tableFilterTypes.RDD_DATE) {
+      this.tableFilters.rddDate = '';
+    } else if (filterPropType == 'clear') {
       this.tableFilters.customerName = '';
       this.tableFilters.status = this.selectedStatus = '';
       this.tableFilters.customerPoNo = '';
       this.tableFilters.orderDate = '';
       this.tableFilters.orderType = '';
-      this.dataSource.filter = JSON.stringify(this.tableFilters);
+      this.tableFilters.rddDate = '';
     }
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
@@ -203,6 +205,16 @@ export class OrdersComponent implements OnInit {
             .indexOf(searchString.orderType.toLowerCase()) !== -1 ? 1 : 0
         );
       }
+      if (this.tableFilters.rddDate !== '') {
+        filterCounter++;
+        matchedFilters = matchedFilters + (
+          data.rdd
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.rddDate.toLowerCase()) !== -1 ? 1 : 0
+        );
+      }
 
       if (filterCounter === 0) { return true; }
       return filterCounter === matchedFilters;
@@ -234,5 +246,13 @@ export class OrdersComponent implements OnInit {
     }
     //this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSource.filter = JSON.stringify(this.tableFilters);
+  }
+
+  getCustomerName(number) {
+    return ' Banta Global Turnkey (S) Pte Ltd';
+  }
+
+  getOrdersInfo() {
+    this.router.navigate(['/admin/order-management/order-details']);
   }
 }

@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="18.566" height="17.94" viewBox="0 0 18.566 17.94">
-  <g id="ic_ordermanagement_selected" transform="translate(0 1.261)">
-    <path id="Path_1365" data-name="Path 1365" d="M11.585,188.313H27.861a1.142,1.142,0,0,0,1.145-1.145V175.625a1.142,1.142,0,0,0-1.145-1.145H11.585a1.142,1.142,0,0,0-1.145,1.145v11.543A1.142,1.142,0,0,0,11.585,188.313Z" transform="translate(-10.44 -171.634)" fill="#349aff"/>
-    <path id="Path_1371" data-name="Path 1371" d="M25.6,179.6H14.554c-.412,0-.734-.2-.734-.447s.331-.447.734-.447H25.6c.412,0,.734.2.734.447S26.016,179.6,25.6,179.6Z" transform="translate(-10.796 -172.08)" fill="#284065"/>
-    <path id="Path_1372" data-name="Path 1372" d="M25.6,182.6H14.554c-.412,0-.734-.2-.734-.447s.331-.447.734-.447H25.6c.412,0,.734.2.734.447S26.016,182.6,25.6,182.6Z" transform="translate(-10.796 -172.395)" fill="#284065"/>
-    <path id="Path_1373" data-name="Path 1373" d="M25.6,185.6H14.554c-.412,0-.734-.2-.734-.447s.331-.447.734-.447H25.6c.412,0,.734.2.734.447S26.016,185.6,25.6,185.6Z" transform="translate(-10.796 -172.711)" fill="#284065"/>
-    <rect id="Rectangle_950" data-name="Rectangle 950" width="10" height="3" rx="1" transform="translate(4.479 -1.261)" fill="#284065"/>
-  </g>
-</svg>

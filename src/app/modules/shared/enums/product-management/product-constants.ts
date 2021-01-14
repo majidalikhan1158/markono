@@ -733,4 +733,4 @@ export const StatusList = [
     message: 'Min. specs AND layout AND file specs verified AND File approved',
     hint: ''
   }
-]
+];

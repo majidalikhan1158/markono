@@ -10,6 +10,7 @@ import { ProductService } from 'src/app/modules/services/core/services/product.s
 import { ProductSpecHelperService } from '../../../enums/helpers/product-spec-helper.service';
 import { Router } from '@angular/router';
 import { SnackBarService } from '../../../ui-services/snack-bar.service';
+import { ProductSpecTypes } from '../../../enums/app-enums';
 
 @Component({
   selector: 'app-create-product-spec-modal',
@@ -34,6 +35,7 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   selection: ChildIsbnModal = {ISBN: '', VersionNo: '', Id: ''};
   selectedType: number;
+  description: string;
   constructor(private modalService: ModalService,
               private store: ProductSpecStore,
               private ref: ChangeDetectorRef,
@@ -137,7 +139,31 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
     if (!this.selection.ISBN || !this.selection.VersionNo) {
       this.store.setProductSpecReadonly(false);
       this.store.setProductSpecUpdateButton(false);
+      let value = '';
+      if (this.childIsbnNumber1) {
+        value = this.childIsbnNumber1;
+      }
+      if (this.childIsbnNumber2) {
+        value = this.childIsbnNumber2;
+      }
+
+      if (value) {
+        if (this.childIsbnNumber1 && !this.description) {
+          this.snack.open('Description is required');
+          return;
+        }
+        this.store.reset();
+        const vm = this.getGeneralObj();
+        vm.productNumber = value;
+        vm.productDescription = this.description;
+        this.store.setProductSpecStore(vm, ProductSpecTypes.GENERAL);
+      }
       this.router.navigate(['admin/product-management/create']);
+      return;
+    }
+
+    if (this.selectedType === 1 && !this.description) {
+      this.snack.open('Description is required');
       return;
     }
     const reqObj = {
@@ -162,6 +188,33 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
     });
   }
 
+  getGeneralObj = () => {
+    return {
+      id: 1,
+      productNumber: '',
+      printingType: '',
+      productType: 0,
+      externalPartNo: '',
+      isbnOwner: '',
+      journalTitleCode: '',
+      volume: '',
+      issue: '',
+      productDescription: '',
+      orientationType: '',
+      fscType: '',
+      height: 0,
+      width: 0,
+      isOpenSize: false,
+      openSizeHeight: 0,
+      openSizeWidth: 0,
+      weight: 0,
+      spinWidth: 0,
+      isChildIsbnAdded: false,
+      isDvdAdded: false,
+      isWebcodeAdded: false,
+      versionNo: ''
+    };
+  }
   ngOnDestroy(): void {
     this.acceptEvent.emit();
     // this.router.navigate(['admin/product-management/view']);

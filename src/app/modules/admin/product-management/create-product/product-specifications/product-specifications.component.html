@@ -77,7 +77,7 @@
                 <div class="col-lg-12 pt-10 text-right">
                     <button mat-button (click)="handleBackEvent()"
                         *ngIf="selectedProductSpecType !== productSpecTypesConstant.GENERAL && selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE"
-                        [ngClass]="shouldDisplayUpdateButton ? 'btn btn-primary stepper-back-button mr-2 float-left' : 'btn btn-primary stepper-back-button mr-2 float-left'">Back</button>
+                        [ngClass]="shouldDisplayUpdateButton ? 'btn btn-primary stepper-back-button mr-2' : 'btn btn-primary stepper-back-button mr-2'">Back</button>
                     
                     <button mat-button *ngIf="shouldDisplayUpdateButton && 
                             selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
@@ -91,7 +91,7 @@
                         *ngIf="(!shouldDisplayUpdateButton && !shouldReadonly) && 
                             (selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP || 
                             selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE)"
-                        class="btn btn-success stepper-next-button mr-2">Create</button>
+                        class="btn outline-button mr-2">Create</button>
                     
                     <button mat-button (click)="handleNextEvent()"
                         *ngIf="selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && 

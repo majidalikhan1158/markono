@@ -742,7 +742,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       series: [
         {
           name: 'Units produced',
-          data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87, 65, 35]
+          data: list
         }
       ],
       chart: {

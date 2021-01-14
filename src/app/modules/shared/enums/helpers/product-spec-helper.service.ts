@@ -2,7 +2,7 @@ import { ChildIsbnModal } from './../../../services/shared/classes/product-modal
 import { Injectable } from '@angular/core';
 import { WebCodeVM, DVDVM, OtherVM, GeneralVM, CoverVM, TextVM, BindingVM, ChildIsbnVM,
    UnitPriceVM, BindingTypeOthers, ProductSpecStoreVM } from '../../models/product-spec';
-import { BindingType, ProductSpecificationTypesArray } from '../product-management/product-constants';
+import { BindingType, ProductSpecificationTypesArray, ColorTypes } from '../product-management/product-constants';
 import { ProductSpecStore } from '../../ui-services/product-spec.service';
 import {
   BindingTypeCaseBound,
@@ -131,12 +131,12 @@ export class ProductSpecHelperService {
       cvrBrand: this.getString(data?.coverVM?.materialBrand),
       cvrSpecialInstruction: this.getString(data.coverVM?.specialInstructions),
       cvrOutsideNoOfColours: this.getNumber(data.coverVM?.colorTypeOutside?.length + data.coverVM?.pantoneColourOutside.length),
-      cvrOutsideSelectedColours: this.getString(data.coverVM?.colorTypeOutside?.join(',')) ,
+      cvrOutsideSelectedColours: this.getBitsFromColors(data.coverVM?.colorTypeOutside ?? []),
       cvrOutsidePantoneColours:  data.coverVM?.pantoneColourOutside?.length > 0 ? true : false,
       cvrOutsidePantoneColoursNo: this.getString(data.coverVM?.pantoneColourOutside?.join(',')),
       cvrOutsideFinishing: this.getString(data.coverVM?.finishingTypeOutside?.join(',')),
       cvrInsideNoOfColours: this.getNumber(data.coverVM?.colorTypeInside?.length + data.coverVM?.pantoneColourInside.length),
-      cvrInsideSelectedColours: this.getString(data.coverVM?.colorTypeInside?.join(',')) ,
+      cvrInsideSelectedColours: this.getBitsFromColors(data.coverVM?.colorTypeInside ?? []),
       cvrInsidePantoneColours:  data.coverVM?.pantoneColourInside?.length > 0 ? true : false,
       cvrInsidePantoneColoursNo: this.getString(data.coverVM?.pantoneColourInside?.join(',')),
       cvrInsideFinishing: this.getString(data.coverVM?.finishingTypeInside?.join(',')),
@@ -148,7 +148,7 @@ export class ProductSpecHelperService {
       txtMaterial: this.getString(data.textVM?.textMaterial),
       txtMaterialBrand: this.getString(data.textVM?.materialBrand),
       txtNoOfColours: this.getNumber(data.textVM?.pantoneColour.length + data.textVM?.colorType.length),
-      txtSelectedColours: this.getString(data.textVM?.colorType?.join(',')),
+      txtSelectedColours: this.getBitsFromColors(data.textVM?.colorType ?? []),
       txtPantoneColours: data.textVM?.pantoneColour?.length > 0 ? true : false,
       txtPantoneColoursNo: this.getString(data.textVM?.pantoneColour?.join(',')),
       txtFinishing: this.getString(data.textVM?.finishingType?.join(',')),
@@ -175,7 +175,7 @@ export class ProductSpecHelperService {
       endpaperNoOfMonoExtent: this.getNumber(data.bindingVM?.caseBound?.noOfMonoExtent),
       endpaperTotalExtent: this.getNumber(data.bindingVM?.caseBound?.totalExtent),
       endpaperNoOfColours: this.getNumber(data.bindingVM?.caseBound?.pantoneColour.length + data.bindingVM?.caseBound?.colorType.length),
-      endpaperSelectedColours: this.getString(data.bindingVM?.caseBound?.colorType.join(',')),
+      endpaperSelectedColours: this.getBitsFromColors(data.bindingVM?.caseBound?.colorType ?? []),
       endpaperPantoneColours:  data.bindingVM?.caseBound?.pantoneColour?.length > 0 ? true : false,
       // this.getString(data.bindingVM?.caseBound?.pantoneColour?.join(',')),
       endpaperPantoneColourNo:  this.getString(data.bindingVM?.caseBound?.pantoneColour?.join(',')),
@@ -185,7 +185,7 @@ export class ProductSpecHelperService {
       endpaperComponentPrintingDesc: this.getString(''),
 
       slipCaseNoOfColours: this.getNumber(data.childIsbnVM?.colorType?.length + data.childIsbnVM?.pantoneColour?.length),
-      slipCaseSelectedColours: this.getString(data.childIsbnVM?.colorType?.join(',')),
+      slipCaseSelectedColours: this.getBitsFromColors(data.childIsbnVM?.colorType ?? []),
       slipCasePantoneColours:  data.childIsbnVM?.pantoneColour?.length > 0 ? true : false,
       slipCasePantoneColoursNo: this.getString(data.childIsbnVM?.pantoneColour?.join(',')),
       slipCaseFinishing: this.getString(data.childIsbnVM?.finishingType?.join(',')),
@@ -262,7 +262,7 @@ export class ProductSpecHelperService {
             noOfMonoExtent: this.getNumber(item.noOfMonoExtent),
             totalExtent: this.getNumber(item.totalExtent),
             noOfColours: this.getNumber(item.pantoneColour.length + item.colorType.length),
-            selectedColours: this.getString(item.colorType?.join(',')),
+            selectedColours: this.getBitsFromColors(item.colorType ?? []),
             pantoneColours: item.pantoneColour?.length > 0 ? true : false,
             pantoneColoursNo: this.getString(item.pantoneColour?.join(',')),
             finishing: this.getString(item.finishingType?.join(',')),
@@ -297,7 +297,7 @@ export class ProductSpecHelperService {
             endpaperTotalExtent: this.getNumber(item.bindingVM?.caseBound?.totalExtent),
             endpaperNoOfColours: this.getNumber(item.bindingVM?.caseBound?.pantoneColour.length +
               item.bindingVM?.caseBound?.colorType.length),
-            endpaperSelectedColours: this.getString(item.bindingVM?.caseBound?.colorType?.join(',')),
+            endpaperSelectedColours:  this.getBitsFromColors(item.bindingVM?.caseBound?.colorType ?? []),
             endpaperPantoneColours: item.bindingVM?.caseBound?.pantoneColour?.length > 0 ? true : false,
             // this.getString(item.bindingVM?.caseBound?.pantoneColour?.join(',')),
             endpaperPantoneColourNo: this.getNumber(item.bindingVM?.caseBound?.pantoneColour?.length),
@@ -334,7 +334,7 @@ export class ProductSpecHelperService {
         noOfMonoExtent: this.getNumber(item.noOfMonoExtent),
         totalExtent: this.getNumber(item.totalExtent),
         txtFrontNoOfColours: this.getNumber(item.pantoneColour.length + item.colorType.length),
-        txtFrontSelectedColours: this.getString(item.colorType?.join(',')),
+        txtFrontSelectedColours: this.getBitsFromColors(item.colorType ?? []),
         txtFrontPantoneColours: item.pantoneColour?.length > 0 ? true : false,
         txtFrontPantoneColourNo: this.getString(item.pantoneColour?.join(',')),
         txtFrontFinishing: this.getString(item.finishingType?.join(',')),
@@ -366,7 +366,7 @@ export class ProductSpecHelperService {
         endpaperNoOfMonoExtent: this.getNumber(item.bindingVM?.caseBound?.noOfMonoExtent),
         endpaperTotalExtent: this.getNumber(item.bindingVM?.caseBound?.totalExtent),
         endpaperNoOfColours: this.getNumber(item.bindingVM?.caseBound?.pantoneColour.length + item.bindingVM?.caseBound?.colorType.length),
-        endpaperSelectedColours: this.getString(item.bindingVM?.caseBound?.colorType?.join(',')),
+        endpaperSelectedColours:  this.getBitsFromColors(item.bindingVM?.caseBound?.colorType ?? []),
         endpaperPantoneColours:  item.bindingVM?.caseBound?.pantoneColour?.length > 0 ? true : false,
         // this.getString(item.bindingVM?.caseBound?.pantoneColour?.join(',')),
         endpaperPantoneColourNo: this.getNumber(item.bindingVM?.caseBound?.pantoneColour.length),
@@ -514,8 +514,8 @@ export class ProductSpecHelperService {
       noOfMonoExtent: 0,
       totalExtent: 0,
       noOfColours: 0,
-      colorTypeOutside: this.getStringArray(p?.CvrOutsideSelectedColours?.toString()),
-      colorTypeInside: this.getStringArray(p?.CvrInsideSelectedColours?.toString()),
+      colorTypeOutside: this.getColorsFromBits(p?.CvrOutsideSelectedColours ?? ''),
+      colorTypeInside: this.getColorsFromBits(p?.CvrInsideSelectedColours ?? ''),
       pantoneColourInside: this.getStringArray(p?.CvrInsidePantoneColoursNo?.toString()),
       pantoneColourOutside: this.getStringArray(p?.CvrOutsidePantoneColoursNo?.toString()),
       finishingTypeOutside: this.getStringArray(p?.CvrOutsideFinishing?.toString()),
@@ -535,7 +535,7 @@ export class ProductSpecHelperService {
       noOfMonoExtent: p?.TxtNoOfMonoExtent ?? 0,
       totalExtent: this.sum(p?.TxtNoOfColourExtent ?? 0, p?.TxtNoOfMonoExtent ?? 0) ,
       noOfColours: p?.TxtNoOfColours ?? 0,
-      colorType: this.getStringArray(p?.TxtSelectedColours?.toString()),
+      colorType: this.getColorsFromBits(p?.TxtSelectedColours ?? ''),
       pantoneColour: this.getStringArray(p?.TxtPantoneColoursNo?.toString()),
       finishingType: this.getStringArray(p?.TxtFinishing?.toString()),
       specialInstructions: p?.TxtSpecialInstruction ?? ''
@@ -583,7 +583,7 @@ export class ProductSpecHelperService {
       materialBrand: prd?.VolSetSlipCaseMaterialBrand  ?? '',
       greyboardThickness: prd?.VolSetGreyboardThickness  ?? '',
       noOfColours: prd?.SlipCaseNoOfColours  ?? 0,
-      colorType: this.getStringArray(prd?.SlipCaseSelectedColours?.toString()),
+      colorType:  this.getColorsFromBits(prd?.SlipCaseSelectedColours ?? ''),
       pantoneColour: this.getStringArray(prd?.SlipCasePantoneColoursNo?.toString()),
       finishingType: this.getStringArray(prd?.SlipCaseFinishing?.toString()),
       specialInstructions2: prd?.TxtSpecialInstruction  ?? '',
@@ -685,7 +685,7 @@ export class ProductSpecHelperService {
       noOfMonoExtent: p?.EndpaperNoOfMonoExtent ?? 0,
       totalExtent: this.sum(p?.EndpaperNoOfColourExtent ?? 0, p?.EndpaperNoOfMonoExtent ?? 0),
       noOfColours: p?.EndpaperNoOfColours ?? 0,
-      colorType: this.getStringArray(p?.EndpaperSelectedColours?.toString()),
+      colorType: this.getColorsFromBits(p?.EndpaperSelectedColours ?? ''),
       pantoneColour: this.getStringArray(p?.EndpaperPantoneColourNo?.toString()),
       finishingType: this.getStringArray(p?.EndpaperFinishing?.toString()),
       specialInstructions3: p?.EndpaperSpecialInstruction ?? '',
@@ -832,7 +832,7 @@ export class ProductSpecHelperService {
       }
 
       const finishingCount = coverVM?.finishingTypeOutside?.length ?? 0;
-      if (finishingCount) {
+      if (finishingCount === 0) {
         errorArrays.push('Outside: Finishing is required');
       }
     }
@@ -870,5 +870,30 @@ export class ProductSpecHelperService {
     }
 
     return errorArrays;
+  }
+
+  getBitsFromColors = (colors: string[]): string => {
+    if (colors && colors.length === 0) {
+      return '0000';
+    }
+    const bits = [];
+    colors.includes(ColorTypes.Cyan.text) ? bits.push(1) : bits.push(0);
+    colors.includes(ColorTypes.Yellow.text) ? bits.push(1) : bits.push(0);
+    colors.includes(ColorTypes.Magenta.text) ? bits.push(1) : bits.push(0);
+    colors.includes(ColorTypes.Black.text) ? bits.push(1) : bits.push(0);
+
+    return bits.join('');
+  }
+
+  getColorsFromBits = (bits: string): string[] => {
+    if (!bits || bits.length === 0) {
+      return [];
+    }
+    const colors = [];
+    bits && bits.length === 4 && bits.charAt(0) === '1' ? colors.push(ColorTypes.Cyan.text) : '';
+    bits && bits.length === 4 && bits.charAt(1) === '1' ? colors.push(ColorTypes.Yellow.text) : '';
+    bits && bits.length === 4 && bits.charAt(2) === '1' ? colors.push(ColorTypes.Magenta.text) : '';
+    bits && bits.length === 4 && bits.charAt(3) === '1' ? colors.push(ColorTypes.Black.text) : '';
+    return colors;
   }
 }

@@ -32,25 +32,15 @@
                             </mat-form-field>
                         </td>
                         <td style="width: 150px;">
-                            --
-                            <!-- <mat-form-field appearance="fill">
-                              <mat-label>Weight</mat-label>
-                              <input [(ngModel)]="viewModal[i].mainWeight" matInput placeholder="0">
-                          </mat-form-field> -->
+                           {{viewModal[i].weight}}
                         </td>
                         <td style="width: 150px;">
-                            <!-- <mat-form-field appearance="fill">
-                              <mat-label>Choose</mat-label>
-                              <mat-select [(ngModel)]="viewModal[i].sleeveType">
-                                  <mat-option value="1">DVD Case</mat-option>
-                              </mat-select>
-                          </mat-form-field> -->
-                            --
+                            {{viewModal[i].textMaterial}}
                         </td>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>--</td>
+                        <td>{{viewModal[i].materialBrand}}</td>
+                        <td>{{viewModal[i].noOfColourExtent}}</td>
+                        <td>{{viewModal[i].noOfMonoExtent}}</td>
+                        <td>{{viewModal[i].totalExtent}}</td>
                         <td class="action-column pb-0 text-right">
                             <span class="material-icons delete-icon pr-2 cursor-pointer"
                                 (click)="deleteRecord(viewModal[i].id)" *ngIf="viewModal.length > 1">

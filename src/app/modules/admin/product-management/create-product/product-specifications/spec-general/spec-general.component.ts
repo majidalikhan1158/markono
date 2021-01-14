@@ -64,7 +64,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
   handleUpdateStore = () => {
     this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
       if (resp && resp === this.productSpecTypesConstant.GENERAL) {
-        // this.pushToStore();
+        this.pushToStore();
       }
     });
   }
@@ -202,6 +202,9 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
   }
 
   pushToStore = () => {
+    if (!this.generalVM) {
+      return;
+    }
     this.store.setProductSpecStore(this.generalVM, ProductSpecTypes.GENERAL);
   }
 

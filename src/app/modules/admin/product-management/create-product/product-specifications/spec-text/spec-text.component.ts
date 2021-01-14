@@ -50,7 +50,7 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   handleUpdateStore = () => {
     this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
       if (resp && resp === this.productSpecTypesConstant.TEXT ) {
-        // this.pushToStore();
+         this.pushToStore();
       }
     });
   }
@@ -248,7 +248,9 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   }
 
   pushToStore = () => {
-    this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.TEXT);
+    if (this.viewModal) {
+      this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.TEXT);
+    }
   }
 
   ngOnDestroy(): void {

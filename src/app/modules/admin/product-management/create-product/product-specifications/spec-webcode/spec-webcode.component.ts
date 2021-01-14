@@ -35,11 +35,11 @@ export class SpecWebcodeComponent implements OnInit, OnDestroy {
   handleUpdateStore = () => {
     this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
       if (resp && resp === this.productSpecTypesConstant.WEB_CODE ) {
-        // this.pushToStore();
+       this.pushToStore();
       }
     });
   }
-  
+
   getDefaultRecord = () => {
     this.store.$productSpecStore.subscribe(resp => {
       if (resp && resp.webCodeVM && resp.webCodeVM.length > 0) {
@@ -55,7 +55,7 @@ export class SpecWebcodeComponent implements OnInit, OnDestroy {
     this.viewModal.push({
       id: totalRows + 1,
       webcodeLocation: '',
-      noOfWebcode: '',
+      noOfWebcode: 0,
       xCoordinate: 0,
       ycoordinate: 0,
       specialInstructions: ''
@@ -101,8 +101,10 @@ export class SpecWebcodeComponent implements OnInit, OnDestroy {
     );
   }
 
-  pushToStore = () =>{
-    this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.WEBCODE);
+  pushToStore = () => {
+    if (this.viewModal) {
+      this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.WEBCODE);
+    }
   }
 
   ngOnDestroy(): void {

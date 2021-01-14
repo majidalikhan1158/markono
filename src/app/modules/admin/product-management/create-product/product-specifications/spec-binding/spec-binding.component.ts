@@ -106,7 +106,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   handleUpdateStore = () => {
     this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
       if (resp && resp === this.productSpecTypesConstant.BINDING ) {
-        // this.pushToStore();
+         this.pushToStore();
       }
     });
   }
@@ -606,10 +606,12 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
       const obj: DvdCDBindingMapper = { index: this.parentRecordIndex, bindingVM: this.viewModal };
       this.childComponentDataBindingType.emit(obj);
     } else {
-      this.store.setProductSpecStore(
-        this.viewModal,
-        ProductSpecTypes.BINDING
-      );
+      if (this.viewModal) {
+        this.store.setProductSpecStore(
+          this.viewModal,
+          ProductSpecTypes.BINDING
+        );
+      }
     }
   }
 }

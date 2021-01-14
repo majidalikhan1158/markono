@@ -57,7 +57,7 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   handleUpdateStore = () => {
     this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
       if (resp && resp === this.productSpecTypesConstant.COVER ) {
-        // this.pushToStore();
+         this.pushToStore();
       }
     });
   }
@@ -321,7 +321,9 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   }
 
   pushToStore = () => {
-    this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.COVER);
+    if (this.viewModal){
+      this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.COVER);
+    }
   }
 
   ngOnDestroy(): void {

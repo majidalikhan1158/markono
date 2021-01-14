@@ -148,7 +148,7 @@ export interface ChildIsbnVM {
 export interface WebCodeVM {
   id: number;
   webcodeLocation: string;
-  noOfWebcode: string;
+  noOfWebcode: number;
   xCoordinate: number;
   ycoordinate: number;
   specialInstructions: string;

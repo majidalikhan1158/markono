@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ModalService } from '../../../ui-services/modal.service';
-import { UIModalID } from '../../../enums/app-constants';
+import { AppPageRoutes, UIModalID } from '../../../enums/app-constants';
 import { ChildIsbnModal } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
@@ -33,7 +33,7 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
   previousValue1: string;
   previousValue2: string;
   subscription: Subscription;
-  selection: ChildIsbnModal = {ISBN: '', VersionNo: '', Id: ''};
+  selection: ChildIsbnModal = {ISBN: null, VersionNo: null, Id: null};
   selectedType: number;
   description: string;
   constructor(private modalService: ModalService,
@@ -157,9 +157,11 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
         vm.productNumber = value;
         vm.productDescription = this.description;
         this.store.setProductSpecStore(vm, ProductSpecTypes.GENERAL);
+        this.router.navigate([AppPageRoutes.CREATE_PRODUCT]);
+      } else {
+        this.snack.open('ISBN and Description is required');
+        return;
       }
-      this.router.navigate(['admin/product-management/create']);
-      return;
     }
 
     if (this.selectedType === 1 && !this.description) {
@@ -181,7 +183,7 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
           this.helper.transProductDetailToVM(productDetails, 2);
         }
         this.store.setProductSpecStatus({status: productDetails.Status, tooltipMessage: '' });
-        this.router.navigate(['admin/product-management/view']);
+        this.router.navigate([AppPageRoutes.VIEW_PRODUCT]);
       } else {
         this.snack.open('No details found');
       }

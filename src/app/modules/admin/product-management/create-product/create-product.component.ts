@@ -3,7 +3,7 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
-import { CreateProductTabs } from 'src/app/modules/shared/enums/app-constants';
+import { AppPageRoutes, CreateProductTabs } from 'src/app/modules/shared/enums/app-constants';
 import { OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ProductSpecStore } from '../../../shared/ui-services/product-spec.service';
 import { Subscription } from 'rxjs';
@@ -12,6 +12,7 @@ import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-
 import { PageHeader } from 'src/app/modules/shared/models/app-modal';
 import { DynamicHeaderMenuService } from 'src/app/_metronic/core';
 import { Router } from '@angular/router';
+import { SubheaderService } from 'src/app/_metronic/partials/layout/subheader/_services/subheader.service';
 
 @Component({
   selector: 'app-create-product',
@@ -30,8 +31,7 @@ export class CreateProductComponent implements OnInit, OnDestroy {
   statusTypes = ProductSpecStatusTypes;
   shouldReadonly: boolean;
   constructor(private store: ProductSpecStore, private cf: ChangeDetectorRef,
-              private dynamicHeaderMenuService: DynamicHeaderMenuService,  private router: Router) {
-                this.setHeaderLabel();
+              private subheader: SubheaderService) {
   }
 
   ngOnDestroy(): void {
@@ -61,19 +61,25 @@ export class CreateProductComponent implements OnInit, OnDestroy {
 
   handleEditMode = () => {
     this.store.setProductSpecReadonly(false);
+    this.handleEditProductBreadCrumb();
   }
 
-  private setHeaderLabel() {
-    const currentUrl = this.router.url.split(/[?#]/)[0];
-    let pageLabelFound = false;
-    DynamicPageHeaderLabels.items.forEach(element => {
-      if (element.page === currentUrl) {
-        pageLabelFound = true;
-        const obj: PageHeader = { headerText: element.title, breadCrumb: element.breadCrumb};
-        this.dynamicHeaderMenuService.setHeaderLabel(obj);
-      }
-    });
-    this.dynamicHeaderMenuService.displayProductSpecButton(false);
+  handleEditProductBreadCrumb = () => {
+    this.subheader.setTitle('');
+    this.subheader.setBreadcrumbs([]);
+    const breadCrumList = [];
+    this.subheader.setTitle('Edit Product');
+    breadCrumList.push({
+      linkText: 'Products Library',
+      linkPath: AppPageRoutes.LIST_PRODUCT,
+      title: 'Products Library'
+    },{
+      linkText: 'Edit Product',
+      linkPath: AppPageRoutes.VIEW_PRODUCT,
+      title: 'Edit Product'
+    }
+    );
+    this.subheader.setBreadcrumbs(breadCrumList);
   }
 
 }

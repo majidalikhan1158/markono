@@ -22,6 +22,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TokenType } from 'src/app/modules/shared/enums/app-enums';
 import { AppAuthService } from '../../../services/core/services/app-auth.service';
 import { CaseHelperService } from '../../../shared/enums/helpers/case-helper.service';
+import { AppPageRoutes } from '../../../shared/enums/app-constants';
 
 @Component({
   selector: 'app-orders',
@@ -253,6 +254,6 @@ export class OrdersComponent implements OnInit {
   }
 
   getOrdersInfo() {
-    this.router.navigate(['/admin/order-management/order-details']);
+    this.router.navigate([AppPageRoutes.VIEW_ORDER]);
   }
 }

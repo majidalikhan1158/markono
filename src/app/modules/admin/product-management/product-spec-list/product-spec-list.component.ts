@@ -12,7 +12,7 @@ import {
   ProductSpecFilterTypes,
 } from 'src/app/modules/shared/models/table-filter-modals';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
-import { UIModalID } from 'src/app/modules/shared/enums/app-constants';
+import { AppPageRoutes, UIModalID } from 'src/app/modules/shared/enums/app-constants';
 import { Router } from '@angular/router';
 import { PrintingTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { ProductService } from '../../../services/core/services/product.service';
@@ -199,7 +199,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
 
   handleAddProductSpecEvent(modalId: string) {
     this.modalService.close(modalId);
-    this.router.navigate(['admin/product-management/create']);
+    this.router.navigate([AppPageRoutes.CREATE_PRODUCT]);
   }
 
   handleModalRejectEvent(modalId: string) {}
@@ -221,7 +221,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
         this.helper.transProductDetailToVM(productDetails);
         this.store.setProductSpecReadonly(true);
         this.store.setProductSpecStatus({status: productDetails.Status, tooltipMessage: '' });
-        this.router.navigate(['admin/product-management/view']);
+        this.router.navigate([AppPageRoutes.VIEW_PRODUCT]);
       } else {
         this.snack.open('No details found');
       }

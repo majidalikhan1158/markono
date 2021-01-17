@@ -1,5 +1,5 @@
 <!-- begin::Header Nav -->
-<ul class="menu-nav" [ngClass]="ulCSSClasses">
+<ul class="menu-nav" [ngClass]="ulCSSClasses" *ngIf="0>1">
   <li class="menu-item menu-item-rel" routerLinkActive="menu-item-active">
     <h3>
       <span class="menu-text" style="font-family: 'Roboto-Bold'; font-size: 24px;">{{headerLabel?.headerText}}</span>
@@ -16,7 +16,6 @@
   class="subheader py-2 py-lg-6"
   [ngClass]="subheaderCSSClasses"
   id="kt_subheader"
-  *ngIf="0>1"
 >
   <div
     [ngClass]="subheaderContainerCSSClasses"
@@ -40,7 +39,7 @@
         <!--begin::Page Title-->
         <ng-container *ngIf="title$ | async as _title">
           <h5 class="text-dark font-weight-bold my-1 mr-5">
-            <!-- {{ _title }} -->
+            {{ _title }}
             <ng-container *ngIf="subheaderDisplayDesc">
               <ng-container *ngIf="description$ | async as _description">
                 <small>{{ _description }}</small>

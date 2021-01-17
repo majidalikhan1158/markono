@@ -111,7 +111,7 @@ export const DefaultLayoutConfig = {
   // Subheader
   subheader: {
     display: false,
-    displayDesc: true,
+    displayDesc: false,
     displayDaterangepicker: true,
     layoutVersion: 'v1', // [1..6]
     fixed: true,

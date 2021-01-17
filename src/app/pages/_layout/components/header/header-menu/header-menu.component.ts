@@ -8,6 +8,7 @@ import { BreadcrumbItemModel } from 'src/app/_metronic/partials/layout/subheader
 import { SubheaderService } from 'src/app/_metronic/partials/layout/subheader/_services/subheader.service';
 import { ResolveEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AppPageRoutes } from 'src/app/modules/shared/enums/app-constants';
 
 function getCurrentURL(location) {
   return location.split(/[?#]/)[0];
@@ -34,6 +35,7 @@ export class HeaderMenuComponent implements OnInit {
   breadcrumbs$: Observable<BreadcrumbItemModel[]>;
   breadcrumbs: BreadcrumbItemModel[] = [];
   description$: Observable<string>;
+  currentUrl: string;
   // ---------------------------//
   constructor(private layout: LayoutService,
               private subheader: SubheaderService,
@@ -42,17 +44,7 @@ export class HeaderMenuComponent implements OnInit {
               private dynamicHeaderMenuService: DynamicHeaderMenuService,
               private cf: ChangeDetectorRef) {
     this.location = this.loc;
-    const initSubheader = () => {
-      setTimeout(() => {
-        this.subheader.updateAfterRouteChanges(this.router.url);
-      }, 0);
-    };
-
-    initSubheader();
-    // subscribe to router events
-    this.router.events
-      .pipe(filter((event) => event instanceof ResolveEnd))
-      .subscribe(initSubheader);
+    this.currentUrl = this.router.url.split(/[?#]/)[0];
   }
 
   ngOnInit(): void {
@@ -66,8 +58,21 @@ export class HeaderMenuComponent implements OnInit {
       this.headerLabel = resp;
       this.cf.detectChanges();
     });
-    this.setHeaderLabel();
+    this.handleHeaderButtons();
     this.handlerShopFloorScreen();
+  }
+
+  private handleHeaderButtons = () => {
+    if (this.currentUrl === AppPageRoutes.LIST_PRODUCT) {
+      this.dynamicHeaderMenuService.displayProductSpecButton(true);
+    } else {
+      this.dynamicHeaderMenuService.displayProductSpecButton(false);
+    }
+    if (this.currentUrl === AppPageRoutes.LIST_CASE) {
+      this.dynamicHeaderMenuService.displayAddNewQuotationButton(true);
+    } else {
+      this.dynamicHeaderMenuService.displayAddNewQuotationButton(false);
+    }
   }
 
   private setHeaderLabel() {
@@ -80,26 +85,8 @@ export class HeaderMenuComponent implements OnInit {
         const obj: PageHeader = { headerText: element.title, breadCrumb: element.breadCrumb};
         this.dynamicHeaderMenuService.setHeaderLabel(obj);
       }
-      // else {
-      //   const obj: PageHeader = { headerText: element.title, breadCrumb: ''};
-      //   this.dynamicHeaderMenuService.setHeaderLabel(obj);
-      // }
     });
-    if (current === '/admin/product-management/list') {
-      this.dynamicHeaderMenuService.displayProductSpecButton(true);
-    } else {
-      this.dynamicHeaderMenuService.displayProductSpecButton(false);
-    }
-    if (current === '/admin/case-management/quotation-list') {
-      this.dynamicHeaderMenuService.displayAddNewQuotationButton(true);
-    } else {
-      this.dynamicHeaderMenuService.displayAddNewQuotationButton(false);
-    }
-    // if (current === '/admin/app-dashboard') {
-    //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(true);
-    // } else {
-    //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(false);
-    // }
+
     if (!pageLabelFound) {
       const obj: PageHeader = { headerText: 'Dashboard', breadCrumb: ''};
       this.dynamicHeaderMenuService.setHeaderLabel(obj);
@@ -110,7 +97,7 @@ export class HeaderMenuComponent implements OnInit {
     const location = this.location.path();
     const current = getCurrentURL(location) as string;
 
-    if (current.trim() === '/admin/shopfloor-collection') {
+    if (current.trim() === AppPageRoutes.SHOP_FLOOR_COLLECTION) {
       this.dynamicHeaderMenuService.setShouldHeaderDisplay(false);
       document.body.classList.add('aside-minimize');
     } else {
@@ -155,7 +142,6 @@ export class HeaderMenuComponent implements OnInit {
     this.subheaderDisplayDesc = this.layout.getProp('subheader.displayDesc');
     this.breadcrumbs$.subscribe((res) => {
       this.breadcrumbs = res;
-      console.log(this.breadcrumbs);
       this.cf.detectChanges();
     });
   }

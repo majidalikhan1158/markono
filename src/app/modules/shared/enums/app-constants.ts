@@ -62,3 +62,41 @@ export const SnackBarPositionY = {
   top: 'top',
   bottom: 'bottom'
 };
+
+export const AppModules = {
+  DASHBOARD: 'app-dashboard',
+  SHOPFLOORCOLLECTION: 'shopfloor-collection',
+  PLATMAKING: 'platemaking',
+  CASE_MANAGMENT: 'case-management',
+  PRODUCT_MANAGMENT: 'product-management',
+  ORDER_MANAGMENT: 'order-management'
+};
+
+export const AppPages = {
+  CREATE: 'create',
+  LIST: 'list',
+  VIEW: 'view',
+  DETAIL: 'detail',
+  SHOP_FLOOR_COLLECTION: 'shopfloor-collection',
+  DASHBOARD: 'app-dashboard',
+  PLATMAKING: 'platemaking',
+  USER_PROFILE: 'user-profile',
+  ORDER_JOB_DETAIL: 'job-details',
+  ORDER_ISSUES: 'orders-with-issues'
+};
+
+export const AppPageRoutes = {
+  CREATE_CASE: `/admin/${AppModules.CASE_MANAGMENT}/${AppPages.CREATE}`,
+  LIST_CASE: `/admin/${AppModules.CASE_MANAGMENT}/${AppPages.LIST}`,
+  CREATE_PRODUCT: `admin/${AppModules.PRODUCT_MANAGMENT}/${AppPages.CREATE}`,
+  LIST_PRODUCT: `/admin/${AppModules.PRODUCT_MANAGMENT}/${AppPages.LIST}`,
+  VIEW_PRODUCT: `admin/${AppModules.PRODUCT_MANAGMENT}/${AppPages.VIEW}`,
+  SHOP_FLOOR_COLLECTION: `/admin/${AppModules.SHOPFLOORCOLLECTION}`,
+  DASHBOARD: `/admin/${AppModules.DASHBOARD}`,
+  PLATMAKING: `/admin/${AppModules.PLATMAKING}`,
+  USER_PROFILE: `/admin/${AppPages.USER_PROFILE}`,
+  LIST_ORDERS: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.LIST}`,
+  VIEW_ORDER: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.DETAIL}`,
+  ORDER_ISSUES: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.ORDER_ISSUES}`,
+  JOB_DETAILS: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.ORDER_JOB_DETAIL}`
+}

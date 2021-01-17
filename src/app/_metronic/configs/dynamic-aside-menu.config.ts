@@ -1,10 +1,11 @@
+import { AppPageRoutes } from '../../modules/shared/enums/app-constants';
 export const DynamicAsideMenuConfig = {
   items: [
     {
       title: 'Dashboard',
       root: true,
       bullet: 'dot',
-      page: '/admin/app-dashboard',
+      page: AppPageRoutes.DASHBOARD,
       icon: 'flaticon2-browser-2',
       png: './assets/media/menu-logos/ic_dashboard.png',
       selected: './assets/media/menu-logos/ic_dashboard_Selected.png',
@@ -21,18 +22,18 @@ export const DynamicAsideMenuConfig = {
       submenu: [
         {
           title: 'Create Case',
-          page: '/admin/case-management/create',
+          page: AppPageRoutes.CREATE_CASE,
           permission: 'accessToCreateCase'
         },
         {
           title: 'Quotations',
-          page: '/admin/case-management/quotation-list',
+          page: AppPageRoutes.LIST_CASE,
           permission: 'accessToQuotationList'
         },
       ]
     },
     {
-      title: 'Product Management',
+      title: 'Product Library',
       root: true,
       bullet: 'dot',
       page: '/admin/product-management',
@@ -42,7 +43,7 @@ export const DynamicAsideMenuConfig = {
       submenu: [
         {
           title: 'Add Product',
-          page: '/admin/product-management/list',
+          page: AppPageRoutes.LIST_PRODUCT,
           permission: 'accessToListProduct'
         },
       ]
@@ -51,7 +52,7 @@ export const DynamicAsideMenuConfig = {
       title: 'ShopFloor Collection',
       root: true,
       bullet: 'dot',
-      page: '/admin/shopfloor-collection',
+      page: AppPageRoutes.SHOP_FLOOR_COLLECTION,
       icon: 'flaticon2-browser-2',
       png: './assets/media/menu-logos/ic_shopfloorcollection.png',
       selected: './assets/media/menu-logos/ic_shopfloorcollection_Selected.png',
@@ -61,7 +62,7 @@ export const DynamicAsideMenuConfig = {
       title: 'Platemaking',
       root: true,
       bullet: 'dot',
-      page: '/admin/platemaking',
+      page: AppPageRoutes.PLATMAKING,
       icon: 'flaticon2-browser-2',
       png: './assets/media/menu-logos/ic_platemaking.png',
       selected: './assets/media/menu-logos/ic_platemaking_Selected.png',
@@ -78,11 +79,11 @@ export const DynamicAsideMenuConfig = {
       submenu: [
         {
           title: 'Orders',
-          page: '/admin/order-management/orders',
+          page: AppPageRoutes.LIST_ORDERS,
         },
         {
           title: 'Orders With Issues',
-          page: '/admin/order-management/orders-with-issues',
+          page: AppPageRoutes.ORDER_ISSUES,
         }
       ]
     },

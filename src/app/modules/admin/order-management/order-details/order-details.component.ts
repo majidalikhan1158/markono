@@ -10,6 +10,7 @@ import { CreateCaseMode } from 'src/app/modules/shared/enums/app-enums';
 import { Router } from '@angular/router';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { OrderInfoDetailSearchFilters, OrdersInfoDetailSearchFilterTypes } from 'src/app/modules/shared/models/table-filter-modals';
+import { AppPageRoutes } from '../../../shared/enums/app-constants';
 
 
 const ELEMENT_DATA: OrdersModel[] = [
@@ -106,7 +107,7 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   getJobInfo() {
-    this.router.navigate(['admin/order-management/job-details']);
+    this.router.navigate([AppPageRoutes.JOB_DETAILS]);
   }
 
   toggleExpandable(id: number): void {

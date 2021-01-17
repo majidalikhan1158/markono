@@ -45,7 +45,7 @@ export class ProductVersionsComponent implements OnInit, OnDestroy {
   handleVersionSelection = (versionId: string, showMessage = 0) => {
     const selectedVersion = this.productVersionList.find(x => x.Id === versionId);
     if (selectedVersion && showMessage > 0) {
-      this.snak.open(`Version has been selected susccesfully to ${selectedVersion?.VersionNo ?? ''}`);
+      this.snak.open(`Version has been selected successfully to ${selectedVersion?.VersionNo ?? ''}`);
     }
     this.store.setSelectedVersion(selectedVersion);
   }

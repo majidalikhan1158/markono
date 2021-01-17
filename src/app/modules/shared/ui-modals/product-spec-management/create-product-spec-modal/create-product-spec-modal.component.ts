@@ -185,7 +185,7 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
         this.store.setProductSpecStatus({status: productDetails.Status, tooltipMessage: '' });
         this.router.navigate([AppPageRoutes.VIEW_PRODUCT]);
       } else {
-        this.snack.open('No details found');
+        // this.snack.open('No details found');
       }
     });
   }

@@ -97,6 +97,8 @@ export class AdminComponent implements OnInit {
       this.handleViewJobDetail();
     } else if (url.includes(AppPages.DETAIL)) {
       this.handleOrderDetail();
+    } else if (url.includes(AppPages.ORDER_ISSUES)) {
+      this.subheader.setTitle('Orders with issues');
     }
   }
 

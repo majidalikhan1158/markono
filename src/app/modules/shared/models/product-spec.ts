@@ -14,7 +14,7 @@ export interface GeneralVM {
   id: number;
   productNumber: string;
   printingType: string;
-  productType: number;
+  productType: string;
   externalPartNo: string;
   isbnOwner: string;
   journalTitleCode: string;

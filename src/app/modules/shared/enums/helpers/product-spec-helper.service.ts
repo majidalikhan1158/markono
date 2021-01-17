@@ -462,7 +462,7 @@ export class ProductSpecHelperService {
     this.store.getCoverMaterialWeight('Endpaper', ProductSpecTypes.BINDING_DVD_CD);
     this.store.getFinishingTypes('Endpaper', ProductSpecTypes.BINDING_DVD_CD);
 
-    this.store.setShouldShowJournalFields(generalVM?.productType === 11);
+    this.store.setShouldShowJournalFields(generalVM?.productType === '11');
 
     // editModeType === 2, coming from add-product-spec-modal and selected use existing template option
     if (editModeType === 2) {
@@ -479,7 +479,7 @@ export class ProductSpecHelperService {
       id: 1,
       productNumber: product?.ISBN ?? '',
       printingType: product?.PrintType ?? '',
-      productType:  parseInt(product?.ProductGroup, 2) ?? 0,
+      productType:  product?.ProductGroup ?? '0',
       externalPartNo: product?.ExternalPartNo ?? '',
       isbnOwner: product?.ISBNOwner ?? '',
       productDescription: product?.ProductDescription ?? '',

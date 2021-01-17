@@ -58,7 +58,6 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
     this.handleUpdateStore();
     this.getApisData();
     this.getDefaultRecord();
-    this.handleFilterAutoComplete();
   }
 
   handleUpdateStore = () => {
@@ -134,7 +133,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
       id: 1,
       productNumber: '',
       printingType: '',
-      productType: 0,
+      productType: '0',
       externalPartNo: '',
       isbnOwner: '',
       journalTitleCode: '',
@@ -187,6 +186,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
   getApisData = () => {
     this.subscription = this.store.$productGroupList.subscribe(resp => {
       this.productTypeList = resp.sort((a, b) => a.Id - b.Id);
+      this.handleFilterAutoComplete();
     });
   }
 

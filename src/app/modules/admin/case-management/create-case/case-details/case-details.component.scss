@@ -71,3 +71,11 @@
     color: #5FACE2;
     font-family: 'Roboto-Bold';
 }
+
+.overall-cost-card .mat-expansion-panel-header {
+    height: 45px;
+}
+
+.overall-cost-card .mat-expansion-panel-header.mat-expanded {
+    height: 40px !important;
+}

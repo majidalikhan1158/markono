@@ -24,6 +24,10 @@ const routes: Routes = [
     component: OrdersWithIssuesComponent,
   },
   {
+    path: '',
+    component: OrdersComponent,
+  },
+  {
     path: '**',
     component: Error404Component,
   },

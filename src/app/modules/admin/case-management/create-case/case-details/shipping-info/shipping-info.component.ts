@@ -176,8 +176,8 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     this.shipmentsInfoVMList.forEach((element) => {
       if (element.shipmentId === shipmentId) {
         if (
-          selectedMode.attributes.code === 'Internal Transfer (ML whs)' ||
-          selectedMode.attributes.code === 'Internal Transfer (MPM whs)'
+          selectedMode.attributes.code === 'Internal Transfer (MPM3PL whs)' ||
+          selectedMode.attributes.code === 'Internal Transfer (ML3PL whs)'
         ) {
           element.shippingDetails.isShipmentModeInternalTransfer = true;
           element.shippingDetails.isShipmentModeLibrary = false;

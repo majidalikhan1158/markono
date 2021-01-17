@@ -194,6 +194,7 @@ export interface OverAllCostVM {
 export interface OtherCharges {
     type: string;
     total: number;
+    title: string;
 }
 
 export interface QuotationListVM {

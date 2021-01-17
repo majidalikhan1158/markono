@@ -14,7 +14,7 @@ export const DynamicAsideMenuConfig = {
       title: 'Case Management',
       root: true,
       bullet: 'dot',
-      page: '/material',
+      page: '/admin/case-management',
       icon: 'flaticon2-browser-2',
       png: './assets/media/menu-logos/ic_casemanagement.png',
       selected: './assets/media/menu-logos/ic_casemanagement_Selected.png',
@@ -35,7 +35,7 @@ export const DynamicAsideMenuConfig = {
       title: 'Product Management',
       root: true,
       bullet: 'dot',
-      page: '/material',
+      page: '/admin/product-management',
       icon: 'flaticon2-browser-2',
       png: './assets/media/menu-logos/ic_productLib.png',
       selected: './assets/media/menu-logos/ic_productLib_Selected.png',
@@ -66,11 +66,12 @@ export const DynamicAsideMenuConfig = {
       png: './assets/media/menu-logos/ic_platemaking.png',
       selected: './assets/media/menu-logos/ic_platemaking_Selected.png',
       permission: 'accessToPlatemaking'
-    }, {
+    },
+    {
       title: 'Order Management',
       root: true,
       bullet: 'dot',
-      page: '/material',
+      page: '/admin/order-management',
       icon: 'flaticon2-browser-2',
       png: './assets/media/menu-logos/ic_productLib.png',
       selected: './assets/media/menu-logos/ic_productLib_Selected.png',

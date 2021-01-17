@@ -13,7 +13,7 @@ import { MiscCostComponent } from './create-case/case-details/misc-cost/misc-cos
 import { SpecialInstructionsComponent } from './create-case/case-details/special-instructions/special-instructions.component';
 import { InvoiceComponent } from './create-case/case-details/invoice/invoice.component';
 import { SummaryComponent } from './create-case/summary/summary.component';
-import { CaseStore } from '../../shared/ui-services/create-case.service';
+import { GroupByPipeModule } from '../../shared/pipe/group-by.pipe';
 
 @NgModule({
   declarations: [
@@ -32,7 +32,8 @@ import { CaseStore } from '../../shared/ui-services/create-case.service';
     CommonModule,
     CaseManagementRoutingModule,
     MaterialUiModule,
-    SharedModule
+    SharedModule,
+    GroupByPipeModule
   ],
   providers: []
 })

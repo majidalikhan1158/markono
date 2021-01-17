@@ -44,6 +44,7 @@
                                                 [(ngModel)]="miscCostVMList[i].subTotal"
                                                 (change)="handleChangeToSyncWithStore()"
                                                 matInput [disabled]="disabled">
+                                                <span matPrefix>$&nbsp;</span>
                                         </mat-form-field>
                                     </td>
                                     <td>

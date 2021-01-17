@@ -57,10 +57,9 @@
                                                     [(ngModel)]="productDetailsVMList[i].sellingPrice"
                                                     [disabled]="disabled">
                                                 <span matPrefix>$&nbsp;</span>
-                                                <!-- <span matSuffix>.00</span> -->
                                             </mat-form-field>
                                         </td>
-                                        <td>{{productDetailsVMList[i].subTotal}}</td>
+                                        <td>$&nbsp;{{productDetailsVMList[i].subTotal}}</td>
                                         <td class="action-column pb-0 ">
                                             <span class="material-icons delete-icon pr-2 cursor-pointer"
                                                 (click)="deleteProductDetails(productDetailsVMList[i].id)"

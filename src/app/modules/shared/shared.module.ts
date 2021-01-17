@@ -15,6 +15,7 @@ import { AddAdvancesModalComponent } from './ui-modals/case-management/add-advan
 import { ViewAllModalComponent } from './ui-modals/case-management/view-all-modal/view-all-modal.component';
 import { ViewOperatorsModalComponent } from './ui-modals/shop-floor-management/view-operators-modal/view-operators-modal.component';
 import { AddReasonModalComponent } from './ui-modals/platemaking/add-reason-modal/add-reason-modal.component';
+import { GroupByPipeModule } from './pipe/group-by.pipe';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import { AddReasonModalComponent } from './ui-modals/platemaking/add-reason-moda
     ViewOperatorsModalComponent,
     AddReasonModalComponent,
   ],
-  imports: [CommonModule, MaterialUiModule, NgbDropdownModule, SumPipeModule ],
+  imports: [CommonModule, MaterialUiModule, NgbDropdownModule, SumPipeModule, GroupByPipeModule ],
   exports: [
     AddCustomerModalComponent,
     AddBlueprintModalComponent,
@@ -40,12 +41,12 @@ import { AddReasonModalComponent } from './ui-modals/platemaking/add-reason-moda
     ModalComponent,
     ViewAllModalComponent,
     ViewOperatorsModalComponent,
-    AddReasonModalComponent
+    AddReasonModalComponent,
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DATA, useValue: {} },
     SumPipeModule,
-    SnackBarService
+    SnackBarService,
   ],
 })
 export class SharedModule { }

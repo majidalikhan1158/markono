@@ -18,6 +18,10 @@ const routes: Routes = [
     component: CreateProductComponent,
   },
   {
+    path: '',
+    component: CreateProductComponent,
+  },
+  {
     path: '**',
     component: Error404Component,
   },

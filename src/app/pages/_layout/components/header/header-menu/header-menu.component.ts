@@ -3,6 +3,11 @@ import { Location } from '@angular/common';
 import { LayoutService, DynamicHeaderMenuService } from '../../../../../_metronic/core';
 import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-headers.config';
 import { PageHeader } from 'src/app/modules/shared/models/app-modal';
+import { Observable } from 'rxjs';
+import { BreadcrumbItemModel } from 'src/app/_metronic/partials/layout/subheader/_models/breadcrumb-item.model';
+import { SubheaderService } from 'src/app/_metronic/partials/layout/subheader/_services/subheader.service';
+import { ResolveEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 function getCurrentURL(location) {
   return location.split(/[?#]/)[0];
@@ -19,12 +24,39 @@ export class HeaderMenuComponent implements OnInit {
   location: Location;
   headerMenuDesktopToggle: string;
   headerLabel: PageHeader;
-  constructor(private layout: LayoutService, private loc: Location,
-              private dynamicHeaderMenuService: DynamicHeaderMenuService, private cf: ChangeDetectorRef) {
+
+  // BREAD CRUMB
+  subheaderCSSClasses = '';
+  subheaderContainerCSSClasses = '';
+  subheaderMobileToggle = false;
+  subheaderDisplayDesc = false;
+  title$: Observable<string>;
+  breadcrumbs$: Observable<BreadcrumbItemModel[]>;
+  breadcrumbs: BreadcrumbItemModel[] = [];
+  description$: Observable<string>;
+  // ---------------------------//
+  constructor(private layout: LayoutService,
+              private subheader: SubheaderService,
+              private loc: Location,
+              private router: Router,
+              private dynamicHeaderMenuService: DynamicHeaderMenuService,
+              private cf: ChangeDetectorRef) {
     this.location = this.loc;
+    const initSubheader = () => {
+      setTimeout(() => {
+        this.subheader.updateAfterRouteChanges(this.router.url);
+      }, 0);
+    };
+
+    initSubheader();
+    // subscribe to router events
+    this.router.events
+      .pipe(filter((event) => event instanceof ResolveEnd))
+      .subscribe(initSubheader);
   }
 
   ngOnInit(): void {
+    this.handleBreadCrumbLogic();
     this.ulCSSClasses = this.layout.getStringCSSClasses('header_menu_nav');
     this.rootArrowEnabled = this.layout.getProp('header.menu.self.rootArrow');
     this.headerMenuDesktopToggle = this.layout.getProp(
@@ -109,5 +141,22 @@ export class HeaderMenuComponent implements OnInit {
     }
 
     return false;
+  }
+
+  handleBreadCrumbLogic = () => {
+    this.title$ = this.subheader.titleSubject.asObservable();
+    this.breadcrumbs$ = this.subheader.breadCrumbsSubject.asObservable();
+    this.description$ = this.subheader.descriptionSubject.asObservable();
+    this.subheaderCSSClasses = this.layout.getStringCSSClasses('subheader');
+    this.subheaderContainerCSSClasses = this.layout.getStringCSSClasses(
+      'subheader_container'
+    );
+    this.subheaderMobileToggle = this.layout.getProp('subheader.mobileToggle');
+    this.subheaderDisplayDesc = this.layout.getProp('subheader.displayDesc');
+    this.breadcrumbs$.subscribe((res) => {
+      this.breadcrumbs = res;
+      console.log(this.breadcrumbs);
+      this.cf.detectChanges();
+    });
   }
 }

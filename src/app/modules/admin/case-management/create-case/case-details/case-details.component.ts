@@ -24,12 +24,13 @@ import {
 } from 'src/app/modules/shared/enums/case-management/case-contants';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import {
+  OtherCharges,
   OverAllCostVM,
   ShippingInfoVM,
-  ShippingSpecificCostModel,
 } from 'src/app/modules/shared/models/create-case';
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 import { CaseHelperService } from 'src/app/modules/shared/enums/helpers/case-helper.service';
+import { GroupByPipe } from 'src/app/modules/shared/pipe/group-by.pipe';
 @Component({
   selector: 'app-case-details',
   templateUrl: './case-details.component.html',
@@ -190,6 +191,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
             this.overAllCostVM.otherCharges.push({
               type: `Shipment ${shipment.shipmentId} costs`,
               total: totalCost,
+              title: 'Shipment specific costs'
             });
           }
           totalCost = 0;
@@ -207,6 +209,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
             this.overAllCostVM.otherCharges.push({
               type: CostCategory.find(x => x.value === cost.id).text,
               total: totalCost,
+              title: 'Misc costs'
             });
           }
           totalCost = 0;
@@ -234,7 +237,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
           // this.overAllCostVM.otherChargesTotal = parseInt(this.overAllCostVM.otherChargesTotal.toString()) + parseInt(cost.total.toString());
           otherChargesTotal = this.helper.sum(otherChargesTotal, cost.total);
         });
-        this.overAllCostVM.otherChargesTotal = parseFloat(otherChargesTotal.toFixed(2)); 
+        this.overAllCostVM.otherChargesTotal = parseFloat(otherChargesTotal.toFixed(2));
       }
 
       // this.overAllCostVM.subTotal = parseInt(subTotal.toString()) + parseInt(this.overAllCostVM.printAndBind.toString());
@@ -312,4 +315,29 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       total: 0,
     };
   }
+
+  getNumber = (value) => {
+    if (value && value > 0) {
+      return parseFloat(value).toFixed(2);
+    }
+
+    return parseFloat(value ?? 0).toFixed(2);
+  }
+
+  getOtherChargesArray = (otherCharges: OtherCharges[]) => {
+    return this.groupBy(otherCharges, 'title');
+
+  }
+
+  groupBy = (array, key) => {
+    // Return the end result
+    return array.reduce((result, currentValue) => {
+      // If an array already present for key, push it to the array. Else create an array and push the object
+      (result[currentValue[key]] = result[currentValue[key]] || []).push(
+        currentValue
+      );
+      // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+      return result;
+    }, {}); // empty object is the initial value for result object
+  };
 }

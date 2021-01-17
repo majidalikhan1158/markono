@@ -60,7 +60,7 @@
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
 
-                            $ {{overAllCostVM.printAndBind}}
+                            $ {{getNumber(overAllCostVM.printAndBind)}}
                         </span>
                     </div>
                     <div class="col-lg-12 mb-3">
@@ -71,21 +71,24 @@
                                     Other Charges
                                 </mat-panel-title>
                                 <mat-panel-description>
-                                    <span class="font-roboto-regular font-14px float-right" style="margin-left: 92%">
-                                        $ {{overAllCostVM.otherChargesTotal?.toFixed(2)}}
+                                    <span class="font-roboto-regular font-14px float-right" style="margin-left: 88%">
+                                        $ {{getNumber(overAllCostVM.otherChargesTotal)}}
                                     </span>
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
-                            <ng-container *ngFor="let item of overAllCostVM.otherCharges">
-                                <div class="mb-2">
+                            <ng-container *ngFor="let item of overAllCostVM.otherCharges | groupby: 'title'">
+                                <div class="mb-2 font-roboto-bold">
+                                    {{item.key}}
+                                </div>
+                                <div class="mb-2 ml-2" *ngFor="let child of item.value">
                                     <span class="span-grey material-icons pr-2">
                                         stop_circle
                                     </span>
                                     <span class="font-roboto-regular font-14px">
-                                        {{item.type}}
+                                        {{child.type}}
                                     </span>
                                     <span class="font-roboto-regular font-14px float-right">
-                                        {{item.total}}
+                                        $&nbsp;{{child.total}}
                                     </span>
                                 </div>
                             </ng-container>
@@ -99,24 +102,25 @@
                             Sub-total
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
-                            $ {{overAllCostVM.subTotal?.toFixed(2)}}
+                            $ {{getNumber(overAllCostVM.subTotal)}}
                         </span>
                     </div>
-                    <div class="col-lg-12 mb-3">
+                    <div class="col-lg-12">
                         <span class="font-roboto-regular font-14px" style="vertical-align: sub;">
                             Discount (%)
                         </span>
                         <span class="font-roboto-regular font-14px float-right">
                             <mat-form-field appearance="fill" class="width-90">
                                 <input type="number" #discountField min="0" matInput (change)="handleDiscountChange(discountField.value)"
-                                    [value]="discountPercentage?.toFixed(2)">
+                                    [value]="getNumber(discountPercentage)">
                                 <span matPrefix>$&nbsp;</span>
                                 <!-- <span matSuffix>.00</span> -->
                             </mat-form-field>
                         </span>
-                        <mat-divider class="mt-4"></mat-divider>
                     </div>
-
+                    <div class="col-lg-12 mt-2 mb-2">
+                        <mat-divider></mat-divider>
+                    </div>
                     <div class="col-lg-12 mb-3">
                         <span class="font-roboto-regular font-14px">
                             Tax (GST)
@@ -130,7 +134,7 @@
                             Total
                         </span>
                         <span class="font-roboto-bold font-14px float-right">
-                            $ {{totalAmout?.toFixed(2)}}
+                            $ {{getNumber(totalAmout)}}
                         </span>
                     </div>
                 </div>

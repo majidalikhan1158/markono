@@ -64,7 +64,11 @@ export class AddFgRequiredModalComponent implements OnInit, OnDestroy {
   }
 
   deleteRow(rowId) {
-    this.fgRequiredListVM = this.fgRequiredListVM.filter(x => x.id !== rowId);
+    const filteredRows = this.fgRequiredListVM.filter((x) => x.id !== rowId);
+    filteredRows.forEach((x, i) => {
+      x.id = i + 1;
+    });
+    this.fgRequiredListVM = filteredRows;
   }
 
   ngOnDestroy(): void {

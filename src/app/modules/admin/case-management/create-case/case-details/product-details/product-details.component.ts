@@ -87,6 +87,11 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   addRow() {
+    const previousRecord = this.productDetailsVMList[this.productDetailsVMList.length - 1];
+    if (previousRecord && !(previousRecord.orderQty > 0)) {
+      this.snack.open(`Order Quantity of ISBNPartNo: ${previousRecord.isbn} should not be zero !`);
+      return;
+    }
     this.productDetailsVMList.push(this.initialObject());
     this.rowIdToExpand = 0;
   }
@@ -132,13 +137,13 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
           item.sellingPrice =
             +item.productISBNDetail.estimatedPrice + marginPrice;
         }
-        item.subTotal = item.sellingPrice * item.prodQty;
+        item.subTotal = item.sellingPrice * item.orderQty;
       } else if (item.margin > 0) {
         const marginPrice =
           (item.productISBNDetail.estimatedPrice * item.margin) / 100;
         item.sellingPrice =
           +item.productISBNDetail.estimatedPrice + marginPrice;
-        item.subTotal = item.sellingPrice * item.prodQty;
+        item.subTotal = item.sellingPrice * item.orderQty;
       }
       this.pushToStore();
       return item;

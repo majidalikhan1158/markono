@@ -28,7 +28,7 @@ export const CaseDetailTypesArray = [
     isSelected: false,
   },
   {
-    value: 'Misc. Cost',
+    value: 'Misc Billing (By Order)',
     id: 2,
     enum: 'MISC_COST',
     isSelected: false,

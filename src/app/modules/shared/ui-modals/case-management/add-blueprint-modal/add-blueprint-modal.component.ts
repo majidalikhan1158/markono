@@ -65,7 +65,11 @@ export class AddBlueprintModalComponent implements OnInit, OnDestroy {
   }
 
   deleteRow(rowId) {
-    this.bluePrintListVM = this.bluePrintListVM.filter(x => x.id !== rowId);
+    const filteredRows = this.bluePrintListVM.filter((x) => x.id !== rowId);
+    filteredRows.forEach((x, i) => {
+      x.id = i + 1;
+    });
+    this.bluePrintListVM = filteredRows;
   }
 
   ngOnDestroy(): void {

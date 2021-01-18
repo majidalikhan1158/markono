@@ -21,7 +21,7 @@ export class CaseHelperService {
     return {
       id: data.id,
       title: data.attributes['product-description'],
-      totalExtent: data.attributes['txt-total-extent'],
+      totalExtent: data.attributes['txt-total-extent'] ?? 0,
       bindingType: data.attributes['binding-type'],
       productGroup: data.attributes['product-group'],
       samplesRequired: 0,
@@ -29,17 +29,17 @@ export class CaseHelperService {
       specsVersionNo: data.attributes['version-no'],
       owner: data.attributes['isbn-owner'],
       jobType: '',
-      weight: data.attributes['weight'],
+      weight: data.attributes['weight'] ?? 0,
       fGRequired: 0,
       advancesRequired: 0,
       quoteNo: '',
-      estimatedPrice: data.attributes['estimated-price'],
+      estimatedPrice: data.attributes['estimated-price'] ?? 0,
       additionalUnitPrice: 0,
       sampleList: [],
       bluePrintList: [],
       fgList: [],
       advancesList: [],
-      spineWidth: data.attributes['spine-width'],
+      spineWidth: data.attributes['spine-width'] ?? 0,
     };
   }
 

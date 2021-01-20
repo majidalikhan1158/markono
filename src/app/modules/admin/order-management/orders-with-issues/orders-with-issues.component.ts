@@ -44,7 +44,7 @@ export class OrdersWithIssuesComponent implements OnInit {
     'qty',
     'type',
     'status',
-    'actions'
+    // 'actions'
   ];
   dataArray = OrdersIssueDataList;
   dataSource;

@@ -105,7 +105,7 @@
 
 <div class="row pt-5">
     <div class="col-lg-12 display-flex">
-        <div class="card card-custom example example-compact gutter-b orders-table-card">
+        <div class="card card-custom example example-compact gutter-b quotation-table-card">
             <div class="card-header pr-0">
                 <div class="row full-width">
                     <div class="col-lg-12 pt-2 pb-2 pr-0">
@@ -239,92 +239,93 @@
                 </div>
             </div>
             <div class="card-body">
-                <mat-table #table [dataSource]="dataSource" class="orders-table">
+                <table mat-table [dataSource]="dataSource" class="quotation-spec-table">
 
                     <ng-container matColumnDef="id">
-                        <mat-header-cell *matHeaderCellDef style="padding-left: 20px !important;"> # </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+                        <th mat-header-cell *matHeaderCellDef> # </th>
+                        <td mat-cell *matCellDef="let element; let i = index">{{i + 1}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="customerPoNo">
-                        <mat-header-cell *matHeaderCellDef>Customer PO No.</mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-                            {{element.customerPoNo }}
-                            <span class="cutomer-name">
-                                {{ getCustomerName(element.customerPoNo)}}
+                    <ng-container matColumnDef="companyName">
+                        <th mat-header-cell *matHeaderCellDef>Company Name.</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span style="font-weight: bold;">
+                                <a href="javascript:;" style="color: black;"
+                                    (click)="getOrdersInfo()">{{element.companyName }}
+                                </a>
+                            </span> <br>
+                            <span class="cutomer-name" style="font-weight: bold;">
+                                <a href="javascript:;" style="color: black;" (click)="getOrdersInfo()">{{
+                                    getCustomerName(element.customerPoNo)}}</a>
                             </span>
-                        </mat-cell>
+                        </td>
                     </ng-container>
 
                     <ng-container matColumnDef="orderDate">
-                        <mat-header-cell *matHeaderCellDef> Order Date </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.orderDate | date:'shortDate'}} </mat-cell>
+                        <th mat-header-cell *matHeaderCellDef> Order Date </th>
+                        <td mat-cell *matCellDef="let element"> {{element.orderDate | date:'shortDate'}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="rdd">
-                        <mat-header-cell *matHeaderCellDef> RDD </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.rdd | date:'shortDate'}}
-                        </mat-cell>
+                    <ng-container matColumnDef="requestedDeliveryDate">
+                        <th mat-header-cell *matHeaderCellDef> RDD </th>
+                        <td mat-cell *matCellDef="let element"> {{element.requestedDeliveryDate | date:'shortDate'}}
+                        </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="noOfTitles">
-                        <mat-header-cell *matHeaderCellDef> No. of Titles </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.noOfTitles}} </mat-cell>
+                    <ng-container matColumnDef="caseNo">
+                        <th mat-header-cell *matHeaderCellDef> No. of Titles </th>
+                        <td mat-cell *matCellDef="let element"> 22 </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="qty">
-                        <mat-header-cell *matHeaderCellDef>Qty </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.qty}} </mat-cell>
+                    <ng-container matColumnDef="orderNo">
+                        <th mat-header-cell *matHeaderCellDef> Qty </th>
+                        <td mat-cell *matCellDef="let element"> 2 </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="type">
-                        <mat-header-cell *matHeaderCellDef> Type</mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-                            <div *ngIf="element.type == 'print'">
-                                <!-- <a href="javascript:;" routerLink="/admin/order-management/order-details"> -->
-                                <img src="./../../../../../assets/media/misc/ic_print.png">
-                                <!-- </a> -->
+                    <ng-container matColumnDef="printType">
+                        <th mat-header-cell *matHeaderCellDef> Type</th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.printType == 'Digital'">
+                                <img src="./assets/media/misc/ic_print.png">
                             </div>
-                            <div *ngIf="element.type == 'warehouse'">
-                                <!-- <a href="javascript:;" routerLink="/admin/order-management/order-details"> -->
-                                <img src="./../../../../../assets/media/misc/ic_warehouse.png">
-                                <!-- </a> -->
+                            <div *ngIf="element.printType == 'warehouse'">
+                                <img src="./assets/media/misc/ic_warehouse.png">
                             </div>
-                        </mat-cell>
+                        </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="status">
-                        <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-                            <div class="status-options" *ngIf="element.status == 'Pending File Prep'">
+                    <ng-container matColumnDef="currentActivityStatusName">
+                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="status-options"
+                                *ngIf="element.currentActivityStatusName == 'Pending File Prep'">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-orange label-inline">Pending File
                                         Prep</span>
                                 </span>
                             </div>
-                            <div class="status-options" *ngIf="element.status == 'Order Confirmed'">
+                            <div class="status-options" *ngIf="element.currentActivityStatusName == 'Order Confirmed'">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-green label-inline">Order Confirmed</span>
                                 </span>
                             </div>
-                            <div class="status-options" *ngIf="element.status == 'Planning'">
+                            <div class="status-options" *ngIf="element.currentActivityStatusName == 'Planning'">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-purple label-inline">Planning</span>
                                 </span>
                             </div>
-                            <div class="status-options" *ngIf="element.status == 'Scheduling'">
+                            <div class="status-options" *ngIf="element.currentActivityStatusName == 'Scheduling'">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-blue label-inline">Scheduling</span>
                                 </span>
                             </div>
-                        </mat-cell>
+                        </td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
-                        <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-                            <mat-form-field appearance="fill" class="font-12px pb-4"
-                                style="width: -webkit-fill-available;">
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-form-field appearance="fill" class="font-12px pb-4 width-120">
                                 <mat-label>Choose</mat-label>
                                 <mat-select [(ngModel)]="chooseList" (selectionChange)="chooseSelectionChange($event)">
                                     <mat-option value="Complete">
@@ -338,33 +339,17 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <!-- <button class="btn btn-light" (click)="Choose()">Choose
-                                <span class="svg-icon svg-icon-2x">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                        width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                            <polygon points="0 0 24 0 24 24 0 24" />
-                                            <path
-                                                d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z"
-                                                fill="#000000" fill-rule="nonzero"
-                                                transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999) " />
-                                        </g>
-                                    </svg>
-                                </span>
-                            </button> -->
-                        </mat-cell>
+                        </td>
                     </ng-container>
 
-                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <!--  (click)="toggleExpandable(row.id)" -->
-                    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getOrdersInfo()"> </mat-row>
-
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
                         <td class="mat-cell text-center" colspan="8">No data matching the filter
                             "{{tableSearchInput.value}}"</td>
                     </tr>
-                </mat-table>
+                </table>
 
                 <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
             </div>

@@ -45,13 +45,13 @@
                         <mat-cell *matCellDef="let element">
                             <div *ngIf="element.orderType == 'Print'">
                                 <a href="javascript:;" routerLink="/admin/order-management/order-details">
-                                    <img src="./../../../../../assets/media/misc/ic_print.png">
+                                    <img src="./assets/media/misc/ic_print.png">
                                 </a>
                                 <span style="padding-left: 12px;">Print</span>
                             </div>
                             <div *ngIf="element.orderType == 'Warehouse'">
                                 <a href="javascript:;" routerLink="/admin/order-management/order-details">
-                                    <img src="./../../../../../assets/media/misc/ic_warehouse.png">
+                                    <img src="./assets/media/misc/ic_warehouse.png">
                                 </a>
                                 <span style="padding-left: 12px;">Warehouse</span>
                             </div>
@@ -400,7 +400,7 @@
                                     <p class="info-label">Company Name</p>
                                     <p class="info-label-value">CPI - Elsevier Ltd</p>
                                 </div>
-                                <div class="col-lg-4 col-4">
+                                <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">Contact Person</p>
                                     <p class="info-label-value">CPIANTONYROWE</p>
                                 </div>
@@ -412,7 +412,7 @@
                                     <p class="info-label">Phone No</p>
                                     <p class="info-label-value">-</p>
                                 </div>
-                                <div class="col-lg-4 col-4">
+                                <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">Co-ordinator</p>
                                     <p class="info-label-value">-</p>
                                 </div>
@@ -438,9 +438,9 @@
                                     <p class="info-label">Address 1</p>
                                     <p class="info-label-value">422 Than Road</p>
                                 </div>
-                                <div class="col-lg-4 col-4">
+                                <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">Address 2</p>
-                                    <p class="info-label-value" style="width: 134px;">CC Industrial Building Lorem Ipsum
+                                    <p class="info-label-value">CC Industrial Building Lorem Ipsum
                                     </p>
                                 </div>
                                 <div class="col-lg-4 col-4">
@@ -451,7 +451,7 @@
                                     <p class="info-label">City</p>
                                     <p class="info-label-value">UK</p>
                                 </div>
-                                <div class="col-lg-4 col-4">
+                                <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">State</p>
                                     <p class="info-label-value">-</p>
                                 </div>
@@ -462,7 +462,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <!--billing info-->
                 <div class="col-lg-6">
@@ -491,7 +490,7 @@
                                     <p class="info-label">Company Name</p>
                                     <p class="info-label-value">CPI - Elsevier Ltd</p>
                                 </div>
-                                <div class="col-lg-4 col-4">
+                                <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">Contact Person</p>
                                     <p class="info-label-value">CPIANTONYROWE</p>
                                 </div>
@@ -503,7 +502,7 @@
                                     <p class="info-label">Phone No</p>
                                     <p class="info-label-value">-</p>
                                 </div>
-                                <div class="col-lg-4 col-4">
+                                <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">Co-ordinator</p>
                                     <p class="info-label-value">-</p>
                                 </div>
@@ -529,7 +528,7 @@
                                     <p class="info-label">Address 1</p>
                                     <p class="info-label-value">422 Than Road</p>
                                 </div>
-                                <div class="col-lg-4 col-4">
+                                <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">Address 2</p>
                                     <p class="info-label-value" style="width: 134px;">CC Industrial Building</p>
                                 </div>
@@ -537,11 +536,14 @@
                                     <p class="info-label">Postcode</p>
                                     <p class="info-label-value">332143</p>
                                 </div>
+                            </div>
+                            <br>
+                            <div class="row display-flex">
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">City</p>
                                     <p class="info-label-value">UK</p>
                                 </div>
-                                <div class="col-lg-4 col-4">
+                                <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">State</p>
                                     <p class="info-label-value">-</p>
                                 </div>
@@ -626,7 +628,7 @@
                                             <p class="info-label-value">10/22/2020</p>
                                         </div>
                                         <div class="col-lg-3 pr-0">
-                                            <p class="info-label">Shipment Mode Date</p>
+                                            <p class="info-label">Shipment Mode</p>
                                             <p class="info-label-value">Air Freight</p>
                                         </div>
                                     </div>
@@ -862,14 +864,55 @@
         </div>
         <!--Analysis-->
         <div *ngIf="(currentSelectedType === jobDetailTypesConstant.ANALYSIS)" class="col-lg-10 padding-l-0px">
-
+            <!--Time value map-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-custom example example-compact gutter-b order-info-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <h3 class="card-label">Time Value Map</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!--Value-add Process Times-->
+                <div class="col-lg-6">
+                    <div class="card card-custom example example-compact gutter-b order-info-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <h3 class="card-label">Value-add Process Times</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                        </div>
+                    </div>
+                </div>
+                <!--Time Value Analysis-->
+                <div class="col-lg-6">
+                    <div class="card card-custom example example-compact gutter-b order-info-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <h3 class="card-label">Time Value Analysis</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
+                                [labels]="chartOptions.labels"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!--Activity Log-->
         <div *ngIf="(currentSelectedType === jobDetailTypesConstant.ACTIVITY_LOG)" class="col-lg-10 padding-l-0px">
             <div class="card card-custom example example-compact gutter-b orders-job-table-card">
                 <div class="card-header pr-0">
                     <div class="row full-width">
-                        <div class="col-lg-12 pt-2 pb-2 pr-0">
+                        <div class="col-lg-12 pt-2 pb-2 pr-0" style="padding-top: 0px !important;">
                             <div class="float-left display-flex">
                             </div>
                             <div class="float-right display-flex">
@@ -941,10 +984,16 @@
 
                         <!-- Row shown when there is no matching data. -->
                         <tr class="mat-row" *matNoDataRow>
-                            <div><span style="color: #a6a6a6;">No data to show</span></div>
+                            <div
+                                style="padding-left: 385px;padding-right: 385px;text-align: center;color: rgba(0, 0, 0, 0.54);font-size: 14px;">
+                                No data to show</div>
                         </tr>
-                    </mat-table>
 
+
+                    </mat-table>
+                    <!-- <div *ngIf="dataSourceActivityLog.length===0" class="no-records">
+                        No records found
+                    </div> -->
                     <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
                 </div>
             </div>

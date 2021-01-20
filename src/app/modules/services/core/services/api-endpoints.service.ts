@@ -84,8 +84,11 @@ export class ApiEndpointsService {
     `${this.getProductServicesEndpoint()}${Endpoints.product.getFileCheckConfig}`
 
   getCreateCheckPrintFileUrl = () =>
-   `${this.getProductServicesEndpoint()}${Endpoints.product.getCreateCheckPrintFile}`
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getCreateCheckPrintFile}`
 
   getFileCheckUrl = () =>
-   `${this.getProductServicesEndpoint()}${Endpoints.product.getFileCheck}`
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getFileCheck}`
+
+  getAllOrders = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.order.getAllOrders}`
 }

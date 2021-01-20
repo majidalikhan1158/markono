@@ -15,7 +15,7 @@ import {
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 import { Router } from '@angular/router';
 import { OrdersModelDataList } from 'src/app/modules/shared/mock-data/orders-data-list';
-import { ViewByArray, OrdersModel, StatusTypesArray, OrderType } from 'src/app/modules/shared/models/order-management';
+import { ViewByArray, OrdersModel, StatusTypesArray, OrderType, OrderVM } from 'src/app/modules/shared/models/order-management';
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 import { Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -23,6 +23,7 @@ import { TokenType } from 'src/app/modules/shared/enums/app-enums';
 import { AppAuthService } from '../../../services/core/services/app-auth.service';
 import { CaseHelperService } from '../../../shared/enums/helpers/case-helper.service';
 import { AppPageRoutes } from '../../../shared/enums/app-constants';
+import { OrderService } from 'src/app/modules/services/core/services/order.service';
 
 @Component({
   selector: 'app-orders',
@@ -33,17 +34,9 @@ import { AppPageRoutes } from '../../../shared/enums/app-constants';
 export class OrdersComponent implements OnInit {
   //#region declaration
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  displayedColumns: string[] = [
-    'id',
-    'customerPoNo',
-    'orderDate',
-    'rdd',
-    'noOfTitles',
-    'qty',
-    'type',
-    'status',
-    'actions'
-  ];
+  displayedColumns: string[] = ['id', 'companyName', 'caseNo', 'orderNo', 'printType', 'orderDate', 'requestedDeliveryDate', 'currentActivityStatusName', 'actions'];
+  //displayedColumns: string[] = ['id','customerPoNo', 'orderDate','rdd','noOfTitles','qty','type','status','actions'];
+
   dataArray = OrdersModelDataList;
   dataSource;
   tableFilters: OrderSearchFilters = {
@@ -64,19 +57,40 @@ export class OrdersComponent implements OnInit {
   rowIdToExpand = 0;
   chooseList = '';
   viewByFilter = '';
+  subscription: Subscription;
+  dataArrayOrder;
   //#endregion
 
-  constructor(private modalService: ModalService, private router: Router,
-    private snack: SnackBarService,) {
+  constructor(private modalService: ModalService,
+    private router: Router,
+    private snack: SnackBarService,
+    private orderService: OrderService,
+    private cd: ChangeDetectorRef,) {
     this.dataSource = new MatTableDataSource<OrdersModel>(this.dataArray);
   }
 
   ngOnInit(): void {
+    this.getAllOrders();
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.filterPredicate = this.customFilterPredicate();
+  }
+
+  getAllOrders() {
+    this.subscription = this.orderService.getAllOrders().subscribe(resp => {
+      this.dataArrayOrder = resp.body.result ? resp.body.result as OrderVM[] : [];
+      // console.log('get al orders', this.dataArrayOrder)
+      this.initializeDatatable();
+    });
+  }
+
+  initializeDatatable = () => {
+    this.dataSource = new MatTableDataSource<OrderVM>(this.dataArrayOrder);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.filterPredicate = this.customFilterPredicate();
+    this.cd.detectChanges();
   }
 
   applySearch(event: Event) {
@@ -118,7 +132,7 @@ export class OrdersComponent implements OnInit {
 
   customFilterPredicate() {
     const myFilterPredicate = (
-      data: OrdersModel,
+      data: OrderVM,
       filter: string
     ): boolean => {
       let globalMatch = !this.globalFilter;
@@ -126,7 +140,7 @@ export class OrdersComponent implements OnInit {
       if (this.globalFilter) {
         // search all text fields
         globalMatch =
-          new Date(data.rdd)
+          new Date(data.requestedDeliveryDate)
             .toLocaleDateString()
             .toString()
             .trim()
@@ -138,17 +152,17 @@ export class OrdersComponent implements OnInit {
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.customerPoNo
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.type
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.status
+          // data.customerPoNo
+          //   .toString()
+          //   .trim()
+          //   .toLowerCase()
+          //   .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          // data.type
+          //   .toString()
+          //   .trim()
+          //   .toLowerCase()
+          //   .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.currentActivityStatusName
             .toString()
             .trim()
             .toLowerCase()
@@ -178,7 +192,7 @@ export class OrdersComponent implements OnInit {
         } else {
           filterCounter++;
           matchedFilters = matchedFilters + (
-            data.status
+            data.currentActivityStatusName
               .toString()
               .trim()
               .toLowerCase()
@@ -186,30 +200,30 @@ export class OrdersComponent implements OnInit {
           );
         }
       }
-      if (this.tableFilters.customerPoNo !== '') {
-        filterCounter++;
-        matchedFilters = matchedFilters + (
-          data.customerPoNo
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.customerPoNo.toLowerCase()) !== -1 ? 1 : 0
-        );
-      }
-      if (this.tableFilters.orderType !== '') {
-        filterCounter++;
-        matchedFilters = matchedFilters + (
-          data.type
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.orderType.toLowerCase()) !== -1 ? 1 : 0
-        );
-      }
+      // if (this.tableFilters.customerPoNo !== '') {
+      //   filterCounter++;
+      //   matchedFilters = matchedFilters + (
+      //     data.customerPoNo
+      //       .toString()
+      //       .trim()
+      //       .toLowerCase()
+      //       .indexOf(searchString.customerPoNo.toLowerCase()) !== -1 ? 1 : 0
+      //   );
+      // }
+      // if (this.tableFilters.orderType !== '') {
+      //   filterCounter++;
+      //   matchedFilters = matchedFilters + (
+      //     data.type
+      //       .toString()
+      //       .trim()
+      //       .toLowerCase()
+      //       .indexOf(searchString.orderType.toLowerCase()) !== -1 ? 1 : 0
+      //   );
+      // }
       if (this.tableFilters.rddDate !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.rdd
+          data.requestedDeliveryDate
             .toString()
             .trim()
             .toLowerCase()
@@ -237,6 +251,7 @@ export class OrdersComponent implements OnInit {
   }
 
   chooseSelectionChange(event: Event) {
+
   }
 
   viewByFilterChange(filterValue: string, filterPropType: string) {
@@ -256,4 +271,5 @@ export class OrdersComponent implements OnInit {
   getOrdersInfo() {
     this.router.navigate([AppPageRoutes.VIEW_ORDER]);
   }
+
 }

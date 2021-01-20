@@ -7,6 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 import { OrdersWithIssuesComponent } from './orders-with-issues/orders-with-issues.component';
 import { OrderJobDetailsComponent } from './order-job-details/order-job-details.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { OrderJobDetailsComponent } from './order-job-details/order-job-details.
     CommonModule,
     MaterialUiModule,
     SharedModule,
-    OrderManagementRoutingModule
+    OrderManagementRoutingModule,
+    NgApexchartsModule,
   ]
 })
 export class OrderManagementModule { }

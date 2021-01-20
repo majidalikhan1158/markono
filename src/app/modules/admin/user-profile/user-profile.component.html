@@ -1,40 +1,62 @@
 <div class="row">
     <div class="col-xl-12">
         <div class="card card-custom example example-compact gutter-b personal-info-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <h3 class="card-label">Personal Info</h3>
-                </div>
-            </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-lg-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>User Id</mat-label>
-                            <input matInput placeholder="User Id" value="SeanMicheal22" class="txtReferenceNo"
-                                [disabled]="disabled">
-                        </mat-form-field>
+                    <div class="col-lg-1 label-pd">
+                        <span class="user-label">User Id</span>
                     </div>
-                    <div class="col-lg-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Full Name</mat-label>
-                            <input matInput value="Sean Micheal" placeholder="Full Name" class="txtReferenceNo"
-                                [disabled]="disabled">
-                        </mat-form-field>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <input value="SeanMicheal22" class="form-control form-control-solid" [disabled]="disabled">
+                        </div>
                     </div>
-                    <div class="col-lg-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>User Role</mat-label>
-                            <input matInput value="Super" placeholder="User Role" class="txtReferenceNo"
-                                [disabled]="disabled">
-                        </mat-form-field>
+                </div>
+                <div class="row">
+                    <div class="col-lg-1 label-pd">
+                        <span class="user-label">Password</span>
                     </div>
-                    <div class="col-lg-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Email</mat-label>
-                            <input matInput value="seanm@gmail.com" placeholder="Email" class="txtReferenceNo"
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <input type="password" value="********" placeholder="Password"
+                                class="form-control form-control-solid" [disabled]="disabled">
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+                        <button mat-button-raised class="btn btn-primary" (click)="updatePassword()">UPDATE</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-1 label-pd">
+                        <span class="user-label">Full Name</span>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <input value="Sean Micheal" placeholder="Full Name" class="form-control form-control-solid"
                                 [disabled]="disabled">
-                        </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-1 label-pd">
+                        <span class="user-label">User Role</span>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <input value="Super" placeholder="User Role" class="form-control form-control-solid"
+                                [disabled]="disabled">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-1 label-pd">
+                        <span class="user-label">Email</span>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <input value="seanm@gmail.com" placeholder="Email" class="form-control form-control-solid"
+                                [disabled]="disabled">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -42,39 +64,7 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-xl-12">
-        <div class="card card-custom example example-compact gutter-b update-password-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <h3 class="card-label">Update Password</h3>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Enter Current Password</mat-label>
-                            <input matInput placeholder="Enter Current Password" class="txtReferenceNo">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-lg-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Enter New Password</mat-label>
-                            <input matInput placeholder="Enter New Password" class="txtReferenceNo">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-lg-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Confirm New Password</mat-label>
-                            <input matInput placeholder="Confirm New Password" class="txtReferenceNo">
-                        </mat-form-field>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-12 text-right">
-        <button mat-button class="btn btn-primary stepper-next-button">Save</button>
-    </div>
-</div>
+<app-modal id="ADD_UPDATE_PASSWORD_MODAL">
+    <app-update-password-modal (acceptEvent)="handleAddReasonEvent('ADD_UPDATE_PASSWORD_MODAL')">
+    </app-update-password-modal>
+</app-modal>

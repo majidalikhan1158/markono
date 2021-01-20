@@ -9,6 +9,52 @@ export interface OrdersModel {
     status: string;
 }
 
+export interface OrderVM {
+    id: number;
+    caseNo: string;
+    quoteNo: string;
+    orderNo: string;
+    printType: string;
+    productGroup: string;
+    sellToNo: string;
+    billToNo: string;
+    requestedDeliveryDate: number;
+    salesPerson: string;
+    coordinator: string;
+    yourReference: string;
+    weight: string;
+    specialInstructions: string;
+    discount: string;
+    tax: string;
+    notesOnInvoiceBottom: string;
+    notesOnInvoiceTop: string;
+    quoteDate: number;
+    quoteSentDate: number;
+    quoteExpireDate: number;
+    orderDate: number;
+    currentActivityId: string;
+    currentActivityStatusCode: string;
+    currentActivityStatusName: string;
+    createdByUser: string;
+    createdBy: string;
+    createdDateTime: number;
+    updatedByUser: string;
+    updatedBy: string;
+    updatedDateTime: number;
+    syncWMS: boolean;
+    syncWMSDateTime: number;
+    syncERP: boolean;
+    syncERPDateTime: number;
+    isDeleted: boolean;
+    currencyCode: string;
+    companyCode: string;
+    companyName: string;
+    address1: string;
+    address2: string;
+    caseDetail: string;
+    otherCharge: string
+}
+
 export const StatusTypesArray = [
     {
         text: 'PO',

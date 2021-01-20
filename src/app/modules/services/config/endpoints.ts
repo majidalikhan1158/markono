@@ -33,6 +33,9 @@ export const Endpoints = {
     },
     shopFloor: {
         getMachinesList: 'machines?filter[active]=true&filter[sdcFlag]=true&sort=seq'
-    }
+    },
+    order: {
+        getAllOrders: 'GetCases',
+    },
 
 };

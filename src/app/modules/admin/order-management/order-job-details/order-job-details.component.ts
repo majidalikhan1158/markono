@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSelectionListChange } from '@angular/material/list';
 import { MatTableDataSource } from '@angular/material/table';
 import { JobDetailTypes, JobDetailTypesArray, OrderDetailTypes, OrderDetailTypesArray } from 'src/app/modules/shared/enums/order-management/order-constants';
@@ -9,6 +9,16 @@ import { FormControl } from '@angular/forms';
 import { CreateCaseMode } from 'src/app/modules/shared/enums/app-enums';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { OrderInfoDetailSearchFilters, OrdersInfoDetailSearchFilterTypes } from 'src/app/modules/shared/models/table-filter-modals';
+import { map } from 'rxjs/operators';
+import { ChartComponent } from "ng-apexcharts";
+import { ApexNonAxisChartSeries, ApexResponsive, ApexChart } from "ng-apexcharts";
+
+export type ChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  responsive: ApexResponsive[];
+  labels: any;
+};
 
 const JobInfoHeader_DATA: JobInfoHeaderModel[] = [
   { id: 1, custPoNo: '20005838', jobNo: '968052', orderDate: Date.now(), rdd: Date.now(), jobType: 'Offset', orderType: 'Warehouse', orderStatus: 'Shipped' },
@@ -26,6 +36,9 @@ const ActivityLog_DATA: ActivityLogModel[] = [
   encapsulation: ViewEncapsulation.None
 })
 export class OrderJobDetailsComponent implements OnInit {
+  @ViewChild("chart") chart: ChartComponent;
+  public chartOptions: Partial<ChartOptions>;
+
   //#region declaration 
   @Input() createCaseMode: CreateCaseMode;
   positionOptions: TooltipPosition[] = ['below', 'above', 'left', 'right'];
@@ -91,9 +104,33 @@ export class OrderJobDetailsComponent implements OnInit {
   //#endregion
 
   constructor() {
+    this.chartOptions = {
+      series: [44, 55, 13],
+      chart: {
+        type: "donut"
+      },
+      labels: ["Lorem", "Ipsum", "Dolor"],
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            dataLabels: {
+              enabled: false,
+            },
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      ]
+    };
     this.dataSourceJobInfo = new MatTableDataSource<JobInfoHeaderModel>(this.dataArrayJobInfo);
     this.dataSourceJobInfoDetail = new MatTableDataSource<JobInfoDetailModel>(this.dataArrayJobInfoDetail);
     this.dataSourceActivityLog = new MatTableDataSource<ActivityLogModel>(this.dataArrayActivityLog);
+
   }
 
   ngOnInit(): void {

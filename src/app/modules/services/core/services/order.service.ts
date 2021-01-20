@@ -4,6 +4,7 @@ import { ApiEndpointsService } from './api-endpoints.service';
 import { Observable } from 'rxjs';
 import { ResponseModal } from '../../shared/classes/response-modal';
 import { HttpResponse } from '@angular/common/http';
+import { ProductResponseModal } from '../../shared/classes/product-modals/product-modals';
 
 @Injectable({
   providedIn: 'root',
@@ -34,4 +35,11 @@ export class OrderService {
 
   public createShipment = (request: any): Observable<HttpResponse<ResponseModal>> =>
     this.http.post(this.endPoint.getCreateShipmentUrl(), request)
+  // order-management Module
+  public getAllOrders = (): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getAllOrders();
+    const queryParams = `$filter=orderNo ne null`;;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
 }

@@ -99,7 +99,7 @@ app-order-job-details {
         font-family: "Roboto-Bold";
     }
     .customer-info-card > .card-body {
-        padding: 2rem 2.25rem !important;
+        padding: 15px !important;
     }
     .customer-info-card > .card-header h6 {
         font-weight: 400;
@@ -153,5 +153,14 @@ app-order-job-details {
     .mat-icon-button i,
     .mat-icon-button .mat-icon {
         line-height: 38px;
+    }
+    .pd-2 {
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+    #chart {
+        max-width: 380px;
+        margin: 35px auto;
+        padding: 0;
     }
 }

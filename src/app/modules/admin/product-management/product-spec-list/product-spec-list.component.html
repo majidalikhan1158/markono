@@ -98,7 +98,7 @@
 
           <ng-container matColumnDef="productTitle">
             <th mat-header-cell *matHeaderCellDef> Product Title </th>
-            <td class="text-truncate" style="max-width: 340px !important;" mat-cell *matCellDef="let element"> {{element.productDescription}} </td>
+            <td class="text-truncate" style="max-width: 300px !important;" mat-cell *matCellDef="let element"> {{element.productDescription}} </td>
           </ng-container>
 
           <ng-container matColumnDef="dateCreated">
@@ -128,7 +128,13 @@
 
           <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef> Status</th>
-            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+            <td mat-cell *matCellDef="let element"> 
+              <div
+              class="status-box pl-5" 
+              [ngClass]="element.status === statusTypes.Complete ? 'status-complete' : element.status === statusTypes.InComplete ? 'status-incomplete' : 'status-live'"
+              >{{element.status}}
+              </div>
+            </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

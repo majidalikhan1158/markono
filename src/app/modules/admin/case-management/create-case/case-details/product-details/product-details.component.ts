@@ -137,13 +137,13 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
           item.sellingPrice =
             +item.productISBNDetail.estimatedPrice + marginPrice;
         }
-        item.subTotal = item.sellingPrice * item.orderQty;
+        item.subTotal = parseFloat((item.sellingPrice * item.orderQty).toFixed(2));
       } else if (item.margin > 0) {
         const marginPrice =
           (item.productISBNDetail.estimatedPrice * item.margin) / 100;
         item.sellingPrice =
           +item.productISBNDetail.estimatedPrice + marginPrice;
-        item.subTotal = item.sellingPrice * item.orderQty;
+        item.subTotal = parseFloat((item.sellingPrice * item.orderQty).toFixed(2));
       }
       this.pushToStore();
       return item;

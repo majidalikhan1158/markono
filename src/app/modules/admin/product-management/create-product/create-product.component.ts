@@ -73,7 +73,7 @@ export class CreateProductComponent implements OnInit, OnDestroy {
       linkText: 'Products Library',
       linkPath: AppPageRoutes.LIST_PRODUCT,
       title: 'Products Library'
-    },{
+    }, {
       linkText: 'Edit Product',
       linkPath: AppPageRoutes.VIEW_PRODUCT,
       title: 'Edit Product'

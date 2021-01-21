@@ -2,7 +2,7 @@ import { ChildIsbnModal } from './../../../services/shared/classes/product-modal
 import { Injectable } from '@angular/core';
 import { WebCodeVM, DVDVM, OtherVM, GeneralVM, CoverVM, TextVM, BindingVM, ChildIsbnVM,
    UnitPriceVM, BindingTypeOthers, ProductSpecStoreVM } from '../../models/product-spec';
-import { BindingType, ProductSpecificationTypesArray, ColorTypes } from '../product-management/product-constants';
+import { BindingType, ProductSpecificationTypesArray, ColorTypes, BenchworkTypeList } from '../product-management/product-constants';
 import { ProductSpecStore } from '../../ui-services/product-spec.service';
 import {
   BindingTypeCaseBound,
@@ -156,18 +156,18 @@ export class ProductSpecHelperService {
 
       bindingType: this.getString(data.bindingVM?.bindingType),
       bindingStitchType: this.getString(data.bindingVM?.saddleStich?.stichType),
-      bindingMethod: this.getString(data.bindingVM?.caseBound?.bindingMethod),
+      bindingMethod: this.getBindingData(data.bindingVM, 'METHOD'),
       bindingBookSpineType: this.getString(data.bindingVM?.caseBound?.bookSpineType),
       bindingHeadTailBand: data.bindingVM?.caseBound?.isHeadTailBand ? true : false,
       bindingHeadTailBandColour: this.getString(data.bindingVM?.caseBound?.headTailBandColour),
       bindingGreyBoardThickness: this.getString(data.bindingVM?.caseBound?.greyboardThickness),
       bindingMethodPerfect: this.getString(''),
       bindingMethodComb: this.getString(''),
-      bindingMethodCoil: this.getString(''),
-      bindingMethodWire: this.getString(''),
-      bindingTypeSpecialInstruction: this.getString(data.bindingVM?.caseBound?.specialInstruction1),
-      bindingBenchworkRequired: this.getString(data.bindingVM?.caseBound?.benchworkRequired.join(',')),
-      bindingBenchworkSpecialInstruction: this.getString(data.bindingVM?.caseBound?.specialInstruction2),
+      bindingMethodCoil: this.getString(data.bindingVM?.spiralBound?.coilColour ?? ''),
+      bindingMethodWire: this.getString(data.bindingVM?.wireoBinding?.wireColour ?? ''),
+      bindingTypeSpecialInstruction: this.getBindingData(data.bindingVM, 'SPECIALINSTRUCTIONS1'),
+      bindingBenchworkRequired: this.getBindingData(data.bindingVM, 'BENCHWORK'),
+      bindingBenchworkSpecialInstruction: this.getBindingData(data.bindingVM, 'SPECIALINSTRUCTIONS2'),
       endpaperMaterialWeight: this.getString(data.bindingVM?.caseBound?.endPaperWeight),
       endpaperMaterial: this.getString(data.bindingVM?.caseBound?.endPaperMaterial),
       endpaperMaterialBrand: this.getString(data.bindingVM?.caseBound?.materialBrand),
@@ -177,9 +177,7 @@ export class ProductSpecHelperService {
       endpaperNoOfColours: this.getNumber(data.bindingVM?.caseBound?.pantoneColour.length + data.bindingVM?.caseBound?.colorType.length),
       endpaperSelectedColours: this.getBitsFromColors(data.bindingVM?.caseBound?.colorType ?? []),
       endpaperPantoneColours:  data.bindingVM?.caseBound?.pantoneColour?.length > 0 ? true : false,
-      // this.getString(data.bindingVM?.caseBound?.pantoneColour?.join(',')),
       endpaperPantoneColourNo:  this.getString(data.bindingVM?.caseBound?.pantoneColour?.join(',')),
-      // this.getNumber(data.bindingVM?.caseBound?.pantoneColour?.length),
       endpaperFinishing: this.getString(data.bindingVM?.caseBound?.finishingType?.join(',')),
       endpaperSpecialInstruction: this.getString(data.bindingVM?.caseBound?.specialInstructions3),
       endpaperComponentPrintingDesc: this.getString(''),
@@ -215,6 +213,55 @@ export class ProductSpecHelperService {
       priceMethod: this.getString(data.unitPriceVM?.priceType),
       price: this.getNumber(data.unitPriceVM?.fixedPrice)
     };
+  }
+
+  getBindingData = (bindingVM: BindingVM, type: string) => {
+    if (type === 'METHOD') {
+      if (bindingVM.bindingType === BindingType.CASEBOUND) {
+        return bindingVM.caseBound?.bindingMethod ?? '';
+      } else if (bindingVM.bindingType === BindingType.PAPERBACK) {
+        return bindingVM.paperBack?.bindingMethod ?? '';
+      } else {
+        return '';
+      }
+    } else if (type === 'SPECIALINSTRUCTIONS1') {
+      if (bindingVM.bindingType === BindingType.CASEBOUND) {
+        return bindingVM.caseBound?.specialInstruction1 ?? '';
+      } else if (bindingVM.bindingType === BindingType.PAPERBACK) {
+        return bindingVM.paperBack?.specialInstructions1 ?? '';
+      } else if (bindingVM.bindingType === BindingType.SADDLESTITCH) {
+        return bindingVM.saddleStich?.specialInstructions1 ?? '';
+      }  else if ( bindingVM.bindingType === BindingType.SPIRALBOUND) {
+        return bindingVM.spiralBound?.specialInstructions1 ?? '';
+      } else {
+        return bindingVM.others?.specialInstructions1 ?? '';
+      }
+    } else if (type === 'SPECIALINSTRUCTIONS2') {
+      if (bindingVM.bindingType === BindingType.CASEBOUND) {
+        return bindingVM.caseBound?.specialInstruction2 ?? '';
+      } else if (bindingVM.bindingType === BindingType.PAPERBACK) {
+        return bindingVM.paperBack?.specialInstructions2 ?? '';
+      } else if (bindingVM.bindingType === BindingType.SADDLESTITCH) {
+        return bindingVM.saddleStich?.specialInstructions2 ?? '';
+      }  else if ( bindingVM.bindingType === BindingType.SPIRALBOUND) {
+        return bindingVM.spiralBound?.specialInstructions2 ?? '';
+      } else {
+        return bindingVM.others?.specialInstructions2 ?? '';
+      }
+    } else if (type === 'BENCHWORK') {
+      if (bindingVM.bindingType === BindingType.CASEBOUND) {
+        return bindingVM.caseBound?.benchworkRequired.join(',') ?? '';
+      } else if (bindingVM.bindingType === BindingType.PAPERBACK) {
+        return bindingVM.paperBack?.benchworkRequired.join(',') ?? '';
+      } else if (bindingVM.bindingType === BindingType.SADDLESTITCH) {
+        return bindingVM.saddleStich?.benchworkRequired.join(',') ?? '';
+      }  else if ( bindingVM.bindingType === BindingType.SPIRALBOUND) {
+        return bindingVM.spiralBound?.benchworkRequired.join(',') ?? '';
+      } else {
+        return bindingVM.others?.benchworkRequired.join(',') ?? '';
+      }
+    }
+    return '';
   }
 
   getWebCodeListObject = (webCodeList: WebCodeVM[]) => {

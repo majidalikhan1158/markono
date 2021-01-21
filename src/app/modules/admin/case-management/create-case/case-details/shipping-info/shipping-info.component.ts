@@ -9,11 +9,13 @@ import {
 import { MatSelectChange } from '@angular/material/select';
 import { FormControl } from '@angular/forms';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
-import { CreateCaseMode, CreateCaseDataType, RecordType } from 'src/app/modules/shared/enums/app-enums';
+import { CreateCaseMode, CreateCaseDataType } from 'src/app/modules/shared/enums/app-enums';
 import { ShipmentTypes } from 'src/app/modules/shared/enums/case-management/case-contants';
 import { CustomerInfoVM, ShipmentBillingDetails, ShipmentToAddress, ShippingInfoVM, ShippingItemsModel } from 'src/app/modules/shared/models/create-case';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
+import { ProductSpecHelperService } from '../../../../../shared/enums/helpers/product-spec-helper.service';
+import { SnackBarService } from '../../../../../shared/ui-services/snack-bar.service';
 
 export interface ShipmentTypesBox {
   boxId: number;
@@ -50,7 +52,9 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   selectedShipmentType: any;
   constructor(
     private store: CaseStore,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private helper: ProductSpecHelperService,
+    private snack: SnackBarService
   ) {}
 
   ngOnInit(): void {
@@ -102,24 +106,23 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     });
   }
 
+  resetShipmentTypeSelect = () => {
+    this.selectedShipmentType = null;
+    this.shipmentSelectedTypeFormControl.setValue(this.selectedShipmentType);
+  }
+
   handleShipmentTypeChange(event: MatSelectChange) {
     let shipmentToBeAdded;
     if (!this.isShippingDetails) {
-      const isShipmentExist = this.shipmentsInfoVMList.find(
-        (x) => x.shipmentId === event.value
-      );
+      const isShipmentExist = this.shipmentsInfoVMList.find((x) => x.shipmentId === event.value);
       if (isShipmentExist) {
-        this.selectedShipmentType = null;
-        this.shipmentSelectedTypeFormControl.setValue(this.selectedShipmentType);
+        this.resetShipmentTypeSelect();
+        this.snack.open(`Shipment Type ${isShipmentExist.shippingDetails.shipmentCategory} already added`);
         return;
       }
-      shipmentToBeAdded = this.shipmentTypesArray.find(
-        (x) => x.value === event.value
-      );
+      shipmentToBeAdded = this.shipmentTypesArray.find((x) => x.value === event.value);
     } else {
-      shipmentToBeAdded = this.shipmentTypesArray.find(
-        (x) => x.value === this.selectedShipmentType
-      );
+      shipmentToBeAdded = this.shipmentTypesArray.find((x) => x.value === this.selectedShipmentType);
     }
     if (shipmentToBeAdded) {
       this.boxIdToExpand = 0;
@@ -136,13 +139,17 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
           maximumAllowed: qty === -10000 ? item.availableQty : (qty > 0 ? qty : 0),
         });
       });
+      if (obj.shippingItems.find(x => x.availableQty <= 0)) {
+        this.snack.open('Available quantity is zero');
+        this.resetShipmentTypeSelect();
+        return;
+      }
       obj.shipmentAddress = this.getShipmentAddressDetails('s');
       obj.shipmentBillingDetails = this.getShipmentAddressDetails('b');
       obj.shipmentBillingDetails.BillToNumber = this.customerInfoVM.customerId;
       this.shipmentsInfoVMList.push(obj);
       this.shouldShowShipmentDetails = false;
-      this.selectedShipmentType = null;
-      this.shipmentSelectedTypeFormControl.setValue(this.selectedShipmentType);
+      this.resetShipmentTypeSelect();
       this.displayShipmentDetails(obj.shipmentId);
     }
   }
@@ -231,14 +238,16 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     const shipmentRecord = this.shipmentsInfoVMList.find(x => x.shipmentId === shipmentId);
     let totalQty = 0;
     if (shipmentRecord) {
-      // tslint:disable-next-line: radix
-      shipmentRecord.shippingItems.forEach(item => totalQty = parseInt(totalQty.toString()) + Number.parseInt(item.shipmentQty.toString()));
+      shipmentRecord.shippingItems.forEach(item => totalQty = this.helper.sum(totalQty, item.shipmentQty));
     }
     return totalQty > 0 ? totalQty : 0;
   }
 
   handleShipmentQtyChange = (shipmentId: number, shipmentItemId: number, event: Event) => {
     const value = (event.target as HTMLInputElement).value as unknown as number;
+    if (!value) {
+      return;
+    }
     this.shipmentsInfoVMList.find(x => x.shipmentId === shipmentId).shippingItems.forEach(item => {
       if (item.id === shipmentItemId) {
         if (this.isShippingDetails) {
@@ -248,8 +257,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
             (event.target as HTMLInputElement).value = '0';
           } else {
             item.shipmentQty = value;
-            // tslint:disable-next-line: radix
-            item.availableQty =  parseInt(item.availableQty.toString()) - parseInt(item.shipmentQty.toString());
+            item.availableQty = this.helper.minus(item.availableQty, item.shipmentQty);
           }
         }
       }
@@ -257,7 +265,9 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   }
 
   getShipmentItemQty = (shipmentId: number, shipmentItemId: number) => {
-    return this.shipmentsInfoVMList.find(x => x.shipmentId === shipmentId).shippingItems.find(y => y.id === shipmentItemId).shipmentQty;
+    return this.shipmentsInfoVMList
+    .find(x => x.shipmentId === shipmentId).shippingItems
+    .find(y => y.id === shipmentItemId).shipmentQty ?? 0;
   }
 
   getAvaiableQty = (i) => {

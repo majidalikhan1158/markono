@@ -544,7 +544,7 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Binding Method</mat-label>
                     <mat-select [(ngModel)]="viewModal.paperBack.bindingMethod">
-                        <mat-option [value]="item.value" *ngFor="let item of bindingMethodList">{{item.text}}
+                        <mat-option [value]="item.value.toString()" *ngFor="let item of bindingMethodList">{{item.text}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

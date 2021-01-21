@@ -189,7 +189,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
           });
           if (totalCost > 0) {
             this.overAllCostVM.otherCharges.push({
-              type: `Shipment ${shipment.shipmentId} costs`,
+              type: `Shipment ${shipment.boxId} costs`,
               total: totalCost,
               title: 'Shipment specific costs'
             });

@@ -14,7 +14,7 @@ import {
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 import { AppPageRoutes, UIModalID } from 'src/app/modules/shared/enums/app-constants';
 import { Router } from '@angular/router';
-import { PrintingTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
+import { PrintingTypes, ProductSpecStatusTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { ProductService } from '../../../services/core/services/product.service';
 import { ProductSpecsList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 import { SnackBarService } from '../../../shared/ui-services/snack-bar.service';
@@ -41,6 +41,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
   globalFilter = '';
   subscription: Subscription;
   isLoading = true;
+  statusTypes = ProductSpecStatusTypes;
   constructor(private modalService: ModalService,
               private router: Router,
               private productService: ProductService,
@@ -62,7 +63,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
 
   getProductSpecList = () => {
     this.subscription = this.productService.getProductSpecList().subscribe(resp => {
-      this.dataArray = resp.body.result ? (resp.body.result as ProductSpecsList[]).sort((a,b) => {
+      this.dataArray = resp.body.result ? (resp.body.result as ProductSpecsList[]).sort((a, b) => {
         return (new Date(b.createdBy) as any) - (new Date(a.createdDateTime) as any);
       }) : [];
       this.initializeDatatable();

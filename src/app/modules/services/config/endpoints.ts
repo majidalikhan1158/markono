@@ -29,7 +29,8 @@ export const Endpoints = {
         createProduct: 'CreateProduct',
         getFileCheckConfig: 'GetFileCheckConfig',
         getCreateCheckPrintFile: 'CreateFileCheck',
-        getFileCheck: 'GetFileCheck'
+        getFileCheck: 'GetFileCheck',
+        setLiveVersion: 'SetLiveVersion'
     },
     shopFloor: {
         getMachinesList: 'machines?filter[active]=true&filter[sdcFlag]=true&sort=seq'

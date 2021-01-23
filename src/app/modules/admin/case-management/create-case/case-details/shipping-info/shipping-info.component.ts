@@ -243,25 +243,27 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     return totalQty > 0 ? totalQty : 0;
   }
 
-  handleShipmentQtyChange = (shipmentId: number, shipmentItemId: number, event: Event) => {
+  handleShipmentQtyChange = (i: number, k: number, event: Event) => {
     const value = (event.target as HTMLInputElement).value as unknown as number;
     if (!value) {
       return;
     }
-    this.shipmentsInfoVMList.find(x => x.shipmentId === shipmentId).shippingItems.forEach(item => {
-      if (item.id === shipmentItemId) {
-        if (this.isShippingDetails) {
-          item.shipmentQty = value;
+    const shipmentItem = this.shipmentsInfoVMList[i].shippingItems[k];
+    if (shipmentItem) {
+      if (this.isShippingDetails) {
+        shipmentItem.shipmentQty = value;
+      } else {
+        if (value > shipmentItem.availableQty) {
+          (event.target as HTMLInputElement).value = '0';
         } else {
-          if (value > item.availableQty) {
-            (event.target as HTMLInputElement).value = '0';
-          } else {
-            item.shipmentQty = value;
-            item.availableQty = this.helper.minus(item.availableQty, item.shipmentQty);
-          }
+          const availableQuantity = this.helper.sum(shipmentItem.availableQty, shipmentItem.shipmentQty) ;
+          shipmentItem.shipmentQty = value;
+          shipmentItem.availableQty = this.helper.minus(availableQuantity, shipmentItem.shipmentQty);
         }
       }
-    });
+    }
+
+    this.shipmentsInfoVMList[i].shippingItems[k] = shipmentItem;
   }
 
   getShipmentItemQty = (shipmentId: number, shipmentItemId: number) => {

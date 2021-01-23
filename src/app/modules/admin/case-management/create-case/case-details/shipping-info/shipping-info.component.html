@@ -182,7 +182,7 @@
                                                                     *ngIf="!isShippingDetails">
                                                                     <mat-label>Shipment Qty</mat-label>
                                                                     <input matInput type="number"
-                                                                        (change)="handleShipmentQtyChange(shipment.shipmentId, shipmentItem.id, $event)"
+                                                                        (change)="handleShipmentQtyChange(i, k, $event)"
                                                                         value="{{getShipmentItemQty(shipment.shipmentId, shipmentItem.id)}}"
                                                                         [disabled]="disabled || !(shipmentItem.maximumAllowed > 0)"
                                                                         min="0" max="{{shipmentItem.maximumAllowed}}">
@@ -191,7 +191,7 @@
                                                                     *ngIf="isShippingDetails">
                                                                     <mat-label>Shipment Qty</mat-label>
                                                                     <input matInput type="number"
-                                                                        (change)="handleShipmentQtyChange(shipment.shipmentId, shipmentItem.id, $event)"
+                                                                        (change)="handleShipmentQtyChange(i, k, $event)"
                                                                         value="{{getShipmentItemQty(shipment.shipmentId, shipmentItem.id)}}"
                                                                         [disabled]="disabled">
                                                                 </mat-form-field>

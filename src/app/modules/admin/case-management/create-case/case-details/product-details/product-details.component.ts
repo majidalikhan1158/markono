@@ -54,7 +54,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   ExpansionIcons = ExpansionIcons;
   printTypeList = PrintingTypesArray;
   recordIdPassToModal = 0;
-  recordIdISBNPassToModal = '';
+  currentIndex: number;
   constructor(
     private modalService: ModalService,
     private store: CaseStore,
@@ -339,14 +339,19 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     this.modalService.open(modalId);
   }
 
-  openUiViewAllVersionsModal(modalId: string, isbn: string) {
-    this.store.setViewVersionISBN(isbn);
-    this.recordIdISBNPassToModal = isbn;
+  openUiViewAllVersionsModal(modalId: string, index: number) {
+    this.currentIndex = index;
+    const currentISBN = this.productDetailsVMList[index]?.isbn ?? '';
+    const versionNo = this.productDetailsVMList[index]?.productISBNDetail?.specsVersionNo ?? '';
+    this.store.setViewVersionISBN({currentISBN, versionNo});
     this.modalService.open(modalId);
   }
 
   handleViewAllEvent = (data: any) => {
-    this.store.setViewVersionISBN('');
-    this.recordIdISBNPassToModal = '';
+    if (data) {
+      this.productDetailsVMList[this.currentIndex].productISBNDetail.specsVersionNo = data;
+    }
+    this.currentIndex = null;
+    this.store.setViewVersionISBN(null);
   }
 }

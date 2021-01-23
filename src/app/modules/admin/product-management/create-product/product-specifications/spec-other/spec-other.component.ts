@@ -197,7 +197,6 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
     this.viewModal[$event.index].bindingVM = $event.bindingVM;
   }
 
-  
   handleMaterialWeightFilterAutoComplete = () => {
     this.filteredMaterialWeightList.next(this.materialWeightList.slice());
     this.materialWeightFltrCtrl.valueChanges

@@ -383,7 +383,6 @@ export class ProductSpecStore {
     };
     this.productService.getBindingTypes(reqObj).subscribe((resp) => {
       const result = [...((resp.body.result as unknown) as any[]).map(x => x.BindingName)];
-      console.log(result);
       this.bindingTypeListSubject.next(result);
     });
   }

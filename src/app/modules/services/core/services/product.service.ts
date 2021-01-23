@@ -13,6 +13,7 @@ import { ProductResponseModal, SpineWidthThicknessParamHistory, SpineWidthParamH
   providedIn: 'root',
 })
 export class ProductService {
+
   constructor(
     private http: ApiHttpService,
     private endPoint: ApiEndpointsService,
@@ -30,6 +31,17 @@ export class ProductService {
       }
     );
     return this.http.get(url);
+  }
+
+  setLiveVersion = (reqObj: { isbn: string; versionNo: string; }) => {
+    const url = this.endPoint.setLiveVersion();
+    const obj = {
+      isbnList: [
+        reqObj
+      ],
+      actionUser: 'CCE'
+    };
+    return this.http.post(url, obj);
   }
 
   getProductVersions = (isbn: string): Observable<HttpResponse<ResponseModal>> => {

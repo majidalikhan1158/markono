@@ -93,7 +93,6 @@ export class CreateCaseComponent implements OnInit {
   createCase = () => {
     this.subscription = this.store.createCaseStore.subscribe(data => {
       const mappedData = this.caseHelper.transCaseDataToCaseApiModal(data);
-      console.log(JSON.stringify(mappedData));
       this.orderService.createCase(mappedData).subscribe(resp => {
         if (resp && resp.body.result && resp.body.result) {
           const response = resp.body.result as any;
@@ -117,7 +116,6 @@ export class CreateCaseComponent implements OnInit {
       return;
     }
     const mappedData = this.caseHelper.transToCreateShipment(data, caseId);
-    console.log(JSON.stringify(mappedData));
     this.orderService.createShipment(mappedData).subscribe(resp => {
       if (resp && resp.body.result && resp.body.result) {
         const response = resp.body.result as any;

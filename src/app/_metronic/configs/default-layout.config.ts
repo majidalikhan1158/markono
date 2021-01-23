@@ -257,7 +257,7 @@ export const DefaultLayoutConfig = {
 
     // Scrolltop
     scrolltop: {
-      display: true,
+      display: false,
     },
   },
 };

@@ -94,4 +94,7 @@ export class ApiEndpointsService {
 
   getAllOrders = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.order.getAllOrders}`
+
+  setLiveVersion = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.setLiveVersion}`
 }

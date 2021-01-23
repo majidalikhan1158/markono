@@ -244,7 +244,9 @@ export class CaseHelperService {
         statusDescription: item.attributes['status-description'],
       });
     });
-    return list;
+    return list.sort((a, b) => {
+      return (new Date(b.createdDate) as any) - (new Date(a.createdDate) as any);
+    });
   }
 
   // Create Shipment Api Intergation

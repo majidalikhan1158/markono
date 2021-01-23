@@ -322,20 +322,20 @@ export class ProductSpecHelperService {
             openSizeWidth: this.getNumber(item.openSizeWidth),
             bindingType: this.getString(item.bindingVM?.bindingType),
             bindingStitchType: this.getString(item.bindingVM?.saddleStich?.stichType),
-            bindingMethod: this.getString(item.bindingVM?.caseBound?.bindingMethod),
+            bindingMethod: this.getBindingData(item.bindingVM, 'METHOD'),
             bindingBookSpineType: this.getString(item.bindingVM?.caseBound?.bookSpineType),
             bindingHeadTailBand: item.bindingVM?.caseBound?.isHeadTailBand ? true : false,
             bindingHeadTailBandColour: this.getString(item.bindingVM?.caseBound?.headTailBandColour),
             bindingGreyBoardThickness: this.getString(item.bindingVM?.caseBound?.greyboardThickness),
             bindingMethodPerfect: this.getString(''),
             bindingMethodComb: this.getString(''),
-            bindingMethodCoil: this.getString(''),
-            bindingMethodWire: this.getString(''),
+            bindingMethodCoil: this.getString(item.bindingVM?.spiralBound?.coilColour ?? ''),
+            bindingMethodWire: this.getString(item.bindingVM?.wireoBinding?.wireColour ?? ''),
             bindingRibbon: item.bindingVM?.caseBound?.isRibbon,
             bindingRibbonColour: this.getString(item.bindingVM?.caseBound?.ribbonColour),
-            bindingTypeSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstruction1),
-            bindingBenchworkRequired: this.getString(item.bindingVM?.caseBound?.benchworkRequired.join(',')),
-            bindingBenchworkSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstruction2),
+            bindingTypeSpecialInstruction: this.getBindingData(item.bindingVM, 'SPECIALINSTRUCTIONS1'),
+            bindingBenchworkRequired: this.getBindingData(item.bindingVM, 'BENCHWORK'),
+            bindingBenchworkSpecialInstruction: this.getBindingData(item.bindingVM, 'SPECIALINSTRUCTIONS2'),
             endpaperMaterialWeight: this.getString(item.bindingVM?.caseBound?.endPaperWeight),
             endpaperMaterial: this.getString(item.bindingVM?.caseBound?.endPaperMaterial),
             endpaperMaterialBrand: this.getString(item.bindingVM?.caseBound?.materialBrand),
@@ -392,20 +392,20 @@ export class ProductSpecHelperService {
         txtBackFinishing: this.getString(''),
         bindingType: this.getString(item.bindingVM?.bindingType),
         bindingStitchType: this.getString(item.bindingVM?.saddleStich?.stichType),
-        bindingMethod: this.getString(item.bindingVM?.caseBound?.bindingMethod),
+        bindingMethod: this.getBindingData(item.bindingVM, 'METHOD'),
         bindingBookSpineType: this.getString(item.bindingVM?.caseBound?.bookSpineType),
         bindingHeadTailBand: item.bindingVM?.caseBound?.isHeadTailBand ? true : false,
         bindingHeadTailBandColour: this.getString(item.bindingVM?.caseBound?.headTailBandColour),
         bindingGreyBoardThickness: this.getString(item.bindingVM?.caseBound?.greyboardThickness),
         bindingMethodPerfect: this.getString(''),
         bindingMethodComb: this.getString(''),
-        bindingMethodCoil: this.getString(''),
-        bindingMethodWire: this.getString(''),
         bindingRibbon: item.bindingVM?.caseBound?.isRibbon,
         bindingRibbonColour: this.getString(item.bindingVM?.caseBound?.ribbonColour),
-        bindingTypeSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstruction1),
-        bindingBenchworkRequired: this.getString(item.bindingVM?.caseBound?.benchworkRequired.join('')),
-        bindingBenchworkSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstruction2),
+        bindingMethodCoil: this.getString(item.bindingVM?.spiralBound?.coilColour ?? ''),
+        bindingMethodWire: this.getString(item.bindingVM?.wireoBinding?.wireColour ?? ''),
+        bindingTypeSpecialInstruction: this.getBindingData(item.bindingVM, 'SPECIALINSTRUCTIONS1'),
+        bindingBenchworkRequired: this.getBindingData(item.bindingVM, 'BENCHWORK'),
+        bindingBenchworkSpecialInstruction: this.getBindingData(item.bindingVM, 'SPECIALINSTRUCTIONS2'),
         endpaperMaterialWeight: this.getString(item.bindingVM?.caseBound?.endPaperWeight),
         endpaperMaterial: this.getString(item.bindingVM?.caseBound?.endPaperMaterial),
         endpaperMaterialBrand: this.getString(item.bindingVM?.caseBound?.materialBrand),
@@ -415,7 +415,6 @@ export class ProductSpecHelperService {
         endpaperNoOfColours: this.getNumber(item.bindingVM?.caseBound?.pantoneColour.length + item.bindingVM?.caseBound?.colorType.length),
         endpaperSelectedColours:  this.getBitsFromColors(item.bindingVM?.caseBound?.colorType ?? []),
         endpaperPantoneColours:  item.bindingVM?.caseBound?.pantoneColour?.length > 0 ? true : false,
-        // this.getString(item.bindingVM?.caseBound?.pantoneColour?.join(',')),
         endpaperPantoneColourNo: this.getNumber(item.bindingVM?.caseBound?.pantoneColour.length),
         endpaperFinishing: this.getString(item.bindingVM?.caseBound?.finishingType?.join(',')),
         endpaperSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstructions3),
@@ -469,7 +468,7 @@ export class ProductSpecHelperService {
     const childIsbnVM = this.getChildIsbnVM(product);
     const dvdcdVM = this.getDVDCDVM(product);
     const unitPriceVM = this.getUnitPriceVM(product);
-
+    const otherVM = this.getOtherVM(product);
     this.store.reset();
     const list = ProductSpecificationTypesArray;
     this.store.setProductSpecTypeList(list);
@@ -484,7 +483,7 @@ export class ProductSpecHelperService {
     this.store.setProductSpecStore(childIsbnVM, ProductSpecTypes.CHILD_ISBN);
     this.store.setProductSpecStore(dvdcdVM, ProductSpecTypes.DVD_CD);
     this.store.setProductSpecStore(unitPriceVM, ProductSpecTypes.UNIT_PRICE);
-
+    this.store.setProductSpecStore(otherVM, ProductSpecTypes.OTHER_COMPONENT);
     this.store.getProductGroupList(generalVM);
 
     this.store.getUserCheckFile(product.Id);
@@ -673,6 +672,40 @@ export class ProductSpecHelperService {
     return list;
   }
 
+  getOtherVM = (product: any): OtherVM[] => {
+    const p = product?.ProductAdditionalComponent;
+    const list: OtherVM[] = [];
+
+    p?.forEach((i, index) => {
+      list.push({
+        id: index + 1,
+        type: i.Type ?? '',
+        componentType: i.Type ?? '',
+        orientationType: i.Orientation ?? '',
+        height: i.Height ?? 0,
+        width: i.Width ?? 0,
+        isOpenSize: i.OpenSize ?? false,
+        openSizeHeight: i.OpenSizeHeight ?? 0,
+        openSizeWidth: i.OpenSizeWidth ?? 0,
+        textMaterialWeight: i.MaterialWeight ?? '',
+        spineWidth: 0,
+        weight: 0,
+        textMaterial: i.Material ?? '',
+        materialBrand: i.MaterialBrand ?? '',
+        noOfColourExtent: i.NoOfColourExtent ?? 0,
+        noOfMonoExtent: i.NoOfMonoExtent ?? 0,
+        totalExtent: i.TotalExtent ?? 0,
+        noOfColours: i.TxtFrontNoOfColours ?? 0,
+        colorType: this.getColorsFromBits(i?.TxtFrontSelectedColours ?? ''),
+        pantoneColour: this.getStringArray(i.TxtFrontPantoneColourNo),
+        finishingType: this.getStringArray(i.TxtFrontFinishing),
+        specialInstructions: i.SpecialInstruction ?? '',
+        bindingVM: this.getChildBindingVMS(i)
+      });
+    });
+    return list;
+  }
+
   getUnitPriceVM = (product: any): UnitPriceVM => {
     const p = product?.ProductDetail[0];
     return {
@@ -710,8 +743,23 @@ export class ProductSpecHelperService {
     };
   }
 
-  getCaseBound = (bindingType: string, product: any): BindingTypeCaseBound => {
-    const p = product?.ProductDetail[0];
+  getChildBindingVMS = (product: any): BindingVM => {
+    const p = product;
+    return {
+      id: 1,
+      bindingType: p?.BindingType ?? '',
+      caseBound: this.getCaseBound(p?.BindingType, product, true), // BindingTypeCaseBound;
+      folding: this.getFolding(p?.BindingType, product, true), // BindingTypeFolding;
+      paperBack: this.getPaperBack(p?.BindingType, product, true), // BindingTypePaperBack;
+      saddleStich: this.saddleStitch(p?.BindingType, product, true), // BindingTypeStichType;
+      spiralBound: this.spiralBound(p?.BindingType, product, true), // BindingTypeSpiralBound;
+      wireoBinding: this.wireOBinding(p?.BindingType, product, true), // BindingTypeWireoBinding;
+      others: this.getOtherType(p?.BindingType, product, true)
+    };
+  }
+
+  getCaseBound = (bindingType: string, product: any, isChild = false): BindingTypeCaseBound => {
+    const p = isChild ? product : product?.ProductDetail[0];
     if (bindingType !== BindingType.CASEBOUND) {
       return null;
     }
@@ -740,8 +788,8 @@ export class ProductSpecHelperService {
     };
   }
 
-  getFolding = (bindingType: string, product: any): BindingTypeFolding => {
-    const p = product?.ProductDetail[0];
+  getFolding = (bindingType: string, product: any, isChild = false): BindingTypeFolding => {
+    const p = isChild ? product : product?.ProductDetail[0];
     if (bindingType !== BindingType.FOLDING) {
       return null;
     }
@@ -752,8 +800,8 @@ export class ProductSpecHelperService {
     };
   }
 
-  getPaperBack = (bindingType: string, product: any): BindingTypePaperBack => {
-    const p = product?.ProductDetail[0];
+  getPaperBack = (bindingType: string, product: any, isChild = false): BindingTypePaperBack => {
+    const p = isChild ? product : product?.ProductDetail[0];
     if (bindingType !== BindingType.PAPERBACK) {
       return null;
     }
@@ -765,8 +813,8 @@ export class ProductSpecHelperService {
     };
   }
 
-  saddleStitch = (bindingType: string, product: any): BindingTypeStichType => {
-    const p = product?.ProductDetail[0];
+  saddleStitch = (bindingType: string, product: any, isChild = false): BindingTypeStichType => {
+    const p = isChild ? product : product?.ProductDetail[0];
     if (bindingType !== BindingType.SADDLESTITCH) {
       return null;
     }
@@ -778,8 +826,8 @@ export class ProductSpecHelperService {
     };
   }
 
-  spiralBound = (bindingType: string, product: any): BindingTypeSpiralBound => {
-    const p = product?.ProductDetail[0];
+  spiralBound = (bindingType: string, product: any, isChild = false): BindingTypeSpiralBound => {
+    const p = isChild ? product : product?.ProductDetail[0];
     if (bindingType !== BindingType.SPIRALBOUND) {
       return null;
     }
@@ -791,8 +839,8 @@ export class ProductSpecHelperService {
     };
   }
 
-  wireOBinding = (bindingType: string, product: any): BindingTypeWireoBinding => {
-    const p = product?.ProductDetail[0];
+  wireOBinding = (bindingType: string, product: any, isChild = false): BindingTypeWireoBinding => {
+    const p = isChild ? product : product?.ProductDetail[0];
     if (bindingType !== BindingType.WIREOBINDING) {
       return null;
     }
@@ -804,9 +852,12 @@ export class ProductSpecHelperService {
     };
   }
 
-  getOtherType = (bindingType: string, product: any): BindingTypeOthers => {
-    const p = product?.ProductDetail[0];
-    if (bindingType !== BindingType.OTHER) {
+  getOtherType = (bindingType: string, product: any, isChild = false): BindingTypeOthers => {
+
+    const p = isChild ? product : product?.ProductDetail[0];
+    if (bindingType === BindingType.CASEBOUND || bindingType === BindingType.FOLDING ||
+      bindingType === BindingType.SADDLESTITCH || bindingType === BindingType.WIREOBINDING ||
+      bindingType === BindingType.SPIRALBOUND || bindingType === BindingType.PAPERBACK) {
       return null;
     }
     return {

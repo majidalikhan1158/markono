@@ -25,7 +25,6 @@ export class ProductVersionsComponent implements OnInit, OnDestroy {
       if (resp && resp.generalVM && resp.generalVM.productNumber && this.productIsbnNumber !== resp.generalVM.productNumber) {
         this.productIsbnNumber = resp.generalVM.productNumber;
         this.selectedVersion = resp.generalVM.versionNo;
-        console.log(resp.generalVM)
         this.store.getVersions(this.productIsbnNumber);
       }
     });

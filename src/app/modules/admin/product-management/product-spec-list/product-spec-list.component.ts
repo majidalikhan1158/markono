@@ -64,7 +64,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
   getProductSpecList = () => {
     this.subscription = this.productService.getProductSpecList().subscribe(resp => {
       this.dataArray = resp.body.result ? (resp.body.result as ProductSpecsList[]).sort((a, b) => {
-        return (new Date(b.createdBy) as any) - (new Date(a.createdDateTime) as any);
+        return (new Date(b.createdDateTime) as any) - (new Date(a.createdDateTime) as any);
       }) : [];
       this.initializeDatatable();
     });

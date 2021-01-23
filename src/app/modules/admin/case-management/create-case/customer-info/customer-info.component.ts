@@ -73,11 +73,23 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
       this.matAutoCompleteSubscription = this.orderService.getCustomerDetail({sellToNo: this.customerInfoVM.customerId}).subscribe(resp => {
         const details = resp.body as unknown as CustomerDetailVM[];
         this.customerDetailVMList = details && details.length > 0 ? details : [];
+        if (this.customerDetailVMList.length === 0) {
+          const customerObj = this.getEmptyDetails();
+          customerObj.CompanyName = 'No record found';
+          customerObj.CompanyCode = '-1';
+          this.customerDetailVMList.push(customerObj);
+        }
         this.isLoading = false;
         this.ref.detectChanges();
       }, (err: HttpErrorResponse) => {
         this.customerDetailVMList = [];
         this.isLoading = false;
+        if (this.customerDetailVMList.length === 0) {
+          const customerObj = this.getEmptyDetails();
+          customerObj.CompanyName = 'No record found';
+          customerObj.CompanyCode = '-1';
+          this.customerDetailVMList.push(customerObj);
+        }
         this.ref.detectChanges();
       });
 
@@ -87,6 +99,9 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   handleSelectedCustomer = (customerId: string) => {
     if (customerId === '0') {
       setTimeout(_ => this.trigger.openPanel());
+      return;
+    }
+    if (customerId === '-1') {
       return;
     }
     this.customerInfoVM.customerId = customerId;

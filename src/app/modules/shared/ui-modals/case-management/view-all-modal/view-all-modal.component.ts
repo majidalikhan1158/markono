@@ -16,6 +16,8 @@ import { ProductVersionVM } from '../../../models/create-case';
 import { CaseStore } from '../../../ui-services/create-case.service';
 import { ModalService } from '../../../ui-services/modal.service';
 import { SnackBarService } from '../../../ui-services/snack-bar.service';
+import { Subscription } from 'rxjs';
+import { version } from 'moment';
 
 @Component({
   selector: 'app-view-all-modal',
@@ -24,9 +26,9 @@ import { SnackBarService } from '../../../ui-services/snack-bar.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class ViewAllModalComponent implements OnInit, OnDestroy {
-  @Input() recordId: string;
-  @Output() acceptEvent = new EventEmitter<ProductVersionVM[]>();
-
+  @Output() acceptEvent = new EventEmitter<string>();
+  currentISBN: string;
+  versionNo: string;
   displayedColumns = [
     'isSpecsInView',
     'versionNo',
@@ -35,6 +37,8 @@ export class ViewAllModalComponent implements OnInit, OnDestroy {
     'versionDescription'
   ];
   dataSource: ProductVersionVM[] = [];
+  subscription: Subscription;
+
   constructor(
     private modalService: ModalService,
     private store: CaseStore,
@@ -45,20 +49,24 @@ export class ViewAllModalComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.store.viewVersionISBN.subscribe((x) => {
-      this.recordId = x;
-      if (this.recordId && this.recordId !== '') {
-        this.getDefaultRecord();
+    this.subscription = this.store.viewVersionISBN.subscribe((resp) => {
+      if (!resp) {
+        return;
+      }
+      this.currentISBN = resp.currentISBN;
+      this.versionNo = resp.versionNo;
+      if (this.currentISBN) {
+        this.getVersions();
       }
     });
   }
 
   save() {
-    this.modalService.close(UIModalID.VIEW_ALL_MODAL);
+    this.handleVersionSelection(this.versionNo);
   }
 
-  getDefaultRecord = () => {
-    this.productService.getProductVersions(this.recordId).subscribe(
+  getVersions = () => {
+    this.subscription = this.productService.getProductVersions(this.currentISBN).subscribe(
       (resp) => {
         if (
           resp &&
@@ -69,18 +77,45 @@ export class ViewAllModalComponent implements OnInit, OnDestroy {
           this.dataSource = this.helper.transProductVersionApiToProductVersionModal(resp.body.result.data);
           this.ref.detectChanges();
         } else {
-          if (this.recordId !== '') {
+          if (this.currentISBN) {
             this.snack.open('No versions found', '', 'top');
           }
         }
       },
       (err: HttpErrorResponse) => {
-        if (this.recordId !== '') {
+        if (this.currentISBN) {
           this.snack.open('No versions found', '', 'top');
         }
       }
     );
   }
 
-  ngOnDestroy(): void {}
+  setVersionNo = (versionNo: string) => {
+    this.versionNo = versionNo;
+  }
+
+  handleVersionSelection = (versionNo: string) => {
+    const reqObj = {
+      isbn: this.currentISBN,
+      versionNo
+    };
+    this.subscription = this.productService.setLiveVersion(reqObj).subscribe(resp => {
+      if (resp && resp.body && resp.body.success) {
+        this.snack.open(`${versionNo} has been set successfully`);
+      } else {
+        this.versionNo = '';
+        this.snack.open(`Unable to set. Try again`);
+      }
+      this.close();
+    });
+  }
+
+  close = () => {
+    this.modalService.close(UIModalID.VIEW_ALL_MODAL);
+    this.acceptEvent.emit(this.versionNo);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
 }

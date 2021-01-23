@@ -337,7 +337,8 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
         const data = this.getUnitsProducedPerMinuteData(this.machineCurrentJobUnitsVM.unitsPerMinutesList);
         const unitsPerMinutes = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.count);
         const unitsFromDate = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.fromDate);
-        this.unitsProducedChartOptions = this.getUnitsProducePerMinuteChart(unitsPerMinutes, unitsFromDate) as unknown as UnitsProducedChartOptions;
+        this.unitsProducedChartOptions =
+        (this.getUnitsProducePerMinuteChart(unitsPerMinutes, unitsFromDate) as unknown) as UnitsProducedChartOptions;
       } else {
         showMessage ? this.snack.open('Unable to get machine current job units') : this.emptyCall() ;
       }

@@ -225,7 +225,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
 
-  getCustomerName(number) {
+  getCustomerName(value) {
     return ' Banta Global Turnkey (S) Pte Ltd';
   }
 

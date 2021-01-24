@@ -35,6 +35,7 @@ export const Endpoints = {
     },
     order: {
         getAllOrders: 'GetCases',
+        getShipmentDetails: 'GetShipments'
     },
 
 };

@@ -39,7 +39,7 @@ export const DynamicPageHeaderLabels = {
     },
     {
       title: 'Order Detail',
-      page: '/admin/order-management/order-details',
+      page: '/admin/order-management/order-details/:id',
     },
     {
       title: 'Orders With Issues',

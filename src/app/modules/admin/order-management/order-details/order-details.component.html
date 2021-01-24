@@ -7,86 +7,127 @@
                     <h3 class="card-label">Order Info.</h3>
                 </div>
             </div>
-            <div class="card-body">
-                <mat-table #table [dataSource]="dataSource" class="order-info-table-card">
-
-                    <ng-container matColumnDef="customerPoNo">
-                        <mat-header-cell *matHeaderCellDef>Customer PO No.</mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-                            {{element.customerPoNo }}
-                        </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="orderDate">
-                        <mat-header-cell *matHeaderCellDef> Order Date </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.orderDate | date:'shortDate'}} </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="rdd">
-                        <mat-header-cell *matHeaderCellDef> RDD </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.rdd | date:'shortDate'}}
-                        </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="qty">
-                        <mat-header-cell *matHeaderCellDef>Qty </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.qty}} </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="type">
-                        <mat-header-cell *matHeaderCellDef> Type</mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-                            <div *ngIf="element.type == 'Print'">
-                                <a href="javascript:;" routerLink="/admin/order-management/order-details">
-                                    <img src="./assets/media/misc/ic_print.png">
-                                </a>
-                                <span style="padding-left: 12px;">Print</span>
-                            </div>
-                            <div *ngIf="element.type == 'Warehouse'">
-                                <a href="javascript:;" routerLink="/admin/order-management/order-details">
-                                    <img src="./assets/media/misc/ic_warehouse.png">
-                                </a>
-                                <span style="padding-left: 12px;">Warehouse</span>
-                            </div>
-                        </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="status">
-                        <mat-header-cell *matHeaderCellDef> Order Status </mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-                            <div class="status-options" *ngIf="element.status == 'Pending File Prep'">
-                                <span style="width: 100px;">
-                                    <span class="label label-lg label-light-orange label-inline">Pending File
-                                        Prep</span>
-                                </span>
-                            </div>
-                            <div class="status-options" *ngIf="element.status == 'Shipped'">
-                                <span style="width: 100px;">
-                                    <span class="label label-lg label-light-green label-inline">Shipped</span>
-                                </span>
-                            </div>
-                            <div class="status-options" *ngIf="element.status == 'Planning'">
-                                <span style="width: 100px;">
-                                    <span class="label label-lg label-light-purple label-inline">Planning</span>
-                                </span>
-                            </div>
-                            <div class="status-options" *ngIf="element.status == 'Scheduling'">
-                                <span style="width: 100px;">
-                                    <span class="label label-lg label-light-blue label-inline">Scheduling</span>
-                                </span>
-                            </div>
-                        </mat-cell>
-                    </ng-container>
-
-                    <mat-header-row *matHeaderRowDef="displayedColumnsOrderInfo"></mat-header-row>
-                    <!--  (click)="toggleExpandable(row.id)" -->
-                    <mat-row *matRowDef="let row; columns: displayedColumnsOrderInfo;"> </mat-row>
-
-                    <!-- Row shown when there is no matching data. -->
-                    <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell text-center" colspan="8">No data matching the filter</td>
-                    </tr>
-                </mat-table>
+            <div class="card-body" style="padding-left:20px !important">
+                <table class="order-info-table-card">
+                    <thead>
+                        <tr class="th-order">
+                            <th style="font-weight: normal;" *ngFor="let item of columnsToDisplay"> {{item}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let rowId of orderInfoList;let i = index;">
+                            <tr class="outer-row">
+                                <td class="flex-width">{{orderInfoList[i].OrderNo}}</td>
+                                <td class="flex-width"> {{orderInfoList[i].OrderDate | date:'shortDate'}}</td>
+                                <td class="flex-width">
+                                    <ng-container *ngIf="orderInfoList[i].RequestedDeliveryDate === null">
+                                        -
+                                    </ng-container>
+                                    <ng-container *ngIf="orderInfoList[i].RequestedDeliveryDate !== null">
+                                        {{orderInfoList[i].RequestedDeliveryDate | date:'shortDate'}}
+                                    </ng-container>
+                                </td>
+                                <td class="flex-width"> {{orderInfoList[i].Qty}}</td>
+                                <td class="flex-width">
+                                    <div *ngIf="orderInfoList[i].PrintType == 'Digital'">
+                                        <img src="./assets/media/misc/ic_print.png">
+                                        <span style="padding-left: 12px;">Print</span>
+                                    </div>
+                                    <div *ngIf="orderInfoList[i].PrintType != 'Digital'">
+                                        <img src="./assets/media/misc/ic_warehouse.png">
+                                    </div>
+                                </td>
+                                <td class="flex-width">
+                                    <!--orange > Pending File Prep-->
+                                    <div class="status-options"
+                                        *ngIf="orderInfoList[i].CurrentActivityStatusCode == 301">
+                                        <span style="width: 100px;">
+                                            <span style="width: auto !important;"
+                                                class="label label-lg label-light-orange label-inline">Pending File
+                                                Prep</span>
+                                        </span>
+                                    </div>
+                                    <!--green > Order Confirmed-->
+                                    <div class="status-options"
+                                        *ngIf="orderInfoList[i].CurrentActivityStatusCode == 207">
+                                        <span style="width: 100px;">
+                                            <span style="width: auto !important;"
+                                                class="label label-lg label-light-green label-inline">Order
+                                                Confirmed</span>
+                                        </span>
+                                    </div>
+                                    <!--purple > RFQ-->
+                                    <div class="status-options"
+                                        *ngIf="orderInfoList[i].CurrentActivityStatusCode == 201">
+                                        <span style="width: 100px;">
+                                            <span style="width: auto !important;"
+                                                class="label label-lg label-light-purple label-inline">RFQ</span>
+                                        </span>
+                                    </div>
+                                    <!-- light-blue > Case Created-->
+                                    <div class="status-options"
+                                        *ngIf="orderInfoList[i].CurrentActivityStatusCode == 101">
+                                        <span style="width: 100px;">
+                                            <span style="width: auto !important;"
+                                                class="label label-lg label-light-blue label-inline">Case
+                                                Created</span>
+                                        </span>
+                                    </div>
+                                    <!-- light-blue > Pending Est-->
+                                    <div class="status-options"
+                                        *ngIf="orderInfoList[i].CurrentActivityStatusCode == 202">
+                                        <span style="width: 100px;">
+                                            <span style="width: auto !important;"
+                                                class="label label-lg label-light-blue label-inline">Pending
+                                                Est</span>
+                                        </span>
+                                    </div>
+                                    <!-- light-blue > Est. Compl-->
+                                    <div class="status-options"
+                                        *ngIf="orderInfoList[i].CurrentActivityStatusCode == 203">
+                                        <span style="width: 100px;">
+                                            <span style="width: auto !important;"
+                                                class="label label-lg label-light-blue label-inline">Est. Compl</span>
+                                        </span>
+                                    </div>
+                                    <!-- light-blue > Printing-->
+                                    <div class="status-options"
+                                        *ngIf="orderInfoList[i].CurrentActivityStatusCode == 503">
+                                        <span style="width: 100px;">
+                                            <span style="width: auto !important;"
+                                                class="label label-lg label-light-blue label-inline">Printing</span>
+                                        </span>
+                                    </div>
+                                    <!-- light-blue > Folding Compl-->
+                                    <div class="status-options"
+                                        *ngIf="orderInfoList[i].CurrentActivityStatusCode == 602">
+                                        <span style="width: 100px;">
+                                            <span style="width: auto !important;"
+                                                class="label label-lg label-light-blue label-inline">Folding
+                                                Compl</span>
+                                        </span>
+                                    </div>
+                                    <!-- light-blue > Bind Compl-->
+                                    <div class="status-options"
+                                        *ngIf="orderInfoList[i].CurrentActivityStatusCode == 801">
+                                        <span style="width: 100px;">
+                                            <span style="width: auto !important;"
+                                                class="label label-lg label-light-blue label-inline">Bind Compl</span>
+                                        </span>
+                                    </div>
+                                    <!-- light-blue > Shipped-->
+                                    <div class="status-options"
+                                        *ngIf="orderInfoList[i].currentActivityStatusCode == 806">
+                                        <span style="width: 100px;">
+                                            <span style="width: auto !important;"
+                                                class="label label-lg label-light-blue label-inline">Shipped</span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -251,108 +292,125 @@
                 <div class="card-body">
                     <mat-table #table [dataSource]="dataSourceJob" class="orders-table">
 
-                        <ng-container matColumnDef="id">
+                        <ng-container matColumnDef="Id">
                             <mat-header-cell *matHeaderCellDef style="padding-left: 20px !important;"> #
                             </mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+                            <mat-cell *matCellDef="let element; let i = index">{{i + 1}}</mat-cell>
                         </ng-container>
 
-                        <ng-container matColumnDef="jobNo">
+                        <ng-container matColumnDef="JobNo">
                             <mat-header-cell *matHeaderCellDef>Job No.</mat-header-cell>
                             <mat-cell *matCellDef="let element">
-                                {{element.jobNo }}
+                                {{element.JobNo }}
                             </mat-cell>
                         </ng-container>
 
-                        <ng-container matColumnDef="isbn">
+                        <ng-container matColumnDef="ISBNPartNo">
                             <mat-header-cell *matHeaderCellDef>ISBN </mat-header-cell>
-                            <mat-cell [matTooltip]="getToolTipData(element.isbn )" *matCellDef="let element">
-                                {{element.isbn }}
+                            <mat-cell [matTooltip]="getToolTipData(element.ISBNPartNo)" *matCellDef="let element">
+                                {{element.ISBNPartNo }}
                                 <p #tooltip="matTooltip" matTooltip="Info about the action"
                                     [matTooltipPosition]="position.value" matTooltipHideDelay="100000"
                                     class="example-button"></p>
                             </mat-cell>
                         </ng-container>
 
-                        <ng-container matColumnDef="orderDate">
+                        <ng-container matColumnDef="CreatedDateTime">
                             <mat-header-cell *matHeaderCellDef> Order Date </mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{element.orderDate | date:'shortDate'}}
+                            <mat-cell *matCellDef="let element"> {{element.CreatedDateTime | date:'shortDate'}}
                             </mat-cell>
                         </ng-container>
 
-                        <ng-container matColumnDef="rdd">
+                        <ng-container matColumnDef="RequestedDeliveryDate">
                             <mat-header-cell *matHeaderCellDef> RDD </mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{element.rdd | date:'shortDate'}}
+                            <mat-cell *matCellDef="let element"> {{element.RequestedDeliveryDate | date:'shortDate'}}
                             </mat-cell>
                         </ng-container>
 
-                        <ng-container matColumnDef="qty">
+                        <ng-container matColumnDef="OrderQuantity">
                             <mat-header-cell *matHeaderCellDef>Qty </mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{element.qty}} </mat-cell>
+                            <mat-cell *matCellDef="let element"> {{element.OrderQuantity}} </mat-cell>
                         </ng-container>
 
-                        <ng-container matColumnDef="jobType">
+                        <ng-container matColumnDef="PrintType">
                             <mat-header-cell *matHeaderCellDef> Job Type</mat-header-cell>
                             <mat-cell *matCellDef="let element">
-                                {{element.jobType}}
+                                {{element.PrintType}}
                             </mat-cell>
                         </ng-container>
 
-                        <ng-container matColumnDef="status">
+                        <ng-container matColumnDef="CurrentActivityStatusCode">
                             <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
                             <mat-cell *matCellDef="let element">
-                                <div class="status-options" *ngIf="element.status == 'Shipped'">
+                                <!--orange > Pending File Prep-->
+                                <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 301">
                                     <span style="width: 100px;">
-                                        <span class="label label-lg label-light-green label-inline">Shipped</span>
+                                        <span class="label label-lg label-light-orange label-inline">Pending File
+                                            Prep</span>
                                     </span>
                                 </div>
-                                <div class="status-options" *ngIf="element.status == 'Printing'">
+                                <!--green > Order Confirmed-->
+                                <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 207">
                                     <span style="width: 100px;">
-                                        <span class="label label-lg label-light-purple label-inline">Printing</span>
+                                        <span class="label label-lg label-light-green label-inline">Order
+                                            Confirmed</span>
                                     </span>
                                 </div>
-                            </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="actions">
-                            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
-                            <mat-cell *matCellDef="let element">
-                                <mat-form-field appearance="fill" class="font-12px pb-4"
-                                    style="width: -webkit-fill-available;">
-                                    <mat-label>Choose</mat-label>
-                                    <mat-select [(ngModel)]="chooseList"
-                                        (selectionChange)="chooseSelectionChange($event)">
-                                        <mat-option value="Complete">
-                                            Complete
-                                        </mat-option>
-                                        <mat-option value="Processing">
-                                            Processing
-                                        </mat-option>
-                                        <mat-option value="Hold">
-                                            Hold
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                                <!-- <button class="btn btn-light" (click)="Choose()">Choose
-                                    <span class="svg-icon svg-icon-2x">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                            width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                <polygon points="0 0 24 0 24 24 0 24" />
-                                                <path
-                                                    d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z"
-                                                    fill="#000000" fill-rule="nonzero"
-                                                    transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999) " />
-                                            </g>
-                                        </svg>
+                                <!--purple > RFQ-->
+                                <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 201">
+                                    <span style="width: 100px;">
+                                        <span class="label label-lg label-light-purple label-inline">RFQ</span>
                                     </span>
-                                </button> -->
+                                </div>
+                                <!-- light-blue > Case Created-->
+                                <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 101">
+                                    <span style="width: 100px;">
+                                        <span class="label label-lg label-light-blue label-inline">Case Created</span>
+                                    </span>
+                                </div>
+                                <!-- light-blue > Pending Est-->
+                                <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 202">
+                                    <span style="width: 100px;">
+                                        <span class="label label-lg label-light-blue label-inline">Pending Est</span>
+                                    </span>
+                                </div>
+                                <!-- light-blue > Est. Compl-->
+                                <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 203">
+                                    <span style="width: 100px;">
+                                        <span class="label label-lg label-light-blue label-inline">Est. Compl</span>
+                                    </span>
+                                </div>
+                                <!-- light-blue > Printing-->
+                                <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 503">
+                                    <span style="width: 100px;">
+                                        <span class="label label-lg label-light-blue label-inline">Printing</span>
+                                    </span>
+                                </div>
+                                <!-- light-blue > Folding Compl-->
+                                <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 602">
+                                    <span style="width: 100px;">
+                                        <span class="label label-lg label-light-blue label-inline">Folding Compl</span>
+                                    </span>
+                                </div>
+                                <!-- light-blue > Bind Compl-->
+                                <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 801">
+                                    <span style="width: 100px;">
+                                        <span class="label label-lg label-light-blue label-inline">Bind Compl</span>
+                                    </span>
+                                </div>
+                                <!-- light-blue > Shipped-->
+                                <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 806">
+                                    <span style="width: 100px;">
+                                        <span class="label label-lg label-light-blue label-inline">Shipped</span>
+                                    </span>
+                                </div>
                             </mat-cell>
                         </ng-container>
 
                         <mat-header-row *matHeaderRowDef="displayedColumnsJob"></mat-header-row>
                         <!--  (click)="toggleExpandable(row.id)" -->
-                        <mat-row *matRowDef="let row; columns: displayedColumnsJob;" (click)="getJobInfo()"> </mat-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumnsJob;"> </mat-row>
+                        <!-- <mat-row *matRowDef="let row; columns: displayedColumnsJob;" (click)="getJobInfo()"> </mat-row> -->
 
                         <!-- Row shown when there is no matching data. -->
                         <tr class="mat-row" *matNoDataRow>
@@ -367,7 +425,7 @@
         </div>
         <!--Customer-->
         <div *ngIf="(currentSelectedType === orderDetailTypesConstant.CUSTOMER)" class="col-lg-10 padding-l-0px">
-            <div class="row">
+            <div class="row" *ngFor="let rowId of orderInfoList;let i = index;">
                 <!--customer info-->
                 <div class="col-lg-6">
                     <div class="card card-custom example example-compact gutter-b customer-info-card">
@@ -376,7 +434,7 @@
                                 <h3 class="card-label">Customer Info.</h3>
                             </div>
                             <div class="card-toolbar">
-                                <h6>Sell-to-No: DPC149 </h6>
+                                <h6>Sell-to-No: {{orderInfoList[i].SellToNo}} </h6>
                             </div>
                         </div>
                         <div class="card-body">
@@ -393,11 +451,11 @@
                             <div class="row display-flex">
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Company Name</p>
-                                    <p class="info-label-value">CPI - Elsevier Ltd</p>
+                                    <p class="info-label-value">{{orderInfoList[i].CompanyName}}</p>
                                 </div>
                                 <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">Contact Person</p>
-                                    <p class="info-label-value">CPIANTONYROWE</p>
+                                    <p class="info-label-value">-</p>
                                 </div>
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Email</p>
@@ -409,11 +467,11 @@
                                 </div>
                                 <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">Co-ordinator</p>
-                                    <p class="info-label-value">-</p>
+                                    <p class="info-label-value">{{orderInfoList[i].Coordinator}}</p>
                                 </div>
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Sales Person</p>
-                                    <p class="info-label-value">-</p>
+                                    <p class="info-label-value">{{orderInfoList[i].SalesPerson}}</p>
                                 </div>
                             </div>
                             <br>
@@ -431,20 +489,20 @@
                             <div class="row display-flex">
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Address 1</p>
-                                    <p class="info-label-value">422 Than Road</p>
+                                    <p class="info-label-value">{{orderInfoList[i].Address1}}</p>
                                 </div>
                                 <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">Address 2</p>
-                                    <p class="info-label-value">CC Industrial Building Lorem Ipsum
+                                    <p class="info-label-value">{{orderInfoList[i].Address2}}
                                     </p>
                                 </div>
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Postcode</p>
-                                    <p class="info-label-value">332143</p>
+                                    <p class="info-label-value">-</p>
                                 </div>
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">City</p>
-                                    <p class="info-label-value">UK</p>
+                                    <p class="info-label-value">-</p>
                                 </div>
                                 <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">State</p>
@@ -452,7 +510,7 @@
                                 </div>
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Country</p>
-                                    <p class="info-label-value">United Kingdom</p>
+                                    <p class="info-label-value">-</p>
                                 </div>
                             </div>
                         </div>
@@ -466,7 +524,7 @@
                                 <h3 class="card-label">Billing Info.</h3>
                             </div>
                             <div class="card-toolbar">
-                                <h6>Bill-to-No: DPC149 </h6>
+                                <h6>Bill-to-No: {{orderInfoList[i].BillToNo}} </h6>
                             </div>
                         </div>
                         <div class="card-body">
@@ -483,15 +541,15 @@
                             <div class="row display-flex">
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Company Name</p>
-                                    <p class="info-label-value">CPI - Elsevier Ltd</p>
+                                    <p class="info-label-value">{{orderInfoList[i].CompanyName}}</p>
                                 </div>
                                 <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">Contact Person</p>
-                                    <p class="info-label-value">CPIANTONYROWE</p>
+                                    <p class="info-label-value">-</p>
                                 </div>
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Email</p>
-                                    <p class="info-label-value">N/A</p>
+                                    <p class="info-label-value">-</p>
                                 </div>
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Phone No</p>
@@ -499,11 +557,11 @@
                                 </div>
                                 <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">Co-ordinator</p>
-                                    <p class="info-label-value">-</p>
+                                    <p class="info-label-value">{{orderInfoList[i].Coordinator}}</p>
                                 </div>
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Sales Person</p>
-                                    <p class="info-label-value">-</p>
+                                    <p class="info-label-value">{{orderInfoList[i].SalesPerson}}</p>
                                 </div>
                             </div>
                             <br>
@@ -521,22 +579,22 @@
                             <div class="row display-flex">
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Address 1</p>
-                                    <p class="info-label-value">422 Than Road</p>
+                                    <p class="info-label-value">{{orderInfoList[i].Address1}}</p>
                                 </div>
                                 <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">Address 2</p>
-                                    <p class="info-label-value" style="width: 134px;">CC Industrial Building</p>
+                                    <p class="info-label-value" style="width: 134px;">{{orderInfoList[i].Address2}}</p>
                                 </div>
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Postcode</p>
-                                    <p class="info-label-value">332143</p>
+                                    <p class="info-label-value">-</p>
                                 </div>
                             </div>
-                            <br>
+                            <!-- <br> -->
                             <div class="row display-flex">
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">City</p>
-                                    <p class="info-label-value">UK</p>
+                                    <p class="info-label-value">-</p>
                                 </div>
                                 <div class="col-lg-4 col-4 pd-2">
                                     <p class="info-label">State</p>
@@ -544,7 +602,7 @@
                                 </div>
                                 <div class="col-lg-4 col-4">
                                     <p class="info-label">Country</p>
-                                    <p class="info-label-value">United Kingdom</p>
+                                    <p class="info-label-value">-</p>
                                 </div>
                             </div>
                         </div>
@@ -556,7 +614,7 @@
         <div *ngIf="(currentSelectedType === orderDetailTypesConstant.SHIPPING_DETAILS)"
             class="col-lg-10 padding-l-0px">
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-12" *ngFor="let rowId of shipmentInfoList;let i = index;">
                     <ng-container>
                         <div class="card card-custom example example-compact shipping-info-details-card">
                             <div class="card-header">
@@ -565,40 +623,27 @@
                                 </div>
                                 <div class="card-title">
                                     <span class="font-12px color-AFAFAF pr-2">Category: </span>
-                                    <span class="font-12px card-label">Samples</span>
+                                    <span class="font-12px card-label">-</span>
                                 </div>
                                 <div class="card-title">
                                     <span class="font-12px color-AFAFAF pr-2">Attention To: </span>
-                                    <span class="font-12px card-label">Ariadne Pte Ltd</span>
+                                    <span class="font-12px card-label">-</span>
                                 </div>
                                 <div class="card-title">
                                     <span class="font-12px color-AFAFAF pr-2">Shipment Qty: </span>
-                                    <span class="font-12px card-label">180</span>
+                                    <span class="font-12px card-label">{{rowId.ShippedQty}}</span>
                                 </div>
                                 <div class="card-toolbar">
-                                    <span class="material-icons expansion-icon" (click)="toggleExpandable(1)">
+                                    <span class="material-icons expansion-icon" (click)="toggleExpandable(rowId.Id)">
                                         {{
-                                        rowIdToExpand== 1 ?
+                                        rowId.Id == rowIdToExpand ?
                                         ExpansionIcons.KEYBOARD_ARROW_UP :
                                         ExpansionIcons.KEYBOARD_ARROW_DOWN
                                         }}
                                     </span>
-                                    <!-- <span class="material-icons delete-icon pr-2 cursor-pointer"
-                                        (click)="deleteShipment(shipment.shipmentId)"
-                                        *ngIf="createCaseMode !== createCaseModes.EDIT">
-                                        delete
-                                    </span>
-                                    <span class="material-icons expansion-icon cursor-pointer"
-                                        (click)="displayShipmentDetails(shipment.shipmentId)">
-                                        {{
-                                        shipment.boxId == boxIdToExpand ?
-                                        ExpansionIcons.KEYBOARD_ARROW_UP :
-                                        ExpansionIcons.KEYBOARD_ARROW_DOWN
-                                        }}
-                                    </span> -->
                                 </div>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body" *ngIf="shouldShowShipmentDetails &&  rowId.Id == rowIdToExpand">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <span class="span-yellow material-icons pr-2">
@@ -613,19 +658,23 @@
                                     <div class="col-lg-12 display-flex">
                                         <div class="col-lg-3 pl-0">
                                             <p class="info-label">Billable?</p>
-                                            <p class="info-label-value">Yes</p>
+                                            <p class="info-label-value" *ngIf="rowId.Billable==false">No</p>
+                                            <p class="info-label-value" *ngIf="rowId.Billable==true">Yes</p>
+
                                         </div>
                                         <div class="col-lg-3 pr-0 pl-0">
                                             <p class="info-label">Shipment Promised Date</p>
-                                            <p class="info-label-value">10/22/2020</p>
+                                            <p class="info-label-value">{{rowId.ShipmentPromisedDate |date:'shortDate'}}
+                                            </p>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <p class="info-label">Expected Delivery Date</p>
-                                            <p class="info-label-value">10/22/2020</p>
+                                            <p class="info-label-value">{{rowId.ExpectedDeliveryDate |date:'shortDate'}}
+                                            </p>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <p class="info-label">Shipment Mode</p>
-                                            <p class="info-label-value">Air Freight</p>
+                                            <p class="info-label-value">{{rowId.ShipmentMode}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -634,15 +683,15 @@
                                     <div class="col-lg-12 display-flex">
                                         <div class="col-lg-3 pl-0">
                                             <p class="info-label">Shipping Terms</p>
-                                            <p class="info-label-value">CIF</p>
+                                            <p class="info-label-value">-</p>
                                         </div>
                                         <div class="col-lg-3 pr-0 pl-0">
                                             <p class="info-label">Shipping Agent</p>
-                                            <p class="info-label-value">YFE</p>
+                                            <p class="info-label-value">{{rowId.ShippingAgent}}</p>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <p class="info-label">Account No.</p>
-                                            <p class="info-label-value">0123018248</p>
+                                            <p class="info-label-value">{{rowId.AccountNo}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -673,12 +722,16 @@
                                                     </thead>
                                                     <tbody>
                                                         <ng-container>
-                                                            <tr>
-                                                                <td>1</td>
-                                                                <td>9781760422791</td>
-                                                                <td>Passer: Psychology 3e</td>
-                                                                <td>140</td>
-                                                                <td>120</td>
+                                                            <tr
+                                                                *ngFor="let rowId of shipmentInfoList[i].ShipmentDetail;let j = index;">
+                                                                <td>{{j+1}}</td>
+                                                                <td>{{shipmentInfoList[i].ShipmentDetail[j].ISBNPartNo}}
+                                                                </td>
+                                                                <td>{{shipmentInfoList[i].ShipmentDetail[j].Title}}
+                                                                </td>
+                                                                <td>-</td>
+                                                                <td>{{shipmentInfoList[i].ShipmentDetail[j].RequestedQty}}
+                                                                </td>
                                                             </tr>
                                                         </ng-container>
                                                     </tbody>
@@ -715,11 +768,12 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>Filfillment</td>
-                                                            <td>Lorem ipum dolor imit</td>
-                                                            <td>50.00</td>
+                                                        <tr
+                                                            *ngFor="let rowId of shipmentInfoList[i].MiscBilling;let k = index;">
+                                                            <td>{{k+1}}</td>
+                                                            <td>{{rowId.Item}}</td>
+                                                            <td>{{rowId.Description}}</td>
+                                                            <td>{{rowId.Value}}</td>
                                                             <td></td>
                                                         </tr>
                                                     </tbody>
@@ -739,15 +793,15 @@
                                         <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">Attention To</p>
-                                                <p class="info-label-value">Ariadne Pte Ltd</p>
+                                                <p class="info-label-value">{{rowId.ShipToAttentionTo}}</p>
                                             </div>
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">Contact Person</p>
-                                                <p class="info-label-value">Desmond Foo</p>
+                                                <p class="info-label-value">-</p>
                                             </div>
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">Email</p>
-                                                <p class="info-label-value">desmond@ariadne.sg</p>
+                                                <p class="info-label-value">{{rowId.ShipToEmail}}</p>
                                             </div>
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">Phone</p>
@@ -757,29 +811,29 @@
                                         <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">Address 1</p>
-                                                <p class="info-label-value">50 Tagore Lane</p>
+                                                <p class="info-label-value">{{rowId.ShipToAdd1}}</p>
                                             </div>
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">Address 2</p>
-                                                <p class="info-label-value">#02-10G</p>
+                                                <p class="info-label-value">{{rowId.ShipToAdd2}}</p>
                                             </div>
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">City</p>
-                                                <p class="info-label-value">Singapore</p>
+                                                <p class="info-label-value">{{rowId.ShipToCity}}</p>
                                             </div>
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">Postcode</p>
-                                                <p class="info-label-value">787494</p>
+                                                <p class="info-label-value">{{rowId.ShipToPostCode}}</p>
                                             </div>
                                         </div>
                                         <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">State</p>
-                                                <p class="info-label-value">-</p>
+                                                <p class="info-label-value">{{rowId.ShipToState}}</p>
                                             </div>
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">Country</p>
-                                                <p class="info-label-value">-</p>
+                                                <p class="info-label-value">{{rowId.ShipToCountry}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -793,61 +847,61 @@
                                         <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                             <div class="col-lg-3 pl-0 pr-0">
                                                 <p class="info-label">Bill-to No</p>
-                                                <p class="info-label-value">DPA152</p>
+                                                <p class="info-label-value">{{rowId.BillToNo}}</p>
                                             </div>
                                             <div class="col-lg-3 pr-0">
                                                 <p class="info-label">Attention To</p>
-                                                <p class="info-label-value">Ariadne Pte Ltd</p>
+                                                <p class="info-label-value">-</p>
                                             </div>
                                             <div class="col-lg-3 pl-0 pr-0">
                                                 <p class="info-label">Contact Person</p>
-                                                <p class="info-label-value">Desmond Foo</p>
+                                                <p class="info-label-value">{{rowId.BillToContactPerson}}</p>
                                             </div>
                                             <div class="col-lg-3 pr-0">
                                                 <p class="info-label">Email</p>
-                                                <p class="info-label-value">desmond@ariadne.sg</p>
+                                                <p class="info-label-value">{{rowId.BillToEmail}}</p>
                                             </div>
                                         </div>
                                         <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                             <div class="col-lg-3 pl-0 pr-0">
                                                 <p class="info-label">Phone</p>
-                                                <p class="info-label-value">-</p>
+                                                <p class="info-label-value">{{rowId.BillToPhoneNo}}</p>
                                             </div>
                                             <div class="col-lg-3 pr-0">
                                                 <p class="info-label">Address 1</p>
-                                                <p class="info-label-value">50 Tagore Lane</p>
+                                                <p class="info-label-value">{{rowId.BillToAddress1}}</p>
                                             </div>
                                             <div class="col-lg-3 pl-0 pr-0">
                                                 <p class="info-label">Address 2</p>
-                                                <p class="info-label-value">#02-10G</p>
+                                                <p class="info-label-value">{{rowId.BillToAddress2}}</p>
                                             </div>
                                             <div class="col-lg-3 pr-0">
                                                 <p class="info-label">City</p>
-                                                <p class="info-label-value">Singapore</p>
+                                                <p class="info-label-value">{{rowId.BillToCity}}</p>
                                             </div>
                                         </div>
                                         <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                             <div class="col-lg-3 pl-0 pr-0">
                                                 <p class="info-label">Postcode</p>
-                                                <p class="info-label-value">787494</p>
+                                                <p class="info-label-value">{{rowId.BillToPostCode}}</p>
                                             </div>
                                             <div class="col-lg-3 pr-0">
                                                 <p class="info-label">State</p>
-                                                <p class="info-label-value">-</p>
+                                                <p class="info-label-value">{{rowId.BillToState}}</p>
                                             </div>
                                             <div class="col-lg-3 pl-0 pr-0">
                                                 <p class="info-label">Country</p>
-                                                <p class="info-label-value">-</p>
+                                                <p class="info-label-value">{{rowId.BillToCountry}}</p>
                                             </div>
                                             <div class="col-lg-3 pr-0">
                                                 <p class="info-label">Co-ordinator</p>
-                                                <p class="info-label-value">-</p>
+                                                <p class="info-label-value">{{rowId.BillToCoordinator}}</p>
                                             </div>
                                         </div>
                                         <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                                             <div class="col-lg-6 pl-0 pr-0">
                                                 <p class="info-label">Sales Person</p>
-                                                <p class="info-label-value">Dosmond Chew</p>
+                                                <p class="info-label-value">{{rowId.BillToSalesPerson}}</p>
                                             </div>
                                         </div>
                                     </div>

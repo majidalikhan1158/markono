@@ -33,7 +33,7 @@ import { OrderService } from 'src/app/modules/services/core/services/order.servi
 export class OrdersComponent implements OnInit {
   //#region declaration
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  displayedColumns: string[] = ['id', 'companyName', 'caseNo', 'orderNo', 'printType', 'orderDate', 'requestedDeliveryDate', 'currentActivityStatusName', 'actions'];
+  displayedColumns: string[] = ['id', 'companyName', 'noOfTitles', 'qty', 'printType', 'orderDate', 'requestedDeliveryDate', 'currentActivityStatusCode', 'actions'];
   //displayedColumns: string[] = ['id','customerPoNo', 'orderDate','rdd','noOfTitles','qty','type','status','actions'];
 
   dataArray = OrdersModelDataList;
@@ -48,7 +48,6 @@ export class OrdersComponent implements OnInit {
     status: '',
   };
   tableFilterTypes = OrderSearchFilterTypes;
-  ViewByArray = ViewByArray;
   selectedStatus = '';
   globalFilter = '';
   statusTypesList = StatusTypesArray;
@@ -65,16 +64,10 @@ export class OrdersComponent implements OnInit {
     private snack: SnackBarService,
     private orderService: OrderService,
     private cd: ChangeDetectorRef,) {
-    this.dataSource = new MatTableDataSource<OrdersModel>(this.dataArray);
   }
 
   ngOnInit(): void {
     this.getAllOrders();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.filterPredicate = this.customFilterPredicate();
   }
 
   getAllOrders() {
@@ -267,8 +260,8 @@ export class OrdersComponent implements OnInit {
     return ' Banta Global Turnkey (S) Pte Ltd';
   }
 
-  getOrdersInfo() {
-    this.router.navigate(['/admin/order-management/order-details']);
+  getOrdersInfo(id) {
+    this.router.navigate(['/admin/order-management/order-details/' + id]);
   }
 
 }

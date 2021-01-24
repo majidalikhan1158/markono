@@ -89,6 +89,13 @@ export class ApiEndpointsService {
   getFileCheckUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getFileCheck}`
 
+  //order-managemnt-module
   getAllOrders = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.order.getAllOrders}`
+
+  getOrderDeatils = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.order.getAllOrders}`
+
+  getShipmentDetails = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.order.getShipmentDetails}`
 }

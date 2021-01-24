@@ -8,7 +8,6 @@ export interface OrdersModel {
     type: string;
     status: string;
 }
-
 export interface OrderVM {
     id: number;
     caseNo: string;
@@ -51,8 +50,77 @@ export interface OrderVM {
     companyName: string;
     address1: string;
     address2: string;
-    caseDetail: string;
-    otherCharge: string
+    qty: number;
+    noOfTitles: number;
+    caseDetail: CaseDetail[];
+    otherCharge: OtherCharge[];
+}
+export interface OtherCharge {
+    id: number;
+    item: string;
+    value: number;
+    description: string;
+    caseID: number;
+}
+export interface CaseDetail {
+    id: number;
+    caseID: number;
+    caseDetailNo: number;
+    iSBNPartNo: number;
+    printType: string;
+    productVersion: string;
+    parentISBN: string;
+    type: string;
+    componentType: string;
+    jobType: string;
+    productGroup: string;
+    yourReference: string;
+    title: string;
+    lnNo: number;
+    extLnNo: number;
+    jobNo: number;
+    extJobNo: null;
+    sellToNo: string;
+    bindingType: string;
+    totalExtent: number;
+    weight: string;
+    spine: string;
+    additionalUnitPrice: number;
+    additionalQty: number;
+    margin: number;
+    orderQuantity: number;
+    productionQuantity: number;
+    estimatedPrice: number;
+    quotedPrice: number;
+    sellingPrice: number;
+    subTotal: number;
+    samplesRequired: number;
+    bluePrintRequired: number;
+    fGRequired: number;
+    advancesRequired: number;
+    carrierSheet: string;
+    isDeleted: boolean;
+    currentActivityId: number;
+    currentActivityStatusCode: number;
+    currentActivityStatusName: string;
+    createdByUser: string;
+    createdBy: string;
+    createdDateTime: number;
+    updatedByUser: string;
+    updatedBy: string;
+    updatedDateTime: number;
+    requestedDeliveryDate: number
+    caseDetailAddiotional: CaseDetailAdditional[];
+}
+export interface CaseDetailAdditional {
+    id: number;
+    caseDetailID: number;
+    forWho: string;
+    item: string;
+    lnNo: number;
+    quantity: number;
+    specialInstruction: string;
+    requiredDate: number;
 }
 
 export const StatusTypesArray = [
@@ -80,7 +148,6 @@ export const OrderType = {
     PRINT: 'Print',
     WAREHOUSE: 'Warehouse',
 };
-
 export interface OrderJobModel {
     id: number;
     jobNo: string;
@@ -91,7 +158,6 @@ export interface OrderJobModel {
     jobType: string;
     status: string;
 }
-
 export interface OrdersIssueModel {
     id: number;
     jobNo: string;
@@ -103,7 +169,6 @@ export interface OrdersIssueModel {
     type: string;
     status: string;
 }
-
 export interface ActivityLogModel {
     id: number;
     actionDate: number;
@@ -113,7 +178,6 @@ export interface ActivityLogModel {
     status: string;
     activity: string;
 }
-
 export interface JobInfoHeaderModel {
     id: number;
     custPoNo: string;
@@ -124,7 +188,6 @@ export interface JobInfoHeaderModel {
     orderType: string;
     orderStatus: string;
 }
-
 export interface JobInfoDetailModel {
     id: number;
     jobNo: string;
@@ -149,4 +212,42 @@ export const OrderInfoStatusTypesArray = [
 
 export const OrderInfoJobType = {
     OFFSET: 'Offset',
+};
+
+export const OrderStatusTypes = {
+    ALL: 'ALL',
+    101: 'Case Created',
+    CASE_REJECTED: 'Case Rejected',
+    201: 'RFQ',
+    202: 'Pending Est',
+    203: 'Est. Compl',
+    EST_RECOMMIT: 'Est. Recommit.',
+    QUOTE_SENT: 'Quote Sent',
+    QUOTE_REJECTED: 'Quote Rejected',
+    207: 'Order Confirmed',
+    301: 'Pending File Prep',
+    FILE_PREPARING: 'File Preparing',
+    FILE_ISSUE: 'File Issue',
+    FILE_PREP_COMPL: 'File Prep Compl.',
+    PLANNING: 'Planning',
+    SCHEDULING: 'Scheduling',
+    SCHEDULED_TO_SF: 'Scheduled to SF',
+    PENDING_PLATES: 'Pending Plates',
+    PLATES_PRODUCED: 'Plates Produced',
+    503: 'Printing',
+    PRINTING_COMPL: 'Printing Compl.',
+    FOLDING: 'Folding',
+    602: 'Folding Compl',
+    BINDING: 'Binding',
+    801: 'Bind Compl',
+    REJECT: 'Reject (Prod)',
+    PENDING_RECEIPT: 'Pending Receipt',
+    RECEIVING: 'Receiving',
+    RECEIPT_COMPL: 'Receipt Compl.',
+    806: 'Shipped',
+    PENDING_INVOICING: 'Pending Invoicing',
+    INVOICED: 'Invoiced',
+    PAID: 'Paid',
+    ORDER_ON_HOLD: 'Order On-hold',
+    ORDER_CANCELLED: 'Order cancelled',
 };

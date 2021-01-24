@@ -1,20 +1,20 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSelectionListChange } from '@angular/material/list';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrderDetailTypes, OrderDetailTypesArray } from 'src/app/modules/shared/enums/order-management/order-constants';
 import { OrderJobDataList } from 'src/app/modules/shared/mock-data/order-job-list';
-import { OrderInfoJobType, OrderInfoStatusTypesArray, OrderJobModel, OrdersModel } from 'src/app/modules/shared/models/order-management';
+import { CaseDetail, OrderInfoJobType, OrderInfoStatusTypesArray, OrderJobModel, OrdersModel, OrderVM } from 'src/app/modules/shared/models/order-management';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { FormControl } from '@angular/forms';
 import { CreateCaseMode } from 'src/app/modules/shared/enums/app-enums';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { OrderInfoDetailSearchFilters, OrdersInfoDetailSearchFilterTypes } from 'src/app/modules/shared/models/table-filter-modals';
+import { OrderService } from 'src/app/modules/services/core/services/order.service';
+import { Subscription } from 'rxjs';
+import { MatPaginator } from '@angular/material/paginator';
+import { OrderHelperService } from 'src/app/modules/shared/enums/helpers/order-helper.service';
 
-
-const ELEMENT_DATA: OrdersModel[] = [
-  { id: 0, customerPoNo: '1', orderDate: Date.now(), rdd: Date.now(), noOfTitles: 'H', qty: '0', type: 'Warehouse', status: 'Shipped' },
-];
 @Component({
   selector: 'app-order-details',
   templateUrl: './order-details.component.html',
@@ -24,47 +24,22 @@ const ELEMENT_DATA: OrdersModel[] = [
 export class OrderDetailsComponent implements OnInit {
   //#region declaration 
   @Input() createCaseMode: CreateCaseMode;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   positionOptions: TooltipPosition[] = ['below', 'above', 'left', 'right'];
   position = new FormControl(this.positionOptions[1]);
-  displayedColumnsOrderInfo: string[] = [
-    'customerPoNo',
-    'orderDate',
-    'rdd',
-    'qty',
-    'type',
-    'status',
-  ];
-  displayedColumnsJobInfo: string[] = [
-    'jobNo',
-    'isbn',
-    'orderDate',
-    'rdd',
-    'qty',
-    'jobType',
-    'status',
-    'actions'
-  ];
-  dataSource = ELEMENT_DATA;
-  orderDetailTypesArray = OrderDetailTypesArray;
+  columnsToDisplay = ['Cust PO No.', 'Order Date', 'RDD', 'Qty', 'Order Type', 'Order Status',];
+  displayedColumnsJob: string[] = ['Id', 'JobNo', 'ISBNPartNo', 'CreatedDateTime', 'RequestedDeliveryDate', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode'];
   dataSourceJob;
-  displayedColumnsJob: string[] = [
-    'id',
-    'jobNo',
-    'isbn',
-    'orderDate',
-    'rdd',
-    'qty',
-    'jobType',
-    'status',
-    'actions'
-  ];
-  dataArray = OrderJobDataList;
+  orderInfoList;
+  shipmentInfoList;
+  dataJobArray;
+  orderDetailTypesArray = OrderDetailTypesArray;
   chooseList;
   currentSelectedType = 'JOBS';
   orderDetailTypesConstant = OrderDetailTypes;
   ExpansionIcons = ExpansionIcons;
   rowIdToExpand = 1;
-
   tableFilters: OrderInfoDetailSearchFilters = {
     currentSelectedFilter: '',
     jobNo: '',
@@ -76,18 +51,60 @@ export class OrderDetailsComponent implements OnInit {
     status: '',
   };
   tableFilterTypes = OrdersInfoDetailSearchFilterTypes;
-
   statusTypesList = OrderInfoStatusTypesArray;
   jobTypes = OrderInfoJobType;
   selectedStatus = '';
   globalFilter = '';
+  id = '';
+  subscription: Subscription;
+  shouldShowShipmentDetails = false;
+
   //#endregion
 
-  constructor(private router: Router) {
-    this.dataSourceJob = new MatTableDataSource<OrderJobModel>(this.dataArray);
+  constructor(private router: Router,
+    private route: ActivatedRoute,
+    private orderService: OrderService,
+    private cd: ChangeDetectorRef,
+    private orderHelper: OrderHelperService) {
   }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.id = params.get('id');
+    });
+    this.getOrderInfo();
+    this.getOrderJob();
+    this.getCustomerInfo();
+    this.getShimpmentInfo();
+  }
+
+  getOrderInfo() {
+    this.subscription = this.orderService.getOrderDeatils(this.id).subscribe(resp => {
+      this.orderInfoList = resp.body.result as OrderVM;
+    });
+  }
+
+  initializeDatatable = () => {
+    this.dataSourceJob = new MatTableDataSource<OrderJobModel>(this.dataJobArray);
+    this.dataSourceJob.paginator = this.paginator;
+    this.dataSourceJob.filterPredicate = this.customFilterPredicate();
+    this.cd.detectChanges();
+  }
+
+  getOrderJob() {
+    this.subscription = this.orderService.getOrderDeatils(this.id).subscribe(resp => {
+      this.dataJobArray = resp.body.result[0].CaseDetail as CaseDetail;
+      this.initializeDatatable();
+    });
+  }
+
+  getCustomerInfo() {
+  }
+
+  getShimpmentInfo() {
+    this.subscription = this.orderService.getShipmentDetails(this.id).subscribe(resp => {
+      this.shipmentInfoList = resp.body.result as OrderVM;
+    });
   }
 
   handleOrderDetailTypeChange(event: MatSelectionListChange) {
@@ -109,10 +126,16 @@ export class OrderDetailsComponent implements OnInit {
     this.router.navigate(['admin/order-management/job-details']);
   }
 
-  toggleExpandable(id: number): void {
-    this.rowIdToExpand = this.rowIdToExpand === id
-      ? 0
-      : id;
+  toggleExpandable(id: number) {
+    debugger
+    const shipmentToExpand = this.shipmentInfoList.find((x) => x.Id === id);
+    if (this.rowIdToExpand === shipmentToExpand.Id) {
+      this.rowIdToExpand = 0;
+      this.shouldShowShipmentDetails = !this.shouldShowShipmentDetails;
+    } else {
+      this.rowIdToExpand = shipmentToExpand.Id;
+      this.shouldShowShipmentDetails = true;
+    }
   }
 
   tableFilterChange(filterValue: string, filterPropType: string) {
@@ -291,6 +314,6 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   getToolTipData(isbn) {
-    return `Title: OWNER'S BOOKLET, FS FREEDOM LITE, MG/DL, ZHT/EN-GB`;
+    return this.dataJobArray.find(x => x.ISBNPartNo === isbn).Title;
   }
 }

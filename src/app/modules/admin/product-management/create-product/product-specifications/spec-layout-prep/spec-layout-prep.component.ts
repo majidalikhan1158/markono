@@ -73,6 +73,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   layoutPrepCallIsInProgress = false;
   productSpec: ProductSpecStoreVM;
+  shouldShowLoader = false;
   constructor(private productService: ProductService,
               private store: ProductSpecStore,
               private snack: SnackBarService,
@@ -83,7 +84,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getImpositionLayout(LayoutPrepComponentTypes.Cover);
     this.getImpositionLayout(LayoutPrepComponentTypes.Text);
-    // this.checkLayoutPrepData(); uncomment this after testing and removed this.getLayoutPrepApiData('', '');
+    // this.checkLayoutPrepData(); // uncomment this after testing and removed this.getLayoutPrepApiData('', '');
     this.getLayoutPrepApiData('', '');
   }
 
@@ -93,7 +94,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
       const generalVM = resp?.generalVM ?? null;
       if (generalVM && generalVM.productNumber && generalVM.versionNo) {
         if (!this.layoutPrepCallIsInProgress) {
-          this.layoutPrepCallIsInProgress = true;
+          this.layoutPrepCallIsInProgress = this.shouldShowLoader =  true;
           this.getLayoutPrepApiData(generalVM.productNumber, generalVM.versionNo);
         }
       } else {
@@ -103,9 +104,11 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   }
 
   getLayoutPrepApiData(productNumber: string, versionNo: string) {
+    productNumber = 'hht11111111';
+    versionNo = 'V00001';
     const reqObj = {
-      productNumber: 'hht11111111',
-      versionNo: 'V00001'
+      productNumber,
+      versionNo
     };
     this.subscription = this.productService.getLayoutPrepApiData(reqObj).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
@@ -119,14 +122,15 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
         .sort((a, b) => a.ComponentsSNo - b.ComponentsSNo);
         this.layoutPrepVM.ProductionActivity = this.layoutPrepVM.ProductionActivity
         .sort((a, b) => this.helper.minus(a.ComponentBreakdownSNo as any as number, b.ComponentBreakdownSNo as any as number));
-
+        this.shouldShowLoader = false;
         console.log(this.layoutPrepVM);
       } else {
+        this.shouldShowLoader = false;
         this.snack.open(`No record found against ISBN: ${productNumber} and Version No: ${versionNo}`);
       }
       this.layoutPrepCallIsInProgress = false;
     }, (error: HttpErrorResponse) => {
-      this.layoutPrepCallIsInProgress = false;
+      this.layoutPrepCallIsInProgress = this.shouldShowLoader = false;
       this.snack.open('Unable to retreive information');
     });
   }
@@ -215,6 +219,9 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
 
   handleAddProductionActivityModalEvent = (event: ProductionActivities) => {
     this.modalService.close(UIModalID.ADD_PRODUCTION_ACTIVITIES_MODAL);
+    if (!this.layoutPrepVM.ProductionActivity) {
+      this.layoutPrepVM.ProductionActivity = [];
+    }
     this.layoutPrepVM.ProductionActivity.push(event);
   }
 

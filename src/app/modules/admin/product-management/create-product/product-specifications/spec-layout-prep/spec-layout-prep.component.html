@@ -75,6 +75,18 @@
                                 </mat-form-field>
                             </td>
                         </tr>
+                        <tr class="outer-row" *ngIf="layoutPrepVM?.Components.length === 0">
+                            <td colspan="6">No records found</td>
+                        </tr>
+                        <tr class="outer-row" *ngIf="!layoutPrepVM && shouldShowLoader">
+                            <td colspan="6">
+                                <mat-progress-spinner
+                                    style="margin: auto" 
+                                  color="primary" 
+                                  mode="indeterminate">
+                                </mat-progress-spinner>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -119,6 +131,18 @@
                                         <mat-option [value]="row.MachineType">{{row.MachineType}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
+                            </td>
+                        </tr>
+                        <tr class="outer-row" *ngIf="layoutPrepVM?.ComponentsBreakdown.length === 0">
+                            <td colspan="11">No records found</td>
+                        </tr>
+                        <tr class="outer-row" *ngIf="!layoutPrepVM && shouldShowLoader">
+                            <td colspan="11">
+                                <mat-progress-spinner
+                                    style="margin: auto" 
+                                  color="primary" 
+                                  mode="indeterminate">
+                                </mat-progress-spinner>
                             </td>
                         </tr>
                     </tbody>
@@ -264,13 +288,25 @@
                                 </tr>
                             </ng-container>
                         </ng-container>
+                        <tr class="outer-row" *ngIf="layoutPrepVM?.ProductionActivity.length === 0">
+                            <td colspan="14">No records found</td>
+                        </tr>
+                        <tr class="outer-row" *ngIf="!layoutPrepVM && shouldShowLoader">
+                            <td colspan="14">
+                                <mat-progress-spinner
+                                    style="margin: auto" 
+                                  color="primary" 
+                                  mode="indeterminate">
+                                </mat-progress-spinner>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             <!--end::Table-->
         </div>
     </div>
-    <a class="pl-3" (click)="openAddProductionActivityModal()">
+    <a class="pl-3" (click)="openAddProductionActivityModal()" *ngIf="layoutPrepVM">
         <span class="material-icons add-icon pr-2 cursor-pointer font-18px ">
             add_circle_outline
         </span>

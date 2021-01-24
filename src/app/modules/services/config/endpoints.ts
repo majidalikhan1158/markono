@@ -4,6 +4,7 @@ export const Endpoints = {
     authentication: {
         getOrderServicesToken: 'Authentication/GetToken',
         getProductServicesToken: 'GetToken',
+        getEstimationServicesToken: 'GetToken',
         getShopFloorCollectionToken: `https://keycloak.markono.com/auth/realms/${environment.SHOP_FLOOR_AUTH_REALM}/protocol/openid-connect/token`
     },
     case: {
@@ -31,6 +32,11 @@ export const Endpoints = {
         getCreateCheckPrintFile: 'CreateFileCheck',
         getFileCheck: 'GetFileCheck',
         setLiveVersion: 'SetLiveVersion'
+    },
+    estimation: {
+        getImpositionLayout: 'GetImpositionLayout',
+        getEstimation: 'GetEstimations',
+        getCalculatePaper: 'CalculatePaper'
     },
     shopFloor: {
         getMachinesList: 'machines?filter[active]=true&filter[sdcFlag]=true&sort=seq'

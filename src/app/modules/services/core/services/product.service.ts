@@ -8,6 +8,7 @@ import { QueryStringParameters } from '../../shared/classes/query-string-paramet
 import { ProductDetailsVM } from 'src/app/modules/shared/models/create-case';
 import { HelperService } from './helper.service';
 import { ProductResponseModal, SpineWidthThicknessParamHistory, SpineWidthParamHistory } from '../../shared/classes/product-modals/product-modals';
+import { GetPaperRequest, LayoutPrepVM } from 'src/app/modules/shared/models/estimation';
 
 @Injectable({
   providedIn: 'root',
@@ -177,5 +178,24 @@ export class ProductService {
     $filter=isbn eq '${reqObj.isbn}' and VersionNo eq '${reqObj.VersionNo}'`;
     const urlWithParams = `${url}?${queryParams}`;
     return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getImpositionLayout = (componentType: string): Observable<any>  => {
+    const url = this.endPoint.getImpositionLayoutUrl();
+    const queryParams = `ComponentType=${componentType}`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getLayoutPrepApiData = (reqObj: { productNumber: string; versionNo: string; }): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getEstimationUrl();
+    const queryParams = `$filter=ISBNNo eq '${reqObj.productNumber}'and ISBNVersionNo eq '${reqObj.versionNo}' and EstimationType eq 'Layout' &$expand=Components,ComponentsBreakdown($filter=Deleted ne true),ProductionActivity($filter=Deleted ne true;$expand=ProductionProcesses)`;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  getPaperList = (reqObj: GetPaperRequest): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getCalculatePaperUrl();
+    return this.http.post(url, {postData: reqObj});
   }
 }

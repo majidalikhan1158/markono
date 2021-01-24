@@ -139,6 +139,8 @@ export class JwtInterceptor implements HttpInterceptor {
       this.tokenType = TokenType.PRODUCT;
     } else if (url.includes(this.constants.API_ENDPOINT_SHOP_FLOOR_SERVICES)) {
       this.tokenType = TokenType.SHOPFLOOR;
+    } else if (url.includes(this.constants.API_ENDPOINT_ESTIMATION_SERVICES)) {
+      this.tokenType = TokenType.ESTIMATION;
     }
   }
 }

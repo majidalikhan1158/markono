@@ -9,6 +9,7 @@ import { Endpoints } from '../../config/endpoints';
 })
 // Returns the api endpoints urls to use in services in a consistent way
 export class ApiEndpointsService {
+
   constructor(private constants: Constants) { }
 
   private getOrderServicesEndpoint = () =>
@@ -20,11 +21,17 @@ export class ApiEndpointsService {
   private getShopFloorServicesEndpoint = () =>
     `${this.constants.API_BASE_ADDRESS}${this.constants.API_ENDPOINT_SHOP_FLOOR_SERVICES}`
 
+  private getEstimationServicesEndPoint = () =>
+    `${this.constants.API_BASE_ADDRESS}${this.constants.API_ENDPOINT_ESTIMATION_SERVICES}`
+
   getOrderServicesTokenUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.authentication.getOrderServicesToken}`
 
   getProductServicesTokenUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.authentication.getProductServicesToken}`
+
+  getEstimationServicesTokenUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.authentication.getEstimationServicesToken}`
 
   public getShopFloorTokenUrl = () =>
     `${Endpoints.authentication.getShopFloorCollectionToken}`
@@ -97,4 +104,13 @@ export class ApiEndpointsService {
 
   setLiveVersion = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.setLiveVersion}`
+
+  getImpositionLayoutUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getImpositionLayout}`
+
+  getEstimationUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getEstimation}`
+
+  getCalculatePaperUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getCalculatePaper}`
 }

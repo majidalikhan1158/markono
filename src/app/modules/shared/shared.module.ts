@@ -17,6 +17,7 @@ import { ViewOperatorsModalComponent } from './ui-modals/shop-floor-management/v
 import { AddReasonModalComponent } from './ui-modals/platemaking/add-reason-modal/add-reason-modal.component';
 import { GroupByPipeModule } from './pipe/group-by.pipe';
 import { UpdatePasswordModalComponent } from './ui-modals/order-management/update-password-modal/update-password-modal.component';
+import { AddProductionActivityModalComponent } from './ui-modals/product-spec-management/add-production-activity-modal/add-production-activity-modal.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { UpdatePasswordModalComponent } from './ui-modals/order-management/updat
     ViewOperatorsModalComponent,
     AddReasonModalComponent,
     UpdatePasswordModalComponent,
+    AddProductionActivityModalComponent
   ],
   imports: [CommonModule, MaterialUiModule, NgbDropdownModule, SumPipeModule, GroupByPipeModule],
   exports: [
@@ -44,7 +46,8 @@ import { UpdatePasswordModalComponent } from './ui-modals/order-management/updat
     ViewAllModalComponent,
     ViewOperatorsModalComponent,
     AddReasonModalComponent,
-    UpdatePasswordModalComponent
+    UpdatePasswordModalComponent,
+    AddProductionActivityModalComponent
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DATA, useValue: {} },

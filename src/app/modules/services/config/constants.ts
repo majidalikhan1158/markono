@@ -12,6 +12,7 @@ export class Constants {
     public readonly API_ENDPOINT_LIVE: string = 'app.markono.com';
     public readonly API_ENDPOINT_ORDER_SERVICES: string = 'OrderServicesDev/api/';
     public readonly API_ENDPOINT_PRODUCT_SERVICES: string = 'ProductServicesDev/api/';
+    public readonly API_ENDPOINT_ESTIMATION_SERVICES: string = 'EstimationServicesDev/api/';
     public readonly API_ENDPOINT_SHOP_FLOOR_SERVICES: string = `${environment.SHOP_FLOOR_CONTEXT_PATH}/api/`;
     public readonly AUTH_CRED_ORDER_TOKEN = {
         username: 'webDev',
@@ -20,6 +21,10 @@ export class Constants {
     public readonly AUTH_CRED_PRODUCT_TOKEN = {
         username: 'webDev',
         password: 'webDev@prod'
+    };
+    public readonly AUTH_CRED_ESTIMATION_TOKEN = {
+        username: 'webDev',
+        password: 'webDev@est'
     };
     public readonly AUTH_CRED_SHOP_FLOOR_COLLECTION = {
         username: 'operator1',

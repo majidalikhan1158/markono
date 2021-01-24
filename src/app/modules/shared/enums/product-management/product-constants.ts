@@ -620,17 +620,6 @@ export const ImpositionLayoutList = [
   }
 ];
 
-export const GrainDirectionList = [
-  {
-    value: 'true',
-    text: 'True',
-  },
-  {
-    value: 'false',
-    text: 'False',
-  }
-];
-
 export const MachineTypeList = [
   {
     value: '4 Color Press',
@@ -734,3 +723,11 @@ export const StatusList = [
     hint: ''
   }
 ];
+
+
+export const LayoutPrepComponentTypes = {
+  Cover: 'Cover',
+  Text: 'Text',
+  None: '',
+  Jacket: 'Jacket'
+}

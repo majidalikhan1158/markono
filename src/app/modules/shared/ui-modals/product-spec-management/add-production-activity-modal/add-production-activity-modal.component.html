@@ -1,0 +1,79 @@
+<div class="modal-header">
+  <h4 class="modal-title">Add A Production Activity</h4>
+  <button type="button" class="close" aria-label="Close" (click)="addActivity()">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body add-production-activity-form position-relative font-12px">
+  <div class="row pb-5" *ngIf="productionActivityVM">
+    <div class="col-lg-12 display-flex pr-0">
+      <div class="col-lg-6 pl-0">
+        <mat-form-field appearance="fill">
+          <mat-label>Component Id</mat-label>
+          <mat-select [(ngModel)]="productionActivityVM.Id">
+              <mat-option value="1">1</mat-option>
+              <mat-option value="2">2</mat-option>
+              <mat-option value="3">3</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-lg-6 pl-0">
+          <mat-form-field appearance="fill">
+              <mat-label>Type</mat-label>
+              <input matInput [(ngModel)]="productionActivityVM.Type">
+          </mat-form-field>
+      </div>
+    </div>
+    <div class="col-lg-12 display-flex pr-0">
+      <div class="col-lg-6 pl-0">
+        <mat-form-field appearance="fill">
+            <mat-label>Qty</mat-label>
+            <input matInput type="number" min="0" [(ngModel)]="productionActivityVM.Qty">
+        </mat-form-field>
+      </div>
+      <div class="col-lg-6 pl-0">
+          <mat-form-field appearance="fill">
+              <mat-label>Layout</mat-label>
+              <input matInput [(ngModel)]="productionActivityVM.Layout">
+          </mat-form-field>
+      </div>
+    </div>
+    <div class="col-lg-12 display-flex pr-0">
+      <div class="col-lg-6 pl-0">
+        <mat-form-field appearance="fill">
+          <mat-label>Activity</mat-label>
+          <mat-select [(ngModel)]="productionActivityVM.Activity">
+              <mat-option value="4 Color Press">4 Color Press</mat-option>
+              <mat-option value="5 Color Press">5 Color Press</mat-option>
+              <mat-option value="8 Color Press">8 Color Press</mat-option>
+              <mat-option value="Mono Press">Mono Press</mat-option>
+              <mat-option value="Digital (std)">Digital (std)</mat-option>
+              <mat-option value="Digital (Enhance)">Digital (Enhance)</mat-option>
+              <mat-option value="Digital (Premium)">Digital (Premium)</mat-option>
+
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-lg-6 pl-0">
+        <mat-form-field appearance="fill">
+            <mat-label>Dept</mat-label>
+            <input matInput [(ngModel)]="productionActivityVM.Dept">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-lg-12 display-flex pr-0">
+      <div class="col-lg-6 pl-0">
+        <mat-form-field appearance="fill">
+            <mat-label>Process Code</mat-label>
+            <input matInput [(ngModel)]="productionActivityVM.ProcessCode">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <br><Br>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary ui-modal-cancel-button ui-modal-action-button"
+      (click)="close()">CANCEL</button>
+  <button type="button" class="btn btn-primary ui-modal-action-button" (click)="addActivity()">ADD</button>
+</div>

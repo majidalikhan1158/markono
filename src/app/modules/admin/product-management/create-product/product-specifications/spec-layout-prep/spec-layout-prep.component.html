@@ -29,6 +29,9 @@
                     </thead>
                     <tbody>
                         <tr class="outer-row" *ngFor="let row of layoutPrepVM?.Components">
+                            <ng-container>
+                                {{getPaperList(row.ComponentType)}}
+                            </ng-container>
                             <td>{{row.ComponentType}}</td>
                             <td>
                                 <mat-form-field appearance="fill" class="width-100">
@@ -61,12 +64,15 @@
                                 </mat-form-field>
                             </td>
                             <td>
-                                <mat-form-field appearance="fill" *ngIf="!(row.ComponentType === componentTypes.Cover || row.ComponentType === componentTypes.Jacket)">
+                                <mat-form-field appearance="fill" style="top: 6px !important">
                                     <mat-select [(ngModel)]="row.Paper">
-                                        <ng-container *ngIf="row.ComponentType !== componentTypes.None">
-                                            <mat-option [value]="row.Paper">{{row.Paper}}</mat-option>
-                                            <!-- <mat-option *ngFor="let item of getPaperList(row.ComponentType) | async"
-                                            [value]="item.paperNo"> {{item.paperNo}} </mat-option> -->
+                                        <ng-container *ngIf="row.ComponentType === componentTypes.Cover">
+                                            <mat-option *ngFor="let item of paperListObjects.CoverPaperList"
+                                            [value]="item.paperNo"> {{item.paperNo}} </mat-option>
+                                        </ng-container>
+                                        <ng-container *ngIf="row.ComponentType === componentTypes.Text">
+                                            <mat-option *ngFor="let item of paperListObjects.TextPaperList"
+                                            [value]="item.paperNo"> {{item.paperNo}} </mat-option>
                                         </ng-container>
                                         <ng-container *ngIf="row.ComponentType === componentTypes.None">
                                             <mat-option value=""> There is no data </mat-option>

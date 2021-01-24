@@ -196,6 +196,6 @@ export class ProductService {
 
   getPaperList = (reqObj: GetPaperRequest): Observable<HttpResponse<any>> => {
     const url = this.endPoint.getCalculatePaperUrl();
-    return this.http.post(url, {postData: reqObj});
+    return this.http.post(url, reqObj);
   }
 }

@@ -1,3 +1,4 @@
+import { PaperListObjects } from './../../../../../shared/models/estimation';
 import { Component, OnInit, ViewEncapsulation, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { LayoutPrepComponentTypes, MachineTypeList } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { ProductSpecLayoutPrepCompBreakList } from 'src/app/modules/shared/mock-data/layout-prep-comp-break-list';
@@ -9,11 +10,11 @@ import { ProductSpecStore } from '../../../../../shared/ui-services/product-spec
 import { SnackBarService } from '../../../../../shared/ui-services/snack-bar.service';
 import { ProductSpecHelperService } from '../../../../../shared/enums/helpers/product-spec-helper.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { GetPaperRequest, ImpositionLayout, LayoutPrepVM } from 'src/app/modules/shared/models/estimation';
+import { GetPaperRequest, ImpositionLayout, LayoutPrepVM, PaperListObjects } from 'src/app/modules/shared/models/estimation';
 import { ProductSpecStoreVM } from '../../../../../shared/models/product-spec';
 import { Subscription } from 'rxjs';
 import { ModalService } from '../../../../../shared/ui-services/modal.service';
-import { ProductionActivities } from '../../../../../shared/models/estimation';
+import { ProductionActivities, GetPaperResponse } from '../../../../../shared/models/estimation';
 
 @Component({
   selector: 'app-spec-layout-prep',
@@ -23,7 +24,15 @@ import { ProductionActivities } from '../../../../../shared/models/estimation';
 
 })
 export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
+  constructor(private productService: ProductService,
+              private store: ProductSpecStore,
+              private snack: SnackBarService,
+              private helper: ProductSpecHelperService,
+              private ref: ChangeDetectorRef,
+              private modalService: ModalService) { }
+
   layoutPrepVM: LayoutPrepVM;
+  paperListObjects: PaperListObjects = this.getInitialPaperListObject();
   textImpositionLayoutList: ImpositionLayout[];
   coverImpositionLayoutList: ImpositionLayout[];
   componentTypes = LayoutPrepComponentTypes;
@@ -74,12 +83,6 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   layoutPrepCallIsInProgress = false;
   productSpec: ProductSpecStoreVM;
   shouldShowLoader = false;
-  constructor(private productService: ProductService,
-              private store: ProductSpecStore,
-              private snack: SnackBarService,
-              private helper: ProductSpecHelperService,
-              private ref: ChangeDetectorRef,
-              private modalService: ModalService) { }
 
   ngOnInit(): void {
     this.getImpositionLayout(LayoutPrepComponentTypes.Cover);
@@ -94,7 +97,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
       const generalVM = resp?.generalVM ?? null;
       if (generalVM && generalVM.productNumber && generalVM.versionNo) {
         if (!this.layoutPrepCallIsInProgress) {
-          this.layoutPrepCallIsInProgress = this.shouldShowLoader =  true;
+          this.layoutPrepCallIsInProgress = true;
           this.getLayoutPrepApiData(generalVM.productNumber, generalVM.versionNo);
         }
       } else {
@@ -104,6 +107,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   }
 
   getLayoutPrepApiData(productNumber: string, versionNo: string) {
+    this.shouldShowLoader = true;
     productNumber = 'hht11111111';
     versionNo = 'V00001';
     const reqObj = {
@@ -164,10 +168,39 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
     });
   }
 
+  getInitialPaperListObject(): PaperListObjects {
+    return {
+      CoverPaperList: [],
+      TextPaperList: [],
+      NonePaperList: [],
+      CoverPaperListCallDone: false,
+      TextPaperListCallDone: false,
+      NonePaperListCallDone: false,
+    };
+  }
+
   getPaperList = (componentType: string) => {
+    if (!this.shouldCallApi(componentType)) {
+      return ;
+    }
+    this.setPaperList(componentType, []);
     const reqObj = this.getPaperRequestData(componentType);
 
-    return this.productService.getPaperList(reqObj);
+    if (!reqObj) {
+      this.setPaperList(componentType, []);
+    }
+    this.subscription = this.productService.getPaperList(reqObj).subscribe(resp => {
+      if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
+        const list = resp.body.result as GetPaperResponse[];
+        this.setPaperList(componentType, list);
+      } else {
+        this.setPaperList(componentType, []);
+      }
+      this.ref.detectChanges();
+    }, (err: HttpErrorResponse) => {
+      this.setPaperList(componentType, []);
+      this.ref.detectChanges();
+    });
   }
 
   getPaperRequestData = (componentType: string) => {
@@ -190,7 +223,17 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   }
 
   getCoverData = (): GetPaperRequest => {
-    const coverVM = this.productSpec.coverVM;
+    const coverVM = this.productSpec?.coverVM;
+    if (!coverVM) {
+      return {
+        GrainDirection: 'True',
+        PaperDepth: 458,
+        PaperWidth: 304,
+        PaperBrand: 'Magnostar',
+        PaperMaterial: 'Glossy Artpaper',
+        Weight: '130gsm'
+      };
+    }
     return {
       GrainDirection: '',
       PaperDepth: 0,
@@ -202,15 +245,48 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   }
 
   getTextData = (): GetPaperRequest => {
-    const coverVM = this.productSpec.textVM;
+    const textVM = this.productSpec?.textVM;
+    if (!textVM) {
+      return {
+        GrainDirection: 'True',
+        PaperDepth: 960,
+        PaperWidth: 646,
+        PaperBrand: 'UPM',
+        PaperMaterial: 'Woodfree',
+        Weight: '70gsm'
+      };
+    }
     return {
       GrainDirection: '',
       PaperDepth: 0,
       PaperWidth: 0,
-      PaperBrand: coverVM.materialBrand,
-      PaperMaterial: coverVM.textMaterial,
-      Weight: coverVM.textMaterialWeight
+      PaperBrand: textVM.materialBrand,
+      PaperMaterial: textVM.textMaterial,
+      Weight: textVM.textMaterialWeight
     };
+  }
+
+  setPaperList(componentType: string, list: GetPaperResponse[]) {
+    if (componentType === LayoutPrepComponentTypes.Cover) {
+      this.paperListObjects.CoverPaperList = list;
+      this.paperListObjects.CoverPaperListCallDone = true;
+    } else if (componentType === LayoutPrepComponentTypes.Text) {
+      this.paperListObjects.TextPaperList = list;
+      this.paperListObjects.TextPaperListCallDone = true;
+    } else if (componentType === LayoutPrepComponentTypes.None) {
+      this.paperListObjects.NonePaperList = list;
+      this.paperListObjects.NonePaperListCallDone = true;
+    }
+  }
+
+  shouldCallApi(componentType: string) {
+    if (componentType === LayoutPrepComponentTypes.Cover) {
+      return this.paperListObjects.CoverPaperList.length === 0 && !this.paperListObjects.CoverPaperListCallDone ;
+    } else if (componentType === LayoutPrepComponentTypes.Text) {
+      return this.paperListObjects.TextPaperList.length === 0 && !this.paperListObjects.TextPaperListCallDone ;
+    } else if (componentType === LayoutPrepComponentTypes.None) {
+      return this.paperListObjects.NonePaperList.length === 0 && !this.paperListObjects.NonePaperListCallDone ;
+    }
   }
 
   openAddProductionActivityModal = () => {

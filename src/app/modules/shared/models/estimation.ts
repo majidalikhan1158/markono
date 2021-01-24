@@ -116,3 +116,26 @@ export interface GetPaperRequest {
     PaperWidth: number;
     Weight: string;
 }
+
+export interface GetPaperResponse {
+    weight: string;
+    paperMaterial: string;
+    paperBrand: string;
+    paperDepth: number;
+    paperWidth: number;
+    paperNo: string;
+    itemType: string;
+    micron: string;
+    grainDirection: string;
+    totalLose: number;
+    selected: boolean;
+}
+
+export interface PaperListObjects {
+    TextPaperList: GetPaperResponse[];
+    CoverPaperList: GetPaperResponse[];
+    NonePaperList: GetPaperResponse[];
+    TextPaperListCallDone: boolean;
+    CoverPaperListCallDone: boolean;
+    NonePaperListCallDone: boolean;
+}

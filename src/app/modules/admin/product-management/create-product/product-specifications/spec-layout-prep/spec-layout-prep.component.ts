@@ -1,4 +1,3 @@
-import { PaperListObjects } from './../../../../../shared/models/estimation';
 import { Component, OnInit, ViewEncapsulation, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { LayoutPrepComponentTypes, MachineTypeList } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { ProductSpecLayoutPrepCompBreakList } from 'src/app/modules/shared/mock-data/layout-prep-comp-break-list';

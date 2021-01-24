@@ -17,7 +17,7 @@ export const ProductSpecificationTypes = {
   WEB_CODE: 'WEB_CODE',
   UNIT_PRICE: 'UNIT_PRICE',
   OTHER_COMPONENT: 'OTHER_COMPONENT',
-  CHECK_PRINT_FILE: 'CHECK_PRINT_FILE',
+  VERIFY_PRINT_FILE: 'VERIFY_PRINT_FILE',
   LAYOUT_PREP: 'LAYOUT_PREP'
 };
 
@@ -95,9 +95,9 @@ export const ProductSpecificationTypePartialArray: ProductSpecTypeObject[] = [
 
 export const ProductSpecificationTypeOtherArray: ProductSpecTypeObject[] = [
   {
-    value: 'Check Print File',
+    value: 'Verify Print File',
     id: 7,
-    enum: 'CHECK_PRINT_FILE',
+    enum: 'VERIFY_PRINT_FILE',
     isSelected: false,
     isVisited: false,
   },
@@ -277,6 +277,16 @@ export const BindingMethodList: SelectionList[] = [
     text: 'PUR Binding',
     enum: 'PUR Binding'
   }
+];
+
+export const OtherComponentChooseList = [
+'Insert',
+'Jacket',
+'Other Special Instruction',
+'Others',
+'Slip case',
+'Sticker',
+'Tip-In'
 ];
 
 export const BookSpineTypeList: SelectionList[] = [
@@ -583,7 +593,8 @@ export const BindingType = {
   SADDLESTITCH: 'Saddle Stitch',
   SPIRALBOUND: 'Spiral Bound',
   TRIMTOSIZE: 'Trim to size',
-  WIREOBINDING: 'Wire-O Binding'
+  WIREOBINDING: 'Wire-O Binding',
+  OTHER: 'OTHER'
 };
 
 export const ImpositionLayoutList = [
@@ -687,4 +698,39 @@ export const NoOfColorsList = [
   '7',
   '8',
   '9'
+];
+
+export const ProductSpecStatusTypes = {
+  Live: 'Live',
+  InComplete: 'Incomplete',
+  Complete: 'Complete'
+};
+
+export const WebCodeLocationList = [
+  'Front cover',
+  'Inside front cover',
+  'Back cover',
+  'Inside back cover',
+  'Text',
+  'Front endpaper',
+  'Back Endpaper',
+  'Others'
+];
+
+export const StatusList = [
+  {
+    status: 'Incomplete',
+    message: 'Min. specs not completed',
+    hint: 'e.g material, binding type, size'
+  },
+  {
+    status: 'Complete',
+    message: 'Min. specs AND layout AND File verification completed',
+    hint: ''
+  },
+  {
+    status: 'Live',
+    message: 'Min. specs AND layout AND file specs verified AND File approved',
+    hint: ''
+  }
 ];

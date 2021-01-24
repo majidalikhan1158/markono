@@ -9,6 +9,7 @@ import {
 import { SpecialInstructionViewModel } from 'src/app/modules/shared/models/create-case';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import { CreateCaseMode, CreateCaseDataType } from 'src/app/modules/shared/enums/app-enums';
+import { Departments } from 'src/app/modules/shared/enums/case-management/case-contants';
 
 @Component({
   selector: 'app-special-instructions',
@@ -19,6 +20,7 @@ import { CreateCaseMode, CreateCaseDataType } from 'src/app/modules/shared/enums
 export class SpecialInstructionsComponent implements OnInit, OnDestroy {
   @Input() createCaseMode: CreateCaseMode;
   createCaseModes = CreateCaseMode;
+  departmentList = Departments;
   disabled = false;
   columnsToDisplay = ['#', 'Department', 'Instructions', ''];
   rowsToDisplay: SpecialInstructionViewModel[] = [];

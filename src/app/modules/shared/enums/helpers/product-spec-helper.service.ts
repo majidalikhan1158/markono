@@ -1,7 +1,8 @@
 import { ChildIsbnModal } from './../../../services/shared/classes/product-modals/product-modals';
 import { Injectable } from '@angular/core';
-import { WebCodeVM, DVDVM, OtherVM, GeneralVM, CoverVM, TextVM, BindingVM, ChildIsbnVM, UnitPriceVM } from '../../models/product-spec';
-import { BindingType } from '../product-management/product-constants';
+import { WebCodeVM, DVDVM, OtherVM, GeneralVM, CoverVM, TextVM, BindingVM, ChildIsbnVM,
+   UnitPriceVM, BindingTypeOthers, ProductSpecStoreVM } from '../../models/product-spec';
+import { BindingType, ProductSpecificationTypesArray, ColorTypes, BenchworkTypeList } from '../product-management/product-constants';
 import { ProductSpecStore } from '../../ui-services/product-spec.service';
 import {
   BindingTypeCaseBound,
@@ -10,7 +11,6 @@ import {
   BindingTypeSpiralBound,
   BindingTypeStichType,
   BindingTypeWireoBinding,
-  ProductSpecStoreVM,
 } from '../../models/product-spec';
 import { ProductSpecTypes } from '../app-enums';
 
@@ -42,6 +42,7 @@ export class ProductSpecHelperService {
       pantoneColour: [],
       finishingType: [],
       specialInstructions3: '',
+      ribbonColour: ''
     };
   }
 
@@ -52,6 +53,15 @@ export class ProductSpecHelperService {
       specialInstructions2: '',
     };
   }
+
+  getOtherTypeObject = (): BindingTypeOthers => {
+    return {
+      specialInstructions1: '',
+      benchworkRequired: [],
+      specialInstructions2: '',
+    };
+  }
+
 
   getSaddleStitchTypeObject = (): BindingTypeStichType => {
     return {
@@ -121,12 +131,12 @@ export class ProductSpecHelperService {
       cvrBrand: this.getString(data?.coverVM?.materialBrand),
       cvrSpecialInstruction: this.getString(data.coverVM?.specialInstructions),
       cvrOutsideNoOfColours: this.getNumber(data.coverVM?.colorTypeOutside?.length + data.coverVM?.pantoneColourOutside.length),
-      cvrOutsideSelectedColours: this.getString(data.coverVM?.colorTypeOutside?.join(',')) ,
+      cvrOutsideSelectedColours: this.getBitsFromColors(data.coverVM?.colorTypeOutside ?? []),
       cvrOutsidePantoneColours:  data.coverVM?.pantoneColourOutside?.length > 0 ? true : false,
       cvrOutsidePantoneColoursNo: this.getString(data.coverVM?.pantoneColourOutside?.join(',')),
       cvrOutsideFinishing: this.getString(data.coverVM?.finishingTypeOutside?.join(',')),
       cvrInsideNoOfColours: this.getNumber(data.coverVM?.colorTypeInside?.length + data.coverVM?.pantoneColourInside.length),
-      cvrInsideSelectedColours: this.getString(data.coverVM?.colorTypeInside?.join(',')) ,
+      cvrInsideSelectedColours: this.getBitsFromColors(data.coverVM?.colorTypeInside ?? []),
       cvrInsidePantoneColours:  data.coverVM?.pantoneColourInside?.length > 0 ? true : false,
       cvrInsidePantoneColoursNo: this.getString(data.coverVM?.pantoneColourInside?.join(',')),
       cvrInsideFinishing: this.getString(data.coverVM?.finishingTypeInside?.join(',')),
@@ -138,7 +148,7 @@ export class ProductSpecHelperService {
       txtMaterial: this.getString(data.textVM?.textMaterial),
       txtMaterialBrand: this.getString(data.textVM?.materialBrand),
       txtNoOfColours: this.getNumber(data.textVM?.pantoneColour.length + data.textVM?.colorType.length),
-      txtSelectedColours: this.getString(data.textVM?.colorType?.join(',')),
+      txtSelectedColours: this.getBitsFromColors(data.textVM?.colorType ?? []),
       txtPantoneColours: data.textVM?.pantoneColour?.length > 0 ? true : false,
       txtPantoneColoursNo: this.getString(data.textVM?.pantoneColour?.join(',')),
       txtFinishing: this.getString(data.textVM?.finishingType?.join(',')),
@@ -146,18 +156,18 @@ export class ProductSpecHelperService {
 
       bindingType: this.getString(data.bindingVM?.bindingType),
       bindingStitchType: this.getString(data.bindingVM?.saddleStich?.stichType),
-      bindingMethod: this.getString(data.bindingVM?.caseBound?.bindingMethod),
+      bindingMethod: this.getBindingData(data.bindingVM, 'METHOD'),
       bindingBookSpineType: this.getString(data.bindingVM?.caseBound?.bookSpineType),
       bindingHeadTailBand: data.bindingVM?.caseBound?.isHeadTailBand ? true : false,
       bindingHeadTailBandColour: this.getString(data.bindingVM?.caseBound?.headTailBandColour),
       bindingGreyBoardThickness: this.getString(data.bindingVM?.caseBound?.greyboardThickness),
       bindingMethodPerfect: this.getString(''),
       bindingMethodComb: this.getString(''),
-      bindingMethodCoil: this.getString(''),
-      bindingMethodWire: this.getString(''),
-      bindingTypeSpecialInstruction: this.getString(data.bindingVM?.caseBound?.specialInstruction1),
-      bindingBenchworkRequired: this.getString(data.bindingVM?.caseBound?.benchworkRequired.join(',')),
-      bindingBenchworkSpecialInstruction: this.getString(data.bindingVM?.caseBound?.specialInstruction2),
+      bindingMethodCoil: this.getString(data.bindingVM?.spiralBound?.coilColour ?? ''),
+      bindingMethodWire: this.getString(data.bindingVM?.wireoBinding?.wireColour ?? ''),
+      bindingTypeSpecialInstruction: this.getBindingData(data.bindingVM, 'SPECIALINSTRUCTIONS1'),
+      bindingBenchworkRequired: this.getBindingData(data.bindingVM, 'BENCHWORK'),
+      bindingBenchworkSpecialInstruction: this.getBindingData(data.bindingVM, 'SPECIALINSTRUCTIONS2'),
       endpaperMaterialWeight: this.getString(data.bindingVM?.caseBound?.endPaperWeight),
       endpaperMaterial: this.getString(data.bindingVM?.caseBound?.endPaperMaterial),
       endpaperMaterialBrand: this.getString(data.bindingVM?.caseBound?.materialBrand),
@@ -165,17 +175,15 @@ export class ProductSpecHelperService {
       endpaperNoOfMonoExtent: this.getNumber(data.bindingVM?.caseBound?.noOfMonoExtent),
       endpaperTotalExtent: this.getNumber(data.bindingVM?.caseBound?.totalExtent),
       endpaperNoOfColours: this.getNumber(data.bindingVM?.caseBound?.pantoneColour.length + data.bindingVM?.caseBound?.colorType.length),
-      endpaperSelectedColours: this.getString(data.bindingVM?.caseBound?.colorType.join(',')),
+      endpaperSelectedColours: this.getBitsFromColors(data.bindingVM?.caseBound?.colorType ?? []),
       endpaperPantoneColours:  data.bindingVM?.caseBound?.pantoneColour?.length > 0 ? true : false,
-      // this.getString(data.bindingVM?.caseBound?.pantoneColour?.join(',')),
       endpaperPantoneColourNo:  this.getString(data.bindingVM?.caseBound?.pantoneColour?.join(',')),
-      // this.getNumber(data.bindingVM?.caseBound?.pantoneColour?.length),
       endpaperFinishing: this.getString(data.bindingVM?.caseBound?.finishingType?.join(',')),
       endpaperSpecialInstruction: this.getString(data.bindingVM?.caseBound?.specialInstructions3),
       endpaperComponentPrintingDesc: this.getString(''),
 
       slipCaseNoOfColours: this.getNumber(data.childIsbnVM?.colorType?.length + data.childIsbnVM?.pantoneColour?.length),
-      slipCaseSelectedColours: this.getString(data.childIsbnVM?.colorType?.join(',')),
+      slipCaseSelectedColours: this.getBitsFromColors(data.childIsbnVM?.colorType ?? []),
       slipCasePantoneColours:  data.childIsbnVM?.pantoneColour?.length > 0 ? true : false,
       slipCasePantoneColoursNo: this.getString(data.childIsbnVM?.pantoneColour?.join(',')),
       slipCaseFinishing: this.getString(data.childIsbnVM?.finishingType?.join(',')),
@@ -189,7 +197,7 @@ export class ProductSpecHelperService {
       volSetSpecialInstruction: this.getString(data.childIsbnVM?.specialInstructions2),
       otherSpecialInstruction: this.getString(''),
 
-      bindingRibbonColour: this.getString(''),
+      bindingRibbonColour: this.getString(data.bindingVM?.caseBound?.ribbonColour),
       bindingRibbon: data.bindingVM?.caseBound?.isRibbon,
 
       additionalComponentsList: this.getAdditionalComponentList(data.otherVM),
@@ -205,6 +213,55 @@ export class ProductSpecHelperService {
       priceMethod: this.getString(data.unitPriceVM?.priceType),
       price: this.getNumber(data.unitPriceVM?.fixedPrice)
     };
+  }
+
+  getBindingData = (bindingVM: BindingVM, type: string) => {
+    if (type === 'METHOD') {
+      if (bindingVM.bindingType === BindingType.CASEBOUND) {
+        return bindingVM.caseBound?.bindingMethod ?? '';
+      } else if (bindingVM.bindingType === BindingType.PAPERBACK) {
+        return bindingVM.paperBack?.bindingMethod ?? '';
+      } else {
+        return '';
+      }
+    } else if (type === 'SPECIALINSTRUCTIONS1') {
+      if (bindingVM.bindingType === BindingType.CASEBOUND) {
+        return bindingVM.caseBound?.specialInstruction1 ?? '';
+      } else if (bindingVM.bindingType === BindingType.PAPERBACK) {
+        return bindingVM.paperBack?.specialInstructions1 ?? '';
+      } else if (bindingVM.bindingType === BindingType.SADDLESTITCH) {
+        return bindingVM.saddleStich?.specialInstructions1 ?? '';
+      }  else if ( bindingVM.bindingType === BindingType.SPIRALBOUND) {
+        return bindingVM.spiralBound?.specialInstructions1 ?? '';
+      } else {
+        return bindingVM.others?.specialInstructions1 ?? '';
+      }
+    } else if (type === 'SPECIALINSTRUCTIONS2') {
+      if (bindingVM.bindingType === BindingType.CASEBOUND) {
+        return bindingVM.caseBound?.specialInstruction2 ?? '';
+      } else if (bindingVM.bindingType === BindingType.PAPERBACK) {
+        return bindingVM.paperBack?.specialInstructions2 ?? '';
+      } else if (bindingVM.bindingType === BindingType.SADDLESTITCH) {
+        return bindingVM.saddleStich?.specialInstructions2 ?? '';
+      }  else if ( bindingVM.bindingType === BindingType.SPIRALBOUND) {
+        return bindingVM.spiralBound?.specialInstructions2 ?? '';
+      } else {
+        return bindingVM.others?.specialInstructions2 ?? '';
+      }
+    } else if (type === 'BENCHWORK') {
+      if (bindingVM.bindingType === BindingType.CASEBOUND) {
+        return bindingVM.caseBound?.benchworkRequired.join(',') ?? '';
+      } else if (bindingVM.bindingType === BindingType.PAPERBACK) {
+        return bindingVM.paperBack?.benchworkRequired.join(',') ?? '';
+      } else if (bindingVM.bindingType === BindingType.SADDLESTITCH) {
+        return bindingVM.saddleStich?.benchworkRequired.join(',') ?? '';
+      }  else if ( bindingVM.bindingType === BindingType.SPIRALBOUND) {
+        return bindingVM.spiralBound?.benchworkRequired.join(',') ?? '';
+      } else {
+        return bindingVM.others?.benchworkRequired.join(',') ?? '';
+      }
+    }
+    return '';
   }
 
   getWebCodeListObject = (webCodeList: WebCodeVM[]) => {
@@ -252,7 +309,7 @@ export class ProductSpecHelperService {
             noOfMonoExtent: this.getNumber(item.noOfMonoExtent),
             totalExtent: this.getNumber(item.totalExtent),
             noOfColours: this.getNumber(item.pantoneColour.length + item.colorType.length),
-            selectedColours: this.getString(item.colorType?.join(',')),
+            selectedColours: this.getBitsFromColors(item.colorType ?? []),
             pantoneColours: item.pantoneColour?.length > 0 ? true : false,
             pantoneColoursNo: this.getString(item.pantoneColour?.join(',')),
             finishing: this.getString(item.finishingType?.join(',')),
@@ -265,20 +322,20 @@ export class ProductSpecHelperService {
             openSizeWidth: this.getNumber(item.openSizeWidth),
             bindingType: this.getString(item.bindingVM?.bindingType),
             bindingStitchType: this.getString(item.bindingVM?.saddleStich?.stichType),
-            bindingMethod: this.getString(item.bindingVM?.caseBound?.bindingMethod),
+            bindingMethod: this.getBindingData(item.bindingVM, 'METHOD'),
             bindingBookSpineType: this.getString(item.bindingVM?.caseBound?.bookSpineType),
             bindingHeadTailBand: item.bindingVM?.caseBound?.isHeadTailBand ? true : false,
             bindingHeadTailBandColour: this.getString(item.bindingVM?.caseBound?.headTailBandColour),
             bindingGreyBoardThickness: this.getString(item.bindingVM?.caseBound?.greyboardThickness),
             bindingMethodPerfect: this.getString(''),
             bindingMethodComb: this.getString(''),
-            bindingMethodCoil: this.getString(''),
-            bindingMethodWire: this.getString(''),
+            bindingMethodCoil: this.getString(item.bindingVM?.spiralBound?.coilColour ?? ''),
+            bindingMethodWire: this.getString(item.bindingVM?.wireoBinding?.wireColour ?? ''),
             bindingRibbon: item.bindingVM?.caseBound?.isRibbon,
-            bindingRibbonColour: this.getString(''),
-            bindingTypeSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstruction1),
-            bindingBenchworkRequired: this.getString(item.bindingVM?.caseBound?.benchworkRequired.join(',')),
-            bindingBenchworkSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstruction2),
+            bindingRibbonColour: this.getString(item.bindingVM?.caseBound?.ribbonColour),
+            bindingTypeSpecialInstruction: this.getBindingData(item.bindingVM, 'SPECIALINSTRUCTIONS1'),
+            bindingBenchworkRequired: this.getBindingData(item.bindingVM, 'BENCHWORK'),
+            bindingBenchworkSpecialInstruction: this.getBindingData(item.bindingVM, 'SPECIALINSTRUCTIONS2'),
             endpaperMaterialWeight: this.getString(item.bindingVM?.caseBound?.endPaperWeight),
             endpaperMaterial: this.getString(item.bindingVM?.caseBound?.endPaperMaterial),
             endpaperMaterialBrand: this.getString(item.bindingVM?.caseBound?.materialBrand),
@@ -287,7 +344,7 @@ export class ProductSpecHelperService {
             endpaperTotalExtent: this.getNumber(item.bindingVM?.caseBound?.totalExtent),
             endpaperNoOfColours: this.getNumber(item.bindingVM?.caseBound?.pantoneColour.length +
               item.bindingVM?.caseBound?.colorType.length),
-            endpaperSelectedColours: this.getString(item.bindingVM?.caseBound?.colorType?.join(',')),
+            endpaperSelectedColours:  this.getBitsFromColors(item.bindingVM?.caseBound?.colorType ?? []),
             endpaperPantoneColours: item.bindingVM?.caseBound?.pantoneColour?.length > 0 ? true : false,
             // this.getString(item.bindingVM?.caseBound?.pantoneColour?.join(',')),
             endpaperPantoneColourNo: this.getNumber(item.bindingVM?.caseBound?.pantoneColour?.length),
@@ -324,7 +381,7 @@ export class ProductSpecHelperService {
         noOfMonoExtent: this.getNumber(item.noOfMonoExtent),
         totalExtent: this.getNumber(item.totalExtent),
         txtFrontNoOfColours: this.getNumber(item.pantoneColour.length + item.colorType.length),
-        txtFrontSelectedColours: this.getString(item.colorType?.join(',')),
+        txtFrontSelectedColours: this.getBitsFromColors(item.colorType ?? []),
         txtFrontPantoneColours: item.pantoneColour?.length > 0 ? true : false,
         txtFrontPantoneColourNo: this.getString(item.pantoneColour?.join(',')),
         txtFrontFinishing: this.getString(item.finishingType?.join(',')),
@@ -335,20 +392,20 @@ export class ProductSpecHelperService {
         txtBackFinishing: this.getString(''),
         bindingType: this.getString(item.bindingVM?.bindingType),
         bindingStitchType: this.getString(item.bindingVM?.saddleStich?.stichType),
-        bindingMethod: this.getString(item.bindingVM?.caseBound?.bindingMethod),
+        bindingMethod: this.getBindingData(item.bindingVM, 'METHOD'),
         bindingBookSpineType: this.getString(item.bindingVM?.caseBound?.bookSpineType),
         bindingHeadTailBand: item.bindingVM?.caseBound?.isHeadTailBand ? true : false,
         bindingHeadTailBandColour: this.getString(item.bindingVM?.caseBound?.headTailBandColour),
         bindingGreyBoardThickness: this.getString(item.bindingVM?.caseBound?.greyboardThickness),
         bindingMethodPerfect: this.getString(''),
         bindingMethodComb: this.getString(''),
-        bindingMethodCoil: this.getString(''),
-        bindingMethodWire: this.getString(''),
         bindingRibbon: item.bindingVM?.caseBound?.isRibbon,
-        bindingRibbonColour: this.getString(''),
-        bindingTypeSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstruction1),
-        bindingBenchworkRequired: this.getString(item.bindingVM?.caseBound?.benchworkRequired.join('')),
-        bindingBenchworkSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstruction2),
+        bindingRibbonColour: this.getString(item.bindingVM?.caseBound?.ribbonColour),
+        bindingMethodCoil: this.getString(item.bindingVM?.spiralBound?.coilColour ?? ''),
+        bindingMethodWire: this.getString(item.bindingVM?.wireoBinding?.wireColour ?? ''),
+        bindingTypeSpecialInstruction: this.getBindingData(item.bindingVM, 'SPECIALINSTRUCTIONS1'),
+        bindingBenchworkRequired: this.getBindingData(item.bindingVM, 'BENCHWORK'),
+        bindingBenchworkSpecialInstruction: this.getBindingData(item.bindingVM, 'SPECIALINSTRUCTIONS2'),
         endpaperMaterialWeight: this.getString(item.bindingVM?.caseBound?.endPaperWeight),
         endpaperMaterial: this.getString(item.bindingVM?.caseBound?.endPaperMaterial),
         endpaperMaterialBrand: this.getString(item.bindingVM?.caseBound?.materialBrand),
@@ -356,9 +413,8 @@ export class ProductSpecHelperService {
         endpaperNoOfMonoExtent: this.getNumber(item.bindingVM?.caseBound?.noOfMonoExtent),
         endpaperTotalExtent: this.getNumber(item.bindingVM?.caseBound?.totalExtent),
         endpaperNoOfColours: this.getNumber(item.bindingVM?.caseBound?.pantoneColour.length + item.bindingVM?.caseBound?.colorType.length),
-        endpaperSelectedColours: this.getString(item.bindingVM?.caseBound?.colorType?.join(',')),
+        endpaperSelectedColours:  this.getBitsFromColors(item.bindingVM?.caseBound?.colorType ?? []),
         endpaperPantoneColours:  item.bindingVM?.caseBound?.pantoneColour?.length > 0 ? true : false,
-        // this.getString(item.bindingVM?.caseBound?.pantoneColour?.join(',')),
         endpaperPantoneColourNo: this.getNumber(item.bindingVM?.caseBound?.pantoneColour.length),
         endpaperFinishing: this.getString(item.bindingVM?.caseBound?.finishingType?.join(',')),
         endpaperSpecialInstruction: this.getString(item.bindingVM?.caseBound?.specialInstructions3),
@@ -403,7 +459,7 @@ export class ProductSpecHelperService {
     return '';
   }
 
-  transProductDetailToVM = (product: any) => {
+  transProductDetailToVM = (product: any, editModeType = 0) => {
     const generalVM = this.getGeneralVM(product);
     const coverVM = this.getCoverVM(product);
     const textVM = this.getTextVM(product);
@@ -412,6 +468,10 @@ export class ProductSpecHelperService {
     const childIsbnVM = this.getChildIsbnVM(product);
     const dvdcdVM = this.getDVDCDVM(product);
     const unitPriceVM = this.getUnitPriceVM(product);
+    const otherVM = this.getOtherVM(product);
+    this.store.reset();
+    const list = ProductSpecificationTypesArray;
+    this.store.setProductSpecTypeList(list);
 
     this.store.getFileCheckConfig();
 
@@ -423,7 +483,7 @@ export class ProductSpecHelperService {
     this.store.setProductSpecStore(childIsbnVM, ProductSpecTypes.CHILD_ISBN);
     this.store.setProductSpecStore(dvdcdVM, ProductSpecTypes.DVD_CD);
     this.store.setProductSpecStore(unitPriceVM, ProductSpecTypes.UNIT_PRICE);
-
+    this.store.setProductSpecStore(otherVM, ProductSpecTypes.OTHER_COMPONENT);
     this.store.getProductGroupList(generalVM);
 
     this.store.getUserCheckFile(product.Id);
@@ -448,7 +508,15 @@ export class ProductSpecHelperService {
     this.store.getCoverMaterialWeight('Endpaper', ProductSpecTypes.BINDING_DVD_CD);
     this.store.getFinishingTypes('Endpaper', ProductSpecTypes.BINDING_DVD_CD);
 
-    this.store.setShouldShowJournalFields(generalVM?.productType === 11);
+    this.store.setShouldShowJournalFields(generalVM?.productType === '11');
+
+    // editModeType === 2, coming from add-product-spec-modal and selected use existing template option
+    if (editModeType === 2) {
+      generalVM.productNumber = '';
+      this.store.setProductSpecStore(generalVM, ProductSpecTypes.GENERAL);
+    }
+
+    this.store.updateStoreByComponentType(null);
   }
 
   getGeneralVM = (product: any): GeneralVM => {
@@ -457,7 +525,7 @@ export class ProductSpecHelperService {
       id: 1,
       productNumber: product?.ISBN ?? '',
       printingType: product?.PrintType ?? '',
-      productType:  parseInt(product?.ProductGroup) ?? 0,
+      productType:  product?.ProductGroup ?? '0',
       externalPartNo: product?.ExternalPartNo ?? '',
       isbnOwner: product?.ISBNOwner ?? '',
       productDescription: product?.ProductDescription ?? '',
@@ -492,8 +560,8 @@ export class ProductSpecHelperService {
       noOfMonoExtent: 0,
       totalExtent: 0,
       noOfColours: 0,
-      colorTypeOutside: this.getStringArray(p?.CvrOutsideSelectedColours?.toString()),
-      colorTypeInside: this.getStringArray(p?.CvrInsideSelectedColours?.toString()),
+      colorTypeOutside: this.getColorsFromBits(p?.CvrOutsideSelectedColours ?? ''),
+      colorTypeInside: this.getColorsFromBits(p?.CvrInsideSelectedColours ?? ''),
       pantoneColourInside: this.getStringArray(p?.CvrInsidePantoneColoursNo?.toString()),
       pantoneColourOutside: this.getStringArray(p?.CvrOutsidePantoneColoursNo?.toString()),
       finishingTypeOutside: this.getStringArray(p?.CvrOutsideFinishing?.toString()),
@@ -511,9 +579,9 @@ export class ProductSpecHelperService {
       materialBrand: p?.TxtMaterialBrand ?? '',
       noOfColourExtent: p?.TxtNoOfColourExtent ?? 0,
       noOfMonoExtent: p?.TxtNoOfMonoExtent ?? 0,
-      totalExtent: p?.TxtTotalExtent ?? 0,
+      totalExtent: this.sum(p?.TxtNoOfColourExtent ?? 0, p?.TxtNoOfMonoExtent ?? 0) ,
       noOfColours: p?.TxtNoOfColours ?? 0,
-      colorType: this.getStringArray(p?.TxtSelectedColours?.toString()),
+      colorType: this.getColorsFromBits(p?.TxtSelectedColours ?? ''),
       pantoneColour: this.getStringArray(p?.TxtPantoneColoursNo?.toString()),
       finishingType: this.getStringArray(p?.TxtFinishing?.toString()),
       specialInstructions: p?.TxtSpecialInstruction ?? ''
@@ -561,7 +629,7 @@ export class ProductSpecHelperService {
       materialBrand: prd?.VolSetSlipCaseMaterialBrand  ?? '',
       greyboardThickness: prd?.VolSetGreyboardThickness  ?? '',
       noOfColours: prd?.SlipCaseNoOfColours  ?? 0,
-      colorType: this.getStringArray(prd?.SlipCaseSelectedColours?.toString()),
+      colorType:  this.getColorsFromBits(prd?.SlipCaseSelectedColours ?? ''),
       pantoneColour: this.getStringArray(prd?.SlipCasePantoneColoursNo?.toString()),
       finishingType: this.getStringArray(prd?.SlipCaseFinishing?.toString()),
       specialInstructions2: prd?.TxtSpecialInstruction  ?? '',
@@ -604,6 +672,40 @@ export class ProductSpecHelperService {
     return list;
   }
 
+  getOtherVM = (product: any): OtherVM[] => {
+    const p = product?.ProductAdditionalComponent;
+    const list: OtherVM[] = [];
+
+    p?.forEach((i, index) => {
+      list.push({
+        id: index + 1,
+        type: i.Type ?? '',
+        componentType: i.Type ?? '',
+        orientationType: i.Orientation ?? '',
+        height: i.Height ?? 0,
+        width: i.Width ?? 0,
+        isOpenSize: i.OpenSize ?? false,
+        openSizeHeight: i.OpenSizeHeight ?? 0,
+        openSizeWidth: i.OpenSizeWidth ?? 0,
+        textMaterialWeight: i.MaterialWeight ?? '',
+        spineWidth: 0,
+        weight: 0,
+        textMaterial: i.Material ?? '',
+        materialBrand: i.MaterialBrand ?? '',
+        noOfColourExtent: i.NoOfColourExtent ?? 0,
+        noOfMonoExtent: i.NoOfMonoExtent ?? 0,
+        totalExtent: i.TotalExtent ?? 0,
+        noOfColours: i.TxtFrontNoOfColours ?? 0,
+        colorType: this.getColorsFromBits(i?.TxtFrontSelectedColours ?? ''),
+        pantoneColour: this.getStringArray(i.TxtFrontPantoneColourNo),
+        finishingType: this.getStringArray(i.TxtFrontFinishing),
+        specialInstructions: i.SpecialInstruction ?? '',
+        bindingVM: this.getChildBindingVMS(i)
+      });
+    });
+    return list;
+  }
+
   getUnitPriceVM = (product: any): UnitPriceVM => {
     const p = product?.ProductDetail[0];
     return {
@@ -637,11 +739,27 @@ export class ProductSpecHelperService {
       saddleStich: this.saddleStitch(p?.BindingType, product), // BindingTypeStichType;
       spiralBound: this.spiralBound(p?.BindingType, product), // BindingTypeSpiralBound;
       wireoBinding: this.wireOBinding(p?.BindingType, product), // BindingTypeWireoBinding;
+      others: this.getOtherType(p?.BindingType, product)
     };
   }
 
-  getCaseBound = (bindingType: string, product: any): BindingTypeCaseBound => {
-    const p = product?.ProductDetail[0];
+  getChildBindingVMS = (product: any): BindingVM => {
+    const p = product;
+    return {
+      id: 1,
+      bindingType: p?.BindingType ?? '',
+      caseBound: this.getCaseBound(p?.BindingType, product, true), // BindingTypeCaseBound;
+      folding: this.getFolding(p?.BindingType, product, true), // BindingTypeFolding;
+      paperBack: this.getPaperBack(p?.BindingType, product, true), // BindingTypePaperBack;
+      saddleStich: this.saddleStitch(p?.BindingType, product, true), // BindingTypeStichType;
+      spiralBound: this.spiralBound(p?.BindingType, product, true), // BindingTypeSpiralBound;
+      wireoBinding: this.wireOBinding(p?.BindingType, product, true), // BindingTypeWireoBinding;
+      others: this.getOtherType(p?.BindingType, product, true)
+    };
+  }
+
+  getCaseBound = (bindingType: string, product: any, isChild = false): BindingTypeCaseBound => {
+    const p = isChild ? product : product?.ProductDetail[0];
     if (bindingType !== BindingType.CASEBOUND) {
       return null;
     }
@@ -660,17 +778,18 @@ export class ProductSpecHelperService {
       materialBrand: p?.EndpaperMaterialBrand ?? '',
       noOfColourExtent: p?.EndpaperNoOfColourExtent ?? 0,
       noOfMonoExtent: p?.EndpaperNoOfMonoExtent ?? 0,
-      totalExtent: p?.EndpaperTotalExtent ?? 0,
+      totalExtent: this.sum(p?.EndpaperNoOfColourExtent ?? 0, p?.EndpaperNoOfMonoExtent ?? 0),
       noOfColours: p?.EndpaperNoOfColours ?? 0,
-      colorType: this.getStringArray(p?.EndpaperSelectedColours?.toString()),
+      colorType: this.getColorsFromBits(p?.EndpaperSelectedColours ?? ''),
       pantoneColour: this.getStringArray(p?.EndpaperPantoneColourNo?.toString()),
       finishingType: this.getStringArray(p?.EndpaperFinishing?.toString()),
       specialInstructions3: p?.EndpaperSpecialInstruction ?? '',
+      ribbonColour: p?.BindingRibbonColour ?? ''
     };
   }
 
-  getFolding = (bindingType: string, product: any): BindingTypeFolding => {
-    const p = product?.ProductDetail[0];
+  getFolding = (bindingType: string, product: any, isChild = false): BindingTypeFolding => {
+    const p = isChild ? product : product?.ProductDetail[0];
     if (bindingType !== BindingType.FOLDING) {
       return null;
     }
@@ -681,8 +800,8 @@ export class ProductSpecHelperService {
     };
   }
 
-  getPaperBack = (bindingType: string, product: any): BindingTypePaperBack => {
-    const p = product?.ProductDetail[0];
+  getPaperBack = (bindingType: string, product: any, isChild = false): BindingTypePaperBack => {
+    const p = isChild ? product : product?.ProductDetail[0];
     if (bindingType !== BindingType.PAPERBACK) {
       return null;
     }
@@ -694,8 +813,8 @@ export class ProductSpecHelperService {
     };
   }
 
-  saddleStitch = (bindingType: string, product: any): BindingTypeStichType => {
-    const p = product?.ProductDetail[0];
+  saddleStitch = (bindingType: string, product: any, isChild = false): BindingTypeStichType => {
+    const p = isChild ? product : product?.ProductDetail[0];
     if (bindingType !== BindingType.SADDLESTITCH) {
       return null;
     }
@@ -707,8 +826,8 @@ export class ProductSpecHelperService {
     };
   }
 
-  spiralBound = (bindingType: string, product: any): BindingTypeSpiralBound => {
-    const p = product?.ProductDetail[0];
+  spiralBound = (bindingType: string, product: any, isChild = false): BindingTypeSpiralBound => {
+    const p = isChild ? product : product?.ProductDetail[0];
     if (bindingType !== BindingType.SPIRALBOUND) {
       return null;
     }
@@ -720,13 +839,28 @@ export class ProductSpecHelperService {
     };
   }
 
-  wireOBinding = (bindingType: string, product: any): BindingTypeWireoBinding => {
-    const p = product?.ProductDetail[0];
+  wireOBinding = (bindingType: string, product: any, isChild = false): BindingTypeWireoBinding => {
+    const p = isChild ? product : product?.ProductDetail[0];
     if (bindingType !== BindingType.WIREOBINDING) {
       return null;
     }
     return {
       wireColour: p?.BindingMethodWire ?? '',
+      specialInstructions1: p?.BindingTypeSpecialInstruction ?? '',
+      benchworkRequired: this.getStringArray(p?.BindingBenchworkRequired?.toString()),
+      specialInstructions2: p?.BindingBenchworkSpecialInstruction ?? '',
+    };
+  }
+
+  getOtherType = (bindingType: string, product: any, isChild = false): BindingTypeOthers => {
+
+    const p = isChild ? product : product?.ProductDetail[0];
+    if (bindingType === BindingType.CASEBOUND || bindingType === BindingType.FOLDING ||
+      bindingType === BindingType.SADDLESTITCH || bindingType === BindingType.WIREOBINDING ||
+      bindingType === BindingType.SPIRALBOUND || bindingType === BindingType.PAPERBACK) {
+      return null;
+    }
+    return {
       specialInstructions1: p?.BindingTypeSpecialInstruction ?? '',
       benchworkRequired: this.getStringArray(p?.BindingBenchworkRequired?.toString()),
       specialInstructions2: p?.BindingBenchworkSpecialInstruction ?? '',
@@ -739,5 +873,125 @@ export class ProductSpecHelperService {
     }
 
     return value.split(',');
+  }
+
+  sum = (firstNumber: number, secondNumber: number) => {
+    // tslint:disable-next-line: radix
+    firstNumber = parseFloat(firstNumber.toString());
+    // tslint:disable-next-line: radix
+    secondNumber = parseFloat(secondNumber.toString());
+    // tslint:disable-next-line: radix
+    return parseFloat(firstNumber.toFixed(0)) + parseFloat(secondNumber.toFixed(0));
+  }
+
+  minus = (firstNumber: number, secondNumber: number) => {
+    // tslint:disable-next-line: radix
+    firstNumber = parseFloat(firstNumber.toString());
+    // tslint:disable-next-line: radix
+    secondNumber = parseFloat(secondNumber.toString());
+    // tslint:disable-next-line: radix
+    return parseFloat(firstNumber.toFixed(0)) - parseFloat(secondNumber.toFixed(0));
+  }
+
+  validateStoreModal = (storeData: ProductSpecStoreVM) => {
+    const errorArrays = [];
+    if (!storeData) {
+      errorArrays.push('Please fill up the data');
+      return errorArrays;
+    }
+
+    const generalVM = storeData.generalVM;
+
+    if (!generalVM?.productType || generalVM.productType.toString() === '0') {
+      errorArrays.push('General: Product Type is required field');
+    }
+
+    if (!generalVM?.isbnOwner) {
+      errorArrays.push('General: ISBN Owner is required field');
+    }
+
+    if (!generalVM?.productNumber) {
+      errorArrays.push('General: ISBN/Product number is required field');
+    }
+
+    if (!generalVM?.productDescription) {
+      errorArrays.push('General: Product Description is required field');
+    }
+
+    if (errorArrays.length > 0) {
+      return errorArrays;
+    }
+    const coverVM = storeData.coverVM;
+    if (generalVM.printingType === 'POD' && coverVM && coverVM?.coverType !== 'Self-cover') {
+
+      const noOfColoursOutside = coverVM?.colorTypeOutside?.length ?? 0;
+      if (noOfColoursOutside === 0) {
+        errorArrays.push('Outside Cover: No of colour selection is required');
+      }
+
+      const finishingCount = coverVM?.finishingTypeOutside?.length ?? 0;
+      if (finishingCount === 0) {
+        errorArrays.push('Outside: Finishing is required');
+      }
+    }
+
+    if (generalVM.printingType === 'POD' && coverVM && generalVM.productType.toString() !== '21') {
+
+      if (generalVM?.width ?? 0 === 0) {
+        errorArrays.push('General: Width(mm) is required field');
+      }
+
+      if (generalVM?.height ?? 0 === 0) {
+        errorArrays.push('General: Height(mm) is required field');
+      }
+
+      const textVM = storeData.textVM;
+      if (textVM?.noOfColourExtent ?? 0 === 0) {
+        errorArrays.push('Text: No. of Colour Extent is required field');
+      }
+
+      if (textVM?.noOfMonoExtent ?? 0 === 0) {
+        errorArrays.push('Text: No. of Mono Extent is required field');
+      }
+
+      if (storeData?.bindingVM?.bindingType  ?? '' === '') {
+        errorArrays.push('Binding: Binding Type is required field');
+      }
+
+      if ((generalVM?.isWebcodeAdded ?? false) && (storeData?.webCodeVM?.length  ?? 0 === 0)) {
+        errorArrays.push('Webcode: Must add a record in Webcode Location tab');
+      }
+
+      if ((generalVM?.isChildIsbnAdded ?? false) && (storeData?.childIsbnVM?.childIsbns?.length  ?? 0 === 0)) {
+        errorArrays.push('Child ISBN: Must add a record in Child ISBN tab');
+      }
+    }
+
+    return errorArrays;
+  }
+
+  getBitsFromColors = (colors: string[]): string => {
+    if (colors && colors.length === 0) {
+      return '0000';
+    }
+    const bits = [];
+    colors.includes(ColorTypes.Cyan.text) ? bits.push(1) : bits.push(0);
+    colors.includes(ColorTypes.Yellow.text) ? bits.push(1) : bits.push(0);
+    colors.includes(ColorTypes.Magenta.text) ? bits.push(1) : bits.push(0);
+    colors.includes(ColorTypes.Black.text) ? bits.push(1) : bits.push(0);
+
+    return bits.join('');
+  }
+
+  getColorsFromBits = (bits: string): string[] => {
+    if (!bits || bits.length === 0) {
+      return [];
+    }
+    const colors = [];
+    bits && bits.length === 4 && bits.charAt(0) === '1' ? colors.push(ColorTypes.Cyan.text) : '';
+    bits && bits.length === 4 && bits.charAt(1) === '1' ? colors.push(ColorTypes.Yellow.text) : '';
+    bits && bits.length === 4 && bits.charAt(2) === '1' ? colors.push(ColorTypes.Magenta.text) : '';
+    bits && bits.length === 4 && bits.charAt(3) === '1' ? colors.push(ColorTypes.Black.text) : '';
+    return colors;
   }
 }

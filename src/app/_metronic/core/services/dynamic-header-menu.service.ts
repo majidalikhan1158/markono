@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { PageHeader } from 'src/app/modules/shared/models/app-modal';
 import { DynamicHeaderMenuConfig } from '../../configs/dynamic-header-menu.config';
 
 const emptyMenuConfig = {
@@ -11,13 +12,13 @@ const emptyMenuConfig = {
 })
 export class DynamicHeaderMenuService {
   private menuConfigSubject = new BehaviorSubject<any>(emptyMenuConfig);
-  private headerLabelSubject = new BehaviorSubject<string>('');
+  private headerLabelSubject = new BehaviorSubject<PageHeader>(null);
   private shouldDisplayProductSpecButtonSubject = new BehaviorSubject<boolean>(false);
   private shouldHeaderDisplaySubject = new BehaviorSubject<boolean>(true);
   private shouldDisplayAddNewQuotationButtonSubject = new BehaviorSubject<boolean>(false);
   private shouldDisplayEditEmbeddedLinkButtonSubject = new BehaviorSubject<string>(null);
   menuConfig$: Observable<any>;
-  headerLabel$: Observable<any>;
+  headerLabel$: Observable<PageHeader>;
   shouldHeaderDisplay$: Observable<boolean>;
   shouldDisplayProductSpecButton$: Observable<boolean>;
   shouldDisplayAddNewQuotationButton$: Observable<boolean>;
@@ -47,8 +48,8 @@ export class DynamicHeaderMenuService {
     return this.menuConfigSubject.value;
   }
 
-  public setHeaderLabel(label: string) {
-    this.headerLabelSubject.next(label);
+  public setHeaderLabel(obj: PageHeader) {
+    this.headerLabelSubject.next(obj);
   }
 
   public displayProductSpecButton(flag: boolean) {

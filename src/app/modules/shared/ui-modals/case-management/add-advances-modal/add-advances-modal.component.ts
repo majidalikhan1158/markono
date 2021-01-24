@@ -64,7 +64,11 @@ export class AddAdvancesModalComponent implements OnInit, OnDestroy {
   }
 
   deleteRow(rowId) {
-    this.advanceListVM = this.advanceListVM.filter(x => x.id !== rowId);
+    const filteredRows = this.advanceListVM.filter((x) => x.id !== rowId);
+    filteredRows.forEach((x, i) => {
+      x.id = i + 1;
+    });
+    this.advanceListVM = filteredRows;
   }
 
   ngOnDestroy(): void {

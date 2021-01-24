@@ -55,9 +55,17 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
   constructor(public store: ProductSpecStore, private ref: ChangeDetectorRef, private orderService: OrderService) { }
 
   ngOnInit(): void {
+    this.handleUpdateStore();
     this.getApisData();
     this.getDefaultRecord();
-    this.handleFilterAutoComplete();
+  }
+
+  handleUpdateStore = () => {
+    this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
+      if (resp && resp === this.productSpecTypesConstant.GENERAL) {
+        this.pushToStore();
+      }
+    });
   }
 
   handleCustomerSearch() {
@@ -111,7 +119,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.productSpecStore.subscribe(resp => {
+    this.store.$productSpecStore.subscribe(resp => {
       if (resp && resp.generalVM && resp.generalVM.id > 0) {
         this.generalVM = resp.generalVM;
       } else {
@@ -125,7 +133,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
       id: 1,
       productNumber: '',
       printingType: '',
-      productType: 0,
+      productType: '0',
       externalPartNo: '',
       isbnOwner: '',
       journalTitleCode: '',
@@ -176,6 +184,10 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
   }
 
   getApisData = () => {
+    this.subscription = this.store.$productGroupList.subscribe(resp => {
+      this.productTypeList = resp.sort((a, b) => a.Id - b.Id);
+      this.handleFilterAutoComplete();
+    });
   }
 
   handlePrintTypeChange = () => {
@@ -189,9 +201,17 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
     });
   }
 
+  pushToStore = () => {
+    if (!this.generalVM) {
+      return;
+    }
+    this.store.setProductSpecStore(this.generalVM, ProductSpecTypes.GENERAL);
+  }
+
   ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
     this.onDestroy.next();
     this.onDestroy.complete();
-    this.store.setProductSpecStore(this.generalVM, ProductSpecTypes.GENERAL);
+    this.pushToStore();
   }
 }

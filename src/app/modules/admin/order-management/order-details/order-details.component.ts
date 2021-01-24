@@ -13,7 +13,7 @@ import { OrderInfoDetailSearchFilters, OrdersInfoDetailSearchFilterTypes } from 
 import { OrderService } from 'src/app/modules/services/core/services/order.service';
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
-import { OrderHelperService } from 'src/app/modules/shared/enums/helpers/order-helper.service';
+import { AppPageRoutes } from '../../../shared/enums/app-constants';
 
 @Component({
   selector: 'app-order-details',
@@ -64,8 +64,7 @@ export class OrderDetailsComponent implements OnInit {
   constructor(private router: Router,
     private route: ActivatedRoute,
     private orderService: OrderService,
-    private cd: ChangeDetectorRef,
-    private orderHelper: OrderHelperService) {
+    private cd: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -123,7 +122,7 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   getJobInfo() {
-    this.router.navigate(['admin/order-management/job-details']);
+    this.router.navigate([AppPageRoutes.JOB_DETAILS]);
   }
 
   toggleExpandable(id: number) {

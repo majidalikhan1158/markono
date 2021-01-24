@@ -5,6 +5,9 @@ import {
   ProductDetailModals,
   ProductISBNDetailVM,
   ProductVersionVM,
+  ShippingInfoVM,
+  ShippingItemsModel,
+  ShippingSpecificCostModel,
   SpecialInstructionViewModel
 } from '../../models/create-case';
 
@@ -18,7 +21,7 @@ export class CaseHelperService {
     return {
       id: data.id,
       title: data.attributes['product-description'],
-      totalExtent: data.attributes['txt-total-extent'],
+      totalExtent: data.attributes['txt-total-extent'] ?? 0,
       bindingType: data.attributes['binding-type'],
       productGroup: data.attributes['product-group'],
       samplesRequired: 0,
@@ -26,17 +29,17 @@ export class CaseHelperService {
       specsVersionNo: data.attributes['version-no'],
       owner: data.attributes['isbn-owner'],
       jobType: '',
-      weight: data.attributes['weight'],
+      weight: data.attributes['weight'] ?? 0,
       fGRequired: 0,
       advancesRequired: 0,
       quoteNo: '',
-      estimatedPrice: data.attributes['estimated-price'],
+      estimatedPrice: data.attributes['estimated-price'] ?? 0,
       additionalUnitPrice: 0,
       sampleList: [],
       bluePrintList: [],
       fgList: [],
       advancesList: [],
-      spineWidth: data.attributes['spine-width'],
+      spineWidth: data.attributes['spine-width'] ?? 0,
     };
   }
 
@@ -241,56 +244,191 @@ export class CaseHelperService {
         statusDescription: item.attributes['status-description'],
       });
     });
-    return list;
+    return list.sort((a, b) => {
+      return (new Date(b.createdDate) as any) - (new Date(a.createdDate) as any);
+    });
   }
 
-  transToCreateShipment = (data: CreateCaseViewModel) => {
-    if (!data.productDetailsList || data.productDetailsList.length === 0) {
+  // Create Shipment Api Intergation
+  public transToCreateShipment = (mainData: CreateCaseViewModel, caseId: string) => {
+    if (!mainData || !mainData.shippingInfoList || mainData.shippingInfoList.length === 0) {
+      return null;
+    }
+    const dataArray = [];
+    mainData.shippingInfoList.forEach(data => {
+      dataArray.push({
+        accountNo: data.shippingDetails.accountNumber,
+        actualShippingAgentCode: data.shippingDetails.shippingAgent,
+        actualShippedDate: data.shippingDetails.shippmentPromisedDate,
+        billable: data.shippingDetails.billable,
+        billToNo: data.shipmentBillingDetails.BillToNumber,
+        billToCompanyName: data.shipmentBillingDetails.CompanyName,
+        billToContactPerson: data.shipmentBillingDetails.Contact,
+        billToEmail: data.shipmentBillingDetails.Email,
+        billToPhoneNo: data.shipmentBillingDetails.PhoneNo,
+        billToAddress1: data.shipmentBillingDetails.Address,
+        billToAddress2: data.shipmentBillingDetails.Address2,
+        billToPostCode: data.shipmentBillingDetails.PostCode,
+        billToCity: data.shipmentBillingDetails.City,
+        billToState: data.shipmentBillingDetails.State,
+        billToCountry: data.shipmentBillingDetails.CountryRegionCode,
+        billToCoordinator: data.shipmentBillingDetails.Coordinator,
+        billToSalesPerson: data.shipmentBillingDetails.SalesPerson,
+        sellToNo: data.shipmentBillingDetails.BillToNumber,
+        caseID: caseId,
+        companyCode: data.shipmentBillingDetails.CompanyCode,
+        shipmentType: data.shippingDetails.shipmentCategory,
+        shipmentPromisedDate: data.shippingDetails.shippmentPromisedDate,
+        shipmentMode: data.shippingDetails.shipmentMode,
+        shippingAgent: data.shippingDetails.shippingAgent,
+        shipToAttentionTo: data.shipmentAddress.AttentionTo,
+        shipToCode: data.shipmentAddress.CompanyCode,
+        shipToContactNo: data.shipmentAddress.Contact,
+        shipToEmail: data.shipmentAddress.Email,
+        shipToAdd1: data.shipmentAddress.Address,
+        shipToAdd2: data.shipmentAddress.Address2,
+        shipToCity: data.shipmentAddress.City,
+        shipToPostCode: data.shipmentAddress.PostCode,
+        shipToState: data.shipmentAddress.State,
+        shipToCountry: data.shipmentAddress.CountryRegionCode,
+        yourReference: mainData.customerInfo?.referenceNumber,
+        createdByUser: 'DevUI',
+        currentActivityId: caseId,
+        createdBy: 'DevUI',
+        createdDateTime: new Date(),
+        currentActivityStatus: '',
+        createdDateTimeGE: '',
+        createdDateTimeLE: '',
+        deliveryOrderNo: '',
+        expectedDeliveryDate: '',
+        id: caseId,
+        isDeleted: false,
+        glossWeightKg: '',
+        getStatus: '',
+        shipmentNo: '',
+        shipmentTypeGroup: '',
+        shippingMethod: '',
+        trackingNo: '',
+        updatedByUser: 'DevUI',
+        updatedBy: 'DevUI',
+        updatedDateTime: new Date(),
+        wmsStorerKey: '',
+        miscBilling: this.getShipmentSpecificCost(data.shippingSpecificCost, caseId),
+        noOfCartons: '',
+        netWeightKg: '',
+        shipmentDetail: this.getShipmentItems(data.shippingItems, caseId)
+      });
+    });
+    return dataArray;
+  }
+
+  getShipmentSpecificCost = (data: ShippingSpecificCostModel[], caseId: string) => {
+    if ( !data || data.length === 0) {
+      return [];
+    }
+    const dataArray = [];
+    data.forEach(item => {
+      dataArray.push({
+        description: item.description,
+        item: item.costCategory,
+        value: item.subTotal,
+        id: caseId,
+        shipmentOrderID: caseId
+      });
+    });
+    return dataArray;
+  }
+
+  getShipmentItems = (data: ShippingItemsModel[], caseId: string) => {
+    if ( !data || data.length === 0) {
+      return [];
+    }
+    const dataArray = [];
+    data.forEach(item => {
+      dataArray.push(
+        {
+          actualShippedDate: new Date(),
+          currentActivityId: caseId,
+          ediKey: '',
+          currentActivityStatus: '',
+          createdByUser: 'DevUI',
+          createdBy: 'DevUI',
+          createdDateTime: new Date(),
+          id: caseId,
+          lnNo: '',
+          shipmentOrderId: caseId,
+          shipmentDetailNo: '',
+          iSBNPartNo: item.productNumber,
+          isDeleted: false,
+          jobNo: '',
+          requestedQty: item.shipmentQty,
+          requestedDate: new Date(),
+          shippedQty: item.shipmentQty,
+          title: item.title,
+          totalRemaining: item.availableQty,
+          updatedByUser: 'DevUI',
+          updatedBy: 'DevUI',
+          updatedDateTime: new Date()
+        }
+      );
+    });
+    return dataArray;
+  }
+
+  getShipmentDetails = (data: CreateCaseViewModel) => {
+    if (!data.shippingInfoList || data.shippingInfoList.length === 0) {
       return this.getCaseDetailsFromShippingDetails(data);
     }
     const obj = [];
-    data.productDetailsList.forEach(item => {
+    data.shippingInfoList.forEach(item => {
       obj.push({
-        caseDetailNo: '',
-        type: data.customerInfo.caseType,
-        sellToNo: item.productISBNDetail.owner,
-        iSBNPartNo: item.isbn,
-        printType: item.printType,
-        productVersion: item.productISBNDetail.specsVersionNo,
-        parentISBN: '',
-        jobType: item.productISBNDetail.jobType,
-        productGroup: item.productISBNDetail.productGroup,
-        title: item.productISBNDetail.title,
-        lnNo: item.id,
-        extLnNo: 0,
-        bindingType: item.productISBNDetail.bindingType,
-        totalExtent: item.productISBNDetail.totalExtent,
-        weight: item.productISBNDetail.weight,
-        spine: item.productISBNDetail.spineWidth,
-        additionalUnitPrice: 0.0,
-        additionalQty: 0,
-        margin: item.margin,
-        orderQuantity: item.orderQty,
-        productionQuantity: item.prodQty,
-        estimatedPrice: item.productISBNDetail.estimatedPrice,
-        quotedPrice: 0.0,
-        sellingPrice: item.sellingPrice,
-        subTotal: item.subTotal,
-        samplesRequired: item.productISBNDetail.samplesRequired,
-        bluePrintRequired: item.productISBNDetail.bluePrintRequired,
-        fGRequired: item.productISBNDetail.fGRequired,
-        advancesRequired: item.productISBNDetail.advancesRequired,
-        carrierSheet: '',
-        createdByUser: 'DevUI',
-        createdBy: 'DevUI',
-        updatedByUser: 'DevUI',
-        updatedBy: 'DevUI',
-        samplesReq: this.getModalData(item.productISBNDetail.advancesList, 'Sample'),
-        bluePrintReq: this.getModalData(item.productISBNDetail.bluePrintList, 'BluePrint'),
-        fgReq: this.getModalData(item.productISBNDetail.fgList, 'FG'),
-        advancesReq: this.getModalData(item.productISBNDetail.advancesList, 'AD'),
+        shipmentId: '',
+        boxId: '',
+        shippingDetails: this.getShippingDetails(),
+        shippingItems: this.getShippingItems(),
+        shippingSpecificCost: this.getShippingSpecificCost(),
+        shipmentAddress: this.getShippingAddress(),
+        shipmentBillingDetails: this.getShippingBillingDetails()
       });
     });
     return obj;
+  }
+
+  getShippingDetails = () => {
+
+  }
+
+  getShippingItems = () => {
+
+  }
+
+  getShippingSpecificCost = () => {
+
+  }
+
+  getShippingAddress = () => {
+
+  }
+
+  getShippingBillingDetails = () => {
+
+  }
+
+  sum = (firstNumber: number, secondNumber: number) => {
+    // tslint:disable-next-line: radix
+    firstNumber = parseFloat(firstNumber.toString());
+    // tslint:disable-next-line: radix
+    secondNumber = parseFloat(secondNumber.toString());
+    // tslint:disable-next-line: radix
+    return parseFloat(firstNumber.toFixed(2)) + parseFloat(secondNumber.toFixed(2));
+  }
+
+  minus = (firstNumber: number, secondNumber: number) => {
+    // tslint:disable-next-line: radix
+    firstNumber = parseFloat(firstNumber.toString());
+    // tslint:disable-next-line: radix
+    secondNumber = parseFloat(secondNumber.toString());
+    // tslint:disable-next-line: radix
+    return parseFloat(firstNumber.toFixed(2)) - parseFloat(secondNumber.toFixed(2));
   }
 }

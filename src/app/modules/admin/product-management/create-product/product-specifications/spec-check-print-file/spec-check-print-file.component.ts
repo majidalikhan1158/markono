@@ -37,7 +37,7 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.productSpecStore.subscribe((resp) => {
+    this.store.$productSpecStore.subscribe((resp) => {
       if (resp && resp.checkPrintFileVM && resp.checkPrintFileVM.id > 0) {
         this.viewModal = resp.checkPrintFileVM;
       } else {
@@ -99,7 +99,7 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
   saveToStore = () => {
     this.store.setProductSpecStore(
       this.viewModal,
-      ProductSpecTypes.CHECK_PRINT_FILE
+      ProductSpecTypes.VERIFY_PRINT_FILE
     );
   }
 }

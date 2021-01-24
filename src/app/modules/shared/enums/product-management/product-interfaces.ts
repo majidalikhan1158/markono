@@ -22,3 +22,8 @@ export interface ProductSpecTypeObject {
   isSelected: boolean;
   isVisited: boolean;
 }
+
+export interface ProductSpecStatus {
+  status: string;
+  tooltipMessage: string;
+}

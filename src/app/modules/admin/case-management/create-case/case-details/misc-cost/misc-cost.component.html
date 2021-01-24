@@ -43,12 +43,12 @@
                                                 (change)="handleSubTotalChange()"
                                                 [(ngModel)]="miscCostVMList[i].subTotal"
                                                 (change)="handleChangeToSyncWithStore()"
-                                                matInput [disabled]="disabled"
-                                                placeholder="0.00">
+                                                matInput [disabled]="disabled">
+                                                <span matPrefix>$&nbsp;</span>
                                         </mat-form-field>
                                     </td>
                                     <td>
-                                        <span class="material-icons delete-icon pr-2 cursor-pointer" (click)="deleteRow(miscCostVMList[i].id)" *ngIf="miscCostVMList.length > 1">
+                                        <span class="material-icons delete-icon pr-2 cursor-pointer" (click)="deleteRow(miscCostVMList[i].id)">
                                             delete
                                         </span>
                                     </td>

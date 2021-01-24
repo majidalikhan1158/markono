@@ -28,7 +28,7 @@ export const CaseDetailTypesArray = [
     isSelected: false,
   },
   {
-    value: 'Misc. Cost',
+    value: 'Misc Billing (By Order)',
     id: 2,
     enum: 'MISC_COST',
     isSelected: false,
@@ -101,4 +101,15 @@ export const ShipmentTypes = [
     text: 'Others',
     enum: 'OTHERS',
   },
+];
+
+export const Departments = [
+  'Prepress',
+  'Press',
+  'Binding',
+  'Planning',
+  'Folding',
+  'CCE',
+  'Finance',
+  'Fulfilment'
 ];

@@ -6,6 +6,7 @@ import {
   ProductSpecificationTypePartialArray,
   ProductSpecificationTypes,
   ProductSpecificationTypeOtherArray,
+  ProductSpecStatusTypes,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { AddRemoveSpecTypeEvent, ProductSpecTypeObject } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import { ProductSpecStore } from '../../../../shared/ui-services/product-spec.service';
@@ -16,6 +17,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ProductSpecStoreVM } from 'src/app/modules/shared/models/product-spec';
 import { Subscription } from 'rxjs';
 import { ProductVersions } from '../../../../services/shared/classes/product-modals/product-modals';
+import { ProductSpecStatus } from '../../../../shared/enums/product-management/product-interfaces';
+import { StorageKeys } from '../../../../shared/enums/app-constants';
 
 @Component({
   selector: 'app-product-specifications',
@@ -34,21 +37,36 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
   shouldExpandedPanelClose = false;
   productSpecData: ProductSpecStoreVM;
   productId: string;
+  shouldReadonly: boolean;
   subscription: Subscription;
+  shouldDisplayUpdateButton = false;
   constructor(
-    private store: ProductSpecStore,
+    public store: ProductSpecStore,
     private productservice: ProductService,
     private productHelper: ProductSpecHelperService,
     private snack: SnackBarService
-  ) {}
+  ) {
+    this.store.setProductSpecTypeList(this.productSpecTypesArray);
+    this.subscription = this.store.$productSpecTypeObjectList.subscribe(resp => {
+      this.productSpecTypesArray = resp;
+    });
+
+    this.subscription = this.store.$productSpecUpdateButton.subscribe(resp => {
+      this.shouldDisplayUpdateButton = resp;
+    });
+  }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+    this.selectedProductSpecType = '';
+    this.store.setProductSpecTypeList([]);
+    this.productSpecTypesArray = ProductSpecificationTypesArray;
+    this.productSpecTypeOtherArray = ProductSpecificationTypeOtherArray;
   }
 
   ngOnInit(): void {
     this.selectedProductSpecType = this.productSpecTypesConstant.GENERAL;
-    this.subscription = this.store.productSpecStore.subscribe((resp) => {
+    this.subscription = this.store.$productSpecStore.subscribe((resp) => {
       this.productSpecData = resp;
       this.setChildSections();
     });
@@ -56,6 +74,14 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     this.subscription = this.store.$productId.subscribe(resp => {
       this.productId = resp;
     });
+
+    this.subscription = this.store.$productSpecReadonly.subscribe(resp => {
+      this.shouldReadonly = resp;
+    });
+
+    if (!this.shouldReadonly){
+      this.handleProductSpecStatus();
+    }
   }
 
   setChildSections = () => {
@@ -86,6 +112,9 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     if (event.option.value != null) {
       this.selectedProductSpecType = event.option.value;
       this.handleProductSpecChangeLogic(arrayToWork);
+      if (!this.shouldReadonly){
+        this.handleProductSpecStatus();
+      }
     }
   }
 
@@ -100,15 +129,11 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
 
     this.shouldExpandedPanelClose =
       selectedTypeObject.enum ===
-        this.productSpecTypesConstant.CHECK_PRINT_FILE ||
+        this.productSpecTypesConstant.VERIFY_PRINT_FILE ||
       selectedTypeObject.enum === this.productSpecTypesConstant.LAYOUT_PREP ||
       selectedTypeObject.enum === this.productSpecTypesConstant.UNIT_PRICE;
 
     arrayToWork.forEach((item) => {
-      if (item.id <= selectedTypeObject.id) {
-        item.isVisited = true;
-      }
-
       if (item.enum === this.selectedProductSpecType) {
         item.isSelected = true;
       } else {
@@ -118,6 +143,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
 
     if (!this.shouldExpandedPanelClose) {
       this.productSpecTypesArray = arrayToWork;
+      this.store.setProductSpecTypeList(this.productSpecTypesArray);
       this.productSpecTypeOtherArray.forEach((item) => {
         item.isSelected = false;
       });
@@ -126,7 +152,28 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
       this.productSpecTypesArray.forEach((item) => {
         item.isSelected = false;
       });
+      this.store.setProductSpecTypeList(this.productSpecTypesArray);
     }
+
+  }
+
+  handleProductSpecStatus = () => {
+    const obj: ProductSpecStatus = {
+      status: '',
+      tooltipMessage: ''
+    };
+    if (this.selectedProductSpecType === this.productSpecTypesConstant.LAYOUT_PREP) {
+      obj.tooltipMessage = '';
+      obj.status = ProductSpecStatusTypes.Live;
+      this.store.setProductSpecStatus(obj);
+    } else if (this.selectedProductSpecType === this.productSpecTypesConstant.VERIFY_PRINT_FILE) {
+      obj.tooltipMessage = '';
+      obj.status = ProductSpecStatusTypes.Complete;
+    } else {
+      obj.tooltipMessage = '';
+      obj.status = ProductSpecStatusTypes.InComplete;
+    }
+    this.store.setProductSpecStatus(obj);
   }
 
   handleAddOtherComponent() {}
@@ -157,7 +204,12 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     this.selectedProductSpecType = nextSelectedTabObj
       ? nextSelectedTabObj.enum
       : this.selectedProductSpecType;
-    this.handleProductSpecChangeLogic(this.productSpecTypesArray);
+    if (!nextSelectedTabObj) {
+      this.selectedProductSpecType = this.productSpecTypesConstant.VERIFY_PRINT_FILE;
+      this.handleProductSpecChangeLogic(this.productSpecTypeOtherArray);
+    } else {
+      this.handleProductSpecChangeLogic(this.productSpecTypesArray);
+    }
   }
 
   addProductSpecType(e: AddRemoveSpecTypeEvent) {
@@ -178,16 +230,8 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
       if (isExistAlread) {
         return;
       }
-      // obj.id = this.productSpecTypesArray.length;
-      // this.productSpecTypesArray.splice(
-      //   this.productSpecTypesArray.length - 1,
-      //   0,
-      //   obj
-      // );
       this.productSpecTypesArray.push(obj);
-      // this.productSpecTypesArray.find(
-      //   (x) => x.enum === this.productSpecTypesConstant.UNIT_PRICE
-      // ).id = this.productSpecTypesArray.length;
+      this.store.setProductSpecTypeList(this.productSpecTypesArray);
     }
   }
 
@@ -195,16 +239,20 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     if (
       this.selectedProductSpecType === this.productSpecTypesConstant.UNIT_PRICE
     ) {
-      this.saveFromUnitPrice();
+      this.handleCreateButtonClick();
     } else if (
       this.selectedProductSpecType ===
-      this.productSpecTypesConstant.CHECK_PRINT_FILE
+      this.productSpecTypesConstant.VERIFY_PRINT_FILE
     ) {
       this.saveFromCheckPrintFile();
     } else if (
       this.selectedProductSpecType === this.productSpecTypesConstant.LAYOUT_PREP
     ) {
     }
+  }
+
+  updateProductSpec = () => {
+    this.handleCreateButtonClick();
   }
 
   saveFromUnitPrice = () => {
@@ -215,14 +263,40 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
           const result = response.body.result;
           if (result?.failureCount > 0) {
             this.snack.open(result?.title);
-          } else {
+          } else if (result?.errors) {
+            const errors = result?.errors;
+            const entries = Object.entries(errors);
+            const errorsList = [];
+            entries.forEach(error => {
+              const message = `Field: ${error[0]}, Message: ${error[1]}`;
+              this.snack.open(message, '', 'top', 5000, 'center');
+            });
+          } else{
             this.handleVersionSelection(result.customMessage);
             this.snack.open(result?.returnMessage);
           }
         }
       },
       (error: HttpErrorResponse) => {
-        this.snack.open('An error occured: ', 'Interal Server Error');
+        const errorString = localStorage.getItem(`${StorageKeys.SUFFIX}_${StorageKeys.APP_ERRORS}`);
+        const errorObject = JSON.parse(errorString);
+        const result = errorObject?.result;
+        const timeOut = 5000;
+        if (result) {
+          const errors = result?.errors;
+          const entries = Object.entries(errors) ?? [];
+          const errorsList = [];
+          entries.forEach((error, i) => {
+            const message = `${error[1]}`;
+            setTimeout(() => {
+              this.snack.open(message, '', 'top', 5000, 'right');
+            }, i * (timeOut + 500));
+          });
+          localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.APP_ERRORS}`, '');
+        } else {
+          localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.APP_ERRORS}`, '');
+        }
+        // this.snack.open('An error occured: ', 'Interal Server Error');
       }
     );
   }
@@ -302,5 +376,15 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     }, (errOr: HttpErrorResponse) => {
       this.snack.open('Unable to create record');
     });
+  }
+
+  handleCreateButtonClick = () => {
+    this.store.updateStoreByComponentType(this.selectedProductSpecType);
+    const validationErrors = this.productHelper.validateStoreModal(this.productSpecData);
+    if (validationErrors && validationErrors.length > 0) {
+      this.snack.open(validationErrors.join('.\n'));
+      return;
+    }
+    this.saveFromUnitPrice();
   }
 }

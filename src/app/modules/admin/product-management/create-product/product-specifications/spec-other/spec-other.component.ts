@@ -5,7 +5,8 @@ import { takeUntil } from 'rxjs/operators';
 import { MaterialDataList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
-import { FinishingTypeList, BindingTypeList, ColorTypeList } from 'src/app/modules/shared/enums/product-management/product-constants';
+import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
+import { FinishingTypeList, BindingTypeList, ColorTypeList, OtherComponentChooseList } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import { OtherVM, DvdCDBindingMapper } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
@@ -23,7 +24,7 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
   rowIdToExpand = 0;
   shouldShowOtherDetails = false;
   ExpansionIcons = ExpansionIcons;
-
+  otherComponentChooseList = OtherComponentChooseList.sort();
 
   materialDataList: MaterialDataList[];
   materialWeightList: string[];
@@ -34,8 +35,15 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
   selectedFinishingTypes: string[] = [];
 
   materialWeightFltrCtrl: FormControl = new FormControl();
+  materialFltrCtrl: FormControl = new FormControl();
+  materialBrandFltrCtrl: FormControl = new FormControl();
   finishingTypeFltrCtrl: FormControl = new FormControl();
+  otherComponentChooseFltrCtrl: FormControl = new FormControl();
+
   filteredMaterialWeightList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredMaterialList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredMaterialBrandList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredOtherComponentChooseList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredFinishingTypeList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
 
   bindingTypeList = BindingTypeList;
@@ -43,9 +51,10 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
   parentRecordId: number;
   subscription: Subscription;
   protected onDestroy = new Subject<void>();
-  constructor(private store: ProductSpecStore) { }
+  constructor(private store: ProductSpecStore, private helper: ProductSpecHelperService) { }
 
   ngOnInit(): void {
+    this.handleOtherComponentChooseFilterAutoComplete();
     this.store.getCoverMaterialWeight('Text', ProductSpecTypes.OTHER_COMPONENT);
     this.store.getFinishingTypes('Text', ProductSpecTypes.OTHER_COMPONENT);
     this.getApiData();
@@ -55,12 +64,12 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
   getApiData = () => {
     this.subscription = this.store.$otherMaterialDataList.subscribe(list => {
       this.materialDataList = list;
-      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))];
+      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort();
       this.handleMaterialWeightFilterAutoComplete();
     });
 
     this.subscription = this.store.$otherFinishingTypeList.subscribe(list => {
-      this.finishingTypeList = list;
+      this.finishingTypeList = list.sort();
       this.handleFinishingTypeFilterAutoComplete();
     });
   }
@@ -68,10 +77,12 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
   handleMaterialWeightChange = (type: string, index: number) => {
     if (type === 'MATERIALWEIGHT') {
       const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal[index].textMaterialWeight);
-      this.materialList = [...new Set(records.map(x => x.PaperMaterial))];
+      this.materialList = [...new Set(records.map(x => x.PaperMaterial))].sort();
+      this.handleMaterialFilterAutoComplete();
     } else if (type === 'MATERIAL') {
       const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal[index].textMaterial);
-      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))];
+      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))].sort();
+      this.handleMaterialBrandFilterAutoComplete();
     }
   }
 
@@ -119,7 +130,7 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.productSpecStore.subscribe((resp) => {
+    this.store.$productSpecStore.subscribe((resp) => {
       if (resp && resp.otherVM && resp.otherVM.length > 0) {
         this.viewModal = resp.otherVM;
       } else {
@@ -186,19 +197,30 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
     this.viewModal[$event.index].bindingVM = $event.bindingVM;
   }
 
-  ngOnDestroy(): void {
-    this.store.setProductSpecStore(
-      this.viewModal,
-      ProductSpecTypes.OTHER_COMPONENT
-    );
-  }
-
   handleMaterialWeightFilterAutoComplete = () => {
     this.filteredMaterialWeightList.next(this.materialWeightList.slice());
-    this.subscription = this.materialWeightFltrCtrl.valueChanges
+    this.materialWeightFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
         this.filterMaterialWeight();
+      });
+  }
+
+  handleMaterialFilterAutoComplete = () => {
+    this.filteredMaterialList.next(this.materialList.slice());
+    this.materialFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterMaterial();
+      });
+  }
+
+  handleMaterialBrandFilterAutoComplete = () => {
+    this.filteredMaterialBrandList.next(this.materialBrandList.slice());
+    this.materialBrandFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterMaterialBrand();
       });
   }
 
@@ -217,6 +239,69 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
     // filter the banks
     this.filteredMaterialWeightList.next(
       this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  filterMaterial = () => {
+    if (!this.materialList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.materialFltrCtrl.value;
+    if (!search) {
+      this.filteredMaterialList.next(this.materialList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredMaterialList.next(
+      this.materialList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  filterMaterialBrand = () => {
+    if (!this.materialBrandList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.materialBrandFltrCtrl.value;
+    if (!search) {
+      this.filteredMaterialBrandList.next(this.materialBrandList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredMaterialList.next(
+      this.materialBrandList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  handleOtherComponentChooseFilterAutoComplete = () => {
+    this.filteredOtherComponentChooseList.next(this.otherComponentChooseList.slice());
+    this.subscription = this.otherComponentChooseFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterOtherComponentChoose();
+      });
+  }
+
+  filterOtherComponentChoose = () => {
+    if (!this.otherComponentChooseList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.otherComponentChooseFltrCtrl.value;
+    if (!search) {
+      this.filteredOtherComponentChooseList.next(this.otherComponentChooseList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredOtherComponentChooseList.next(
+      this.otherComponentChooseList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -247,5 +332,20 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
     );
   }
 
+  handleColorSum = (index) => {
+    this.viewModal[index].totalExtent = this.helper.sum(this.viewModal[index].noOfColourExtent ?? 0,
+       this.viewModal[index].noOfMonoExtent ?? 0);
+  }
 
+  handleTypeChange = (index) => {
+    this.viewModal[index].componentType = this.viewModal[index].type;
+    this.showDvdDetails(this.viewModal[index].id);
+  }
+
+  ngOnDestroy(): void {
+    this.store.setProductSpecStore(
+      this.viewModal,
+      ProductSpecTypes.OTHER_COMPONENT
+    );
+  }
 }

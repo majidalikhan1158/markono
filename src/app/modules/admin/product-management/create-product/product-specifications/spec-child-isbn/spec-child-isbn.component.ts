@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { GreyboardThicknessList, ColorTypeList } from 'src/app/modules/shared/enums/product-management/product-constants';
+import { GreyboardThicknessList, ColorTypeList, ProductSpecificationTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 import { ChildIsbnVM } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
@@ -17,6 +17,7 @@ import { GeneralVM } from '../../../../../shared/models/product-spec';
 })
 export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   @ViewChild('trigger') trigger: MatAutocompleteTrigger;
+  productSpecTypesConstant = ProductSpecificationTypes;
   materialDataList: MaterialDataList[];
   materialWeightList: string[];
   materialList: string[];
@@ -27,11 +28,16 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
 
   viewModal: ChildIsbnVM;
   materialWeightFltrCtrl: FormControl = new FormControl();
+  materialFltrCtrl: FormControl = new FormControl();
+  materialBrandFltrCtrl: FormControl = new FormControl();
   finishingTypeFltrCtrl: FormControl = new FormControl();
+
   filteredMaterialWeightList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredMaterialList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredMaterialBrandList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredFinishingTypeList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
 
-  greyboardThicknessList = GreyboardThicknessList;
+  greyboardThicknessList = GreyboardThicknessList.sort();
   childIsbnNumber: string;
   childIsbnNumberCtrl = new FormControl();
   isbnOwnerList: ChildIsbnModal[];
@@ -43,25 +49,34 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   constructor(private store: ProductSpecStore, private ref: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    this.handleUpdateStore();
     this.store.getCoverMaterialWeight('SlipCase', ProductSpecTypes.CHILD_ISBN);
     this.store.getFinishingTypes('SlipCase', ProductSpecTypes.CHILD_ISBN);
     this.getApiData();
     this.getDefaultRecord();
   }
 
+  handleUpdateStore = () => {
+    this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
+      if (resp && resp === this.productSpecTypesConstant.CHILD_ISBN ) {
+         this.pushToStore();
+      }
+    });
+  }
+
   getApiData = () => {
     this.subscription = this.store.$childIsbnMaterialDataList.subscribe(list => {
       this.materialDataList = list;
-      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))];
+      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort();
       this.handleMaterialWeightFilterAutoComplete();
     });
 
     this.subscription = this.store.$childIsbnFinishingTypeList.subscribe(list => {
-      this.finishingTypeList = list;
+      this.finishingTypeList = list.sort();
       this.handleFinishingTypeFilterAutoComplete();
     });
 
-    this.subscription = this.store.productSpecStore.subscribe(data => {
+    this.subscription = this.store.$productSpecStore.subscribe(data => {
       this.generalVM = data.generalVM;
     });
   }
@@ -132,10 +147,12 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   handleMaterialWeightChange = (type: string) => {
     if (type === 'MATERIALWEIGHT') {
       const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.materialWeight);
-      this.materialList = [...new Set(records.map(x => x.PaperMaterial))];
+      this.materialList = [...new Set(records.map(x => x.PaperMaterial))].sort();
+      this.handleMaterialFilterAutoComplete();
     } else if (type === 'MATERIAL') {
       const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal.textMaterial);
-      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))];
+      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))].sort();
+      this.handleMaterialBrandFilterAutoComplete();
     }
   }
 
@@ -156,7 +173,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.subscription = this.store.productSpecStore.subscribe((resp) => {
+    this.subscription = this.store.$productSpecStore.subscribe((resp) => {
       if (resp && resp.childIsbnVM && resp.childIsbnVM.id > 0) {
         this.viewModal = resp.childIsbnVM;
         this.handleMaterialWeightChange('MATERIALWEIGHT');
@@ -214,12 +231,31 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     );
   }
 
+
   handleMaterialWeightFilterAutoComplete = () => {
     this.filteredMaterialWeightList.next(this.materialWeightList.slice());
-    this.subscription = this.materialWeightFltrCtrl.valueChanges
+    this.materialWeightFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
         this.filterMaterialWeight();
+      });
+  }
+
+  handleMaterialFilterAutoComplete = () => {
+    this.filteredMaterialList.next(this.materialList.slice());
+    this.materialFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterMaterial();
+      });
+  }
+
+  handleMaterialBrandFilterAutoComplete = () => {
+    this.filteredMaterialBrandList.next(this.materialBrandList.slice());
+    this.materialBrandFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterMaterialBrand();
       });
   }
 
@@ -241,13 +277,56 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
     );
   }
 
+  filterMaterial = () => {
+    if (!this.materialList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.materialFltrCtrl.value;
+    if (!search) {
+      this.filteredMaterialList.next(this.materialList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredMaterialList.next(
+      this.materialList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  filterMaterialBrand = () => {
+    if (!this.materialBrandList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.materialBrandFltrCtrl.value;
+    if (!search) {
+      this.filteredMaterialBrandList.next(this.materialBrandList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredMaterialList.next(
+      this.materialBrandList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
   ngOnDestroy(): void {
     this.onDestroy.next();
     this.onDestroy.complete();
     this.subscription.unsubscribe();
-    this.store.setProductSpecStore(
-      this.viewModal,
-      ProductSpecTypes.CHILD_ISBN
-    );
+    this.pushToStore();
+  }
+
+  pushToStore = () => {
+    if (this.viewModal) {
+      this.store.setProductSpecStore(
+        this.viewModal,
+        ProductSpecTypes.CHILD_ISBN
+      );
+    }
+
   }
 }

@@ -5,10 +5,11 @@ import { OrderDetailsComponent } from './order-details/order-details.component';
 import { OrderJobDetailsComponent } from './order-job-details/order-job-details.component';
 import { OrdersWithIssuesComponent } from './orders-with-issues/orders-with-issues.component';
 import { OrdersComponent } from './orders/orders.component';
+import { AppPageRoutes, AppPages } from '../../shared/enums/app-constants';
 
 const routes: Routes = [
   {
-    path: 'orders',
+    path: AppPages.LIST,
     component: OrdersComponent,
   },
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
   {
     path: 'orders-with-issues',
     component: OrdersWithIssuesComponent,
+  },
+  {
+    path: '',
+    component: OrdersComponent,
   },
   {
     path: '**',

@@ -12,14 +12,15 @@
 
                 <mat-selection-list [multiple]="false" class="pt-0 pb-0 sub-types"
                     (selectionChange)="handleProductSpecTypeChange($event, productSpecTypesArray)">
-                    <mat-list-option class="text-color" *ngFor="let types of productSpecTypesArray"
+                    <mat-list-option class="text-color" *ngFor="let types of store.$productSpecTypeObjectList | async"
                         [selected]="types.isSelected" [value]="types.enum">
-                        <div class="mat-list-option-number"
+                        <!-- <div class="mat-list-option-number"
                             [ngClass]="{'mat-list-option-number-visited': types.isVisited}">
                             <div class="mat-list-option-number-content">
                                 <span>{{types.id}}</span>
                             </div>
-                        </div>
+                        </div> -->
+                        <span class="pr-1">{{types.id}}.</span>
                         {{types.value}}
                     </mat-list-option>
                 </mat-selection-list>
@@ -37,7 +38,7 @@
             </mat-selection-list>
         </mat-accordion>
     </div>
-    <div class="col-lg-10 product-spec-details pt-4">
+    <div [ngClass]="shouldReadonly ? 'col-lg-10 product-spec-details pt-4 readonly-box' : 'col-lg-10 product-spec-details pt-4'">
         <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.GENERAL">
             <app-spec-general (productSpecTypeEvent)="addProductSpecType($event)"></app-spec-general>
         </ng-container>
@@ -68,20 +69,43 @@
         <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.OTHER_COMPONENT">
             <app-spec-other></app-spec-other>
         </ng-container>
-        <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.CHECK_PRINT_FILE">
+        <ng-container *ngIf="selectedProductSpecType === productSpecTypesConstant.VERIFY_PRINT_FILE">
             <app-spec-check-print-file></app-spec-check-print-file>
         </ng-container>
         <ng-container>
             <div class="row pb-5">
                 <div class="col-lg-12 pt-10 text-right">
                     <button mat-button (click)="handleBackEvent()"
-                        *ngIf="selectedProductSpecType !== productSpecTypesConstant.GENERAL && selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && selectedProductSpecType !== productSpecTypesConstant.CHECK_PRINT_FILE"
-                        class="btn btn-primary stepper-back-button mr-2">Back</button>
+                        *ngIf="(selectedProductSpecType !== productSpecTypesConstant.GENERAL && 
+                        selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && 
+                        selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
+                        selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE) && !shouldReadonly"
+                        [ngClass]="shouldDisplayUpdateButton ? 'btn btn-primary stepper-back-button mr-2' : 'btn btn-primary stepper-back-button mr-2'">Back</button>
+                    
+                    <button mat-button *ngIf="shouldDisplayUpdateButton && 
+                            selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
+                            selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE"
+                            (click)="updateProductSpec()"
+                        class="btn outline-button mr-4">
+                        Update
+                    </button>
+
+                    <button mat-button (click)="handleCreateButtonClick()"
+                        *ngIf="(!shouldDisplayUpdateButton && !shouldReadonly) && 
+                            (selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
+                            selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE)"
+                        class="btn outline-button mr-2">Create</button>
+                    
                     <button mat-button (click)="handleNextEvent()"
-                        *ngIf="selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && selectedProductSpecType !== productSpecTypesConstant.CHECK_PRINT_FILE"
+                        *ngIf="(selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && 
+                            selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
+                            selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE) && !shouldReadonly"
                         class="btn btn-primary stepper-next-button">Next</button>
+
+
                     <button mat-button (click)="createProductSpec()"
-                        *ngIf="selectedProductSpecType === productSpecTypesConstant.UNIT_PRICE || selectedProductSpecType === productSpecTypesConstant.LAYOUT_PREP || selectedProductSpecType === productSpecTypesConstant.CHECK_PRINT_FILE"
+                        *ngIf="selectedProductSpecType === productSpecTypesConstant.LAYOUT_PREP || 
+                            selectedProductSpecType === productSpecTypesConstant.VERIFY_PRINT_FILE"
                         class="btn btn-primary stepper-next-button">Save</button>
                 </div>
             </div>

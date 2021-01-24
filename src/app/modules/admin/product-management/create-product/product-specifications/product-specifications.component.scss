@@ -54,7 +54,8 @@ app-product-specifications {
     flex-direction: row !important;
   }
   .product-spec-types .text-color .mat-list-text {
-    color: #7e7e7e !important;
+    color: #7e7e7e;
+    padding-left: 27px !important;
   }
   .product-spec-types .mat-list-base {
     padding-top: 5px;
@@ -89,9 +90,13 @@ app-product-specifications {
     width: inherit;
   }
 
+  .product-spec-details.readonly-box {
+    pointer-events: none !important;
+  }
+
   .product-spec-types .mat-expansion-panel-body {
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 0px;
+    padding-right: 0px;
     padding-bottom: 0px;
   }
 
@@ -101,7 +106,7 @@ app-product-specifications {
 
   .product-spec-types .mat-selection-list.sub-types {
     background: #f9f9f9;
-    border-radius: 10px;
+    border-radius: 0px;
   }
 
   .product-spec-types .mat-list-item {
@@ -114,5 +119,17 @@ app-product-specifications {
 
   .product-spec-types .material-icons {
     font-size: 20px !important;
+  }
+
+  .product-spec-details  .outline-button {
+    border: 1px solid #5face2 !important;
+    border-radius: 4px !important;
+    opacity: 1 !important;
+    background: transparent !important;
+    color: #5face2 !important;
+    font-size: 14px !important;
+    height: 36px;
+    vertical-align: top;
+    text-transform: uppercase !important;
   }
 }

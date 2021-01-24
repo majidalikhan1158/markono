@@ -11,7 +11,9 @@
         <ng-container matColumnDef="isSpecsInView">
             <mat-header-cell *matHeaderCellDef> Specs in View </mat-header-cell>
             <mat-cell *matCellDef="let element">
-                <mat-radio-button [checked]="element.isSpecsInView"></mat-radio-button>
+                <mat-radio-button
+                    (click)="setVersionNo(element.versionNo)" 
+                    [checked]="element.versionNo === versionNo"></mat-radio-button>
             </mat-cell>
         </ng-container>
         <!-- Position Column -->
@@ -40,6 +42,6 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary ui-modal-cancel-button ui-modal-action-button"
-        (click)="save()">CANCEL</button>
+        (click)="close()">CANCEL</button>
     <button type="button" class="btn btn-primary ui-modal-action-button" (click)="save()">SAVE</button>
 </div>

@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   ViewChild,
-  AfterViewInit,
   ViewEncapsulation,
   ChangeDetectorRef,
 } from '@angular/core';
@@ -12,17 +11,13 @@ import {
   OrderSearchFilters,
   OrderSearchFilterTypes,
 } from 'src/app/modules/shared/models/table-filter-modals';
-import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 import { Router } from '@angular/router';
 import { OrdersModelDataList } from 'src/app/modules/shared/mock-data/orders-data-list';
 import { ViewByArray, OrdersModel, StatusTypesArray, OrderType, OrderVM } from 'src/app/modules/shared/models/order-management';
-import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 import { Subscription } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { TokenType } from 'src/app/modules/shared/enums/app-enums';
-import { AppAuthService } from '../../../services/core/services/app-auth.service';
-import { CaseHelperService } from '../../../shared/enums/helpers/case-helper.service';
+import { AppPageRoutes } from '../../../shared/enums/app-constants';
 import { OrderService } from 'src/app/modules/services/core/services/order.service';
+import { AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-orders',
@@ -59,9 +54,8 @@ export class OrdersComponent implements OnInit {
   dataArrayOrder;
   //#endregion
 
-  constructor(private modalService: ModalService,
+  constructor(
     private router: Router,
-    private snack: SnackBarService,
     private orderService: OrderService,
     private cd: ChangeDetectorRef,) {
   }
@@ -73,7 +67,6 @@ export class OrdersComponent implements OnInit {
   getAllOrders() {
     this.subscription = this.orderService.getAllOrders().subscribe(resp => {
       this.dataArrayOrder = resp.body.result ? resp.body.result as OrderVM[] : [];
-      // console.log('get al orders', this.dataArrayOrder)
       this.initializeDatatable();
     });
   }
@@ -111,7 +104,7 @@ export class OrdersComponent implements OnInit {
       this.tableFilters.orderType = '';
     } else if (filterPropType === this.tableFilterTypes.RDD_DATE) {
       this.tableFilters.rddDate = '';
-    } else if (filterPropType == 'clear') {
+    } else if (filterPropType === 'clear') {
       this.tableFilters.customerName = '';
       this.tableFilters.status = this.selectedStatus = '';
       this.tableFilters.customerPoNo = '';
@@ -144,16 +137,6 @@ export class OrdersComponent implements OnInit {
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          // data.customerPoNo
-          //   .toString()
-          //   .trim()
-          //   .toLowerCase()
-          //   .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          // data.type
-          //   .toString()
-          //   .trim()
-          //   .toLowerCase()
-          //   .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
           data.currentActivityStatusName
             .toString()
             .trim()
@@ -179,7 +162,7 @@ export class OrdersComponent implements OnInit {
         );
       }
       if (this.tableFilters.status !== '') {
-        if (this.tableFilters.status == 'All') {
+        if (this.tableFilters.status === 'All') {
 
         } else {
           filterCounter++;
@@ -192,26 +175,6 @@ export class OrdersComponent implements OnInit {
           );
         }
       }
-      // if (this.tableFilters.customerPoNo !== '') {
-      //   filterCounter++;
-      //   matchedFilters = matchedFilters + (
-      //     data.customerPoNo
-      //       .toString()
-      //       .trim()
-      //       .toLowerCase()
-      //       .indexOf(searchString.customerPoNo.toLowerCase()) !== -1 ? 1 : 0
-      //   );
-      // }
-      // if (this.tableFilters.orderType !== '') {
-      //   filterCounter++;
-      //   matchedFilters = matchedFilters + (
-      //     data.type
-      //       .toString()
-      //       .trim()
-      //       .toLowerCase()
-      //       .indexOf(searchString.orderType.toLowerCase()) !== -1 ? 1 : 0
-      //   );
-      // }
       if (this.tableFilters.rddDate !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
@@ -252,11 +215,11 @@ export class OrdersComponent implements OnInit {
     } else {
 
     }
-    //this.tableFilters.currentSelectedFilter = filterPropType;
+    // this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
 
-  getCustomerName(number) {
+  getCustomerName(value) {
     return ' Banta Global Turnkey (S) Pte Ltd';
   }
 

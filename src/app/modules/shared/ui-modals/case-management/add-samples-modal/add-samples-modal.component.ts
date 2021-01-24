@@ -65,7 +65,11 @@ export class AddSamplesModalComponent implements OnInit, OnDestroy {
   }
 
   deleteRow(rowId) {
-    this.samplesListVM = this.samplesListVM.filter(x => x.id !== rowId);
+    const filteredRows = this.samplesListVM.filter((x) => x.id !== rowId);
+    filteredRows.forEach((x, i) => {
+      x.id = i + 1;
+    });
+    this.samplesListVM = filteredRows;
   }
 
   ngOnDestroy(): void {

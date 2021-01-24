@@ -20,6 +20,7 @@ import { OrderService } from 'src/app/modules/services/core/services/order.servi
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 import { Subscription } from 'rxjs';
+import { CreateCaseViewModel } from '../../../shared/models/create-case';
 @Component({
   selector: 'app-create-case',
   templateUrl: './create-case.component.html',
@@ -91,26 +92,50 @@ export class CreateCaseComponent implements OnInit {
 
   createCase = () => {
     this.subscription = this.store.createCaseStore.subscribe(data => {
-      console.log(data);
       const mappedData = this.caseHelper.transCaseDataToCaseApiModal(data);
-      console.log(JSON.stringify(mappedData));
       this.orderService.createCase(mappedData).subscribe(resp => {
         if (resp && resp.body.result && resp.body.result) {
           const response = resp.body.result as any;
           if (response.message && response.message === 'Successful') {
             this.snack.open('Case has been created successfully');
             this.shouldDisplayCreateCaseButton = false;
-            this.createShipment(data);
-            this.ref.detectChanges();
+            this.createShipment(data, response.caseId);
           } else {
             this.snack.open(response);
           }
-          this.subscription.unsubscribe();
         }
       }, (err: HttpErrorResponse) => {
         this.snack.open(err.error);
       });
     });
+  }
+
+  createShipment = (data: CreateCaseViewModel, caseId: string) => {
+    if (data && (!data.shippingInfoList || data.shippingInfoList.length === 0 )) {
+      this.endCreateProcess();
+      return;
+    }
+    const mappedData = this.caseHelper.transToCreateShipment(data, caseId);
+    this.orderService.createShipment(mappedData).subscribe(resp => {
+      if (resp && resp.body.result && resp.body.result) {
+        const response = resp.body.result as any;
+        if (response.message && response.message === 'Successful') {
+          this.snack.open('Shipping Info has been created successfully');
+          this.endCreateProcess();
+        } else {
+          this.snack.open(response);
+        }
+        this.subscription.unsubscribe();
+      }
+    }, (err: HttpErrorResponse) => {
+      this.snack.open(err.error);
+    });
+  }
+
+  endCreateProcess = () => {
+    location.reload();
+    this.subscription?.unsubscribe();
+    this.ref.detectChanges();
   }
 
   getSecondStepTitle = () => {
@@ -133,7 +158,4 @@ export class CreateCaseComponent implements OnInit {
     });
   }
 
-  createShipment = (data) => {
-
-  }
 }

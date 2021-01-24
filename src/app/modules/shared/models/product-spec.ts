@@ -14,7 +14,7 @@ export interface GeneralVM {
   id: number;
   productNumber: string;
   printingType: string;
-  productType: number;
+  productType: string;
   externalPartNo: string;
   isbnOwner: string;
   journalTitleCode: string;
@@ -60,6 +60,7 @@ export interface BindingVM {
   saddleStich: BindingTypeStichType;
   spiralBound: BindingTypeSpiralBound;
   wireoBinding: BindingTypeWireoBinding;
+  others: BindingTypeOthers;
 }
 
 export interface BindingTypeCaseBound {
@@ -68,6 +69,7 @@ export interface BindingTypeCaseBound {
   isHeadTailBand: boolean;
   headTailBandColour: string;
   isRibbon: boolean;
+  ribbonColour: string;
   greyboardThickness: string;
   specialInstruction1: string;
   benchworkRequired: string[];
@@ -119,6 +121,12 @@ export interface BindingTypeWireoBinding {
   specialInstructions2: string;
 }
 
+export interface BindingTypeOthers {
+  specialInstructions1: string;
+  benchworkRequired: string[];
+  specialInstructions2: string;
+}
+
 export interface ChildIsbnVM {
   id: number;
   childIsbns: string[];
@@ -140,7 +148,7 @@ export interface ChildIsbnVM {
 export interface WebCodeVM {
   id: number;
   webcodeLocation: string;
-  noOfWebcode: string;
+  noOfWebcode: number;
   xCoordinate: number;
   ycoordinate: number;
   specialInstructions: string;

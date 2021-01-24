@@ -182,7 +182,7 @@
                                                                     *ngIf="!isShippingDetails">
                                                                     <mat-label>Shipment Qty</mat-label>
                                                                     <input matInput type="number"
-                                                                        (change)="handleShipmentQtyChange(shipment.shipmentId, shipmentItem.id, $event)"
+                                                                        (change)="handleShipmentQtyChange(i, k, $event)"
                                                                         value="{{getShipmentItemQty(shipment.shipmentId, shipmentItem.id)}}"
                                                                         [disabled]="disabled || !(shipmentItem.maximumAllowed > 0)"
                                                                         min="0" max="{{shipmentItem.maximumAllowed}}">
@@ -191,7 +191,7 @@
                                                                     *ngIf="isShippingDetails">
                                                                     <mat-label>Shipment Qty</mat-label>
                                                                     <input matInput type="number"
-                                                                        (change)="handleShipmentQtyChange(shipment.shipmentId, shipmentItem.id, $event)"
+                                                                        (change)="handleShipmentQtyChange(i, k, $event)"
                                                                         value="{{getShipmentItemQty(shipment.shipmentId, shipmentItem.id)}}"
                                                                         [disabled]="disabled">
                                                                 </mat-form-field>
@@ -270,6 +270,7 @@
                                                                 <input matInput [(ngModel)]="rowId.subTotal"
                                                                     [disabled]="disabled"
                                                                     (change)="handleSubTotalCost()">
+                                                                    <span matPrefix>$&nbsp;</span>
                                                             </mat-form-field>
                                                         </td>
                                                         <td>
@@ -491,8 +492,8 @@
                 </ng-container>
             </div>
         </div>
-        <div class="row sticky-bottom full-width pt-4" style="margin: auto">
-            <div class="col-lg-12 padding-0px" *ngIf="createCaseMode !== createCaseModes.EDIT"
+        <div class="row full-width pt-4">
+            <div class="col-lg-12 pl-0" *ngIf="createCaseMode !== createCaseModes.EDIT"
                 [hidden]="isShippingDetails">
                 <div class="col-lg-4">
                     <mat-form-field appearance="fill" class="selectBoxShippingType">

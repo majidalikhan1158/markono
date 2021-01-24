@@ -40,7 +40,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     SpecUnitPriceComponent,
     SpecOtherComponent,
     SpecCheckPrintFileComponent,
-    SpecLayoutPrepComponent
+    SpecLayoutPrepComponent,
   ],
   imports: [
     ProductManagementRoutingModule,
@@ -48,7 +48,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     MaterialUiModule,
     SharedModule,
     NgApexchartsModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
   ]
 })
 export class ProductManagementModule {}

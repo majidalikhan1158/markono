@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Router, NavigationEnd, ResolveEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { LayoutService, DynamicAsideMenuService, DynamicHeaderMenuService } from '../../../../_metronic/core';
 import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-headers.config';
-import { $ } from 'protractor';
+import { PageHeader } from '../../../../modules/shared/models/app-modal';
+import { AppPageRoutes } from 'src/app/modules/shared/enums/app-constants';
 @Component({
   selector: 'app-aside-dynamic',
   templateUrl: './aside-dynamic.component.html',
@@ -52,11 +53,11 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     // router subscription
     this.currentUrl = this.router.url.split(/[?#]/)[0];
     const routerSubscr = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: NavigationEnd) => {
+      filter(event => event instanceof ResolveEnd)
+    ).subscribe((event: ResolveEnd) => {
       this.currentUrl = event.url;
       this.cdr.detectChanges();
-      this.setHeaderLabel();
+      this.handleHeaderButtons();
       this.handlerShopFloorScreen();
     });
     this.subscriptions.push(routerSubscr);
@@ -69,36 +70,37 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     this.subscriptions.push(menuSubscr);
   }
 
+  private handleHeaderButtons = () => {
+    if (this.currentUrl === AppPageRoutes.LIST_PRODUCT) {
+      this.dynamicHeaderMenuService.displayProductSpecButton(true);
+    } else {
+      this.dynamicHeaderMenuService.displayProductSpecButton(false);
+    }
+    if (this.currentUrl === AppPageRoutes.LIST_CASE) {
+      this.dynamicHeaderMenuService.displayAddNewQuotationButton(true);
+    } else {
+      this.dynamicHeaderMenuService.displayAddNewQuotationButton(false);
+    }
+  }
+
   private setHeaderLabel() {
     let pageLabelFound = false;
     DynamicPageHeaderLabels.items.forEach(element => {
       if (element.page === this.currentUrl) {
         pageLabelFound = true;
-        this.dynamicHeaderMenuService.setHeaderLabel(element.title);
+        const obj: PageHeader = { headerText: element.title, breadCrumb: element.breadCrumb};
+        this.dynamicHeaderMenuService.setHeaderLabel(obj);
       }
     });
-    if (this.currentUrl === '/admin/product-management/list') {
-      this.dynamicHeaderMenuService.displayProductSpecButton(true);
-    } else {
-      this.dynamicHeaderMenuService.displayProductSpecButton(false);
-    }
-    if (this.currentUrl === '/admin/case-management/quotation-list') {
-      this.dynamicHeaderMenuService.displayAddNewQuotationButton(true);
-    } else {
-      this.dynamicHeaderMenuService.displayAddNewQuotationButton(false);
-    }
-    // if (this.currentUrl === '/admin/app-dashboard') {
-    //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(true);
-    // } else {
-    //   this.dynamicHeaderMenuService.displayEditEmbeddedLinkButton(false);
-    // }
+
     if (!pageLabelFound) {
-      this.dynamicHeaderMenuService.setHeaderLabel('Create Case');
+      const obj: PageHeader = { headerText: 'Dashboard', breadCrumb: ''};
+      this.dynamicHeaderMenuService.setHeaderLabel(obj);
     }
   }
 
   private handlerShopFloorScreen() {
-    if (this.currentUrl.trim() === '/admin/shopfloor-collection') {
+    if (this.currentUrl.trim() === AppPageRoutes.SHOP_FLOOR_COLLECTION) {
       this.dynamicHeaderMenuService.setShouldHeaderDisplay(false);
       document.body.classList.add('aside-minimize');
     } else {
@@ -118,7 +120,6 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   }
 
   isMenuItemActive(path) {
-
     if (!this.currentUrl || !path) {
       return false;
     }

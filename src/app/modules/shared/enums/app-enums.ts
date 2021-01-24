@@ -42,7 +42,7 @@ export enum ProductSpecTypes {
     WEBCODE,
     UNIT_PRICE,
     OTHER_COMPONENT,
-    CHECK_PRINT_FILE,
+    VERIFY_PRINT_FILE,
     BINDING_OTHER_COMPONENT,
     BINDING_DVD_CD
 }

@@ -6,13 +6,14 @@ import {
   HttpInterceptor,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { Observable, BehaviorSubject, throwError, throwError as observableThrowError } from 'rxjs';
 import { filter, take, switchMap, catchError } from 'rxjs/operators';
 import { TokenType } from 'src/app/modules/shared/enums/app-enums';
 import { Constants } from '../../config/constants';
 import { AppAuthService } from '../services/app-auth.service';
 import { Endpoints } from '../../config/endpoints';
 import { environment } from 'src/environments/environment';
+import { StorageKeys } from 'src/app/modules/shared/enums/app-constants';
 @Injectable({
   providedIn: 'root',
 })
@@ -37,7 +38,10 @@ export class JwtInterceptor implements HttpInterceptor {
         if (err instanceof HttpErrorResponse && err.status === 401) {
           return this.handle401Error(request, next);
         } else {
-          return throwError(err);
+          if (err.error) {
+            localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.APP_ERRORS}`, JSON.stringify(err.error));
+          }
+          return observableThrowError(err);
         }
       })
     );

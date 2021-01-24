@@ -9,6 +9,7 @@ import {
 import { InvoiceViewModel } from 'src/app/modules/shared/models/create-case';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import { CreateCaseMode, CreateCaseDataType } from 'src/app/modules/shared/enums/app-enums';
+import { SnackBarService } from '../../../../../shared/ui-services/snack-bar.service';
 
 @Component({
   selector: 'app-invoice',
@@ -24,7 +25,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   rowsToDisplay: InvoiceViewModel[] = [];
   constructor(
     private createCaseService: CaseStore,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private snack: SnackBarService
   ) {
   }
 
@@ -67,12 +69,21 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       CreateCaseDataType.INVOICE
     );
   }
-  
+
   ngOnDestroy(): void {
     this.pushToStore();
   }
 
-  handleChangeToSyncWithStore = () => {
+  handleChangeToSyncWithStore = (index: number, type: number) => {
+    if (type > 0 && this.rowsToDisplay.length === 2) {
+      const obj = this.rowsToDisplay[index]?.position ?? null;
+      const isExist = this.rowsToDisplay.filter(x => x.position === obj);
+      if (isExist && isExist.length === 2) {
+        this.snack.open('This position is already added');
+        this.rowsToDisplay[index].position = '';
+        return;
+      }
+    }
     this.pushToStore();
   }
 }

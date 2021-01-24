@@ -1,12 +1,13 @@
+import { AppModules } from './../shared/enums/app-constants';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { Error404Component } from '../errors/error404/error404.component';
 import { ShopFloorCollectionComponent } from './shop-floor-collection/shop-floor-collection.component';
-import { CreateCaseComponent } from './case-management/create-case/create-case.component';
 import { AppDashboardComponent } from './app-dashboard/app-dashboard.component';
 import { PlatemakingComponent } from './platemaking/platemaking.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { AppPages } from '../shared/enums/app-constants';
 
 const routes: Routes = [
   {
@@ -14,43 +15,43 @@ const routes: Routes = [
     component: AdminComponent,
     children: [
       {
-        path: 'case-management',
+        path: AppModules.CASE_MANAGMENT,
         loadChildren: () =>
-          import('../admin/case-management/case-management.module').then(
+          import(`../admin/${AppModules.CASE_MANAGMENT}/case-management.module`).then(
             (m) => m.CaseManagementModule
           ),
       },
       {
-        path: 'product-management',
+        path: AppModules.PRODUCT_MANAGMENT,
         loadChildren: () =>
-          import('../admin/product-management/product-management.module').then(
+          import(`../admin/${AppModules.PRODUCT_MANAGMENT}/product-management.module`).then(
             (m) => m.ProductManagementModule
           ),
       }, {
-        path: 'order-management',
+        path: AppModules.ORDER_MANAGMENT,
         loadChildren: () =>
-          import('../admin/order-management/order-management.module').then(
+          import(`../admin/${AppModules.ORDER_MANAGMENT}/order-management.module`).then(
             (m) => m.OrderManagementModule
           ),
       },
       {
-        path: 'shopfloor-collection',
+        path: AppPages.SHOP_FLOOR_COLLECTION,
         component: ShopFloorCollectionComponent
       },
       {
-        path: 'app-dashboard',
+        path: AppPages.DASHBOARD,
         component: AppDashboardComponent
       },
       {
-        path: 'platemaking',
+        path: AppPages.PLATMAKING,
         component: PlatemakingComponent
       },
       {
         path: '',
-        component: CreateCaseComponent
+        component: AppDashboardComponent
       },
       {
-        path: 'user-profile',
+        path: AppPages.USER_PROFILE,
         component: UserProfileComponent,
       },
       {

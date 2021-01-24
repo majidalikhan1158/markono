@@ -1,6 +1,11 @@
 <div class="row spec-dvd">
-    <div class="col-lg-12 pb-3">
-        <span class="font-16px font-roboto-bold">DVD/CD</span>
+    <div class="col-lg-12">
+        <span class="font-16px font-roboto-bold">Create Specs</span>
+        <mat-hint class="font-14px d-flex">DVD/CD</mat-hint>
+    </div>
+
+    <div class="col-lg-12 pt-2 pb-4 pl-0">
+        <mat-divider></mat-divider>
     </div>
     <div class="col-lg-12 pl-0">
         <table class="table table-head-custom  table-vertical-center spec-dvd-table">
@@ -18,8 +23,8 @@
                             <mat-form-field appearance="fill">
                                 <mat-label>Choose</mat-label>
                                 <mat-select [(ngModel)]="viewModal[i].type">
-                                    <mat-option value="DVD">DVD</mat-option>
                                     <mat-option value="CD">CD</mat-option>
+                                    <mat-option value="DVD">DVD</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -33,11 +38,11 @@
                             <mat-form-field appearance="fill">
                                 <mat-label>Choose</mat-label>
                                 <mat-select [(ngModel)]="viewModal[i].sleeveType">
+                                    <mat-option value="DVD Case">DVD Case</mat-option>
+                                    <mat-option value="Jewel Case">Jewel Case</mat-option>
                                     <mat-option value="PVC">PVC</mat-option>
                                     <mat-option value="Paper sleeve with Window">Paper sleeve with Window</mat-option>
                                     <mat-option value="Paper sleeve without Window">Paper sleeve without Window</mat-option>
-                                    <mat-option value="Jewel Case">Jewel Case</mat-option>
-                                    <mat-option value="DVD Case">DVD Case</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -63,10 +68,10 @@
                                     <mat-form-field appearance="fill">
                                         <mat-label>Add Component</mat-label>
                                         <mat-select [(ngModel)]="viewModal[i].componentType">
-                                            <mat-option value="Front Lay">Front Lay</mat-option>
                                             <mat-option value="Back Lay">Back Lay</mat-option>
                                             <mat-option value="DVD InLay">DVD InLay</mat-option>
                                             <mat-option value="DVD Booklet">DVD Booklet</mat-option>
+                                            <mat-option value="Front Lay">Front Lay</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
@@ -152,7 +157,7 @@
                                                         <ngx-mat-select-search [formControl]="materialWeightFltrCtrl" placeholderLabel="Search..">
                                                         </ngx-mat-select-search>
                                                     </mat-option>
-                                                    <mat-option [value]="item" *ngFor="let item of filteredMaterialWeightList | async">{{item}}</mat-option>
+                                                    <mat-option [value]="item" *ngFor="let item of filteredMaterialWeightList | async ">{{item}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
@@ -162,7 +167,11 @@
                                                 <mat-select (selectionChange)="handleMaterialWeightChange('MATERIAL', i)" 
                                                     [(ngModel)]="viewModal[i].textMaterial" 
                                                     [disabled]="!viewModal[i].textMaterialWeight">
-                                                    <mat-option [value]="item" *ngFor="let item of materialList">{{item}}</mat-option>
+                                                    <mat-option>
+                                                        <ngx-mat-select-search [formControl]="materialFltrCtrl" placeholderLabel="Search..">
+                                                        </ngx-mat-select-search>
+                                                    </mat-option>
+                                                    <mat-option [value]="item" *ngFor="let item of filteredMaterialList | async">{{item}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
@@ -171,7 +180,11 @@
                                                 <mat-label>Material Brand</mat-label>
                                                 <mat-select [(ngModel)]="viewModal[i].materialBrand"
                                                     [disabled]="!viewModal[i].textMaterial || !viewModal[i].textMaterialWeight">
-                                                    <mat-option [value]="item" *ngFor="let item of materialBrandList">{{item}}</mat-option>
+                                                    <mat-option>
+                                                        <ngx-mat-select-search [formControl]="materialBrandFltrCtrl" placeholderLabel="Search..">
+                                                        </ngx-mat-select-search>
+                                                    </mat-option>
+                                                    <mat-option [value]="item" *ngFor="let item of filteredMaterialBrandList | async">{{item}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
@@ -181,29 +194,35 @@
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>No. of Colour Extent</mat-label>
-                                                <input matInput [(ngModel)]="viewModal[i].noOfColourExtent"  type="number" min="0">
+                                                <input matInput [(ngModel)]="viewModal[i].noOfColourExtent"  type="number" min="0" (change)="handleColorSum(i)">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>No. of Mono Extent</mat-label>
-                                                <input matInput [(ngModel)]="viewModal[i].noOfMonoExtent"  type="number" min="0">
+                                                <input matInput [(ngModel)]="viewModal[i].noOfMonoExtent"  type="number" min="0" (change)="handleColorSum(i)">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Total Extent</mat-label>
-                                                <input matInput [(ngModel)]="viewModal[i].totalExtent"  type="number" min="0">
+                                                <input matInput [(ngModel)]="viewModal[i].totalExtent"  type="number" min="0" readonly>
                                             </mat-form-field>
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-12 pb-3 pt-2">
-                                        <mat-hint class="font-10px">No. of colours ({{viewModal[i].pantoneColour.length + viewModal[i].colorType.length}})</mat-hint>
+                                    <div class="col-lg-12 d-flex pb-2 pt-4">
+                                        <div class="col-lg-6 pl-0">
+                                            <mat-hint class="font-10px">No. of colours</mat-hint>
+                                            <!-- ({{viewModal[i].pantoneColour.length + viewModal[i].colorType.length}}) -->
+                                        </div>
+                                        <div class="col-lg-6 pl-1">
+                                            <mat-hint class="font-10px">Pantone Colours</mat-hint>
+                                        </div>
                                     </div>
                             
                                     <div class="col-lg-12 display-flex pl-0">
-                                        <div class="col-lg-4 pr-0">
+                                        <div class="col-lg-6 pr-0">
                                             <div class="color-type-options display-flex pb-4">
                                                 <span *ngFor="let item of colorTypeList"
                                                     [ngClass]="viewModal[i].colorType.includes(item.text) ?  item.color + ' ' + item.textColor + ' option-item mr-2'  : 'option-item mr-2'"

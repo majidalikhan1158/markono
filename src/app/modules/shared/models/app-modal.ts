@@ -4,3 +4,8 @@ export interface CreateCaseStepperEvent {
     tabToOpen: string;
     createCaseStep: CreateCaseSteps;
 }
+
+export interface PageHeader {
+    headerText: string;
+    breadCrumb: string;
+}

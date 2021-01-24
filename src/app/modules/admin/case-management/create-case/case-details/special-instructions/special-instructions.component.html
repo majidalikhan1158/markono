@@ -19,16 +19,12 @@
                                             {{rowsToDisplay[i].id}}
                                         <td>
                                             <mat-form-field appearance="fill">
-                                                <mat-label>Dept. Name</mat-label>
-                                                <mat-select [(ngModel)]="rowsToDisplay[i].department"
+                                                <mat-select 
+                                                    [(ngModel)]="rowsToDisplay[i].department"
+                                                    [disabled]="disabled"
                                                     (selectionChange)="handleChangeToSyncWithStore()">
-                                                    <mat-option></mat-option>
+                                                    <mat-option *ngFor="let item of departmentList" [value]="item">{{item}}</mat-option>
                                                 </mat-select>
-                                                <!-- <input 
-                                                [(ngModel)]="rowsToDisplay[i].department"
-                                                matInput [disabled]="disabled"
-                                                (change)="handleChangeToSyncWithStore()"
-                                                placeholder="Dept. Name"> -->
                                             </mat-form-field>
                                         </td>
                                         <td class="width-590">

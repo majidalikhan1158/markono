@@ -1,9 +1,14 @@
 <div class="row spec-web-code">
-    <div class="col-lg-12 pb-3">
-        <span class="font-16px font-roboto-bold">Webcode</span>
+    <div class="col-lg-12">
+        <span class="font-16px font-roboto-bold">Create Specs</span>
+        <mat-hint class="font-14px d-flex">Webcode</mat-hint>
+    </div>
+
+    <div class="col-lg-12 pt-2 pb-4 pl-0">
+        <mat-divider></mat-divider>
     </div>
     <div class="col-lg-12 pl-0 pr-0">
-        <table class="table table-head-custom  table-vertical-center spec-webcode-table">
+        <table class="table table-head-custom  table-vertical-center spec-webcode-table table-responsive">
             <thead>
                 <tr class="text-left text-uppercase">
                     <th *ngFor="let item of columnsToDisplay"> {{item}}</th>
@@ -18,14 +23,11 @@
                             <mat-form-field appearance="fill">
                                 <mat-label>Choose Location</mat-label>
                                 <mat-select [(ngModel)]="viewModal[i].webcodeLocation">
-                                    <mat-option value="Front cover">Front cover</mat-option>
-                                    <mat-option value="Inside front cover">Inside front cover</mat-option>
-                                    <mat-option value="Back cover">Back cover</mat-option>
-                                    <mat-option value="Inside back cover">Inside back cover</mat-option>
-                                    <mat-option value="Text">Text</mat-option>
-                                    <mat-option value="Front endpaper">Front endpaper</mat-option>
-                                    <mat-option value="Back Endpaper">Back Endpaper</mat-option>
-                                    <mat-option value="Others">Others</mat-option>
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="webCodeLocationFltrCtrl" placeholderLabel="Search..">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option [value]="item" *ngFor="let item of filteredWebCodeLocationList | async">{{item}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -33,10 +35,10 @@
                             <mat-form-field appearance="fill">
                                 <mat-label>Choose</mat-label>
                                 <mat-select [(ngModel)]="viewModal[i].noOfWebcode">
-                                    <mat-option value="1">1</mat-option>
-                                    <mat-option value="2">2</mat-option>
-                                    <mat-option value="3">3</mat-option>
-                                    <mat-option value="4">4</mat-option>
+                                    <mat-option value=1>1</mat-option>
+                                    <mat-option value=2>2</mat-option>
+                                    <mat-option value=3>3</mat-option>
+                                    <mat-option value=4>4</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>

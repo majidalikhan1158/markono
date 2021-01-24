@@ -1,3 +1,6 @@
+import { ApexNonAxisChartSeries, ApexChart, ApexDataLabels,
+    ApexPlotOptions, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke, ApexLegend, ApexAxisChartSeries, ApexTitleSubtitle } from 'ng-apexcharts';
+
 export interface MachineVM {
     machineName: string;
     machineCode: string;
@@ -137,3 +140,48 @@ export interface CommulativeOutputDataVM {
     uom: string;
     value: number;
 }
+
+export type CommulativeChartOptions = {
+    series: ApexNonAxisChartSeries;
+    chart: ApexChart;
+    dataLabels: ApexDataLabels;
+    labels: string[];
+    plotOptions: ApexPlotOptions;
+    yaxis: ApexYAxis;
+    xaxis: ApexXAxis;
+    fill: ApexFill;
+    tooltip: ApexTooltip;
+    stroke: ApexStroke;
+    legend: ApexLegend;
+    colors: [];
+    markers: any;
+    states: any;
+  };
+
+export type UnitsProducedChartOptions = {
+    series: ApexAxisChartSeries;
+    chart: ApexChart;
+    dataLabels: ApexDataLabels;
+    plotOptions: ApexPlotOptions;
+    yaxis: ApexYAxis;
+    xaxis: ApexXAxis;
+    fill: ApexFill;
+    tooltip: ApexTooltip;
+    stroke: ApexStroke;
+    legend: ApexLegend;
+  };
+
+export type TimeLineChartOptions = {
+    series: ApexAxisChartSeries;
+    chart: ApexChart;
+    dataLabels: ApexDataLabels;
+    title: ApexTitleSubtitle;
+    plotOptions: ApexPlotOptions;
+    xaxis: ApexXAxis;
+    tooltip: ApexTooltip;
+  };
+
+export type TimelineStatusLabel = {
+    label: string;
+    value: number;
+  };

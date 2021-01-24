@@ -34,6 +34,8 @@ export class OrderService {
   public createCase = (request: any): Observable<HttpResponse<ResponseModal>> =>
     this.http.post(this.endPoint.getCreateCaseUrl(), request)
 
+  public createShipment = (request: any): Observable<HttpResponse<ResponseModal>> =>
+    this.http.post(this.endPoint.getCreateShipmentUrl(), request)
   // order-management Module
   public getAllOrders = (): Observable<HttpResponse<any>> => {
     const url = this.endPoint.getAllOrders();

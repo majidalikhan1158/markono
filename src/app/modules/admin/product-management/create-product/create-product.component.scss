@@ -15,4 +15,10 @@ app-create-product {
   .create-product-spec-card .mat-tab-label-active{
     color:#5FACE2 !important;
   }
+
+  .create-product-spec-card .mat-tab-label.mat-tab-disabled {
+    padding: 0px;
+    width: 100%;
+    opacity: 1;
+  }
 }

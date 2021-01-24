@@ -1,14 +1,73 @@
 <!-- begin::Header Nav -->
-<ul class="menu-nav" [ngClass]="ulCSSClasses">
-  <!-- begin::1 Level -->
+<ul class="menu-nav" [ngClass]="ulCSSClasses" *ngIf="0>1">
   <li class="menu-item menu-item-rel" routerLinkActive="menu-item-active">
     <h3>
-      <span class="menu-text" style="font-family: 'Roboto-Bold'; font-size: 24px;">{{dynamicHeaderMenuService.headerLabel$ | async}}</span>
-      <ng-container *ngIf="rootArrowEnabled">
-        <i class="menu-arrow"></i>
+      <span class="menu-text" style="font-family: 'Roboto-Bold'; font-size: 24px;">{{headerLabel?.headerText}}</span>
+      <ng-container *ngIf="headerLabel?.breadCrumb">
+        <mat-icon class="pl-2 pr-7 font-20px">keyboard_arrow_right</mat-icon>
+        <span class="menu-text" style="font-family: 'Roboto-Bold'; font-size: 20px;">{{headerLabel?.breadCrumb}}</span>
       </ng-container>
     </h3>
   </li>
-  <!-- end::1 Level -->
 </ul>
 <!-- end::Header Nav -->
+<!--begin::Subheader-->
+<div
+  class="subheader py-2 py-lg-6"
+  [ngClass]="subheaderCSSClasses"
+  id="kt_subheader"
+>
+  <div
+    [ngClass]="subheaderContainerCSSClasses"
+    class="d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap"
+  >
+    <!--begin::Info-->
+    <div class="d-flex align-items-center flex-wrap mr-1">
+      <ng-container *ngIf="subheaderMobileToggle">
+        <!--begin::Mobile Toggle-->
+        <button
+          class="burger-icon burger-icon-left mr-4 d-inline-block d-lg-none"
+          id="kt_subheader_mobile_toggle"
+        >
+          <span></span>
+        </button>
+        <!--end::Mobile Toggle-->
+      </ng-container>
+
+      <!--begin::Page Heading-->
+      <div class="d-flex align-items-baseline flex-wrap mr-5">
+        <!--begin::Page Title-->
+        <ng-container *ngIf="title$ | async as _title">
+          <h5 class="text-dark font-weight-boldest my-1 mr-5">
+            {{ _title }}
+            <ng-container *ngIf="subheaderDisplayDesc">
+              <ng-container *ngIf="description$ | async as _description">
+                <small>{{ _description }}</small>
+              </ng-container>
+            </ng-container>
+          </h5>
+        </ng-container>
+        <!--end::Page Title-->
+
+        <!--begin::Breadcrumb-->
+        <ul
+          class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm"
+        >
+          <li
+            class="breadcrumb-item"
+            *ngFor="let bc of breadcrumbs"
+            routerLinkActive="active"
+          >
+            <a [routerLink]="bc.linkPath" class="text-muted">
+              {{ bc.linkText }}
+            </a>
+          </li>
+        </ul>
+        <!--end::Breadcrumb-->
+      </div>
+      <!--end::Page Heading-->
+    </div>
+    <!--end::Info-->
+  </div>
+</div>
+<!--end::Subheader-->

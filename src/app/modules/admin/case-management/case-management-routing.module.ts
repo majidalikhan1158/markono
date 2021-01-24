@@ -3,14 +3,15 @@ import { Routes, RouterModule } from '@angular/router';
 import { CreateCaseComponent } from './create-case/create-case.component';
 import { Error404Component } from '../../errors/error404/error404.component';
 import { QuotationListComponent } from './quotation-list/quotation-list.component';
+import { AppPages } from '../../shared/enums/app-constants';
 
 const routes: Routes = [
   {
-    path: 'create',
+    path: AppPages.CREATE,
     component: CreateCaseComponent,
   },
   {
-    path: 'quotation-list',
+    path: AppPages.LIST,
     component: QuotationListComponent,
   },
   {

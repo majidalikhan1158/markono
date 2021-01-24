@@ -15,6 +15,7 @@ import { AddAdvancesModalComponent } from './ui-modals/case-management/add-advan
 import { ViewAllModalComponent } from './ui-modals/case-management/view-all-modal/view-all-modal.component';
 import { ViewOperatorsModalComponent } from './ui-modals/shop-floor-management/view-operators-modal/view-operators-modal.component';
 import { AddReasonModalComponent } from './ui-modals/platemaking/add-reason-modal/add-reason-modal.component';
+import { GroupByPipeModule } from './pipe/group-by.pipe';
 import { UpdatePasswordModalComponent } from './ui-modals/order-management/update-password-modal/update-password-modal.component';
 
 @NgModule({
@@ -31,7 +32,7 @@ import { UpdatePasswordModalComponent } from './ui-modals/order-management/updat
     AddReasonModalComponent,
     UpdatePasswordModalComponent,
   ],
-  imports: [CommonModule, MaterialUiModule, NgbDropdownModule, SumPipeModule],
+  imports: [CommonModule, MaterialUiModule, NgbDropdownModule, SumPipeModule, GroupByPipeModule],
   exports: [
     AddCustomerModalComponent,
     AddBlueprintModalComponent,

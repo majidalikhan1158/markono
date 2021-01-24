@@ -10,6 +10,7 @@ import {
   WireOColorList,
   CoilColorList,
   BindingType,
+  ProductSpecificationTypes,
 } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { BindingVM, DvdCDBindingMapper } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
@@ -17,7 +18,7 @@ import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spe
 import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { MaterialDataList } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 export interface ComponentType {
   text: string;
@@ -37,29 +38,33 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   @Input() parentRecordIndex: number;
   @Output() childComponentDataBindingType = new EventEmitter<DvdCDBindingMapper>();
 
+  productSpecTypesConstant = ProductSpecificationTypes;
   materialDataList: MaterialDataList[];
   materialWeightList: string[];
   materialList: string[];
   materialBrandList: string[];
   finishingTypeList: string[];
   bindingTypeList: string[] = [];
-  bindingMethodList = BindingMethodList;
-  bookSpineTypeList = BookSpineTypeList;
-  headTailBandColorTypeList = HeadTailBandColorTypeList;
-  greyboardThicknessList = GreyboardThicknessList;
-  benchworkTypeList = BenchworkTypeList;
-  colorTypeList = ColorTypeList;
-  stitchTypeList = StitchTypeList;
-  wireOColorList = WireOColorList;
-  coilColorList = CoilColorList;
+  bindingMethodList = BindingMethodList.sort();
+  bookSpineTypeList = BookSpineTypeList.sort();
+  headTailBandColorTypeList = HeadTailBandColorTypeList.sort();
+  greyboardThicknessList = GreyboardThicknessList.sort();
+  benchworkTypeList = BenchworkTypeList.sort();
+  colorTypeList = ColorTypeList.sort();
+  stitchTypeList = StitchTypeList.sort();
+  wireOColorList = WireOColorList.sort();
+  coilColorList = CoilColorList.sort();
   viewModal: BindingVM;
   isOtherComponent = false;
 
   bindingTypeFltrCtrl: FormControl = new FormControl();
   materialWeightFltrCtrl: FormControl = new FormControl();
+  materialFltrCtrl: FormControl = new FormControl();
+  materialBrandFltrCtrl: FormControl = new FormControl();
   caseBoundBenchWorkFltrCtrl: FormControl = new FormControl();
   finishingTypeFltrCtrl: FormControl = new FormControl();
   foldingBenchWorkFltrCtrl: FormControl = new FormControl();
+  othersBenchWorkFltrCtrl: FormControl = new FormControl();
   saddleStichBenchWorkFltrCtrl: FormControl = new FormControl();
   wireoBindingBenchWorkFltrCtrl: FormControl = new FormControl();
   spiralBoundBenchworkFltrCtrl: FormControl = new FormControl();
@@ -67,9 +72,12 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
 
   filteredBindingTypeList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredMaterialWeightList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredMaterialList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredMaterialBrandList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredCaseBoundBenchWork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredFinishingTypeList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredFoldingBenchWork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+  filteredOthersBenchWork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredSaddleStichBenchWork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredWireoBindingBenchWork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   filteredSpiralBoundBenchwork: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
@@ -77,19 +85,30 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   protected onDestroy = new Subject<void>();
   countNoOfColors = 0;
   componentType: ComponentType;
+  subscription: Subscription;
   constructor(public store: ProductSpecStore, private helper: ProductSpecHelperService) { }
 
   ngOnInit(): void {
+    this.handleUpdateStore();
     this.handleComponentType();
     this.getApiData();
     this.handleBindingTypeFilterAutoComplete();
     this.handleCaseBoundBenchWorkFilterAutoComplete();
     this.handleFoldingBenchWorkFilterAutoComplete();
+    this.handleOthersBenchWorkFilterAutoComplete();
     this.handleSaddleStichBenchWorkFilterAutoComplete();
     this.handleWireoBindingBenchWorkFilterAutoComplete();
     this.handleSpiralBoundBenchworkFilterAutoComplete();
     this.handlePaperBoundBenchworkFilterAutoComplete();
     this.getDefaultRecord();
+  }
+
+  handleUpdateStore = () => {
+    this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
+      if (resp && resp === this.productSpecTypesConstant.BINDING ) {
+         this.pushToStore();
+      }
+    });
   }
 
   handleComponentType = () => {
@@ -116,18 +135,18 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     this.store.getFinishingTypes(this.componentType.text, this.componentType.componentType);
 
     this.store.$bindingTypeList.subscribe(list => {
-      this.bindingTypeList = list;
+      this.bindingTypeList = list.sort();
       this.handleBindingTypeFilterAutoComplete();
     });
 
     this.store[this.componentType.materialDataObservableProperty].subscribe(list => {
       this.materialDataList = list;
-      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))];
+      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort();
       this.handleMaterialWeightFilterAutoComplete();
     });
 
     this.store[this.componentType.finishingListObservableProperty].subscribe(list => {
-      this.finishingTypeList = list;
+      this.finishingTypeList = (list as string[]).sort();
       this.handleFinishingTypeFilterAutoComplete();
     });
   }
@@ -141,10 +160,12 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   handleMaterialWeightChange = (type: string) => {
     if (type === 'MATERIALWEIGHT') {
       const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.caseBound?.endPaperWeight);
-      this.materialList = [...new Set(records.map(x => x.PaperMaterial))];
+      this.materialList = [...new Set(records.map(x => x.PaperMaterial))].sort();
+      this.handleMaterialFilterAutoComplete();
     } else if (type === 'MATERIAL') {
       const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal.caseBound?.endPaperMaterial);
-      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))];
+      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))].sort();
+      this.handleMaterialBrandFilterAutoComplete();
     }
   }
 
@@ -198,7 +219,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
       this.handleMaterialWeightChange('MATERIALWEIGHT');
       this.handleMaterialWeightChange('MATERIAL');
     } else {
-      this.store.productSpecStore.subscribe((resp) => {
+      this.store.$productSpecStore.subscribe((resp) => {
         if (resp && resp.bindingVM && resp.bindingVM.id > 0) {
           this.viewModal = resp.bindingVM;
           this.handleMaterialWeightChange('MATERIALWEIGHT');
@@ -219,7 +240,8 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
       paperBack: null,
       saddleStich: null,
       spiralBound: null,
-      wireoBinding: null
+      wireoBinding: null,
+      others: null
     };
   }
 
@@ -238,6 +260,8 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
       this.viewModal.spiralBound = this.helper.getSpiralBoundTypeObject();
     } else if (bindingType === BindingType.PAPERBACK) {
       this.viewModal.paperBack = this.helper.getPaperBackTypeObject();
+    } else {
+      this.viewModal.others = this.helper.getOtherTypeObject();
     }
   }
 
@@ -277,6 +301,24 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
       });
   }
 
+  handleMaterialFilterAutoComplete = () => {
+    this.filteredMaterialList.next(this.materialList.slice());
+    this.materialFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterMaterial();
+      });
+  }
+
+  handleMaterialBrandFilterAutoComplete = () => {
+    this.filteredMaterialBrandList.next(this.materialBrandList.slice());
+    this.materialBrandFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterMaterialBrand();
+      });
+  }
+
   filterMaterialWeight = () => {
     if (!this.materialWeightList) {
       return;
@@ -294,6 +336,43 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
       this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
+
+  filterMaterial = () => {
+    if (!this.materialList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.materialFltrCtrl.value;
+    if (!search) {
+      this.filteredMaterialList.next(this.materialList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredMaterialList.next(
+      this.materialList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  filterMaterialBrand = () => {
+    if (!this.materialBrandList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.materialBrandFltrCtrl.value;
+    if (!search) {
+      this.filteredMaterialBrandList.next(this.materialBrandList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredMaterialList.next(
+      this.materialBrandList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
 
   handleFinishingTypeFilterAutoComplete = () => {
     this.filteredFinishingTypeList.next(this.finishingTypeList.slice());
@@ -358,6 +437,15 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
       });
   }
 
+  handleOthersBenchWorkFilterAutoComplete = () => {
+    this.filteredOthersBenchWork.next(this.benchworkTypeList.slice());
+    this.othersBenchWorkFltrCtrl.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterOthersBenchWork();
+      });
+  }
+
   filterFoldingBenchWork = () => {
     if (!this.benchworkTypeList) {
       return;
@@ -372,6 +460,24 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     }
     // filter the banks
     this.filteredFoldingBenchWork.next(
+      this.benchworkTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  filterOthersBenchWork = () => {
+    if (!this.benchworkTypeList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.othersBenchWorkFltrCtrl.value;
+    if (!search) {
+      this.filteredOthersBenchWork.next(this.benchworkTypeList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredOthersBenchWork.next(
       this.benchworkTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
@@ -484,17 +590,28 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     );
   }
 
+  handleColorSum = () => {
+    this.viewModal.caseBound.totalExtent = this.helper.sum(this.viewModal.caseBound.noOfColourExtent ?? 0,
+       this.viewModal.caseBound.noOfMonoExtent ?? 0);
+  }
+
   ngOnDestroy(): void {
     this.onDestroy.next();
     this.onDestroy.complete();
+    this.pushToStore();
+  }
+
+  pushToStore = () => {
     if (this.isOtherComponent) {
       const obj: DvdCDBindingMapper = { index: this.parentRecordIndex, bindingVM: this.viewModal };
       this.childComponentDataBindingType.emit(obj);
     } else {
-      this.store.setProductSpecStore(
-        this.viewModal,
-        ProductSpecTypes.BINDING
-      );
+      if (this.viewModal) {
+        this.store.setProductSpecStore(
+          this.viewModal,
+          ProductSpecTypes.BINDING
+        );
+      }
     }
   }
 }

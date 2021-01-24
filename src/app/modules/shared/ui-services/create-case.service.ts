@@ -15,7 +15,7 @@ export class CaseStore {
   public productDetailsId: Observable<number>;
   public createCaseStore: Observable<CreateCaseViewModel>;
   public caseDropDownStore: Observable<DDLObjectModal>;
-  public viewVersionISBN: Observable<string>;
+  public viewVersionISBN: Observable<any>;
   public caseType: Observable<string>;
   public caseType2: Observable<string>;
   public dashboardEmbededLink: Observable<string>;
@@ -23,7 +23,7 @@ export class CaseStore {
   public productDetailsIdSubject = new BehaviorSubject<number>(0);
   private createCaseStoreSubject = new BehaviorSubject<CreateCaseViewModel>(new CreateCaseViewModel());
   private caseDropDownStoreSubject = new BehaviorSubject<DDLObjectModal>(null);
-  public viewVersionIBNSubject = new BehaviorSubject<string>('');
+  public viewVersionIBNSubject = new BehaviorSubject<any>(null);
   public caseTypeSubject = new BehaviorSubject<string>('');
   public caseTypeSubject2 = new BehaviorSubject<string>('');
   public dashboardEmbededLinkSubject = new BehaviorSubject<string>('');
@@ -150,8 +150,8 @@ export class CaseStore {
     this.productDetailsIdSubject.next(id);
   }
 
-  setViewVersionISBN = (isbn: string) => {
-    this.viewVersionIBNSubject.next(isbn);
+  setViewVersionISBN = (obj: any) => {
+    this.viewVersionIBNSubject.next(obj);
   }
 
   setCaseType = (caseType) => {

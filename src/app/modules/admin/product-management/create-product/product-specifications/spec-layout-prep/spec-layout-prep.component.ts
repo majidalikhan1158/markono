@@ -23,6 +23,7 @@ import { ProductionActivities, GetPaperResponse } from '../../../../../shared/mo
 
 })
 export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
+
   constructor(private productService: ProductService,
               private store: ProductSpecStore,
               private snack: SnackBarService,
@@ -32,8 +33,10 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
 
   layoutPrepVM: LayoutPrepVM;
   paperListObjects: PaperListObjects = this.getInitialPaperListObject();
-  textImpositionLayoutList: ImpositionLayout[];
-  coverImpositionLayoutList: ImpositionLayout[];
+  textImpositionLayoutList: ImpositionLayout[] = [];
+  coverImpositionLayoutList: ImpositionLayout[] = [];
+  insertImpositionLayoutList: ImpositionLayout[] = [];
+  endPaperImpositionLayoutList: ImpositionLayout[] = [];
   componentTypes = LayoutPrepComponentTypes;
   columnsToDisplayCompTable = [
     'Component Type',
@@ -86,8 +89,10 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getImpositionLayout(LayoutPrepComponentTypes.Cover);
     this.getImpositionLayout(LayoutPrepComponentTypes.Text);
-    // this.checkLayoutPrepData(); // uncomment this after testing and removed this.getLayoutPrepApiData('', '');
-    this.getLayoutPrepApiData('', '');
+    this.getImpositionLayout(LayoutPrepComponentTypes.Insert);
+    this.getImpositionLayout(LayoutPrepComponentTypes.EndPaper);
+    this.checkLayoutPrepData(); // uncomment this after testing and removed this.getLayoutPrepApiData('', '');
+    // this.getLayoutPrepApiData('', '');
   }
 
   checkLayoutPrepData = () => {
@@ -107,8 +112,8 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
 
   getLayoutPrepApiData(productNumber: string, versionNo: string) {
     this.shouldShowLoader = true;
-    productNumber = 'hht11111111';
-    versionNo = 'V00001';
+    // productNumber = 'hht11111111';
+    // versionNo = 'V00001';
     const reqObj = {
       productNumber,
       versionNo
@@ -149,19 +154,26 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   }
 
   getImpositionLayout = (componentType: string) => {
-    const isTextType = componentType === LayoutPrepComponentTypes.Text;
     this.subscription = this.productService.getImpositionLayout(componentType).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
-        if (isTextType) {
+        if (componentType === LayoutPrepComponentTypes.Text) {
           this.textImpositionLayoutList = resp.body.result as ImpositionLayout[];
-        } else {
+        } else if (componentType === LayoutPrepComponentTypes.Cover) {
           this.coverImpositionLayoutList = resp.body.result as ImpositionLayout[];
+        } else if (componentType === LayoutPrepComponentTypes.Insert) {
+          this.insertImpositionLayoutList = resp.body.result as ImpositionLayout[];
+        } else if (componentType === LayoutPrepComponentTypes.EndPaper) {
+          this.endPaperImpositionLayoutList = resp.body.result as ImpositionLayout[];
         }
       } else {
-        if (isTextType) {
+        if (componentType === LayoutPrepComponentTypes.Text) {
           this.textImpositionLayoutList = [];
-        } else {
+        } else if (componentType === LayoutPrepComponentTypes.Cover) {
           this.coverImpositionLayoutList = [];
+        } else if (componentType === LayoutPrepComponentTypes.Insert) {
+          this.insertImpositionLayoutList = [];
+        } else if (componentType === LayoutPrepComponentTypes.EndPaper) {
+          this.endPaperImpositionLayoutList = [];
         }
       }
     });
@@ -172,9 +184,13 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
       CoverPaperList: [],
       TextPaperList: [],
       NonePaperList: [],
+      InsertPaperList: [],
+      EndpaperPaperList: [],
       CoverPaperListCallDone: false,
       TextPaperListCallDone: false,
       NonePaperListCallDone: false,
+      InsertPaperListCallDone: false,
+      EndpaperPaperListCallDone: false,
     };
   }
 
@@ -189,7 +205,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
       this.setPaperList(componentType, []);
     }
     this.subscription = this.productService.getPaperList(reqObj).subscribe(resp => {
-      if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
+      if (resp && resp.body && resp.body.result && resp.body.result.length > 0 && typeof(resp.body.result) !== 'string') {
         const list = resp.body.result as GetPaperResponse[];
         this.setPaperList(componentType, list);
       } else {
@@ -275,6 +291,12 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
     } else if (componentType === LayoutPrepComponentTypes.None) {
       this.paperListObjects.NonePaperList = list;
       this.paperListObjects.NonePaperListCallDone = true;
+    } else if (componentType === LayoutPrepComponentTypes.Insert) {
+      this.paperListObjects.InsertPaperList = list;
+      this.paperListObjects.InsertPaperListCallDone = true;
+    }  else if (componentType === LayoutPrepComponentTypes.EndPaper) {
+      this.paperListObjects.EndpaperPaperList = list;
+      this.paperListObjects.EndpaperPaperListCallDone = true;
     }
   }
 
@@ -285,6 +307,10 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
       return this.paperListObjects.TextPaperList.length === 0 && !this.paperListObjects.TextPaperListCallDone ;
     } else if (componentType === LayoutPrepComponentTypes.None) {
       return this.paperListObjects.NonePaperList.length === 0 && !this.paperListObjects.NonePaperListCallDone ;
+    } else if (componentType === LayoutPrepComponentTypes.Insert) {
+      return this.paperListObjects.InsertPaperList.length === 0 && !this.paperListObjects.InsertPaperListCallDone ;
+    } else if (componentType === LayoutPrepComponentTypes.EndPaper) {
+      return this.paperListObjects.EndpaperPaperList.length === 0 && !this.paperListObjects.EndpaperPaperListCallDone ;
     }
   }
 

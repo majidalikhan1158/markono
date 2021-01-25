@@ -198,4 +198,9 @@ export class ProductService {
     const url = this.endPoint.getCalculatePaperUrl();
     return this.http.post(url, reqObj);
   }
+
+  createLayoutPrep = (reqObj: any) => {
+    const url = this.endPoint.getCreateLayoutPrepUrl();
+    return this.http.post(url, reqObj);
+  }
 }

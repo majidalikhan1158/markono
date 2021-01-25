@@ -135,7 +135,11 @@ export interface PaperListObjects {
     TextPaperList: GetPaperResponse[];
     CoverPaperList: GetPaperResponse[];
     NonePaperList: GetPaperResponse[];
+    InsertPaperList: GetPaperResponse[];
+    EndpaperPaperList: GetPaperResponse[];
     TextPaperListCallDone: boolean;
     CoverPaperListCallDone: boolean;
     NonePaperListCallDone: boolean;
+    InsertPaperListCallDone: boolean;
+    EndpaperPaperListCallDone: boolean;
 }

@@ -257,8 +257,8 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
 
   saveFromUnitPrice = () => {
     const transformedObj = this.productHelper.transCreateProductApiModal(this.productSpecData);
-    this.productservice.createProduct(transformedObj).subscribe(
-      (response) => {
+    this.subscription = this.productservice.createProduct(transformedObj).subscribe(
+      (response) => { 
         if (response && response.body && response.body.result) {
           const result = response.body.result;
           if (result?.failureCount > 0) {
@@ -271,8 +271,9 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
               const message = `Field: ${error[0]}, Message: ${error[1]}`;
               this.snack.open(message, '', 'top', 5000, 'center');
             });
-          } else{
+          } else {
             this.handleVersionSelection(result.customMessage);
+            this.createLayoutPrep(result);
             this.snack.open(result?.returnMessage);
           }
         }
@@ -316,6 +317,18 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
     if (customMessage?.Id) {
       this.store.setProductId(customMessage.Id);
     }
+  }
+
+  createLayoutPrep = (result) => {
+    const reqObj = {
+      isbnNo: result.customMessage.ISBN,
+      isbnVersionNo: result.customMessage.VersionNo,
+      quantity: 0,
+      title: this.productSpecData.generalVM.productDescription,
+      createdBy: 'admin'
+    };
+    this.subscription = this.productservice.createLayoutPrep(reqObj).subscribe(resp => {
+    });
   }
 
   saveFromCheckPrintFile = () => {
@@ -364,7 +377,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
       });
     });
 
-    this.productservice.createCheckPrintFile(reqObj).subscribe(response => {
+    this.subscription = this.productservice.createCheckPrintFile(reqObj).subscribe(response => {
       if (response && response.body && response.body.result) {
         const result = response.body.result;
         if (result.failureCount > 0) {

@@ -216,6 +216,9 @@ export class ProductSpecHelperService {
   }
 
   getBindingData = (bindingVM: BindingVM, type: string) => {
+    if (!bindingVM) {
+      return '';
+    }
     if (type === 'METHOD') {
       if (bindingVM.bindingType === BindingType.CASEBOUND) {
         return bindingVM.caseBound?.bindingMethod ?? '';
@@ -876,6 +879,8 @@ export class ProductSpecHelperService {
   }
 
   sum = (firstNumber: number, secondNumber: number) => {
+    firstNumber = firstNumber ?? 0;
+    secondNumber = secondNumber ?? 0;
     // tslint:disable-next-line: radix
     firstNumber = parseFloat(firstNumber.toString());
     // tslint:disable-next-line: radix
@@ -885,6 +890,8 @@ export class ProductSpecHelperService {
   }
 
   minus = (firstNumber: number, secondNumber: number) => {
+    firstNumber = firstNumber ?? 0;
+    secondNumber = secondNumber ?? 0;
     // tslint:disable-next-line: radix
     firstNumber = parseFloat(firstNumber.toString());
     // tslint:disable-next-line: radix

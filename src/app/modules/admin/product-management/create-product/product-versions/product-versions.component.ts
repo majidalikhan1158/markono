@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ProductVersions } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
-import { GeneralVM } from '../../../../shared/models/product-spec';
 import { SnackBarService } from '../../../../shared/ui-services/snack-bar.service';
 import { Subscription } from 'rxjs';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-product-versions',
@@ -12,12 +13,15 @@ import { Subscription } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
 })
 export class ProductVersionsComponent implements OnInit, OnDestroy {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns = ['versionNo', 'dateCreated', 'createdBy', 'versionDescription', 'isSpecsInView'];
   productIsbnNumber: string;
   productVersionList: ProductVersions[];
   selectedVersion: string;
   subscription: Subscription;
-  constructor(public store: ProductSpecStore, private snak: SnackBarService) { }
+  dataArray: ProductVersions[];
+  dataSource;
+  constructor(public store: ProductSpecStore, private snak: SnackBarService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.getVersions();
@@ -38,8 +42,17 @@ export class ProductVersionsComponent implements OnInit, OnDestroy {
           this.handleVersionSelection(item.Id);
         }
       });
-      this.productVersionList = resp;
+      this.productVersionList = this.dataArray = resp.sort((a, b) => {
+        return (new Date(b.CreatedDateTime) as any) - (new Date(a.CreatedDateTime) as any);
+      });
+      this.initializeDatatable();
     });
+  }
+
+  initializeDatatable = () => {
+    this.dataSource = new MatTableDataSource<ProductVersions>(this.dataArray);
+    this.dataSource.paginator = this.paginator;
+    this.cd.detectChanges();
   }
 
   handleVersionSelection = (versionId: string, showMessage = 0) => {

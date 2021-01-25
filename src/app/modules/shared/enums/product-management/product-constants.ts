@@ -729,5 +729,7 @@ export const LayoutPrepComponentTypes = {
   Cover: 'Cover',
   Text: 'Text',
   None: '',
-  Jacket: 'Jacket'
+  Jacket: 'Jacket',
+  Insert: 'Insert',
+  EndPaper: 'EndPaper'
 }

@@ -113,4 +113,7 @@ export class ApiEndpointsService {
 
   getCalculatePaperUrl = () =>
     `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getCalculatePaper}`
+
+  getCreateLayoutPrepUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getCreateLayoutPrep}`
 }

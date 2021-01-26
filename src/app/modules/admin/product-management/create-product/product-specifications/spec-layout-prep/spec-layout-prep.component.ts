@@ -104,9 +104,10 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
           this.layoutPrepCallIsInProgress = true;
           this.getLayoutPrepApiData(generalVM.productNumber, generalVM.versionNo);
         }
-      } else {
-        this.snack.open('ISBN / Version must be selected');
       }
+      // else {
+      //   this.snack.open('ISBN / Version must be selected');
+      // }
     });
   }
 

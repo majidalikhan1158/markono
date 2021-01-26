@@ -19,6 +19,8 @@ import { Subscription } from 'rxjs';
 import { ProductVersions } from '../../../../services/shared/classes/product-modals/product-modals';
 import { ProductSpecStatus } from '../../../../shared/enums/product-management/product-interfaces';
 import { StorageKeys } from '../../../../shared/enums/app-constants';
+import { version } from 'moment';
+import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 
 @Component({
   selector: 'app-product-specifications',
@@ -258,7 +260,7 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
   saveFromUnitPrice = () => {
     const transformedObj = this.productHelper.transCreateProductApiModal(this.productSpecData);
     this.subscription = this.productservice.createProduct(transformedObj).subscribe(
-      (response) => { 
+      (response) => {
         if (response && response.body && response.body.result) {
           const result = response.body.result;
           if (result?.failureCount > 0) {
@@ -266,7 +268,6 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
           } else if (result?.errors) {
             const errors = result?.errors;
             const entries = Object.entries(errors);
-            const errorsList = [];
             entries.forEach(error => {
               const message = `Field: ${error[0]}, Message: ${error[1]}`;
               this.snack.open(message, '', 'top', 5000, 'center');
@@ -311,6 +312,10 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
         if (selectedVersion) {
           this.store.setSelectedVersion(selectedVersion);
         }
+      } else {
+        const generalVM = this.productSpecData.generalVM;
+        generalVM.versionNo = customMessage?.VersionNo;
+        this.store.setProductSpecStore(generalVM, ProductSpecTypes.GENERAL);
       }
     });
 
@@ -336,13 +341,15 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
 
     if (this.productId) {
       this.saveCheckPrintFileData(this.productId);
+      return;
     }
 
     if (!productSpecData?.generalVM?.productNumber) {
       this.snack.open('Product No / ISBN is required!', 'General Tab');
       return;
     }
-    if (!productSpecData?.selectedVersion?.VersionNo) {
+    const versionNo = productSpecData?.selectedVersion?.VersionNo ?? productSpecData.generalVM.versionNo;
+    if (!versionNo) {
       this.snack.open('Please select at least 1 version', 'Version Tab');
       return;
     }

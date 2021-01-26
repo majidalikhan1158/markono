@@ -126,11 +126,11 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
           element.GrainDirectionInternal = element.GrainDirection == null ? '' : element.GrainDirection ? 'True' : 'False';
         });
         this.layoutPrepVM.Components = this.layoutPrepVM.Components
-        .sort((a, b) => b.ComponentType.localeCompare(a.ComponentType));
+        .sort((a, b) => this.helper.minus(b.SNo  as any as number, a.SNo as any as number));
         this.layoutPrepVM.ComponentsBreakdown = this.layoutPrepVM.ComponentsBreakdown
-        .sort((a, b) => a.ComponentsSNo - b.ComponentsSNo);
+        .sort((a, b) => this.helper.minus(a.SNo  as any as number, b.SNo as any as number));
         this.layoutPrepVM.ProductionActivity = this.layoutPrepVM.ProductionActivity
-        .sort((a, b) => this.helper.minus(a.ComponentBreakdownSNo as any as number, b.ComponentBreakdownSNo as any as number));
+        .sort((a, b) => this.helper.minus(a.SNo as any as number, b.SNo as any as number));
         this.shouldShowLoader = false;
         console.log(this.layoutPrepVM);
       } else {

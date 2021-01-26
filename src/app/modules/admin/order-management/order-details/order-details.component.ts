@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulati
 import { MatSelectionListChange } from '@angular/material/list';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrderDetailTypes, OrderDetailTypesArray } from 'src/app/modules/shared/enums/order-management/order-constants';
-import { OrderJobDataList } from 'src/app/modules/shared/mock-data/order-job-list';
 import { CaseDetail, OrderInfoJobType, OrderInfoStatusTypesArray, OrderJobModel, OrdersModel, OrderVM } from 'src/app/modules/shared/models/order-management';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { FormControl } from '@angular/forms';
@@ -14,7 +13,6 @@ import { OrderService } from 'src/app/modules/services/core/services/order.servi
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { AppPageRoutes } from '../../../shared/enums/app-constants';
-
 @Component({
   selector: 'app-order-details',
   templateUrl: './order-details.component.html',
@@ -45,7 +43,7 @@ export class OrderDetailsComponent implements OnInit {
     jobNo: '',
     isbn: '',
     orderDate: '',
-    rddDate: '',
+    requestedDeliveryDate: '',
     qty: '',
     jobType: '',
     status: '',
@@ -73,18 +71,18 @@ export class OrderDetailsComponent implements OnInit {
     });
     this.getOrderInfo();
     this.getOrderJob();
-    this.getCustomerInfo();
     this.getShimpmentInfo();
   }
 
   getOrderInfo() {
     this.subscription = this.orderService.getOrderDeatils(this.id).subscribe(resp => {
       this.orderInfoList = resp.body.result as OrderVM;
+      console.log('orderinfo list=', this.orderInfoList)
     });
   }
 
   initializeDatatable = () => {
-    this.dataSourceJob = new MatTableDataSource<OrderJobModel>(this.dataJobArray);
+    this.dataSourceJob = new MatTableDataSource<CaseDetail>(this.dataJobArray);
     this.dataSourceJob.paginator = this.paginator;
     this.dataSourceJob.filterPredicate = this.customFilterPredicate();
     this.cd.detectChanges();
@@ -97,12 +95,10 @@ export class OrderDetailsComponent implements OnInit {
     });
   }
 
-  getCustomerInfo() {
-  }
-
   getShimpmentInfo() {
     this.subscription = this.orderService.getShipmentDetails(this.id).subscribe(resp => {
       this.shipmentInfoList = resp.body.result as OrderVM;
+      console.log('shipmentInfoList list=', this.shipmentInfoList)
     });
   }
 
@@ -117,8 +113,8 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   applySearch(event: Event) {
-    // this.globalFilter = (event.target as HTMLInputElement).value;
-    // this.dataSourceJob.filter = JSON.stringify(this.tableFilters);
+    this.globalFilter = (event.target as HTMLInputElement).value;
+    this.dataSourceJob.filter = JSON.stringify(this.tableFilters);
   }
 
   getJobInfo() {
@@ -126,7 +122,6 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   toggleExpandable(id: number) {
-    debugger
     const shipmentToExpand = this.shipmentInfoList.find((x) => x.Id === id);
     if (this.rowIdToExpand === shipmentToExpand.Id) {
       this.rowIdToExpand = 0;
@@ -159,7 +154,7 @@ export class OrderDetailsComponent implements OnInit {
     } else if (filterPropType === this.tableFilterTypes.QTY) {
       this.tableFilters.qty = '';
     } else if (filterPropType === this.tableFilterTypes.RDD_DATE) {
-      this.tableFilters.rddDate = '';
+      this.tableFilters.requestedDeliveryDate = '';
     } else if (filterPropType == 'clear') {
       this.tableFilters.isbn = '';
       this.tableFilters.status = this.selectedStatus = '';
@@ -168,14 +163,14 @@ export class OrderDetailsComponent implements OnInit {
       this.tableFilters.jobType = '';
       this.tableFilters.jobNo = '';
       this.tableFilters.isbn = '';
-      this.tableFilters.rddDate = '';
+      this.tableFilters.requestedDeliveryDate = '';
     }
     this.dataSourceJob.filter = JSON.stringify(this.tableFilters);
   }
 
   customFilterPredicate() {
     const myFilterPredicate = (
-      data: OrderJobModel,
+      data: CaseDetail,
       filter: string
     ): boolean => {
       let globalMatch = !this.globalFilter;
@@ -183,13 +178,13 @@ export class OrderDetailsComponent implements OnInit {
       if (this.globalFilter) {
         // search all text fields
         globalMatch =
-          new Date(data.rdd)
+          new Date(data.requestedDeliveryDate)
             .toLocaleDateString()
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          new Date(data.orderDate)
+          new Date(data.createdDateTime)
             .toLocaleDateString()
             .toString()
             .trim()
@@ -205,17 +200,17 @@ export class OrderDetailsComponent implements OnInit {
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.isbn
+          data.iSBNPartNo
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.qty
+          data.orderQuantity
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.status
+          data.currentActivityStatusName
             .toString()
             .trim()
             .toLowerCase()
@@ -231,7 +226,7 @@ export class OrderDetailsComponent implements OnInit {
       if (this.tableFilters.orderDate !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          new Date(data.orderDate)
+          new Date(data.createdDateTime)
             .toLocaleDateString()
             .trim()
             .indexOf(
@@ -239,14 +234,14 @@ export class OrderDetailsComponent implements OnInit {
             ) !== -1 ? 1 : 0
         );
       }
-      if (this.tableFilters.rddDate !== '') {
+      if (this.tableFilters.requestedDeliveryDate !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          new Date(data.rdd)
+          new Date(data.requestedDeliveryDate)
             .toLocaleDateString()
             .trim()
             .indexOf(
-              new Date(searchString.rddDate).toLocaleDateString()
+              new Date(searchString.requestedDeliveryDate).toLocaleDateString()
             ) !== -1 ? 1 : 0
         );
       }
@@ -256,7 +251,7 @@ export class OrderDetailsComponent implements OnInit {
         // } else {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.status
+          data.currentActivityStatusName
             .toString()
             .trim()
             .toLowerCase()
@@ -287,7 +282,7 @@ export class OrderDetailsComponent implements OnInit {
       if (this.tableFilters.qty !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.qty
+          data.orderQuantity
             .toString()
             .trim()
             .toLowerCase()
@@ -297,7 +292,7 @@ export class OrderDetailsComponent implements OnInit {
       if (this.tableFilters.isbn !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.isbn
+          data.iSBNPartNo
             .toString()
             .trim()
             .toLowerCase()

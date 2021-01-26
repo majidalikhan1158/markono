@@ -110,6 +110,7 @@
                 <div class="row full-width">
                     <div class="col-lg-12 pt-2 pb-2 pr-0">
                         <div class="float-left display-flex">
+                            <!--View By-->
                             <span style="padding-top: 10px;font-size: 15px;color: #AFAFAF;">View
                                 By:&nbsp;</span>
                             <mat-form-field appearance="fill" class="font-12px pr-2">
@@ -121,6 +122,7 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
+                            <!--mat-chips-->
                             <mat-chip-list #chipList class="table-filter-chips">
                                 <mat-chip [removable]="true" *ngIf="tableFilters.customerPoNo != ''"
                                     (removed)="removeFilter(tableFilterTypes.CUSTOMER_PONO)">
@@ -132,9 +134,9 @@
                                     {{tableFilters.orderDate | date:'shortDate'}}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
-                                <mat-chip [removable]="true" *ngIf="tableFilters.rddDate != ''"
+                                <mat-chip [removable]="true" *ngIf="tableFilters.requestedDeliveryDate != ''"
                                     (removed)="removeFilter(tableFilterTypes.RDD_DATE)">
-                                    {{tableFilters.rddDate | date:'shortDate' }}
+                                    {{tableFilters.requestedDeliveryDate | date:'shortDate' }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.status != ''"
@@ -142,9 +144,9 @@
                                     {{tableFilters.status }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
-                                <mat-chip [removable]="true" *ngIf="tableFilters.customerName != ''"
-                                    (removed)="removeFilter(tableFilterTypes.CUSTOMER_NAME)">
-                                    {{tableFilters.customerName }}
+                                <mat-chip [removable]="true" *ngIf="tableFilters.companyName != ''"
+                                    (removed)="removeFilter(tableFilterTypes.COMPANY_NAME)">
+                                    {{tableFilters.companyName }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.orderType != ''"
@@ -177,14 +179,14 @@
                                             Clear Filters
                                         </a>
                                     </div>
-
+                                    <!--Cust PO No.-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Cust PO No.</mat-label>
                                         <mat-icon matPrefix>search</mat-icon>
                                         <input matInput [(ngModel)]="tableFilters.customerPoNo"
                                             (ngModelChange)="tableFilterChange($event,tableFilterTypes.CUSTOMER_PONO)">
                                     </mat-form-field>
-
+                                    <!--Choose Order Date Range-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Choose Order Date Range</mat-label>
                                         <input [matDatepicker]="pickerorder" matInput
@@ -194,15 +196,16 @@
                                         </mat-datepicker-toggle>
                                         <mat-datepicker #pickerorder></mat-datepicker>
                                     </mat-form-field>
-
+                                    <!--Choose RDD Range-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Choose RDD Range</mat-label>
-                                        <input [matDatepicker]="pickerrdd" matInput [(ngModel)]="tableFilters.rddDate"
+                                        <input [matDatepicker]="pickerrdd" matInput
+                                            [(ngModel)]="tableFilters.requestedDeliveryDate"
                                             (ngModelChange)="tableFilterChange($event,tableFilterTypes.RDD_DATE)">
                                         <mat-datepicker-toggle matSuffix [for]="pickerrdd"></mat-datepicker-toggle>
                                         <mat-datepicker #pickerrdd></mat-datepicker>
                                     </mat-form-field>
-
+                                    <!--Status-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Status</mat-label>
                                         <mat-select [(ngModel)]="tableFilters.status"
@@ -212,18 +215,17 @@
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-
+                                    <!--Customer name-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Customer name</mat-label>
                                         <mat-icon matPrefix>search</mat-icon>
-                                        <input matInput [(ngModel)]="tableFilters.customerName"
-                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.CUSTOMER_NAME)">
+                                        <input matInput [(ngModel)]="tableFilters.companyName"
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.COMPANY_NAME)">
                                     </mat-form-field>
-
+                                    <!--Order Type-->
                                     <span class="filter-menu-heading font-14px pb-4">
                                         Order Type
                                     </span>
-
                                     <div class="printing-type-options display-flex pb-4">
                                         <span class="option-item mr-2"
                                             [ngClass]="{'option-item-selected': selectedStatus == orderTypes.PRINT, 'option-item mr-2': true}"
@@ -246,17 +248,17 @@
                         <td mat-cell *matCellDef="let element; let i = index">{{i + 1}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="companyName">
+                    <ng-container matColumnDef="yourReference">
                         <th mat-header-cell *matHeaderCellDef>Customer PO No.</th>
                         <td mat-cell *matCellDef="let element">
                             <span style="font-weight: bold;">
                                 <a href="javascript:;" style="color: black;"
-                                    (click)="getOrdersInfo(element.id)">{{element.companyName }}
+                                    (click)="getOrdersInfo(element.id)">{{element.yourReference }}
                                 </a>
                             </span> <br>
                             <span class="cutomer-name">
                                 <a href="javascript:;" style="color: black;" (click)="getOrdersInfo(element.id)">{{
-                                    getCustomerName(element.customerPoNo)}}</a>
+                                    getCustomerName(element.id)}}</a>
                             </span>
                         </td>
                     </ng-container>

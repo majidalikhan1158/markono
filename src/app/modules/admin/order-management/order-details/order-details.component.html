@@ -165,9 +165,9 @@
                                         {{tableFilters.orderDate | date:'shortDate'}}
                                         <mat-icon matChipRemove>cancel</mat-icon>
                                     </mat-chip>
-                                    <mat-chip [removable]="true" *ngIf="tableFilters.rddDate != ''"
+                                    <mat-chip [removable]="true" *ngIf="tableFilters.requestedDeliveryDate != ''"
                                         (removed)="removeFilter(tableFilterTypes.RDD_DATE)">
-                                        {{tableFilters.rddDate | date:'shortDate' }}
+                                        {{tableFilters.requestedDeliveryDate | date:'shortDate' }}
                                         <mat-icon matChipRemove>cancel</mat-icon>
                                     </mat-chip>
                                     <mat-chip [removable]="true" *ngIf="tableFilters.isbn != ''"
@@ -243,7 +243,7 @@
                                         <mat-form-field appearance="fill" class="font-12px pb-4">
                                             <mat-label>Choose RDD Range</mat-label>
                                             <input [matDatepicker]="pickerrdd" matInput
-                                                [(ngModel)]="tableFilters.rddDate"
+                                                [(ngModel)]="tableFilters.requestedDeliveryDate"
                                                 (ngModelChange)="tableFilterChange($event,tableFilterTypes.RDD_DATE)">
                                             <mat-datepicker-toggle matSuffix [for]="pickerrdd"></mat-datepicker-toggle>
                                             <mat-datepicker #pickerrdd></mat-datepicker>
@@ -623,11 +623,11 @@
                                 </div>
                                 <div class="card-title">
                                     <span class="font-12px color-AFAFAF pr-2">Category: </span>
-                                    <span class="font-12px card-label">-</span>
+                                    <span class="font-12px card-label">{{rowId.ShipmentType}}</span>
                                 </div>
                                 <div class="card-title">
                                     <span class="font-12px color-AFAFAF pr-2">Attention To: </span>
-                                    <span class="font-12px card-label">-</span>
+                                    <span class="font-12px card-label">{{rowId.ShipToAttentionTo}}</span>
                                 </div>
                                 <div class="card-title">
                                     <span class="font-12px color-AFAFAF pr-2">Shipment Qty: </span>
@@ -683,7 +683,7 @@
                                     <div class="col-lg-12 display-flex">
                                         <div class="col-lg-3 pl-0">
                                             <p class="info-label">Shipping Terms</p>
-                                            <p class="info-label-value">-</p>
+                                            <p class="info-label-value">{{rowId.ShippingMethod}}</p>
                                         </div>
                                         <div class="col-lg-3 pr-0 pl-0">
                                             <p class="info-label">Shipping Agent</p>
@@ -729,7 +729,8 @@
                                                                 </td>
                                                                 <td>{{shipmentInfoList[i].ShipmentDetail[j].Title}}
                                                                 </td>
-                                                                <td>-</td>
+                                                                <td>{{shipmentInfoList[i].ShipmentDetail[j].TotalRemaining}}
+                                                                </td>
                                                                 <td>{{shipmentInfoList[i].ShipmentDetail[j].RequestedQty}}
                                                                 </td>
                                                             </tr>
@@ -797,7 +798,7 @@
                                             </div>
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">Contact Person</p>
-                                                <p class="info-label-value">-</p>
+                                                <p class="info-label-value">{{rowId.BillToContactPerson}}</p>
                                             </div>
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">Email</p>
@@ -805,7 +806,7 @@
                                             </div>
                                             <div class="col-lg-3 pl-0">
                                                 <p class="info-label">Phone</p>
-                                                <p class="info-label-value">-</p>
+                                                <p class="info-label-value">{{rowId.BillToPhoneNo}}</p>
                                             </div>
                                         </div>
                                         <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
@@ -851,7 +852,7 @@
                                             </div>
                                             <div class="col-lg-3 pr-0">
                                                 <p class="info-label">Attention To</p>
-                                                <p class="info-label-value">-</p>
+                                                <p class="info-label-value">{{rowId.ShipToAttentionTo}}</p>
                                             </div>
                                             <div class="col-lg-3 pl-0 pr-0">
                                                 <p class="info-label">Contact Person</p>

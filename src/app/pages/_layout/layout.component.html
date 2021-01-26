@@ -1,12 +1,8 @@
 <!--begin::Main-->
 <ng-container *ngIf="selfLayout !== 'blank'; else blankLayout">
   <!-- begin:: Header Mobile -->
-  <app-header-mobile
-    #ktHeaderMobile
-    id="kt_header_mobile"
-    class="header-mobile align-items-center"
-    [ngClass]="headerMobileClasses"
-  ></app-header-mobile>
+  <app-header-mobile #ktHeaderMobile id="kt_header_mobile" class="header-mobile align-items-center"
+    [ngClass]="headerMobileClasses"></app-header-mobile>
   <!-- end:: Header Mobile -->
   <div class="d-flex flex-column flex-root">
     <!--begin::Page-->
@@ -23,12 +19,8 @@
         <!--end::STATIC Aside-->
 
         <!--begin::DYNAMIC Aside-->
-        <app-aside-dynamic
-          #ktAside
-          id="kt_aside"
-          class="aside aside-left d-flex flex-column flex-row-auto"
-          [ngClass]="asideCSSClasses"
-        ></app-aside-dynamic>
+        <app-aside-dynamic #ktAside id="kt_aside" class="aside aside-left d-flex flex-column flex-row-auto"
+          [ngClass]="asideCSSClasses"></app-aside-dynamic>
         <!--end::DYNAMIC Aside-->
       </ng-container>
       <!-- end:: Aside Left -->
@@ -36,21 +28,12 @@
       <!--begin::Wrapper-->
       <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
         <!-- begin:: Header -->
-        <app-header
-        *ngIf="dynamicHeaderMenuService.shouldHeaderDisplay$ | async"
-          #ktHeader
-          id="kt_header"
-          class="header"
-          [ngClass]="headerCSSClasses"
-        ></app-header>
+        <app-header *ngIf="dynamicHeaderMenuService.shouldHeaderDisplay$ | async" #ktHeader id="kt_header"
+          class="header" [ngClass]="headerCSSClasses"></app-header>
         <!-- end:: Header -->
 
         <!-- begin:: Content -->
-        <div
-          class="content d-flex flex-column flex-column-fluid"
-          id="kt_content"
-          [ngClass]="contentClasses"
-        >
+        <div class="content d-flex flex-column flex-column-fluid" id="kt_content" [ngClass]="contentClasses">
           <!-- begin:: Content Head -->
           <ng-container *ngIf="subheaderDisplay">
             <app-subheader-wrapper></app-subheader-wrapper>
@@ -78,11 +61,8 @@
         <!-- end:: Content -->
         <ng-container *ngIf="footerDisplay">
           <!--begin::Footer-->
-          <app-footer
-            class="footer bg-white py-4 d-flex flex-lg-column"
-            id="kt_footer"
-            [ngClass]="footerCSSClasses"
-          ></app-footer>
+          <app-footer class="footer bg-white py-4 d-flex flex-lg-column" id="kt_footer" [ngClass]="footerCSSClasses">
+          </app-footer>
           <!--end::Footer-->
         </ng-container>
       </div>

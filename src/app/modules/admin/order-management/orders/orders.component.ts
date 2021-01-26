@@ -28,18 +28,16 @@ import { AfterViewInit } from '@angular/core';
 export class OrdersComponent implements OnInit {
   //#region declaration
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  displayedColumns: string[] = ['id', 'companyName', 'noOfTitles', 'qty', 'printType', 'orderDate', 'requestedDeliveryDate', 'currentActivityStatusCode', 'actions'];
-  //displayedColumns: string[] = ['id','customerPoNo', 'orderDate','rdd','noOfTitles','qty','type','status','actions'];
-
+  displayedColumns: string[] = ['id', 'yourReference', 'noOfTitles', 'qty', 'printType', 'orderDate', 'requestedDeliveryDate', 'currentActivityStatusCode', 'actions'];
   dataArray = OrdersModelDataList;
   dataSource;
   tableFilters: OrderSearchFilters = {
     currentSelectedFilter: '',
     orderType: '',
     customerPoNo: '',
-    customerName: '',
+    companyName: '',
     orderDate: '',
-    rddDate: '',
+    requestedDeliveryDate: '',
     status: '',
   };
   tableFilterTypes = OrderSearchFilterTypes;
@@ -92,8 +90,8 @@ export class OrdersComponent implements OnInit {
   }
 
   removeFilter(filterPropType: string) {
-    if (filterPropType === this.tableFilterTypes.CUSTOMER_NAME) {
-      this.tableFilters.customerName = '';
+    if (filterPropType === this.tableFilterTypes.COMPANY_NAME) {
+      this.tableFilters.companyName = '';
     } else if (filterPropType === this.tableFilterTypes.STATUS) {
       this.tableFilters.status = this.selectedStatus = '';
     } else if (filterPropType === this.tableFilterTypes.CUSTOMER_PONO) {
@@ -103,14 +101,14 @@ export class OrdersComponent implements OnInit {
     } else if (filterPropType === this.tableFilterTypes.ORDER_TYPE) {
       this.tableFilters.orderType = '';
     } else if (filterPropType === this.tableFilterTypes.RDD_DATE) {
-      this.tableFilters.rddDate = '';
+      this.tableFilters.requestedDeliveryDate = '';
     } else if (filterPropType === 'clear') {
-      this.tableFilters.customerName = '';
+      this.tableFilters.companyName = '';
       this.tableFilters.status = this.selectedStatus = '';
       this.tableFilters.customerPoNo = '';
       this.tableFilters.orderDate = '';
       this.tableFilters.orderType = '';
-      this.tableFilters.rddDate = '';
+      this.tableFilters.requestedDeliveryDate = '';
     }
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
@@ -175,14 +173,14 @@ export class OrdersComponent implements OnInit {
           );
         }
       }
-      if (this.tableFilters.rddDate !== '') {
+      if (this.tableFilters.requestedDeliveryDate !== '' || this.tableFilters.requestedDeliveryDate !== null) {
         filterCounter++;
         matchedFilters = matchedFilters + (
           data.requestedDeliveryDate
             .toString()
             .trim()
             .toLowerCase()
-            .indexOf(searchString.rddDate.toLowerCase()) !== -1 ? 1 : 0
+            .indexOf(searchString.requestedDeliveryDate.toLowerCase()) !== -1 ? 1 : 0
         );
       }
 
@@ -220,7 +218,7 @@ export class OrdersComponent implements OnInit {
   }
 
   getCustomerName(value) {
-    return ' Banta Global Turnkey (S) Pte Ltd';
+    return this.dataArrayOrder.find(x => x.id === value).companyName;
   }
 
   getOrdersInfo(id) {

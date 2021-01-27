@@ -50,9 +50,9 @@ export interface OrderSearchFilters {
     currentSelectedFilter: string;
     orderType: string;
     customerPoNo: string;
-    customerName: string;
+    companyName: string;
     orderDate: string;
-    rddDate: string;
+    requestedDeliveryDate: string;
     status: string;
 }
 
@@ -61,7 +61,7 @@ export const OrderSearchFilterTypes = {
     CUSTOMER_PONO: 'CUSTOMER_PONO',
     ORDER_DATE: 'ORDER_DATE',
     STATUS: 'STATUS',
-    CUSTOMER_NAME: 'CUSTOMER_NAME',
+    COMPANY_NAME: 'COMPANY_NAME',
     RDD_DATE: 'RDD_DATE'
 };
 
@@ -89,6 +89,17 @@ export const OrdersWithIssueSearchFilterTypes = {
 };
 
 export interface OrderInfoDetailSearchFilters {
+    currentSelectedFilter: string;
+    jobNo: string;
+    isbn: string;
+    orderDate: string;
+    requestedDeliveryDate: string;
+    qty: string;
+    jobType: string;
+    status: string;
+};
+
+export interface OrderJobInfoDetailSearchFilters {
     currentSelectedFilter: string;
     jobNo: string;
     isbn: string;

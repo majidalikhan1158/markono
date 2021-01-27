@@ -8,7 +8,7 @@ import { TooltipPosition } from '@angular/material/tooltip';
 import { FormControl } from '@angular/forms';
 import { CreateCaseMode } from 'src/app/modules/shared/enums/app-enums';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
-import { OrderInfoDetailSearchFilters, OrdersInfoDetailSearchFilterTypes } from 'src/app/modules/shared/models/table-filter-modals';
+import { OrderInfoDetailSearchFilters, OrderJobInfoDetailSearchFilters, OrdersInfoDetailSearchFilterTypes } from 'src/app/modules/shared/models/table-filter-modals';
 import { map } from 'rxjs/operators';
 import { ChartComponent } from "ng-apexcharts";
 import { ApexNonAxisChartSeries, ApexResponsive, ApexChart } from "ng-apexcharts";
@@ -86,7 +86,7 @@ export class OrderJobDetailsComponent implements OnInit {
   ExpansionIcons = ExpansionIcons;
   rowIdToExpand = 1;
 
-  tableFilters: OrderInfoDetailSearchFilters = {
+  tableFilters: OrderJobInfoDetailSearchFilters = {
     currentSelectedFilter: '',
     jobNo: '',
     isbn: '',
@@ -268,7 +268,7 @@ export class OrderJobDetailsComponent implements OnInit {
             .toLocaleDateString()
             .trim()
             .indexOf(
-              new Date(searchString.rddDate).toLocaleDateString()
+              new Date(searchString.requestedDeliveryDate).toLocaleDateString()
             ) !== -1 ? 1 : 0
         );
       }

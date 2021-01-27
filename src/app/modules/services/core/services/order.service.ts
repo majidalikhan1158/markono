@@ -6,6 +6,7 @@ import { ResponseModal } from '../../shared/classes/response-modal';
 import { HttpResponse } from '@angular/common/http';
 import { ProductResponseModal } from '../../shared/classes/product-modals/product-modals';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -42,4 +43,18 @@ export class OrderService {
     const urlWithParams = `${url}?${queryParams}`;
     return this.http.get(decodeURI(urlWithParams));
   }
+
+  public getOrderDeatils = (request: any): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getOrderDeatils();
+    const queryParams = `$filter=id eq ${request}&$expand=CaseDetail($expand=CaseDetailAdditional),OtherCharge`;;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+  public getShipmentDetails = (request: any): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getShipmentDetails();
+    const queryParams = `$filter=caseID eq ${request}&$expand=ShipmentDetail,MiscBilling`;;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
 }

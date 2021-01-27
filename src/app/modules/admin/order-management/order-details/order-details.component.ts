@@ -1,20 +1,55 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSelectionListChange } from '@angular/material/list';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrderDetailTypes, OrderDetailTypesArray } from 'src/app/modules/shared/enums/order-management/order-constants';
-import { OrderJobDataList } from 'src/app/modules/shared/mock-data/order-job-list';
-import { OrderInfoJobType, OrderInfoStatusTypesArray, OrderJobModel, OrdersModel } from 'src/app/modules/shared/models/order-management';
+import { ActivityLogModel, CaseDetail, JobInfoHeaderModel, OrderInfoJobType, OrderInfoStatusTypesArray, OrderJobModel, OrdersModel, OrderVM } from 'src/app/modules/shared/models/order-management';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { FormControl } from '@angular/forms';
 import { CreateCaseMode } from 'src/app/modules/shared/enums/app-enums';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { OrderInfoDetailSearchFilters, OrdersInfoDetailSearchFilterTypes } from 'src/app/modules/shared/models/table-filter-modals';
+import { OrderService } from 'src/app/modules/services/core/services/order.service';
+import { Subscription } from 'rxjs';
+import { MatPaginator } from '@angular/material/paginator';
 import { AppPageRoutes } from '../../../shared/enums/app-constants';
+import { ApexAxisChartSeries, ApexDataLabels, ApexGrid, ApexPlotOptions, ApexTitleSubtitle, ApexXAxis, ChartComponent } from "ng-apexcharts";
+import { ApexNonAxisChartSeries, ApexResponsive, ApexChart } from "ng-apexcharts";
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
-
-const ELEMENT_DATA: OrdersModel[] = [
-  { id: 0, customerPoNo: '1', orderDate: Date.now(), rdd: Date.now(), noOfTitles: 'H', qty: '0', type: 'Warehouse', status: 'Shipped' },
+export type TimeValueAnalysisChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  responsive: ApexResponsive[];
+  labels: any;
+};
+export type TimeValueMapChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  fill: any;
+  colors: any;
+  title: ApexTitleSubtitle;
+  xaxis: ApexXAxis;
+  grid: ApexGrid;
+  plotOptions: ApexPlotOptions;
+};
+export type TimeValueProcessChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  fill: any;
+  colors: any;
+  title: ApexTitleSubtitle;
+  xaxis: ApexXAxis;
+  grid: ApexGrid;
+  plotOptions: ApexPlotOptions;
+};
+const JobInfoHeader_DATA: JobInfoHeaderModel[] = [
+  { id: 1, custPoNo: '20005838', jobNo: '968052', orderDate: Date.now(), rdd: Date.now(), jobType: 'Offset', orderType: 'Warehouse', orderStatus: 'Shipped' },
+];
+const ActivityLog_DATA: ActivityLogModel[] = [
+  { id: 1, actionDate: Date.now(), actionBy: '9780124059351', source: '50,120', activity: 'Offset', status: 'Shipped', duration: '' },
 ];
 @Component({
   selector: 'app-order-details',
@@ -24,71 +59,246 @@ const ELEMENT_DATA: OrdersModel[] = [
 })
 export class OrderDetailsComponent implements OnInit {
   //#region declaration 
+  @ViewChild("chart") chart: ChartComponent;
+  public timeValueAnalysisChartOptions: Partial<TimeValueAnalysisChartOptions>;
+  public timeValueMapChartOptions: Partial<TimeValueMapChartOptions>;
+  public timeValueProcessChartOptions: Partial<TimeValueProcessChartOptions>;
+  displayedColumnsJobInfo: string[] = [
+    'custPoNo',
+    'jobNo',
+    'jobType',
+    'rdd',
+    'orderDate',
+    'orderType',
+    'orderStatus',
+  ];
   @Input() createCaseMode: CreateCaseMode;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  showFiller = true;
   positionOptions: TooltipPosition[] = ['below', 'above', 'left', 'right'];
   position = new FormControl(this.positionOptions[1]);
-  displayedColumnsOrderInfo: string[] = [
-    'customerPoNo',
-    'orderDate',
-    'rdd',
-    'qty',
-    'type',
-    'status',
-  ];
-  displayedColumnsJobInfo: string[] = [
-    'jobNo',
-    'isbn',
-    'orderDate',
-    'rdd',
-    'qty',
-    'jobType',
-    'status',
-    'actions'
-  ];
-  dataSource = ELEMENT_DATA;
-  orderDetailTypesArray = OrderDetailTypesArray;
+  columnsToDisplay = ['Cust PO No.', 'Order Date', 'RDD', 'Qty', 'Order Type', 'Order Status',];
+  displayedColumnsJob: string[] = ['Id', 'JobNo', 'ISBNPartNo', 'CreatedDateTime', 'RequestedDeliveryDate', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode'];
   dataSourceJob;
-  displayedColumnsJob: string[] = [
-    'id',
-    'jobNo',
-    'isbn',
-    'orderDate',
-    'rdd',
-    'qty',
-    'jobType',
-    'status',
-    'actions'
-  ];
-  dataArray = OrderJobDataList;
+  orderInfoList;
+  shipmentInfoList;
+  dataJobArray;
+  orderDetailTypesArray = OrderDetailTypesArray;
   chooseList;
   currentSelectedType = 'JOBS';
   orderDetailTypesConstant = OrderDetailTypes;
   ExpansionIcons = ExpansionIcons;
   rowIdToExpand = 1;
-
   tableFilters: OrderInfoDetailSearchFilters = {
     currentSelectedFilter: '',
     jobNo: '',
     isbn: '',
     orderDate: '',
-    rddDate: '',
+    requestedDeliveryDate: '',
     qty: '',
     jobType: '',
     status: '',
   };
   tableFilterTypes = OrdersInfoDetailSearchFilterTypes;
-
   statusTypesList = OrderInfoStatusTypesArray;
   jobTypes = OrderInfoJobType;
   selectedStatus = '';
   globalFilter = '';
+  id = '';
+  subscription: Subscription;
+  shouldShowShipmentDetails = false;
+  dataSourceJobInfo;
+  dataArrayJobInfo = JobInfoHeader_DATA;
+  dataArrayActivityLog = ActivityLog_DATA;
+  dataSourceActivityLog;
+  displayedColumnsActivityLog: string[] = [
+    'id',
+    'actionDate',
+    'actionBy',
+    'source',
+    'duration',
+    'activity',
+    'status',
+  ];
   //#endregion
 
-  constructor(private router: Router) {
-    this.dataSourceJob = new MatTableDataSource<OrderJobModel>(this.dataArray);
+  constructor(private router: Router,
+    private route: ActivatedRoute,
+    private orderService: OrderService,
+    private cd: ChangeDetectorRef) {
+    this.dataSourceJobInfo = new MatTableDataSource<JobInfoHeaderModel>(this.dataArrayJobInfo);
+    this.dataSourceActivityLog = new MatTableDataSource<ActivityLogModel>(this.dataArrayActivityLog);
   }
 
   ngOnInit(): void {
+    this.timeValueAnalysisChartOptions = {
+      series: [44, 55, 13],
+      chart: {
+        type: "donut"
+      },
+      labels: ["Lorem", "Ipsum", "Dolor"],
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            dataLabels: {
+              enabled: false,
+            },
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      ]
+    };
+    this.timeValueMapChartOptions = {
+      series: [
+        {
+          name: "Target TAT",
+          data: this.generateData(8, {
+            min: 0,
+            max: 90
+          })
+        },
+
+      ],
+      chart: {
+        height: 150,
+        type: "heatmap"
+      },
+      plotOptions: {
+        heatmap: {
+          shadeIntensity: 0.5,
+          colorScale: {
+            ranges: [
+              {
+                from: -30,
+                to: 5,
+                name: "Prepress (ENVA)",
+                color: "#00A100"
+              },
+              {
+                from: 6,
+                to: 20,
+                name: "Prepress (NVA)",
+                color: "#128FD9"
+              },
+              {
+                from: 21,
+                to: 45,
+                name: "Prepress (VA)",
+                color: "#FFB200"
+              },
+              {
+                from: 46,
+                to: 55,
+                name: "Prepress (VA)",
+                color: "#FF0000"
+              }, {
+                from: 46,
+                to: 55,
+                name: "  Printing(VA)",
+                color: "#FF0000"
+              }, {
+                from: 46,
+                to: 55,
+                name: "Fulfillment(VA)",
+                color: "#FF0000"
+              },
+            ]
+          }
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      colors: [
+        "#F3B415",
+        "#F27036",
+        "#663F59",
+        "#6A6E94",
+        "#4E88B4",
+        "#00A7C6",
+        "#18D8D8",
+        "#A9D794",
+        "#46AF78",
+        "#A93F55",
+        "#8C5E58",
+        "#2176FF",
+        "#33A1FD",
+        "#7A918D",
+        "#BAFF29"
+      ],
+      xaxis: {
+        type: "category",
+        categories: [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      },
+      title: {
+        text: ""
+      },
+      grid: {
+        padding: {
+          right: 20
+        }
+      }
+    };
+    this.route.paramMap.subscribe(params => {
+      this.id = params.get('id');
+    });
+    this.getOrderInfo();
+    this.getOrderJob();
+    this.getShimpmentInfo();
+  }
+
+  public generateData(count, yrange) {
+    var i = 0;
+    var series = [];
+    while (i < count) {
+      var y =
+        Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+
+      series.push(y);
+      i++;
+    }
+    return series;
+  }
+
+  getOrderInfo() {
+    this.subscription = this.orderService.getOrderDeatils(this.id).subscribe(resp => {
+      this.orderInfoList = resp.body.result as OrderVM;
+    });
+  }
+
+  initializeDatatable = () => {
+    this.dataSourceJob = new MatTableDataSource<CaseDetail>(this.dataJobArray);
+    this.dataSourceJob.paginator = this.paginator;
+    this.dataSourceJob.filterPredicate = this.customFilterPredicate();
+    this.cd.detectChanges();
+  }
+
+  getOrderJob() {
+    this.subscription = this.orderService.getOrderDeatils(this.id).subscribe(resp => {
+      this.dataJobArray = resp.body.result[0].CaseDetail as CaseDetail;
+      this.initializeDatatable();
+    });
+  }
+
+  getShimpmentInfo() {
+    this.subscription = this.orderService.getShipmentDetails(this.id).subscribe(resp => {
+      this.shipmentInfoList = resp.body.result as OrderVM;
+    });
   }
 
   handleOrderDetailTypeChange(event: MatSelectionListChange) {
@@ -102,18 +312,23 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   applySearch(event: Event) {
-    // this.globalFilter = (event.target as HTMLInputElement).value;
-    // this.dataSourceJob.filter = JSON.stringify(this.tableFilters);
+    this.globalFilter = (event.target as HTMLInputElement).value;
+    this.dataSourceJob.filter = JSON.stringify(this.tableFilters);
   }
 
   getJobInfo() {
     this.router.navigate([AppPageRoutes.JOB_DETAILS]);
   }
 
-  toggleExpandable(id: number): void {
-    this.rowIdToExpand = this.rowIdToExpand === id
-      ? 0
-      : id;
+  toggleExpandable(id: number) {
+    const shipmentToExpand = this.shipmentInfoList.find((x) => x.Id === id);
+    if (this.rowIdToExpand === shipmentToExpand.Id) {
+      this.rowIdToExpand = 0;
+      this.shouldShowShipmentDetails = !this.shouldShowShipmentDetails;
+    } else {
+      this.rowIdToExpand = shipmentToExpand.Id;
+      this.shouldShowShipmentDetails = true;
+    }
   }
 
   tableFilterChange(filterValue: string, filterPropType: string) {
@@ -138,7 +353,7 @@ export class OrderDetailsComponent implements OnInit {
     } else if (filterPropType === this.tableFilterTypes.QTY) {
       this.tableFilters.qty = '';
     } else if (filterPropType === this.tableFilterTypes.RDD_DATE) {
-      this.tableFilters.rddDate = '';
+      this.tableFilters.requestedDeliveryDate = '';
     } else if (filterPropType == 'clear') {
       this.tableFilters.isbn = '';
       this.tableFilters.status = this.selectedStatus = '';
@@ -147,14 +362,14 @@ export class OrderDetailsComponent implements OnInit {
       this.tableFilters.jobType = '';
       this.tableFilters.jobNo = '';
       this.tableFilters.isbn = '';
-      this.tableFilters.rddDate = '';
+      this.tableFilters.requestedDeliveryDate = '';
     }
     this.dataSourceJob.filter = JSON.stringify(this.tableFilters);
   }
 
   customFilterPredicate() {
     const myFilterPredicate = (
-      data: OrderJobModel,
+      data: CaseDetail,
       filter: string
     ): boolean => {
       let globalMatch = !this.globalFilter;
@@ -162,13 +377,13 @@ export class OrderDetailsComponent implements OnInit {
       if (this.globalFilter) {
         // search all text fields
         globalMatch =
-          new Date(data.rdd)
+          new Date(data.requestedDeliveryDate)
             .toLocaleDateString()
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          new Date(data.orderDate)
+          new Date(data.createdDateTime)
             .toLocaleDateString()
             .toString()
             .trim()
@@ -184,17 +399,17 @@ export class OrderDetailsComponent implements OnInit {
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.isbn
+          data.iSBNPartNo
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.qty
+          data.orderQuantity
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.status
+          data.currentActivityStatusName
             .toString()
             .trim()
             .toLowerCase()
@@ -210,7 +425,7 @@ export class OrderDetailsComponent implements OnInit {
       if (this.tableFilters.orderDate !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          new Date(data.orderDate)
+          new Date(data.createdDateTime)
             .toLocaleDateString()
             .trim()
             .indexOf(
@@ -218,14 +433,14 @@ export class OrderDetailsComponent implements OnInit {
             ) !== -1 ? 1 : 0
         );
       }
-      if (this.tableFilters.rddDate !== '') {
+      if (this.tableFilters.requestedDeliveryDate !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          new Date(data.rdd)
+          new Date(data.requestedDeliveryDate)
             .toLocaleDateString()
             .trim()
             .indexOf(
-              new Date(searchString.rddDate).toLocaleDateString()
+              new Date(searchString.requestedDeliveryDate).toLocaleDateString()
             ) !== -1 ? 1 : 0
         );
       }
@@ -235,7 +450,7 @@ export class OrderDetailsComponent implements OnInit {
         // } else {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.status
+          data.currentActivityStatusName
             .toString()
             .trim()
             .toLowerCase()
@@ -266,7 +481,7 @@ export class OrderDetailsComponent implements OnInit {
       if (this.tableFilters.qty !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.qty
+          data.orderQuantity
             .toString()
             .trim()
             .toLowerCase()
@@ -276,7 +491,7 @@ export class OrderDetailsComponent implements OnInit {
       if (this.tableFilters.isbn !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.isbn
+          data.iSBNPartNo
             .toString()
             .trim()
             .toLowerCase()
@@ -292,6 +507,12 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   getToolTipData(isbn) {
-    return `Title: OWNER'S BOOKLET, FS FREEDOM LITE, MG/DL, ZHT/EN-GB`;
+    return this.dataJobArray.find(x => x.ISBNPartNo === isbn).Title;
+  }
+
+  tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
+    if (tabChangeEvent.index == 1 || tabChangeEvent.index == 3) {
+      this.showFiller = !this.showFiller
+    }
   }
 }

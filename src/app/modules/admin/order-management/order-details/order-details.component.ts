@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulati
 import { MatSelectionListChange } from '@angular/material/list';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrderDetailTypes, OrderDetailTypesArray } from 'src/app/modules/shared/enums/order-management/order-constants';
-import { CaseDetail, OrderInfoJobType, OrderInfoStatusTypesArray, OrderJobModel, OrdersModel, OrderVM } from 'src/app/modules/shared/models/order-management';
+import { CaseDetail, JobInfoHeaderModel, OrderInfoJobType, OrderInfoStatusTypesArray, OrderJobModel, OrdersModel, OrderVM } from 'src/app/modules/shared/models/order-management';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { FormControl } from '@angular/forms';
 import { CreateCaseMode } from 'src/app/modules/shared/enums/app-enums';
@@ -13,6 +13,9 @@ import { OrderService } from 'src/app/modules/services/core/services/order.servi
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { AppPageRoutes } from '../../../shared/enums/app-constants';
+const JobInfoHeader_DATA: JobInfoHeaderModel[] = [
+  { id: 1, custPoNo: '20005838', jobNo: '968052', orderDate: Date.now(), rdd: Date.now(), jobType: 'Offset', orderType: 'Warehouse', orderStatus: 'Shipped' },
+];
 @Component({
   selector: 'app-order-details',
   templateUrl: './order-details.component.html',
@@ -21,9 +24,18 @@ import { AppPageRoutes } from '../../../shared/enums/app-constants';
 })
 export class OrderDetailsComponent implements OnInit {
   //#region declaration 
+  displayedColumnsJobInfo: string[] = [
+    'custPoNo',
+    'jobNo',
+    'jobType',
+    'rdd',
+    'orderDate',
+    'orderType',
+    'orderStatus',
+  ];
   @Input() createCaseMode: CreateCaseMode;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
+  showFiller = false;
   positionOptions: TooltipPosition[] = ['below', 'above', 'left', 'right'];
   position = new FormControl(this.positionOptions[1]);
   columnsToDisplay = ['Cust PO No.', 'Order Date', 'RDD', 'Qty', 'Order Type', 'Order Status',];
@@ -56,6 +68,8 @@ export class OrderDetailsComponent implements OnInit {
   id = '';
   subscription: Subscription;
   shouldShowShipmentDetails = false;
+  dataSourceJobInfo;
+  dataArrayJobInfo = JobInfoHeader_DATA;
 
   //#endregion
 
@@ -63,6 +77,8 @@ export class OrderDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private orderService: OrderService,
     private cd: ChangeDetectorRef) {
+    this.dataSourceJobInfo = new MatTableDataSource<JobInfoHeaderModel>(this.dataArrayJobInfo);
+
   }
 
   ngOnInit(): void {
@@ -77,7 +93,6 @@ export class OrderDetailsComponent implements OnInit {
   getOrderInfo() {
     this.subscription = this.orderService.getOrderDeatils(this.id).subscribe(resp => {
       this.orderInfoList = resp.body.result as OrderVM;
-      console.log('orderinfo list=', this.orderInfoList)
     });
   }
 
@@ -98,7 +113,6 @@ export class OrderDetailsComponent implements OnInit {
   getShimpmentInfo() {
     this.subscription = this.orderService.getShipmentDetails(this.id).subscribe(resp => {
       this.shipmentInfoList = resp.body.result as OrderVM;
-      console.log('shipmentInfoList list=', this.shipmentInfoList)
     });
   }
 
@@ -309,5 +323,8 @@ export class OrderDetailsComponent implements OnInit {
 
   getToolTipData(isbn) {
     return this.dataJobArray.find(x => x.ISBNPartNo === isbn).Title;
+  }
+  hafsa() {
+    console.log('hafsa calling')
   }
 }

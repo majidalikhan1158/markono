@@ -183,7 +183,16 @@ app-order-details {
         width: 150px;
     }
     .example-sidenav {
-        height: 312px;
+        height: 400px;
+        width: 600px;
+        position: fixed;
+        transform: translateX !important;
+        visibility: visible;
+        margin-top: 282px;
+        margin-right: 36px;
+    }
+    .scssClassName {
+        height: 400px;
         width: 810px;
         position: fixed;
         transform: translateX !important;

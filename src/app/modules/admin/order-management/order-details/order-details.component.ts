@@ -13,16 +13,38 @@ import { OrderService } from 'src/app/modules/services/core/services/order.servi
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { AppPageRoutes } from '../../../shared/enums/app-constants';
-import { ChartComponent } from "ng-apexcharts";
+import { ApexAxisChartSeries, ApexDataLabels, ApexGrid, ApexPlotOptions, ApexTitleSubtitle, ApexXAxis, ChartComponent } from "ng-apexcharts";
 import { ApexNonAxisChartSeries, ApexResponsive, ApexChart } from "ng-apexcharts";
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
-export type ChartOptions = {
+export type TimeValueAnalysisChartOptions = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
   responsive: ApexResponsive[];
   labels: any;
 };
-
+export type TimeValueMapChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  fill: any;
+  colors: any;
+  title: ApexTitleSubtitle;
+  xaxis: ApexXAxis;
+  grid: ApexGrid;
+  plotOptions: ApexPlotOptions;
+};
+export type TimeValueProcessChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  fill: any;
+  colors: any;
+  title: ApexTitleSubtitle;
+  xaxis: ApexXAxis;
+  grid: ApexGrid;
+  plotOptions: ApexPlotOptions;
+};
 const JobInfoHeader_DATA: JobInfoHeaderModel[] = [
   { id: 1, custPoNo: '20005838', jobNo: '968052', orderDate: Date.now(), rdd: Date.now(), jobType: 'Offset', orderType: 'Warehouse', orderStatus: 'Shipped' },
 ];
@@ -38,7 +60,9 @@ const ActivityLog_DATA: ActivityLogModel[] = [
 export class OrderDetailsComponent implements OnInit {
   //#region declaration 
   @ViewChild("chart") chart: ChartComponent;
-  public chartOptions: Partial<ChartOptions>;
+  public timeValueAnalysisChartOptions: Partial<TimeValueAnalysisChartOptions>;
+  public timeValueMapChartOptions: Partial<TimeValueMapChartOptions>;
+  public timeValueProcessChartOptions: Partial<TimeValueProcessChartOptions>;
   displayedColumnsJobInfo: string[] = [
     'custPoNo',
     'jobNo',
@@ -50,7 +74,7 @@ export class OrderDetailsComponent implements OnInit {
   ];
   @Input() createCaseMode: CreateCaseMode;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  showFiller = false;
+  showFiller = true;
   positionOptions: TooltipPosition[] = ['below', 'above', 'left', 'right'];
   position = new FormControl(this.positionOptions[1]);
   columnsToDisplay = ['Cust PO No.', 'Order Date', 'RDD', 'Qty', 'Order Type', 'Order Status',];
@@ -107,7 +131,7 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.chartOptions = {
+    this.timeValueAnalysisChartOptions = {
       series: [44, 55, 13],
       chart: {
         type: "donut"
@@ -130,12 +154,125 @@ export class OrderDetailsComponent implements OnInit {
         }
       ]
     };
+    this.timeValueMapChartOptions = {
+      series: [
+        {
+          name: "Target TAT",
+          data: this.generateData(8, {
+            min: 0,
+            max: 90
+          })
+        },
+
+      ],
+      chart: {
+        height: 150,
+        type: "heatmap"
+      },
+      plotOptions: {
+        heatmap: {
+          shadeIntensity: 0.5,
+          colorScale: {
+            ranges: [
+              {
+                from: -30,
+                to: 5,
+                name: "Prepress (ENVA)",
+                color: "#00A100"
+              },
+              {
+                from: 6,
+                to: 20,
+                name: "Prepress (NVA)",
+                color: "#128FD9"
+              },
+              {
+                from: 21,
+                to: 45,
+                name: "Prepress (VA)",
+                color: "#FFB200"
+              },
+              {
+                from: 46,
+                to: 55,
+                name: "Prepress (VA)",
+                color: "#FF0000"
+              }, {
+                from: 46,
+                to: 55,
+                name: "  Printing(VA)",
+                color: "#FF0000"
+              }, {
+                from: 46,
+                to: 55,
+                name: "Fulfillment(VA)",
+                color: "#FF0000"
+              },
+            ]
+          }
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      colors: [
+        "#F3B415",
+        "#F27036",
+        "#663F59",
+        "#6A6E94",
+        "#4E88B4",
+        "#00A7C6",
+        "#18D8D8",
+        "#A9D794",
+        "#46AF78",
+        "#A93F55",
+        "#8C5E58",
+        "#2176FF",
+        "#33A1FD",
+        "#7A918D",
+        "#BAFF29"
+      ],
+      xaxis: {
+        type: "category",
+        categories: [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      },
+      title: {
+        text: ""
+      },
+      grid: {
+        padding: {
+          right: 20
+        }
+      }
+    };
     this.route.paramMap.subscribe(params => {
       this.id = params.get('id');
     });
     this.getOrderInfo();
     this.getOrderJob();
     this.getShimpmentInfo();
+  }
+
+  public generateData(count, yrange) {
+    var i = 0;
+    var series = [];
+    while (i < count) {
+      var y =
+        Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+
+      series.push(y);
+      i++;
+    }
+    return series;
   }
 
   getOrderInfo() {
@@ -372,7 +509,10 @@ export class OrderDetailsComponent implements OnInit {
   getToolTipData(isbn) {
     return this.dataJobArray.find(x => x.ISBNPartNo === isbn).Title;
   }
-  hafsa() {
-    console.log('hafsa calling')
+
+  tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
+    if (tabChangeEvent.index == 1 || tabChangeEvent.index == 3) {
+      this.showFiller = !this.showFiller
+    }
   }
 }

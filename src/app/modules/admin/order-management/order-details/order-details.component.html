@@ -414,7 +414,7 @@
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumnsJob"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumnsJob" (click)="drawer.toggle(); hafsa()">
+            <mat-row *matRowDef="let row; columns: displayedColumnsJob" (click)="drawer.toggle()">
             </mat-row>
 
             <tr class="mat-row" *matNoDataRow>
@@ -425,9 +425,11 @@
           </mat-table>
 
           <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
           <!--mat-drawer-->
           <mat-drawer-container class="example-container" autosize>
-            <mat-drawer #drawer class="example-sidenav" mode="side" position="end">
+            <mat-drawer #drawer mode="side" position="end"
+              [ngClass]="{'scssClassName': showFiller==false,'example-sidenav':showFiller==true}">
               <div class="card card-custom example example-compact gutter-b">
                 <div class="card-header pr-0" style="padding-top: 10px">
                   <div class="row full-width">
@@ -445,246 +447,251 @@
                   </div>
                 </div>
                 <div class="card-body">
-                  <mat-tab-group>
+                  <mat-tab-group (selectedTabChange)="tabChanged($event)">
                     <mat-tab label="Jobs">
-                      <mat-table #table [dataSource]="dataSourceJobInfo" class="orders-job-info-table-card">
-                        <ng-container matColumnDef="custPoNo">
-                          <mat-header-cell *matHeaderCellDef>Customer PO No.</mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            {{ element.custPoNo }}
-                          </mat-cell>
-                        </ng-container>
+                      <ng-container>
+                        <mat-table #table [dataSource]="dataSourceJobInfo" class="orders-job-info-table-card">
+                          <ng-container matColumnDef="custPoNo">
+                            <mat-header-cell *matHeaderCellDef>Customer PO No.</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              {{ element.custPoNo }}
+                            </mat-cell>
+                          </ng-container>
 
-                        <ng-container matColumnDef="jobNo">
-                          <mat-header-cell *matHeaderCellDef>Job No
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            {{ element.jobNo }}
-                          </mat-cell>
-                        </ng-container>
+                          <ng-container matColumnDef="jobNo">
+                            <mat-header-cell *matHeaderCellDef>Job No
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              {{ element.jobNo }}
+                            </mat-cell>
+                          </ng-container>
 
-                        <ng-container matColumnDef="jobType">
-                          <mat-header-cell *matHeaderCellDef>
-                            Job Type</mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            {{ element.jobType }}
-                          </mat-cell>
-                        </ng-container>
+                          <ng-container matColumnDef="jobType">
+                            <mat-header-cell *matHeaderCellDef>
+                              Job Type</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              {{ element.jobType }}
+                            </mat-cell>
+                          </ng-container>
 
-                        <ng-container matColumnDef="orderDate">
-                          <mat-header-cell *matHeaderCellDef>
-                            Order Date
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            {{ element.orderDate | date: "shortDate" }}
-                          </mat-cell>
-                        </ng-container>
+                          <ng-container matColumnDef="orderDate">
+                            <mat-header-cell *matHeaderCellDef>
+                              Order Date
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              {{ element.orderDate | date: "shortDate" }}
+                            </mat-cell>
+                          </ng-container>
 
-                        <ng-container matColumnDef="rdd">
-                          <mat-header-cell *matHeaderCellDef>
-                            RDD
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            {{ element.rdd | date: "shortDate" }}
-                          </mat-cell>
-                        </ng-container>
+                          <ng-container matColumnDef="rdd">
+                            <mat-header-cell *matHeaderCellDef>
+                              RDD
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              {{ element.rdd | date: "shortDate" }}
+                            </mat-cell>
+                          </ng-container>
 
-                        <ng-container matColumnDef="orderType">
-                          <mat-header-cell *matHeaderCellDef>
-                            Type</mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            <div *ngIf="element.orderType == 'Print'">
-                              <a href="javascript:;" routerLink="/admin/order-management/order-details">
-                                <img src="./assets/media/misc/ic_print.png" />
-                              </a>
-                              <span style="padding-left: 12px">Print</span>
-                            </div>
-                            <div *ngIf="element.orderType == 'Warehouse'">
-                              <a href="javascript:;" routerLink="/admin/order-management/order-details">
-                                <img src="./assets/media/misc/ic_warehouse.png" />
-                              </a>
-                              <span style="padding-left: 12px">Warehouse</span>
-                            </div>
-                          </mat-cell>
-                        </ng-container>
+                          <ng-container matColumnDef="orderType">
+                            <mat-header-cell *matHeaderCellDef>
+                              Type</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              <div *ngIf="element.orderType == 'Print'">
+                                <a href="javascript:;" routerLink="/admin/order-management/order-details">
+                                  <img src="./assets/media/misc/ic_print.png" />
+                                </a>
+                                <span style="padding-left: 12px">Print</span>
+                              </div>
+                              <div *ngIf="element.orderType == 'Warehouse'">
+                                <a href="javascript:;" routerLink="/admin/order-management/order-details">
+                                  <img src="./assets/media/misc/ic_warehouse.png" />
+                                </a>
+                                <span style="padding-left: 12px">Warehouse</span>
+                              </div>
+                            </mat-cell>
+                          </ng-container>
 
-                        <ng-container matColumnDef="orderStatus">
-                          <mat-header-cell *matHeaderCellDef>
-                            Order Status
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            <div class="status-options" *ngIf="element.orderStatus == 'Pending File Prep'">
-                              <span style="width: 100px">
-                                <span class="label label-lg label-light-orange label-inline">Pending File Prep</span>
-                              </span>
-                            </div>
-                            <div class="status-options" *ngIf="element.orderStatus == 'Shipped'">
-                              <span style="width: 100px">
-                                <span class="label label-lg label-light-green label-inline">Shipped</span>
-                              </span>
-                            </div>
-                            <div class="status-options" *ngIf="element.orderStatus == 'Planning'">
-                              <span style="width: 100px">
-                                <span class="label label-lg label-light-purple label-inline">Planning</span>
-                              </span>
-                            </div>
-                            <div class="status-options" *ngIf="element.orderStatus == 'Scheduling'">
-                              <span style="width: 100px">
-                                <span class="label label-lg label-light-blue label-inline">Scheduling</span>
-                              </span>
-                            </div>
-                          </mat-cell>
-                        </ng-container>
+                          <ng-container matColumnDef="orderStatus">
+                            <mat-header-cell *matHeaderCellDef>
+                              Order Status
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              <div class="status-options" *ngIf="element.orderStatus == 'Pending File Prep'">
+                                <span style="width: 100px">
+                                  <span class="label label-lg label-light-orange label-inline">Pending File Prep</span>
+                                </span>
+                              </div>
+                              <div class="status-options" *ngIf="element.orderStatus == 'Shipped'">
+                                <span style="width: 100px">
+                                  <span class="label label-lg label-light-green label-inline">Shipped</span>
+                                </span>
+                              </div>
+                              <div class="status-options" *ngIf="element.orderStatus == 'Planning'">
+                                <span style="width: 100px">
+                                  <span class="label label-lg label-light-purple label-inline">Planning</span>
+                                </span>
+                              </div>
+                              <div class="status-options" *ngIf="element.orderStatus == 'Scheduling'">
+                                <span style="width: 100px">
+                                  <span class="label label-lg label-light-blue label-inline">Scheduling</span>
+                                </span>
+                              </div>
+                            </mat-cell>
+                          </ng-container>
 
-                        <mat-header-row *matHeaderRowDef="displayedColumnsJobInfo">
-                        </mat-header-row>
-                        <!--  (click)="toggleExpandable(row.id)" -->
-                        <mat-row *matRowDef="let row; columns: displayedColumnsJobInfo">
-                        </mat-row>
+                          <mat-header-row *matHeaderRowDef="displayedColumnsJobInfo">
+                          </mat-header-row>
+                          <!--  (click)="toggleExpandable(row.id)" -->
+                          <mat-row *matRowDef="let row; columns: displayedColumnsJobInfo">
+                          </mat-row>
 
-                        <!-- Row shown when there is no matching data. -->
-                        <tr class="mat-row" *matNoDataRow>
-                          <td class="mat-cell text-center" colspan="8">
-                            No data matching the filter
-                          </td>
-                        </tr>
-                      </mat-table>
+                          <!-- Row shown when there is no matching data. -->
+                          <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell text-center" colspan="8">
+                              No data matching the filter
+                            </td>
+                          </tr>
+                        </mat-table>
+                      </ng-container>
                     </mat-tab>
                     <mat-tab label="Analysis">
                       <!--Time value map-->
                       <div class="row">
-                        <div class="col-lg-6">
-                          <div class="card card-custom example example-compact gutter-b order-info-card">
-                            <div class="card-header">
-                              <div class="card-title">
-                                <h3 class="card-label">Time Value Map</h3>
-                              </div>
+                        <div class="card card-custom example example-compact gutter-b order-info-card">
+                          <div class="card-header">
+                            <div class="card-title">
+                              <h3 class="card-label">Time Value Map</h3>
                             </div>
-                            <div class="card-body">
-                              <apx-chart [series]="timeLineChartOptions.series" [chart]="timeLineChartOptions.chart"
-                              [dataLabels]="timeLineChartOptions.dataLabels" [plotOptions]="timeLineChartOptions.plotOptions"
-                              [title]="timeLineChartOptions.title" [xaxis]="timeLineChartOptions.xaxis"
-                              [tooltip]="timeLineChartOptions.tooltip"></apx-chart>
-                            </div>
+                          </div>
+                          <div class="card-body">
+                            <apx-chart [series]="timeValueMapChartOptions.series"
+                              [chart]="timeValueMapChartOptions.chart"
+                              [dataLabels]="timeValueMapChartOptions.dataLabels"
+                              [plotOptions]="timeValueMapChartOptions.plotOptions"
+                              [colors]="timeValueMapChartOptions.colors" [grid]="timeValueMapChartOptions.grid"
+                              [xaxis]="timeValueMapChartOptions.xaxis" [title]="timeValueMapChartOptions.title">
+                            </apx-chart>
                           </div>
                         </div>
                       </div>
+                      <!--Value-add Process Times-->
                       <div class="row">
-                        <!--Value-add Process Times-->
-                        <div class="col-lg-6">
-                          <div class="card card-custom example example-compact gutter-b order-info-card">
-                            <div class="card-header">
-                              <div class="card-title">
-                                <h3 class="card-label">
-                                  Value-add Process Times
-                                </h3>
-                              </div>
+                        <div class="card card-custom example example-compact gutter-b order-info-card">
+                          <div class="card-header">
+                            <div class="card-title">
+                              <h3 class="card-label">
+                                Value-add Process Times
+                              </h3>
                             </div>
-                            <div class="card-body">
-                              <apx-chart [series]="timeLineChartOptions.series" [chart]="timeLineChartOptions.chart"
-                              [dataLabels]="timeLineChartOptions.dataLabels" [plotOptions]="timeLineChartOptions.plotOptions"
-                              [title]="timeLineChartOptions.title" [xaxis]="timeLineChartOptions.xaxis"
-                              [tooltip]="timeLineChartOptions.tooltip"></apx-chart>
-                            </div>
+                          </div>
+                          <div class="card-body">
+                            <apx-chart [series]="timeValueMapChartOptions.series"
+                              [chart]="timeValueMapChartOptions.chart"
+                              [dataLabels]="timeValueMapChartOptions.dataLabels"
+                              [plotOptions]="timeValueMapChartOptions.plotOptions"
+                              [colors]="timeValueMapChartOptions.colors" [grid]="timeValueMapChartOptions.grid"
+                              [xaxis]="timeValueMapChartOptions.xaxis" [title]="timeValueMapChartOptions.title">
+                            </apx-chart>
                           </div>
                         </div>
                       </div>
+                      <!--Time Value Analysis-->
                       <div class="row">
-                        <!--Time Value Analysis-->
-                        <div class="col-lg-6">
-                          <div class="card card-custom example example-compact gutter-b order-info-card">
-                            <div class="card-header">
-                              <div class="card-title">
-                                <h3 class="card-label">Time Value Analysis</h3>
-                              </div>
+                        <div class="card card-custom example example-compact gutter-b order-info-card">
+                          <div class="card-header">
+                            <div class="card-title">
+                              <h3 class="card-label">Time Value Analysis</h3>
                             </div>
-                            <div class="card-body">
-                              <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
-                                [labels]="chartOptions.labels"></apx-chart>
-                            </div>
+                          </div>
+                          <div class="card-body">
+                            <apx-chart [series]="timeValueAnalysisChartOptions.series"
+                              [chart]="timeValueAnalysisChartOptions.chart"
+                              [labels]="timeValueAnalysisChartOptions.labels"></apx-chart>
                           </div>
                         </div>
                       </div>
                     </mat-tab>
                     <mat-tab label="Activity Log">
-                      <mat-table #table [dataSource]="dataSourceActivityLog" class="orders-table">
-                        <ng-container matColumnDef="id">
-                          <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            {{ element.id }}
-                          </mat-cell>
-                        </ng-container>
+                      <ng-container>
+                        <mat-table #table [dataSource]="dataSourceActivityLog" class="orders-table">
+                          <ng-container matColumnDef="id">
+                            <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              {{ element.id }}
+                            </mat-cell>
+                          </ng-container>
 
-                        <ng-container matColumnDef="actionDate">
-                          <mat-header-cell *matHeaderCellDef>Activity Date</mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            {{ element.actionDate }}
-                          </mat-cell>
-                        </ng-container>
+                          <ng-container matColumnDef="actionDate">
+                            <mat-header-cell *matHeaderCellDef>Activity Date</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              {{ element.actionDate }}
+                            </mat-cell>
+                          </ng-container>
 
-                        <ng-container matColumnDef="actionBy">
-                          <mat-header-cell *matHeaderCellDef>Action By
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            {{ element.actionBy }}
-                          </mat-cell>
-                        </ng-container>
+                          <ng-container matColumnDef="actionBy">
+                            <mat-header-cell *matHeaderCellDef>Action By
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              {{ element.actionBy }}
+                            </mat-cell>
+                          </ng-container>
 
-                        <ng-container matColumnDef="source">
-                          <mat-header-cell *matHeaderCellDef>
-                            Source
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            {{ element.source }}
-                          </mat-cell>
-                        </ng-container>
+                          <ng-container matColumnDef="source">
+                            <mat-header-cell *matHeaderCellDef>
+                              Source
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              {{ element.source }}
+                            </mat-cell>
+                          </ng-container>
 
-                        <ng-container matColumnDef="activity">
-                          <mat-header-cell *matHeaderCellDef>
-                            Activity
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            {{ element.activity }}
-                          </mat-cell>
-                        </ng-container>
+                          <ng-container matColumnDef="activity">
+                            <mat-header-cell *matHeaderCellDef>
+                              Activity
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              {{ element.activity }}
+                            </mat-cell>
+                          </ng-container>
 
-                        <ng-container matColumnDef="status">
-                          <mat-header-cell *matHeaderCellDef>Status
-                          </mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            {{ element.status }}
-                          </mat-cell>
-                        </ng-container>
+                          <ng-container matColumnDef="status">
+                            <mat-header-cell *matHeaderCellDef>Status
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              {{ element.status }}
+                            </mat-cell>
+                          </ng-container>
 
-                        <ng-container matColumnDef="duration">
-                          <mat-header-cell *matHeaderCellDef>
-                            Duration</mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                            {{ element.duration }}
-                          </mat-cell>
-                        </ng-container>
+                          <ng-container matColumnDef="duration">
+                            <mat-header-cell *matHeaderCellDef>
+                              Duration</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              {{ element.duration }}
+                            </mat-cell>
+                          </ng-container>
 
-                        <mat-header-row *matHeaderRowDef="displayedColumnsActivityLog"></mat-header-row>
-                        <!--  (click)="toggleExpandable(row.id)" -->
-                        <mat-row *matRowDef="
+                          <mat-header-row *matHeaderRowDef="displayedColumnsActivityLog"></mat-header-row>
+                          <!--  (click)="toggleExpandable(row.id)" -->
+                          <mat-row *matRowDef="
                             let row;
                             columns: displayedColumnsActivityLog
                           ">
-                        </mat-row>
+                          </mat-row>
 
-                        <!-- Row shown when there is no matching data. -->
-                        <tr class="mat-row" *matNoDataRow>
-                          <div style="
+                          <!-- Row shown when there is no matching data. -->
+                          <tr class="mat-row" *matNoDataRow>
+                            <div style="
                               padding-left: 385px;
                               padding-right: 385px;
                               text-align: center;
                               color: rgba(0, 0, 0, 0.54);
                               font-size: 14px;
                             ">
-                            No data to show
-                          </div>
-                        </tr>
-                      </mat-table>
+                              No data to show
+                            </div>
+                          </tr>
+                        </mat-table>
+                      </ng-container>
                     </mat-tab>
                   </mat-tab-group>
                 </div>
@@ -940,7 +947,8 @@
                   </span>
                 </div>
               </div>
-              <div class="card-body" *ngIf="shouldShowShipmentDetails && rowId.Id == rowIdToExpand">
+              <div class="card-body" *ngIf="!shouldShowShipmentDetails && rowId.Id != rowIdToExpand">
+                <!-- <div class="card-body"> -->
                 <div class="row">
                   <div class="col-lg-12">
                     <span class="span-yellow material-icons pr-2">

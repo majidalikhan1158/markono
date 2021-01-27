@@ -692,7 +692,8 @@ export const NoOfColorsList = [
 export const ProductSpecStatusTypes = {
   Live: 'Live',
   InComplete: 'Incomplete',
-  Complete: 'Complete'
+  Complete: 'Complete',
+  LayoutReady: 'Layout ready'
 };
 
 export const WebCodeLocationList = [
@@ -720,6 +721,11 @@ export const StatusList = [
   {
     status: 'Live',
     message: 'Min. specs AND layout AND file specs verified AND File approved',
+    hint: ''
+  },
+  {
+    status: 'Layout ready',
+    message: '',
     hint: ''
   }
 ];

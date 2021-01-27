@@ -47,7 +47,7 @@ export class CreateProductComponent implements OnInit, OnDestroy {
       this.productSpecTooltip = status.message;
       this.statusClass = resp.status === this.statusTypes.Live
       ? `${this.baseClass} status-live`
-      : resp.status === this.statusTypes.Complete
+      : (resp.status === this.statusTypes.Complete || resp.status === this.statusTypes.Complete)
       ? `${this.baseClass} status-complete`
       : `${this.baseClass} status-incomplete`;
       this.cf.detectChanges();

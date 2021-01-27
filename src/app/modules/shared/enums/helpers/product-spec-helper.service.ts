@@ -926,6 +926,8 @@ export class ProductSpecHelperService {
     }
 
     if (errorArrays.length > 0) {
+      console.log(storeData);
+      console.log(errorArrays);
       return errorArrays;
     }
     const coverVM = storeData.coverVM;
@@ -944,28 +946,28 @@ export class ProductSpecHelperService {
 
     if (generalVM.printingType === 'POD' && coverVM && generalVM.productType.toString() !== '21') {
 
-      if (generalVM?.width ?? 0 === 0) {
+      if (generalVM?.width === 0) {
         errorArrays.push('General: Width(mm) is required field');
       }
 
-      if (generalVM?.height ?? 0 === 0) {
+      if (generalVM?.height === 0) {
         errorArrays.push('General: Height(mm) is required field');
       }
 
       const textVM = storeData.textVM;
-      if (textVM?.noOfColourExtent ?? 0 === 0) {
+      if (textVM?.noOfColourExtent === 0) {
         errorArrays.push('Text: No. of Colour Extent is required field');
       }
 
-      if (textVM?.noOfMonoExtent ?? 0 === 0) {
+      if (textVM?.noOfMonoExtent === 0) {
         errorArrays.push('Text: No. of Mono Extent is required field');
       }
 
-      if (storeData?.bindingVM?.bindingType  ?? '' === '') {
+      if (!storeData?.bindingVM?.bindingType) {
         errorArrays.push('Binding: Binding Type is required field');
       }
 
-      if ((generalVM?.isWebcodeAdded ?? false) && (storeData?.webCodeVM?.length  ?? 0 === 0)) {
+      if ((generalVM?.isWebcodeAdded) && (storeData?.webCodeVM?.length === 0)) {
         errorArrays.push('Webcode: Must add a record in Webcode Location tab');
       }
 
@@ -973,7 +975,8 @@ export class ProductSpecHelperService {
         errorArrays.push('Child ISBN: Must add a record in Child ISBN tab');
       }
     }
-
+    console.log(storeData);
+    console.log(errorArrays);
     return errorArrays;
   }
 

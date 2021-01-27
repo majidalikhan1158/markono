@@ -88,12 +88,10 @@ app-order-details {
         padding-top: 5px !important;
         margin-top: 10px !important;
     }
-    // side list
     .order-details-types .mat-list-single-selected-option {
         border-radius: 2px;
         background: #eef6fb;
     }
-
     .order-details-types .mat-list-single-selected-option .mat-list-text {
         color: #5face2;
         font-family: "Roboto-Bold";
@@ -183,5 +181,14 @@ app-order-details {
     .mat-column-ISBNPartNo {
         flex: none;
         width: 150px;
+    }
+    .example-sidenav {
+        height: 312px;
+        width: 810px;
+        position: fixed;
+        transform: translateX !important;
+        visibility: visible;
+        margin-top: 282px;
+        margin-right: 36px;
     }
 }

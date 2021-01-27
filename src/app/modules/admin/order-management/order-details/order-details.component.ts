@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulati
 import { MatSelectionListChange } from '@angular/material/list';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrderDetailTypes, OrderDetailTypesArray } from 'src/app/modules/shared/enums/order-management/order-constants';
-import { CaseDetail, JobInfoHeaderModel, OrderInfoJobType, OrderInfoStatusTypesArray, OrderJobModel, OrdersModel, OrderVM } from 'src/app/modules/shared/models/order-management';
+import { ActivityLogModel, CaseDetail, JobInfoHeaderModel, OrderInfoJobType, OrderInfoStatusTypesArray, OrderJobModel, OrdersModel, OrderVM } from 'src/app/modules/shared/models/order-management';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { FormControl } from '@angular/forms';
 import { CreateCaseMode } from 'src/app/modules/shared/enums/app-enums';
@@ -13,8 +13,21 @@ import { OrderService } from 'src/app/modules/services/core/services/order.servi
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { AppPageRoutes } from '../../../shared/enums/app-constants';
+import { ChartComponent } from "ng-apexcharts";
+import { ApexNonAxisChartSeries, ApexResponsive, ApexChart } from "ng-apexcharts";
+
+export type ChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  responsive: ApexResponsive[];
+  labels: any;
+};
+
 const JobInfoHeader_DATA: JobInfoHeaderModel[] = [
   { id: 1, custPoNo: '20005838', jobNo: '968052', orderDate: Date.now(), rdd: Date.now(), jobType: 'Offset', orderType: 'Warehouse', orderStatus: 'Shipped' },
+];
+const ActivityLog_DATA: ActivityLogModel[] = [
+  { id: 1, actionDate: Date.now(), actionBy: '9780124059351', source: '50,120', activity: 'Offset', status: 'Shipped', duration: '' },
 ];
 @Component({
   selector: 'app-order-details',
@@ -24,6 +37,8 @@ const JobInfoHeader_DATA: JobInfoHeaderModel[] = [
 })
 export class OrderDetailsComponent implements OnInit {
   //#region declaration 
+  @ViewChild("chart") chart: ChartComponent;
+  public chartOptions: Partial<ChartOptions>;
   displayedColumnsJobInfo: string[] = [
     'custPoNo',
     'jobNo',
@@ -70,7 +85,17 @@ export class OrderDetailsComponent implements OnInit {
   shouldShowShipmentDetails = false;
   dataSourceJobInfo;
   dataArrayJobInfo = JobInfoHeader_DATA;
-
+  dataArrayActivityLog = ActivityLog_DATA;
+  dataSourceActivityLog;
+  displayedColumnsActivityLog: string[] = [
+    'id',
+    'actionDate',
+    'actionBy',
+    'source',
+    'duration',
+    'activity',
+    'status',
+  ];
   //#endregion
 
   constructor(private router: Router,
@@ -78,10 +103,33 @@ export class OrderDetailsComponent implements OnInit {
     private orderService: OrderService,
     private cd: ChangeDetectorRef) {
     this.dataSourceJobInfo = new MatTableDataSource<JobInfoHeaderModel>(this.dataArrayJobInfo);
-
+    this.dataSourceActivityLog = new MatTableDataSource<ActivityLogModel>(this.dataArrayActivityLog);
   }
 
   ngOnInit(): void {
+    this.chartOptions = {
+      series: [44, 55, 13],
+      chart: {
+        type: "donut"
+      },
+      labels: ["Lorem", "Ipsum", "Dolor"],
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            dataLabels: {
+              enabled: false,
+            },
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      ]
+    };
     this.route.paramMap.subscribe(params => {
       this.id = params.get('id');
     });

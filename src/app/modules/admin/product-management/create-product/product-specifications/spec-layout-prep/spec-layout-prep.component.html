@@ -318,7 +318,8 @@
 </div>
 
 
-<app-modal id="ADD_PRODUCTION_ACTIVITIES_MODAL" size="modal-md">
-    <app-add-production-activity-modal (acceptEvent)="handleAddProductionActivityModalEvent($event)">
+<app-modal id="ADD_PRODUCTION_ACTIVITIES_MODAL" size="modal-md" *ngIf="showAddProductionActivityModal">
+    <app-add-production-activity-modal (acceptEvent)="handleAddProductionActivityModalEvent($event)" 
+    [componentBreakDownList]="layoutPrepVM?.ComponentsBreakdown">
     </app-add-production-activity-modal>
 </app-modal>

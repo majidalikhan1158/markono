@@ -131,7 +131,6 @@ export interface GetPaperResponse {
     // selected: boolean;
 }
 
-
 export interface ImpositionLayoutObject {
     [key: string]: ImpositionLayout[];
   }
@@ -139,3 +138,22 @@ export interface ImpositionLayoutObject {
 export interface PaperListObject {
     [key: string]: GetPaperResponse[];
   }
+
+export interface ActivitySettings {
+    id: string;
+    processCode: string;
+    description: string;
+    dept: string;
+    listOfUnits: boolean;
+    paperType: string;
+    tieComponentsBreakdown: boolean;
+    sorting: number;
+    remark: string;
+    processItemType: string;
+    createdBy: string;
+    createdDateTime: Date;
+    updatedBy: string;
+    updatedDateTime: Date;
+    hide: boolean;
+    defaultActivity: string;
+}

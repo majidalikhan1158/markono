@@ -10,17 +10,15 @@
       <div class="col-lg-6 pl-0">
         <mat-form-field appearance="fill">
           <mat-label>Component Id</mat-label>
-          <mat-select [(ngModel)]="productionActivityVM.ComponentBreakdownSNo">
-              <mat-option value="1">1</mat-option>
-              <mat-option value="2">2</mat-option>
-              <mat-option value="3">3</mat-option>
+          <mat-select [(ngModel)]="productionActivityVM.ComponentBreakdownSNo" (selectionChange)="handleComponentTypeChange()">
+              <mat-option [value]="item.Id" *ngFor="let item of componentBreakDownList"> {{item.SNo}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
       <div class="col-lg-6 pl-0">
           <mat-form-field appearance="fill">
               <mat-label>Type</mat-label>
-              <input matInput [(ngModel)]="productionActivityVM.Type">
+              <input matInput [(ngModel)]="productionActivityVM.Type" readonly="true">
           </mat-form-field>
       </div>
     </div>
@@ -28,13 +26,13 @@
       <div class="col-lg-6 pl-0">
         <mat-form-field appearance="fill">
             <mat-label>Qty</mat-label>
-            <input matInput type="number" min="0" [(ngModel)]="productionActivityVM.Qty">
+            <input matInput type="number" min="0" [(ngModel)]="productionActivityVM.Qty" readonly="true">
         </mat-form-field>
       </div>
       <div class="col-lg-6 pl-0">
           <mat-form-field appearance="fill">
               <mat-label>Layout</mat-label>
-              <input matInput [(ngModel)]="productionActivityVM.Layout">
+              <input matInput [(ngModel)]="productionActivityVM.Layout" readonly="true">
           </mat-form-field>
       </div>
     </div>
@@ -42,22 +40,15 @@
       <div class="col-lg-6 pl-0">
         <mat-form-field appearance="fill">
           <mat-label>Activity</mat-label>
-          <mat-select [(ngModel)]="productionActivityVM.Activity">
-              <mat-option value="4 Color Press">4 Color Press</mat-option>
-              <mat-option value="5 Color Press">5 Color Press</mat-option>
-              <mat-option value="8 Color Press">8 Color Press</mat-option>
-              <mat-option value="Mono Press">Mono Press</mat-option>
-              <mat-option value="Digital (std)">Digital (std)</mat-option>
-              <mat-option value="Digital (Enhance)">Digital (Enhance)</mat-option>
-              <mat-option value="Digital (Premium)">Digital (Premium)</mat-option>
-
+          <mat-select [(ngModel)]="productionActivityVM.Activity" (selectionChange)="handleActivityChange()">
+              <mat-option [value]="item.id" *ngFor="let item of activitySettingList">{{item.description}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
       <div class="col-lg-6 pl-0">
         <mat-form-field appearance="fill">
             <mat-label>Dept</mat-label>
-            <input matInput [(ngModel)]="productionActivityVM.Dept">
+            <input matInput [(ngModel)]="productionActivityVM.Dept" readonly="true">
         </mat-form-field>
       </div>
     </div>
@@ -65,7 +56,7 @@
       <div class="col-lg-6 pl-0">
         <mat-form-field appearance="fill">
             <mat-label>Process Code</mat-label>
-            <input matInput [(ngModel)]="productionActivityVM.ProcessCode">
+            <input matInput [(ngModel)]="productionActivityVM.ProcessCode" readonly="true">
         </mat-form-field>
       </div>
     </div>

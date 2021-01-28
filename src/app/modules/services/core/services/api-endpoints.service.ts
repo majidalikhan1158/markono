@@ -99,7 +99,7 @@ export class ApiEndpointsService {
   getFileCheckUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getFileCheck}`
 
-  //order-managemnt-module
+  // order-managemnt-module
   getAllOrders = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.order.getAllOrders}`
 
@@ -123,4 +123,7 @@ export class ApiEndpointsService {
 
   getCreateLayoutPrepUrl = () =>
     `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getCreateLayoutPrep}`
+
+  getActivitySettingsNotUnitOfListUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getActivitySettingsNotUnitOfList}`
 }

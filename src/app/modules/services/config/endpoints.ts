@@ -37,7 +37,8 @@ export const Endpoints = {
         getImpositionLayout: 'GetImpositionLayout',
         getEstimation: 'GetEstimations',
         getCalculatePaper: 'CalculatePaper',
-        getCreateLayoutPrep: 'CreateLayout'
+        getCreateLayoutPrep: 'CreateLayout',
+        getActivitySettingsNotUnitOfList: 'GetActivitySettingsNotUnitOfList'
     },
     shopFloor: {
         getMachinesList: 'machines?filter[active]=true&filter[sdcFlag]=true&sort=seq'

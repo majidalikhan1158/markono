@@ -14,7 +14,7 @@ import { GetPaperRequest, LayoutPrepVM } from 'src/app/modules/shared/models/est
   providedIn: 'root',
 })
 export class ProductService {
-
+ 
   constructor(
     private http: ApiHttpService,
     private endPoint: ApiEndpointsService,
@@ -202,5 +202,10 @@ export class ProductService {
   createLayoutPrep = (reqObj: any) => {
     const url = this.endPoint.getCreateLayoutPrepUrl();
     return this.http.post(url, reqObj);
+  }
+
+  getActivitySettingsNotUnitOfList = (): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getActivitySettingsNotUnitOfListUrl();
+    return this.http.get(url);
   }
 }

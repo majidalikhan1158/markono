@@ -87,7 +87,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   layoutPrepCallIsInProgress = false;
   productSpec: ProductSpecStoreVM;
   shouldShowLoader = false;
-
+  showAddProductionActivityModal = false;
   ngOnInit(): void {
     this.checkLayoutPrepData();
   }
@@ -148,7 +148,11 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
 
   getImpositionLayout = (componentType: string, layoutName: string) => {
     layoutName = layoutName ?? '';
-    this.subscription = this.productService.getImpositionLayout(componentType).subscribe(resp => {
+    const apiComponentType =
+      (componentType === LayoutPrepComponentTypes.Cover || componentType === LayoutPrepComponentTypes.Jacket)
+      ? LayoutPrepComponentTypes.Cover
+      : LayoutPrepComponentTypes.Text;
+    this.subscription = this.productService.getImpositionLayout(apiComponentType).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
         this.impositionListObjectsKey[componentType] = resp.body.result as ImpositionLayout[];
       } else {
@@ -245,15 +249,17 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   }
 
   openAddProductionActivityModal = () => {
+    this.showAddProductionActivityModal = true;
     this.modalService.open(UIModalID.ADD_PRODUCTION_ACTIVITIES_MODAL);
   }
 
   handleAddProductionActivityModalEvent = (event: ProductionActivities) => {
-    this.modalService.close(UIModalID.ADD_PRODUCTION_ACTIVITIES_MODAL);
     if (!this.layoutPrepVM.ProductionActivity) {
       this.layoutPrepVM.ProductionActivity = [];
     }
     this.layoutPrepVM.ProductionActivity.push(event);
+    this.modalService.close(UIModalID.ADD_PRODUCTION_ACTIVITIES_MODAL);
+    this.showAddProductionActivityModal = false;
   }
 
   addLayoutPrepDropdownsKey = (key: string, layoutName: string = '', paper: string= '') => {
@@ -262,7 +268,6 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
     }
     this.impositionListObjectsKey.key = [{componentType: key, layoutName}];
     this.paperListObjectsKey.key = [{paperNo: paper, itemType: key }];
-    // this.paperListObjectsKey.key = [{paperNo: ((paper && paper !== '') ? paper : 'There is no data'), itemType: key}];
   }
 
   showDetails = (rowId) => {

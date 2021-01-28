@@ -29,26 +29,11 @@
                     </thead>
                     <tbody>
                         <tr class="outer-row" *ngFor="let row of layoutPrepVM?.Components">
-                            <ng-container>
-                                {{getPaperList(row.ComponentType)}}
-                            </ng-container>
-                            <td>{{row.ComponentType}}</td>
+                            <td>{{row.ComponentType === componentTypes.None ? '' : row.ComponentType }}</td>
                             <td>
                                 <mat-form-field appearance="fill" class="width-100">
-                                    <mat-select [(ngModel)]="row.ImpositionLayout" *ngIf="row.ComponentType === componentTypes.Text || row.ComponentType === componentTypes.None">
-                                        <mat-option *ngFor="let item of textImpositionLayoutList" [value]="item.layoutName">
-                                            {{item.layoutName}}</mat-option>
-                                    </mat-select>
-                                    <mat-select [(ngModel)]="row.ImpositionLayout" *ngIf="row.ComponentType === componentTypes.Cover">
-                                        <mat-option *ngFor="let item of coverImpositionLayoutList" [value]="item.layoutName">
-                                            {{item.layoutName}}</mat-option>
-                                    </mat-select>
-                                    <mat-select [(ngModel)]="row.ImpositionLayout" *ngIf="row.ComponentType === componentTypes.Insert">
-                                        <mat-option *ngFor="let item of coverImpositionLayoutList" [value]="item.layoutName">
-                                            {{item.layoutName}}</mat-option>
-                                    </mat-select>
-                                    <mat-select [(ngModel)]="row.ImpositionLayout" *ngIf="row.ComponentType === componentTypes.EndPaper">
-                                        <mat-option *ngFor="let item of endPaperImpositionLayoutList" [value]="item.layoutName">
+                                    <mat-select [(ngModel)]="row.ImpositionLayout">
+                                        <mat-option *ngFor="let item of impositionListObjectsKey[row.ComponentType]" [value]="item.layoutName">
                                             {{item.layoutName}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -72,27 +57,17 @@
                                 </mat-form-field>
                             </td>
                             <td>
-                                <mat-form-field appearance="fill" style="top: 6px !important">
+                                <mat-form-field appearance="fill" style="top: 6px !important" >
                                     <mat-select [(ngModel)]="row.Paper">
-                                        <ng-container *ngIf="row.ComponentType === componentTypes.Cover">
-                                            <mat-option *ngFor="let item of paperListObjects.CoverPaperList"
+                                        <ng-container *ngIf="row.Paper">
+                                            <mat-option *ngFor="let item of paperListObjectsKey[row.ComponentType]"
                                             [value]="item.paperNo"> {{item.paperNo}} </mat-option>
                                         </ng-container>
-                                        <ng-container *ngIf="row.ComponentType === componentTypes.Text">
-                                            <mat-option *ngFor="let item of paperListObjects.TextPaperList"
-                                            [value]="item.paperNo"> {{item.paperNo}} </mat-option>
+                                        <ng-container *ngIf="!row.Paper">
+                                            <mat-option *ngFor="let item of paperListObjectsKey[row.ComponentType]"
+                                            value=""> {{item.paperNo}} </mat-option>
                                         </ng-container>
-                                        <ng-container *ngIf="row.ComponentType === componentTypes.Insert">
-                                            <mat-option *ngFor="let item of paperListObjects.InsertPaperList"
-                                            [value]="item.paperNo"> {{item.paperNo}} </mat-option>
-                                        </ng-container>
-                                        <ng-container *ngIf="row.ComponentType === componentTypes.EndPaper">
-                                            <mat-option *ngFor="let item of paperListObjects.EndpaperPaperList"
-                                            [value]="item.paperNo"> {{item.paperNo}} </mat-option>
-                                        </ng-container>
-                                        <ng-container *ngIf="row.ComponentType === componentTypes.None">
-                                            <mat-option value=""> There is no data </mat-option>
-                                        </ng-container>
+                                       
                                     </mat-select>
                                 </mat-form-field>
                             </td>
@@ -214,7 +189,7 @@
                                 <td> ${{row.UnitCost}} </td>
                                 <td> ${{row.NewUnitCost}} </td>
                                 <td> ${{row.TotalEstCost}} </td>
-                                <td> --- </td>
+                                <td> 2.86% </td>
                                 <td class="action-column pb-0">
                                     <span class="material-icons expansion-icon" (click)="showDetails(i)">
                                         {{

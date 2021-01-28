@@ -1,4 +1,5 @@
 import { ChildIsbnModal, ProductVersions } from '../../services/shared/classes/product-modals/product-modals';
+import { GetPaperResponse, ImpositionLayout } from './estimation';
 export interface ProductSpecListVM {
   id: number;
   isbn: string;

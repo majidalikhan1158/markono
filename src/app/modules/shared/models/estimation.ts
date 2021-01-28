@@ -99,13 +99,13 @@ export interface ProductionActivities {
 
 export interface ImpositionLayout {
     componentType: string;
-    createdBy: string;
-    createdDateTime: Date;
-    deleted: boolean;
-    id: number;
+    // createdBy: string;
+    // createdDateTime: Date;
+    // deleted: boolean;
+    // id: number;
     layoutName: string;
-    updatedBy: string;
-    updatedDateTime: Date;
+    // updatedBy: string;
+    // updatedDateTime: Date;
 }
 
 export interface GetPaperRequest {
@@ -118,28 +118,24 @@ export interface GetPaperRequest {
 }
 
 export interface GetPaperResponse {
-    weight: string;
-    paperMaterial: string;
-    paperBrand: string;
-    paperDepth: number;
-    paperWidth: number;
+    // weight: string;
+    // paperMaterial: string;
+    // paperBrand: string;
+    // paperDepth: number;
+    // paperWidth: number;
     paperNo: string;
     itemType: string;
-    micron: string;
-    grainDirection: string;
-    totalLose: number;
-    selected: boolean;
+    // micron: string;
+    // grainDirection: string;
+    // totalLose: number;
+    // selected: boolean;
 }
 
-export interface PaperListObjects {
-    TextPaperList: GetPaperResponse[];
-    CoverPaperList: GetPaperResponse[];
-    NonePaperList: GetPaperResponse[];
-    InsertPaperList: GetPaperResponse[];
-    EndpaperPaperList: GetPaperResponse[];
-    TextPaperListCallDone: boolean;
-    CoverPaperListCallDone: boolean;
-    NonePaperListCallDone: boolean;
-    InsertPaperListCallDone: boolean;
-    EndpaperPaperListCallDone: boolean;
-}
+
+export interface ImpositionLayoutObject {
+    [key: string]: ImpositionLayout[];
+  }
+
+export interface PaperListObject {
+    [key: string]: GetPaperResponse[];
+  }

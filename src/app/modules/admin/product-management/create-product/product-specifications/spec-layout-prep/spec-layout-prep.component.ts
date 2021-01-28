@@ -9,7 +9,7 @@ import { ProductSpecStore } from '../../../../../shared/ui-services/product-spec
 import { SnackBarService } from '../../../../../shared/ui-services/snack-bar.service';
 import { ProductSpecHelperService } from '../../../../../shared/enums/helpers/product-spec-helper.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { GetPaperRequest, ImpositionLayout, LayoutPrepVM, PaperListObjects } from 'src/app/modules/shared/models/estimation';
+import { GetPaperRequest, ImpositionLayout, ImpositionLayoutObject, LayoutPrepVM, PaperListObject } from 'src/app/modules/shared/models/estimation';
 import { ProductSpecStoreVM } from '../../../../../shared/models/product-spec';
 import { Subscription } from 'rxjs';
 import { ModalService } from '../../../../../shared/ui-services/modal.service';
@@ -32,12 +32,14 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
               private modalService: ModalService) { }
 
   layoutPrepVM: LayoutPrepVM;
-  paperListObjects: PaperListObjects = this.getInitialPaperListObject();
+ // paperListObjects: PaperListObjects = this.getInitialPaperListObject();
   textImpositionLayoutList: ImpositionLayout[] = [];
   coverImpositionLayoutList: ImpositionLayout[] = [];
   insertImpositionLayoutList: ImpositionLayout[] = [];
   endPaperImpositionLayoutList: ImpositionLayout[] = [];
   componentTypes = LayoutPrepComponentTypes;
+  impositionListObjectsKey: ImpositionLayoutObject = {};
+  paperListObjectsKey: PaperListObject = {};
   columnsToDisplayCompTable = [
     'Component Type',
     'Imposition Layout',
@@ -87,12 +89,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   shouldShowLoader = false;
 
   ngOnInit(): void {
-    this.getImpositionLayout(LayoutPrepComponentTypes.Cover);
-    this.getImpositionLayout(LayoutPrepComponentTypes.Text);
-    this.getImpositionLayout(LayoutPrepComponentTypes.Insert);
-    this.getImpositionLayout(LayoutPrepComponentTypes.EndPaper);
-    this.checkLayoutPrepData(); // uncomment this after testing and removed this.getLayoutPrepApiData('', '');
-    // this.getLayoutPrepApiData('', '');
+    this.checkLayoutPrepData();
   }
 
   checkLayoutPrepData = () => {
@@ -105,16 +102,11 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
           this.getLayoutPrepApiData(generalVM.productNumber, generalVM.versionNo);
         }
       }
-      // else {
-      //   this.snack.open('ISBN / Version must be selected');
-      // }
     });
   }
 
   getLayoutPrepApiData(productNumber: string, versionNo: string) {
     this.shouldShowLoader = true;
-    // productNumber = 'hht11111111';
-    // versionNo = 'V00001';
     const reqObj = {
       productNumber,
       versionNo
@@ -131,8 +123,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
         .sort((a, b) => this.helper.minus(a.SNo  as any as number, b.SNo as any as number));
         this.layoutPrepVM.ProductionActivity = this.layoutPrepVM.ProductionActivity
         .sort((a, b) => this.helper.minus(a.SNo as any as number, b.SNo as any as number));
-        this.shouldShowLoader = false;
-        console.log(this.layoutPrepVM);
+        this.getDropDownsData();
       } else {
         this.shouldShowLoader = false;
         this.snack.open(`No record found against ISBN: ${productNumber} and Version No: ${versionNo}`);
@@ -144,77 +135,48 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
     });
   }
 
-  showDetails = (rowId) => {
-    if (this.rowIdToExpand === rowId) {
-      this.rowIdToExpand = 0;
-      this.shouldShowDetails = !this.shouldShowDetails;
-    } else {
-      this.rowIdToExpand = rowId;
-      this.shouldShowDetails = true;
-    }
-  }
-
-  getImpositionLayout = (componentType: string) => {
-    this.subscription = this.productService.getImpositionLayout(componentType).subscribe(resp => {
-      if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
-        if (componentType === LayoutPrepComponentTypes.Text) {
-          this.textImpositionLayoutList = resp.body.result as ImpositionLayout[];
-        } else if (componentType === LayoutPrepComponentTypes.Cover) {
-          this.coverImpositionLayoutList = resp.body.result as ImpositionLayout[];
-        } else if (componentType === LayoutPrepComponentTypes.Insert) {
-          this.insertImpositionLayoutList = resp.body.result as ImpositionLayout[];
-        } else if (componentType === LayoutPrepComponentTypes.EndPaper) {
-          this.endPaperImpositionLayoutList = resp.body.result as ImpositionLayout[];
-        }
-      } else {
-        if (componentType === LayoutPrepComponentTypes.Text) {
-          this.textImpositionLayoutList = [];
-        } else if (componentType === LayoutPrepComponentTypes.Cover) {
-          this.coverImpositionLayoutList = [];
-        } else if (componentType === LayoutPrepComponentTypes.Insert) {
-          this.insertImpositionLayoutList = [];
-        } else if (componentType === LayoutPrepComponentTypes.EndPaper) {
-          this.endPaperImpositionLayoutList = [];
-        }
+  getDropDownsData = () => {
+    this.layoutPrepVM.Components.forEach(item => {
+      if (!item.ComponentType) {
+        item.ComponentType = LayoutPrepComponentTypes.None;
       }
+      this.addLayoutPrepDropdownsKey(item.ComponentType, item.ImpositionLayout, item.Paper);
+      this.getImpositionLayout(item.ComponentType, item.ImpositionLayout);
+      this.getPaperList(item.ComponentType, item.Paper);
     });
   }
 
-  getInitialPaperListObject(): PaperListObjects {
-    return {
-      CoverPaperList: [],
-      TextPaperList: [],
-      NonePaperList: [],
-      InsertPaperList: [],
-      EndpaperPaperList: [],
-      CoverPaperListCallDone: false,
-      TextPaperListCallDone: false,
-      NonePaperListCallDone: false,
-      InsertPaperListCallDone: false,
-      EndpaperPaperListCallDone: false,
-    };
+  getImpositionLayout = (componentType: string, layoutName: string) => {
+    layoutName = layoutName ?? '';
+    this.subscription = this.productService.getImpositionLayout(componentType).subscribe(resp => {
+      if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
+        this.impositionListObjectsKey[componentType] = resp.body.result as ImpositionLayout[];
+      } else {
+        this.impositionListObjectsKey[componentType] = [{componentType, layoutName}];
+      }
+    }, (error: HttpErrorResponse) => {
+      this.impositionListObjectsKey[componentType] = [{componentType, layoutName}];
+    });
   }
 
-  getPaperList = (componentType: string) => {
-    if (!this.shouldCallApi(componentType)) {
-      return ;
-    }
-    this.setPaperList(componentType, []);
+  getPaperList = (componentType: string, paper: string) => {
     const reqObj = this.getPaperRequestData(componentType);
 
     if (!reqObj) {
-      this.setPaperList(componentType, []);
+      return;
     }
+
     this.subscription = this.productService.getPaperList(reqObj).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.length > 0 && typeof(resp.body.result) !== 'string') {
         const list = resp.body.result as GetPaperResponse[];
-        this.setPaperList(componentType, list);
+        this.paperListObjectsKey[componentType] = list;
       } else {
-        this.setPaperList(componentType, []);
+        this.paperListObjectsKey[componentType] = 
+        [{paperNo: (paper !== '' && paper) ? paper : 'There is no data', itemType: componentType}];
       }
       this.ref.detectChanges();
     }, (err: HttpErrorResponse) => {
-      this.setPaperList(componentType, []);
+      this.paperListObjectsKey[componentType] = [{paperNo: paper, itemType: componentType}];
       this.ref.detectChanges();
     });
   }
@@ -282,39 +244,6 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
     };
   }
 
-  setPaperList(componentType: string, list: GetPaperResponse[]) {
-    if (componentType === LayoutPrepComponentTypes.Cover) {
-      this.paperListObjects.CoverPaperList = list;
-      this.paperListObjects.CoverPaperListCallDone = true;
-    } else if (componentType === LayoutPrepComponentTypes.Text) {
-      this.paperListObjects.TextPaperList = list;
-      this.paperListObjects.TextPaperListCallDone = true;
-    } else if (componentType === LayoutPrepComponentTypes.None) {
-      this.paperListObjects.NonePaperList = list;
-      this.paperListObjects.NonePaperListCallDone = true;
-    } else if (componentType === LayoutPrepComponentTypes.Insert) {
-      this.paperListObjects.InsertPaperList = list;
-      this.paperListObjects.InsertPaperListCallDone = true;
-    }  else if (componentType === LayoutPrepComponentTypes.EndPaper) {
-      this.paperListObjects.EndpaperPaperList = list;
-      this.paperListObjects.EndpaperPaperListCallDone = true;
-    }
-  }
-
-  shouldCallApi(componentType: string) {
-    if (componentType === LayoutPrepComponentTypes.Cover) {
-      return this.paperListObjects.CoverPaperList.length === 0 && !this.paperListObjects.CoverPaperListCallDone ;
-    } else if (componentType === LayoutPrepComponentTypes.Text) {
-      return this.paperListObjects.TextPaperList.length === 0 && !this.paperListObjects.TextPaperListCallDone ;
-    } else if (componentType === LayoutPrepComponentTypes.None) {
-      return this.paperListObjects.NonePaperList.length === 0 && !this.paperListObjects.NonePaperListCallDone ;
-    } else if (componentType === LayoutPrepComponentTypes.Insert) {
-      return this.paperListObjects.InsertPaperList.length === 0 && !this.paperListObjects.InsertPaperListCallDone ;
-    } else if (componentType === LayoutPrepComponentTypes.EndPaper) {
-      return this.paperListObjects.EndpaperPaperList.length === 0 && !this.paperListObjects.EndpaperPaperListCallDone ;
-    }
-  }
-
   openAddProductionActivityModal = () => {
     this.modalService.open(UIModalID.ADD_PRODUCTION_ACTIVITIES_MODAL);
   }
@@ -325,6 +254,25 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
       this.layoutPrepVM.ProductionActivity = [];
     }
     this.layoutPrepVM.ProductionActivity.push(event);
+  }
+
+  addLayoutPrepDropdownsKey = (key: string, layoutName: string = '', paper: string= '') => {
+    if (!key) {
+      key = LayoutPrepComponentTypes.None;
+    }
+    this.impositionListObjectsKey.key = [{componentType: key, layoutName}];
+    this.paperListObjectsKey.key = [{paperNo: paper, itemType: key }];
+    // this.paperListObjectsKey.key = [{paperNo: ((paper && paper !== '') ? paper : 'There is no data'), itemType: key}];
+  }
+
+  showDetails = (rowId) => {
+    if (this.rowIdToExpand === rowId) {
+      this.rowIdToExpand = 0;
+      this.shouldShowDetails = !this.shouldShowDetails;
+    } else {
+      this.rowIdToExpand = rowId;
+      this.shouldShowDetails = true;
+    }
   }
 
   ngOnDestroy(): void {

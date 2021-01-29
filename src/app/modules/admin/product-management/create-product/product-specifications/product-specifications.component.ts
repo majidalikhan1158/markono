@@ -264,14 +264,18 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
         if (response && response.body && response.body.result) {
           const result = response.body.result;
           if (result?.failureCount > 0) {
-            this.snack.open(result?.title);
-          } else if (result?.errors) {
-            const errors = result?.errors;
-            const entries = Object.entries(errors);
-            entries.forEach(error => {
-              const message = `Field: ${error[0]}, Message: ${error[1]}`;
-              this.snack.open(message, '', 'top', 5000, 'center');
-            });
+            if (result?.error?.length > 0) {
+              this.snack.open(result?.error.join('.\n'));
+            } else if (result?.errors) {
+              const errors = result?.errors;
+              const entries = Object.entries(errors);
+              entries.forEach(error => {
+                const message = `Field: ${error[0]}, Message: ${error[1]}`;
+                this.snack.open(message, '', 'top', 5000, 'center');
+              });
+            } else {
+              this.snack.open(result?.title ?? 'Unable to save record');
+            }
           } else {
             this.handleVersionSelection(result.customMessage);
             this.createLayoutPrep(result);

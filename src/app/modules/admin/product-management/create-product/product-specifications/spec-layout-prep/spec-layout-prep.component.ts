@@ -13,7 +13,7 @@ import { GetPaperRequest, ImpositionLayout, ImpositionLayoutObject, LayoutPrepVM
 import { ProductSpecStoreVM } from '../../../../../shared/models/product-spec';
 import { Subscription } from 'rxjs';
 import { ModalService } from '../../../../../shared/ui-services/modal.service';
-import { ProductionActivities, GetPaperResponse } from '../../../../../shared/models/estimation';
+import { ProductionActivities, GetPaperResponse, ImpositionInputs } from '../../../../../shared/models/estimation';
 
 @Component({
   selector: 'app-spec-layout-prep',
@@ -176,13 +176,17 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
         this.paperListObjectsKey[componentType] = list;
       } else {
         this.paperListObjectsKey[componentType] = 
-        [{paperNo: (paper !== '' && paper) ? paper : 'There is no data', itemType: componentType}];
+        [{paperNo: this.getPaperNo(paper), itemType: componentType}];
       }
       this.ref.detectChanges();
     }, (err: HttpErrorResponse) => {
-      this.paperListObjectsKey[componentType] = [{paperNo: paper, itemType: componentType}];
+      this.paperListObjectsKey[componentType] = [{paperNo: this.getPaperNo(paper), itemType: componentType}];
       this.ref.detectChanges();
     });
+  }
+
+  getPaperNo = (paper: string) => {
+    return (paper !== '' && paper) ? paper : 'There is no data';
   }
 
   getPaperRequestData = (componentType: string) => {
@@ -195,13 +199,21 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
     : this.getTextData();
 
     return {
-      GrainDirection: componentObj.GrainDirection?.toString().toUpperCase().startsWith('T') ? 'True' : 'False',
+      GrainDirection: this.getGrainDirection(componentType, componentObj),
       PaperDepth: componentObj.CuttingSizeDepth,
       PaperWidth: componentObj.CuttingSizeWidth,
       PaperBrand: productSpec.PaperBrand,
       PaperMaterial: productSpec.PaperMaterial,
       Weight: productSpec.Weight
     };
+  }
+
+  getGrainDirection = (componentType: string, impositionObject: ImpositionInputs) => {
+    if (componentType === LayoutPrepComponentTypes.Cover || componentType === LayoutPrepComponentTypes.Jacket) {
+      return 'True';
+    } else {
+      return impositionObject.GrainDirection?.toString().toUpperCase().startsWith('T') ? 'True' : 'False';
+    }
   }
 
   getCoverData = (): GetPaperRequest => {
@@ -250,7 +262,9 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
 
   openAddProductionActivityModal = () => {
     this.showAddProductionActivityModal = true;
-    this.modalService.open(UIModalID.ADD_PRODUCTION_ACTIVITIES_MODAL);
+    setTimeout(() => {
+      this.modalService.open(UIModalID.ADD_PRODUCTION_ACTIVITIES_MODAL);
+    }, 500); // delaying for .5 second
   }
 
   handleAddProductionActivityModalEvent = (event: ProductionActivities) => {

@@ -290,14 +290,21 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
         const timeOut = 5000;
         if (result) {
           const errors = result?.errors;
-          const entries = Object.entries(errors) ?? [];
-          const errorsList = [];
-          entries.forEach((error, i) => {
-            const message = `${error[1]}`;
-            setTimeout(() => {
-              this.snack.open(message, '', 'top', 5000, 'right');
-            }, i * (timeOut + 500));
-          });
+          if (errors && errors.length > 0) {
+            const entries = Object.entries(errors) ?? [];
+            const errorsList = [];
+            entries.forEach((error, i) => {
+              const message = `${error[1]}`;
+              setTimeout(() => {
+                this.snack.open(message, '', 'top', 5000, 'right');
+              }, i * (timeOut + 500));
+            });
+          } else if (result?.error?.length > 0) {
+            this.snack.open(result?.error.join('.\n'));
+          } else {
+            this.snack.open(result?.title ?? 'Unable to save record');
+          }
+
           localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.APP_ERRORS}`, '');
         } else {
           localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.APP_ERRORS}`, '');
@@ -315,6 +322,10 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
         const selectedVersion = versionsList.find(x => x.VersionNo === customMessage?.VersionNo);
         if (selectedVersion) {
           this.store.setSelectedVersion(selectedVersion);
+        } else {
+          const generalVM = this.productSpecData.generalVM;
+          generalVM.versionNo = customMessage?.VersionNo;
+          this.store.setProductSpecStore(generalVM, ProductSpecTypes.GENERAL);
         }
       } else {
         const generalVM = this.productSpecData.generalVM;

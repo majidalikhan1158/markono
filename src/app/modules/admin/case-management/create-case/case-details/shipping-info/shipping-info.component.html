@@ -71,6 +71,16 @@
                                             <mat-datepicker #picker></mat-datepicker>
                                         </mat-form-field>
                                     </div>
+                                    <div class="col-lg-3 pr-0 pl-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Expected Delivery Date</mat-label>
+                                            <input matInput [matDatepicker]="picker"
+                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippmentExpectedDeliveryDate"
+                                                [disabled]="disabled">
+                                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker1></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
                                     <div class="col-lg-3 pr-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipment Mode</mat-label>
@@ -78,7 +88,7 @@
                                                 (selectionChange)="handleShipmentModeChange($event,shipment.shipmentId)"
                                                 [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shipmentMode"
                                                 [disabled]="disabled">
-                                                <mat-option *ngFor="let item of shipmentModeList" [value]="item.id">
+                                                <mat-option *ngFor="let item of shipmentModeList" [value]="item.attributes.description">
                                                     {{item.attributes.description}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
@@ -90,7 +100,7 @@
                                             <mat-select
                                                 [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingTerms"
                                                 [disabled]="disabled">
-                                                <mat-option *ngFor="let item of shipmentTermList" [value]="item.id">
+                                                <mat-option *ngFor="let item of shipmentTermList" [value]="item.attributes.code">
                                                     {{item.attributes.code}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
@@ -116,7 +126,7 @@
                                             <mat-select
                                                 [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingAgent"
                                                 [disabled]="disabled">
-                                                <mat-option *ngFor="let item of shipmentAgentList" [value]="item.id">
+                                                <mat-option *ngFor="let item of shipmentAgentList" [value]="item.attributes.description">
                                                     {{item.attributes.description}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>

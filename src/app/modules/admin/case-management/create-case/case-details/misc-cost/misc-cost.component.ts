@@ -10,6 +10,7 @@ import { MiscCostVM } from 'src/app/modules/shared/models/create-case';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import { CreateCaseMode, CreateCaseDataType } from 'src/app/modules/shared/enums/app-enums';
 import { CostCategory } from 'src/app/modules/shared/enums/case-management/case-contants';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-misc-cost',
@@ -24,6 +25,7 @@ export class MiscCostComponent implements OnInit, OnDestroy {
   costCategoryArray = CostCategory;
   columnsToDisplay = ['#', 'Cost Category', 'Description', 'Sub-Total', ''];
   miscCostVMList: MiscCostVM[] = [];
+  subscription: Subscription;
   constructor(
     private store: CaseStore,
     private ref: ChangeDetectorRef
@@ -50,7 +52,11 @@ export class MiscCostComponent implements OnInit, OnDestroy {
     filteredRows.forEach((x, i) => {
       x.id = i + 1;
     });
-    this.miscCostVMList = filteredRows;
+    this.miscCostVMList = [];
+    this.miscCostVMList.length = 0;
+    filteredRows.forEach(item => {
+      this.miscCostVMList.push(item);
+    });
     this.pushToStore();
   }
 
@@ -59,7 +65,7 @@ export class MiscCostComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.createCaseStore.subscribe((resp) => {
+   this.subscription = this.store.createCaseStore.subscribe((resp) => {
       if (resp && resp.miscCostList && resp.miscCostList.length > 0) {
         this.miscCostVMList = resp.miscCostList;
       } else {
@@ -78,11 +84,14 @@ export class MiscCostComponent implements OnInit, OnDestroy {
       subTotal: null
     };
   }
+
   ngOnDestroy(): void {
    this.pushToStore();
+   this.subscription?.unsubscribe();
   }
 
   pushToStore = () => {
+    this.subscription?.unsubscribe();
     this.store.setCreateCaseDataSource(
       this.miscCostVMList,
       CreateCaseDataType.MISC_COST

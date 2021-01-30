@@ -342,10 +342,20 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
     this.showDvdDetails(this.viewModal[index].id);
   }
 
-  ngOnDestroy(): void {
+  pushToStore = () => {
+    const validList = [];
+    this.viewModal.forEach(item => {
+      if (item.type) {
+        validList.push(item);
+      }
+    });
     this.store.setProductSpecStore(
-      this.viewModal,
+      validList,
       ProductSpecTypes.OTHER_COMPONENT
     );
+  }
+
+  ngOnDestroy(): void {
+    this.pushToStore();
   }
 }

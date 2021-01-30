@@ -1,3 +1,4 @@
+import { AppModules, AppPageRoutes } from './../../../../modules/shared/enums/app-constants';
 import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
@@ -132,7 +133,8 @@ export class TopbarComponent implements OnInit, AfterViewInit {
   }
 
   openAddNewQuotationModal(modalId: string) {
-    this.modalService.openModalViaObservable(modalId);
+    // this.modalService.openModalViaObservable(modalId);
+    this.router.navigateByUrl(`${AppPageRoutes.CREATE_CASE}`);
   }
 
   handleEmbededLinkChange = () => {

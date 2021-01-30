@@ -101,6 +101,7 @@ export const AppPageRoutes = {
   USER_PROFILE: `/admin/${AppPages.USER_PROFILE}`,
   LIST_ORDERS: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.LIST}`,
   VIEW_ORDER: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.DETAIL}/:id`,
+  CREATE_ORDER: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.CREATE}`,
   ORDER_ISSUES: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.ORDER_ISSUES}`,
   JOB_DETAILS: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.ORDER_JOB_DETAIL}`
 }

@@ -64,11 +64,11 @@
                                     <div class="col-lg-3 pr-0 pl-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipment Promised Date</mat-label>
-                                            <input matInput [matDatepicker]="picker"
+                                            <input matInput [matDatepicker]="picker1"
                                                 [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippmentPromisedDate"
                                                 [disabled]="disabled">
-                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                            <mat-datepicker #picker></mat-datepicker>
+                                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker1></mat-datepicker>
                                         </mat-form-field>
                                     </div>
                                     <div class="col-lg-3 pr-0">
@@ -77,8 +77,8 @@
                                             <input matInput [matDatepicker]="picker"
                                                 [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippmentExpectedDeliveryDate"
                                                 [disabled]="disabled">
-                                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                                            <mat-datepicker #picker1></mat-datepicker>
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
                                         </mat-form-field>
                                     </div>
                                     <div class="col-lg-3 pr-0">

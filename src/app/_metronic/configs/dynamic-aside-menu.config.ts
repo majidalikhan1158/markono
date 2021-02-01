@@ -12,64 +12,27 @@ export const DynamicAsideMenuConfig = {
       permission: 'accessToAppDashboard'
     },
     {
-      title: 'Case Management',
+      title: 'Add Products',
       root: true,
       bullet: 'dot',
-      page: '/admin/case-management',
-      icon: 'flaticon2-browser-2',
-      png: './assets/media/menu-logos/ic_casemanagement.png',
-      selected: './assets/media/menu-logos/ic_casemanagement_Selected.png',
-      submenu: [
-        {
-          title: 'Create Case',
-          page: AppPageRoutes.CREATE_CASE,
-          permission: 'accessToCreateCase'
-        },
-        {
-          title: 'Quotations',
-          page: AppPageRoutes.LIST_CASE,
-          permission: 'accessToQuotationList'
-        },
-      ]
-    },
-    {
-      title: 'Product Library',
-      root: true,
-      bullet: 'dot',
-      page: '/admin/product-management',
+      page: AppPageRoutes.LIST_PRODUCT,
       icon: 'flaticon2-browser-2',
       png: './assets/media/menu-logos/ic_productLib.png',
       selected: './assets/media/menu-logos/ic_productLib_Selected.png',
-      submenu: [
-        {
-          title: 'Add Product',
-          page: AppPageRoutes.LIST_PRODUCT,
-          permission: 'accessToListProduct'
-        },
-      ]
+      permission: 'accessToListProduct'
     },
     {
-      title: 'ShopFloor Collection',
+      title: 'Quotation',
       root: true,
       bullet: 'dot',
-      page: AppPageRoutes.SHOP_FLOOR_COLLECTION,
+      page: AppPageRoutes.LIST_CASE,
       icon: 'flaticon2-browser-2',
-      png: './assets/media/menu-logos/ic_shopfloorcollection.png',
-      selected: './assets/media/menu-logos/ic_shopfloorcollection_Selected.png',
-      permission: 'accessToShopFloorCollection'
+      png: './assets/media/menu-logos/ic_casemanagement.png',
+      selected: './assets/media/menu-logos/ic_casemanagement_Selected.png',
+      permission: 'accessToQuotationList'
     },
     {
-      title: 'Platemaking',
-      root: true,
-      bullet: 'dot',
-      page: AppPageRoutes.PLATMAKING,
-      icon: 'flaticon2-browser-2',
-      png: './assets/media/menu-logos/ic_platemaking.png',
-      selected: './assets/media/menu-logos/ic_platemaking_Selected.png',
-      permission: 'accessToPlatemaking'
-    },
-    {
-      title: 'Order Management',
+      title: 'Orders',
       root: true,
       bullet: 'dot',
       page: '/admin/order-management',
@@ -78,14 +41,69 @@ export const DynamicAsideMenuConfig = {
       selected: './assets/media/menu-logos/ic_productLib_Selected.png',
       submenu: [
         {
-          title: 'Orders',
+          title: 'Create Order',
+          page: AppPageRoutes.CREATE_ORDER,
+        },
+        {
+          title: 'Confirmed Orders',
           page: AppPageRoutes.LIST_ORDERS,
         },
         {
-          title: 'Orders With Issues',
+          title: 'Orders with issue',
           page: AppPageRoutes.ORDER_ISSUES,
         }
       ]
+    },
+    {
+      title: 'Prepress',
+      root: true,
+      bullet: 'dot',
+      page: '/admin/platemaking',
+      icon: 'flaticon2-browser-2',
+      png: './assets/media/menu-logos/ic_platemaking.png',
+      selected: './assets/media/menu-logos/ic_platemaking_Selected.png',
+      submenu: [
+        {
+          title: 'File Prep',
+          page: '/file-prep',
+          permission: 'accessToPlatemaking'
+        },
+        {
+          title: 'Platemaking',
+          page: AppPageRoutes.PLATMAKING,
+          permission: 'accessToPlatemaking'
+        },
+      ]
+    },
+    {
+      title: 'Planning',
+      root: true,
+      bullet: 'dot',
+      page: '/admin/planning',
+      icon: 'flaticon2-browser-2',
+      png: './assets/media/menu-logos/ic_shopfloorcollection.png',
+      selected: './assets/media/menu-logos/ic_shopfloorcollection_Selected.png',
+      permission: 'accessToShopFloorCollection'
+    },
+    {
+      title: 'Material Visibility',
+      root: true,
+      bullet: 'dot',
+      page: '/admin/material-visibilty',
+      icon: 'flaticon2-browser-2',
+      png: './assets/media/menu-logos/ic_shopfloorcollection.png',
+      selected: './assets/media/menu-logos/ic_shopfloorcollection_Selected.png',
+      permission: 'accessToShopFloorCollection'
+    },
+    {
+      title: 'Shopfloor Collection',
+      root: true,
+      bullet: 'dot',
+      page: AppPageRoutes.SHOP_FLOOR_COLLECTION,
+      icon: 'flaticon2-browser-2',
+      png: './assets/media/menu-logos/ic_shopfloorcollection.png',
+      selected: './assets/media/menu-logos/ic_shopfloorcollection_Selected.png',
+      permission: 'accessToShopFloorCollection'
     },
   ]
 };

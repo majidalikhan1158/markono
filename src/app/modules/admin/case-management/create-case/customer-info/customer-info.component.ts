@@ -39,6 +39,7 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   previousValue = '';
   selectedCaseType = '';
   matAutoCompleteSubscription: Subscription;
+  referenceNumber: string;
   constructor(
     private modalService: ModalService,
     private store: CaseStore,
@@ -179,6 +180,12 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
 
   openUiModal(modalId: string) {
     this.modalService.open(modalId);
+  }
+
+  countExternalReferenceCharacters = () => {
+    if (this.referenceNumber?.length <= 32) {
+      this.customerInfoVM.referenceNumber = this.referenceNumber;
+    }
   }
 
   handleAddCustomerEvent(modalId: string) {}

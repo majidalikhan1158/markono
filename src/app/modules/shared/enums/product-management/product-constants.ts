@@ -469,6 +469,10 @@ export const CoverTypeList = [
   {
     value: '8PPCOVER',
     text: '8pp cover',
+  },
+  {
+    value: '12PPCOVER',
+    text: '12 pp cover'
   }
 ];
 

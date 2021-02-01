@@ -94,6 +94,7 @@ export interface ShippingInfoVM {
 export interface ShipingDetailsModel {
     billable: boolean;
     shippmentPromisedDate: string;
+    shippmentExpectedDeliveryDate: string;
     shipmentMode: string;
     shippingTerms: string;
     shippingAgent: string;

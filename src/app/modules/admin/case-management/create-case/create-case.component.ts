@@ -99,7 +99,9 @@ export class CreateCaseComponent implements OnInit {
           if (response.message && response.message === 'Successful') {
             this.snack.open('Case has been created successfully');
             this.shouldDisplayCreateCaseButton = false;
-            this.createShipment(data, response.caseId);
+            const jobNo = response?.caseDetail[0].jobNo ?? '';
+            const caseDetailNo = response?.caseDetail[0].caseDetailNo ?? '';
+            this.createShipment(data, response.caseId, jobNo, caseDetailNo);
           } else {
             this.snack.open(response);
           }
@@ -110,12 +112,12 @@ export class CreateCaseComponent implements OnInit {
     });
   }
 
-  createShipment = (data: CreateCaseViewModel, caseId: string) => {
+  createShipment = (data: CreateCaseViewModel, caseId: string, jobNo: string, caseDetailNo: string) => {
     if (data && (!data.shippingInfoList || data.shippingInfoList.length === 0 )) {
       this.endCreateProcess();
       return;
     }
-    const mappedData = this.caseHelper.transToCreateShipment(data, caseId);
+    const mappedData = this.caseHelper.transToCreateShipment(data, caseId, jobNo, caseDetailNo);
     this.orderService.createShipment(mappedData).subscribe(resp => {
       if (resp && resp.body.result && resp.body.result) {
         const response = resp.body.result as any;
@@ -123,7 +125,7 @@ export class CreateCaseComponent implements OnInit {
           this.snack.open('Shipping Info has been created successfully');
           this.endCreateProcess();
         } else {
-          this.snack.open(response);
+          this.snack.open('unable to create shipment record');
         }
         this.subscription.unsubscribe();
       }
@@ -133,7 +135,7 @@ export class CreateCaseComponent implements OnInit {
   }
 
   endCreateProcess = () => {
-    location.reload();
+    // location.reload();
     this.subscription?.unsubscribe();
     this.ref.detectChanges();
   }

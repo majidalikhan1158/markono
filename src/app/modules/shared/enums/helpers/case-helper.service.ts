@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CaseTypes } from '../case-management/case-contants';
 import {
   CreateCaseViewModel,
   InvoiceViewModel,
@@ -221,11 +222,14 @@ export class CaseHelperService {
       return '';
     }
     let specialInstructions = '';
-    if (specialInstructionList && specialInstructionList.length > 0) {
-      specialInstructionList.forEach(item => {
-        specialInstructions = `${specialInstructions}. ${item.instructions}`;
-      });
-    }
+    specialInstructionList.forEach(item => {
+      const text = `${item.department}:${item.instructions}`;
+      if (specialInstructions && specialInstructions.length > 0) {
+        specialInstructions = `${specialInstructions},${text}`; 
+      } else {
+        specialInstructions = text;
+      }
+    });
     return specialInstructions;
   }
 
@@ -250,7 +254,7 @@ export class CaseHelperService {
   }
 
   // Create Shipment Api Intergation
-  public transToCreateShipment = (mainData: CreateCaseViewModel, caseId: string) => {
+  public transToCreateShipment = (mainData: CreateCaseViewModel, caseId: string, jobNo: string, caseDetailNo: string) => {
     if (!mainData || !mainData.shippingInfoList || mainData.shippingInfoList.length === 0) {
       return null;
     }
@@ -281,6 +285,7 @@ export class CaseHelperService {
         shipmentPromisedDate: data.shippingDetails.shippmentPromisedDate,
         shipmentMode: data.shippingDetails.shipmentMode,
         shippingAgent: data.shippingDetails.shippingAgent,
+        shippingMethod: data.shippingDetails.shippingTerms,
         shipToAttentionTo: data.shipmentAddress.AttentionTo,
         shipToCode: data.shipmentAddress.CompanyCode,
         shipToContactNo: data.shipmentAddress.Contact,
@@ -291,32 +296,31 @@ export class CaseHelperService {
         shipToPostCode: data.shipmentAddress.PostCode,
         shipToState: data.shipmentAddress.State,
         shipToCountry: data.shipmentAddress.CountryRegionCode,
-        yourReference: mainData.customerInfo?.referenceNumber,
+        yourReference: mainData.customerInfo.caseType.toString() === CaseTypes.PRINT_ORDER ? mainData.customerInfo?.referenceNumber : '',
+        expectedDeliveryDate: data.shippingDetails.shippmentExpectedDeliveryDate,
+        shipmentTypeGroup: data.shippingDetails.shipmentCategory,
+        miscBilling: this.getShipmentSpecificCost(data.shippingSpecificCost, caseId),
+        shipmentDetail: this.getShipmentItems(data.shippingItems, caseId, jobNo, caseDetailNo),
         createdByUser: 'DevUI',
         currentActivityId: caseId,
         createdBy: 'DevUI',
         createdDateTime: new Date(),
+        updatedByUser: 'DevUI',
+        updatedBy: 'DevUI',
+        updatedDateTime: new Date(),
         currentActivityStatus: '',
         createdDateTimeGE: '',
         createdDateTimeLE: '',
         deliveryOrderNo: '',
-        expectedDeliveryDate: '',
         id: caseId,
         isDeleted: false,
         glossWeightKg: '',
         getStatus: '',
         shipmentNo: '',
-        shipmentTypeGroup: '',
-        shippingMethod: '',
         trackingNo: '',
-        updatedByUser: 'DevUI',
-        updatedBy: 'DevUI',
-        updatedDateTime: new Date(),
         wmsStorerKey: '',
-        miscBilling: this.getShipmentSpecificCost(data.shippingSpecificCost, caseId),
         noOfCartons: '',
         netWeightKg: '',
-        shipmentDetail: this.getShipmentItems(data.shippingItems, caseId)
       });
     });
     return dataArray;
@@ -339,7 +343,7 @@ export class CaseHelperService {
     return dataArray;
   }
 
-  getShipmentItems = (data: ShippingItemsModel[], caseId: string) => {
+  getShipmentItems = (data: ShippingItemsModel[], caseId: string, jobNo: string, caseDetailNo: string) => {
     if ( !data || data.length === 0) {
       return [];
     }
@@ -360,7 +364,7 @@ export class CaseHelperService {
           shipmentDetailNo: '',
           iSBNPartNo: item.productNumber,
           isDeleted: false,
-          jobNo: '',
+          jobNo,
           requestedQty: item.shipmentQty,
           requestedDate: new Date(),
           shippedQty: item.shipmentQty,
@@ -368,7 +372,8 @@ export class CaseHelperService {
           totalRemaining: item.availableQty,
           updatedByUser: 'DevUI',
           updatedBy: 'DevUI',
-          updatedDateTime: new Date()
+          updatedDateTime: new Date(),
+          caseDetailNo
         }
       );
     });

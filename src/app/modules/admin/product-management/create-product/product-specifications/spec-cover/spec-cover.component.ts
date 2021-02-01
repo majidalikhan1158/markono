@@ -77,7 +77,7 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   }
 
   handleCoverTypeChange = () => {
-    if (this.viewModal.coverType === '4pp cover') {
+    if (this.viewModal.coverType === 'Self-cover') {
       this.store.getCoverMaterialWeight('Cover',  ProductSpecTypes.COVER);
       this.store.getFinishingTypes('Cover', ProductSpecTypes.COVER);
     }

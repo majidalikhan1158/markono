@@ -64,8 +64,18 @@
                                     <div class="col-lg-3 pr-0 pl-0">
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipment Promised Date</mat-label>
-                                            <input matInput [matDatepicker]="picker"
+                                            <input matInput [matDatepicker]="picker1"
                                                 [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippmentPromisedDate"
+                                                [disabled]="disabled">
+                                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker1></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 pr-0">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Expected Delivery Date</mat-label>
+                                            <input matInput [matDatepicker]="picker"
+                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippmentExpectedDeliveryDate"
                                                 [disabled]="disabled">
                                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                             <mat-datepicker #picker></mat-datepicker>
@@ -78,24 +88,30 @@
                                                 (selectionChange)="handleShipmentModeChange($event,shipment.shipmentId)"
                                                 [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shipmentMode"
                                                 [disabled]="disabled">
-                                                <mat-option *ngFor="let item of shipmentModeList" [value]="item.id">
+                                                <mat-option *ngFor="let item of shipmentModeList" [value]="item.attributes.description">
                                                     {{item.attributes.description}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-lg-3 pr-0"
-                                        *ngIf="!shipment.shippingDetails.isShipmentModeInternalTransfer && !shipment.shippingDetails.isShipmentModeLibrary">
-                                        <mat-form-field appearance="fill">
-                                            <mat-label>Shipping Terms</mat-label>
-                                            <mat-select
-                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingTerms"
-                                                [disabled]="disabled">
-                                                <mat-option *ngFor="let item of shipmentTermList" [value]="item.id">
-                                                    {{item.attributes.code}}</mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row pt-3">
+
+                                <div class="col-lg-12 display-flex">
+                                    <div class="col-lg-3 pl-0"
+                                    *ngIf="!shipment.shippingDetails.isShipmentModeInternalTransfer && !shipment.shippingDetails.isShipmentModeLibrary">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Shipping Terms</mat-label>
+                                        <mat-select
+                                            [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingTerms"
+                                            [disabled]="disabled">
+                                            <mat-option *ngFor="let item of shipmentTermList" [value]="item.attributes.code">
+                                                {{item.attributes.code}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
                                     </div>
-                                    <div class="col-lg-3 pr-0"
+                                    <div class="col-lg-3 pl-0"
                                         *ngIf="shipment.shippingDetails.isShipmentModeInternalTransfer">
                                         <mat-form-field appearance="fill" class="">
                                             <mat-label>Storer Key</mat-label>
@@ -104,31 +120,27 @@
                                                 [disabled]="disabled">
                                         </mat-form-field>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="row pt-3">
-                                <div class="col-lg-12 display-flex"
-                                    *ngIf="!shipment.shippingDetails.isShipmentModeInternalTransfer && !shipment.shippingDetails.isShipmentModeLibrary">
-                                    <div class="col-lg-3 pl-0">
-                                        <mat-form-field appearance="fill">
-                                            <mat-label>Shipping Agent</mat-label>
-                                            <mat-select
-                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingAgent"
-                                                [disabled]="disabled">
-                                                <mat-option *ngFor="let item of shipmentAgentList" [value]="item.id">
-                                                    {{item.attributes.description}}</mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="col-lg-3 pr-0 pl-0">
-                                        <mat-form-field appearance="fill">
-                                            <mat-label>Account No</mat-label>
-                                            <input matInput
-                                                [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.accountNumber"
-                                                [disabled]="disabled">
-                                        </mat-form-field>
-                                    </div>
+                                    <ng-container *ngIf="!shipment.shippingDetails.isShipmentModeInternalTransfer && !shipment.shippingDetails.isShipmentModeLibrary">
+                                        <div class="col-lg-3 pr-0 pl-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Shipping Agent</mat-label>
+                                                <mat-select
+                                                    [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingAgent"
+                                                    [disabled]="disabled">
+                                                    <mat-option *ngFor="let item of shipmentAgentList" [value]="item.attributes.description">
+                                                        {{item.attributes.description}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-3 pr-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Account No</mat-label>
+                                                <input matInput
+                                                    [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.accountNumber"
+                                                    [disabled]="disabled">
+                                            </mat-form-field>
+                                        </div>
+                                    </ng-container>
                                 </div>
                             </div>
 

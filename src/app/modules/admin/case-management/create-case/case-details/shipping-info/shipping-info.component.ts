@@ -179,7 +179,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   }
 
   handleShipmentModeChange(event: MatSelectChange, shipmentId: number) {
-    const selectedMode = this.shipmentModeList.find(x => x.id === event.value);
+    const selectedMode = this.shipmentModeList.find(x => x.attributes.description === event.value);
     this.shipmentsInfoVMList.forEach((element) => {
       if (element.shipmentId === shipmentId) {
         if (
@@ -211,6 +211,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
       shippingDetails: {
         billable: false,
         shippmentPromisedDate: '',
+        shippmentExpectedDeliveryDate: '',
         shipmentMode: '',
         shippingTerms: '',
         shippingAgent: '',

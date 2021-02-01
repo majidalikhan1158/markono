@@ -969,7 +969,7 @@ export class ProductSpecHelperService {
         errorArrays.push('Webcode: Must add a record in Webcode Location tab');
       }
 
-      if ((generalVM?.isChildIsbnAdded ?? false) && (storeData?.childIsbnVM?.childIsbns?.length  ?? 0 === 0)) {
+      if (generalVM?.isChildIsbnAdded && storeData?.childIsbnVM?.childIsbns?.length === 0) {
         errorArrays.push('Child ISBN: Must add a record in Child ISBN tab');
       }
     }

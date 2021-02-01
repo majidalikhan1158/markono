@@ -479,7 +479,7 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Coil Colour</mat-label>
                     <mat-select [(ngModel)]="viewModal.spiralBound.coilColour">
-                        <mat-option [value]="item.value" *ngFor="let item of coilColorList">{{item.text}}</mat-option>
+                        <mat-option [value]="item.value.toString()" *ngFor="let item of coilColorList">{{item.text}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>

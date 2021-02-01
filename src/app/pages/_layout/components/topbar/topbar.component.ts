@@ -134,7 +134,7 @@ export class TopbarComponent implements OnInit, AfterViewInit {
 
   openAddNewQuotationModal(modalId: string) {
     // this.modalService.openModalViaObservable(modalId);
-    this.router.navigateByUrl(`${AppPageRoutes.CREATE_CASE}`);
+    // this.router.navigateByUrl(`${AppPageRoutes.CREATE_CASE}`);
   }
 
   handleEmbededLinkChange = () => {

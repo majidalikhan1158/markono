@@ -42,7 +42,7 @@ export const DynamicAsideMenuConfig = {
       submenu: [
         {
           title: 'Create Order',
-          page: AppPageRoutes.CREATE_ORDER,
+          page: AppPageRoutes.CREATE_CASE,
         },
         {
           title: 'Confirmed Orders',

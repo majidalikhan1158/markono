@@ -10,7 +10,7 @@
       <div class="card-body" style="padding-left: 20px !important">
         <table class="order-info-table-card">
           <thead>
-            <tr class="th-order" style="font-size: 16px;">
+            <tr class="th-order">
               <th style="font-weight: normal" *ngFor="let item of columnsToDisplay">
                 {{ item }}
               </th>
@@ -145,7 +145,8 @@
           <div class="row full-width">
             <div class="col-lg-12 pt-2 pb-2 pr-0" style="padding-top: 0px !important">
               <div class="float-left display-flex">
-                <h3 class="card-title font-weight-bolder text-dark">{{currentSelectedType}}</h3>
+                <h3 class="card-title font-weight-bolder text-dark" style="padding-top: 12px;">Jobs
+                </h3>
                 <mat-chip-list #chipList class="table-filter-chips">
                   <mat-chip [removable]="true" *ngIf="tableFilters.jobNo != ''"
                     (removed)="removeFilter(tableFilterTypes.JOBNO)">
@@ -295,6 +296,7 @@
         </div>
         <div class="card-body">
           <mat-table #table [dataSource]="dataSourceJob" class="orders-table">
+
             <ng-container matColumnDef="Id">
               <mat-header-cell *matHeaderCellDef style="padding-left: 20px !important">
                 #
@@ -317,20 +319,6 @@
                 {{ element.ISBNPartNo }}
                 <p #tooltip="matTooltip" matTooltip="Info about the action" [matTooltipPosition]="position.value"
                   matTooltipHideDelay="100000" class="example-button"></p>
-              </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="CreatedDateTime">
-              <mat-header-cell *matHeaderCellDef> Order Date </mat-header-cell>
-              <mat-cell *matCellDef="let element">
-                {{ element.CreatedDateTime | date: "shortDate" }}
-              </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="RequestedDeliveryDate">
-              <mat-header-cell *matHeaderCellDef> RDD </mat-header-cell>
-              <mat-cell *matCellDef="let element">
-                {{ element.RequestedDeliveryDate | date: "shortDate" }}
               </mat-cell>
             </ng-container>
 
@@ -414,8 +402,35 @@
               </mat-cell>
             </ng-container>
 
+            <ng-container matColumnDef="expandRow">
+              <mat-header-cell *matHeaderCellDef style="margin-left:12px !important"> </mat-header-cell>
+              <mat-cell *matCellDef="let element;index as i;" style="margin-left:12px !important">
+                <span class="material-icons expansion-icon" (click)="toggleExpandable(element.Id)">
+                  {{
+                  element.Id== rowIdToExpandJob ?
+                  ExpansionIcons.KEYBOARD_ARROW_UP :
+                  ExpansionIcons.KEYBOARD_ARROW_DOWN
+                  }}
+                </span>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="expandedDetail">
+              <mat-cell *matCellDef="let element" [attr.colspan]="displayedColumnsJob.length"
+                [@expandableRow]="element.Id === rowIdToExpandJob ? 'expanded' : 'collapsed'">
+                <div *ngIf="element.Id === rowIdToExpandJob" style="margin-bottom:-14px">
+
+                </div>
+              </mat-cell>
+            </ng-container>
+
             <mat-header-row *matHeaderRowDef="displayedColumnsJob"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumnsJob" (click)="drawer.toggle()">
+
+            <!-- <mat-row *matRowDef="let row; columns: displayedColumnsJob" >
+            </mat-row> -->
+
+            <mat-row class="expandable-row" *matRowDef="let row; columns: ['expandedDetail'];"
+              (click)="drawer.toggle()">
             </mat-row>
 
             <tr class="mat-row" *matNoDataRow>
@@ -960,31 +975,57 @@
                 </div>
 
                 <div class="row pt-3">
-                  <div class="col-lg-12 display-flex">
+                  <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                     <div class="col-lg-3 pl-0">
-                      <p class="info-label">Billable?</p>
+                      <mat-form-field appearance="fill">
+                        <mat-label>Billable?</mat-label>
+                        <mat-select [(ngModel)]="rowId.Billable" disabled>
+                          <mat-option *ngIf="rowId.Billable==true">Yes</mat-option>
+                          <mat-option *ngIf="rowId.Billable==false">No</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <!-- <p class="info-label">Billable?</p>
                       <p class="info-label-value" *ngIf="rowId.Billable == false">
                         No
                       </p>
                       <p class="info-label-value" *ngIf="rowId.Billable == true">
                         Yes
-                      </p>
+                      </p> -->
                     </div>
-                    <div class="col-lg-3 pr-0 pl-0">
-                      <p class="info-label">Shipment Promised Date</p>
+                    <div class="col-lg-3 pl-0">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Shipment Promised Date</mat-label>
+                        <input matInput [matDatepicker]="picker1" [(ngModel)]="rowId.ShipmentPromisedDate" disabled>
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                      </mat-form-field>
+                      <!-- <p class="info-label">Shipment Promised Date</p>
                       <p class="info-label-value">
                         {{ rowId.ShipmentPromisedDate | date: "shortDate" }}
-                      </p>
+                      </p> -->
                     </div>
-                    <div class="col-lg-3 pr-0">
-                      <p class="info-label">Expected Delivery Date</p>
+                    <div class="col-lg-3 pl-0">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Expected Delivery Date</mat-label>
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="rowId.ExpectedDeliveryDate" disabled>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                      <!-- <p class="info-label">Expected Delivery Date</p>
                       <p class="info-label-value">
                         {{ rowId.ExpectedDeliveryDate | date: "shortDate" }}
-                      </p>
+                      </p> -->
                     </div>
-                    <div class="col-lg-3 pr-0">
-                      <p class="info-label">Shipment Mode</p>
-                      <p class="info-label-value">{{ rowId.ShipmentMode }}</p>
+                    <div class="col-lg-3 pl-0">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Shipment Mode</mat-label>
+                        <mat-select [(ngModel)]="rowId.ShipmentMode" [disabled]="disabled">
+                          <mat-option *ngFor="let item of shipmentModeList" [value]="item.attributes.description">
+                            {{item.attributes.description}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <!-- <p class="info-label">Shipment Mode</p>
+                      <p class="info-label-value">{{ rowId.ShipmentMode }}</p> -->
                     </div>
                   </div>
                 </div>
@@ -992,16 +1033,34 @@
                 <div class="row pt-3">
                   <div class="col-lg-12 display-flex">
                     <div class="col-lg-3 pl-0">
-                      <p class="info-label">Shipping Terms</p>
-                      <p class="info-label-value">{{ rowId.ShippingMethod }}</p>
+                      <mat-form-field appearance="fill">
+                        <mat-label>Shipping Terms</mat-label>
+                        <mat-select [(ngModel)]="rowId.ShippingMethod" disabled>
+                          <mat-option *ngFor="let item of shipmentTermList" [value]="item.attributes.code">
+                            {{item.attributes.code}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <!-- <p class="info-label">Shipping Terms</p>
+                      <p class="info-label-value">{{ rowId.ShippingMethod }}</p> -->
                     </div>
                     <div class="col-lg-3 pr-0 pl-0">
-                      <p class="info-label">Shipping Agent</p>
-                      <p class="info-label-value">{{ rowId.ShippingAgent }}</p>
+                      <mat-form-field appearance="fill">
+                        <mat-label>Shipping Agent</mat-label>
+                        <mat-select [(ngModel)]="rowId.ShippingAgent" [disabled]="disabled">
+                          <mat-option *ngFor="let item of shipmentAgentList" [value]="item.attributes.description">
+                            {{item.attributes.description}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <!-- <p class="info-label">Shipping Agent</p>
+                      <p class="info-label-value">{{ rowId.ShippingAgent }}</p> -->
                     </div>
                     <div class="col-lg-3 pr-0">
-                      <p class="info-label">Account No.</p>
-                      <p class="info-label-value">{{ rowId.AccountNo }}</p>
+                      <mat-form-field appearance="fill">
+                        <mat-label>Account No</mat-label>
+                        <input matInput [(ngModel)]="rowId.AccountNo" disabled>
+                      </mat-form-field>
+                      <!-- <p class="info-label">Account No.</p>
+                      <p class="info-label-value">{{ rowId.AccountNo }}</p> -->
                     </div>
                   </div>
                 </div>
@@ -1014,6 +1073,7 @@
                     <span class="card-body-header">Items</span>
                   </div>
                 </div>
+
                 <div class="row pt-3">
                   <div class="col-lg-12">
                     <div class="tab-content">
@@ -1055,10 +1115,11 @@
                                   }}
                                 </td>
                                 <td>
-                                  {{
-                                  shipmentInfoList[i].ShipmentDetail[j]
-                                  .RequestedQty
-                                  }}
+                                  <mat-form-field appearance="fill">
+                                    <mat-label>Shipment Qty</mat-label>
+                                    <input matInput type="number" value="{{ shipmentInfoList[i].ShipmentDetail[j]
+                                        .RequestedQty}}" [disabled]="disabled">
+                                  </mat-form-field>
                                 </td>
                               </tr>
                             </ng-container>
@@ -1078,6 +1139,7 @@
                     <span class="card-body-header">Misc. Billing</span>
                   </div>
                 </div>
+
                 <div class="row pt-3">
                   <div class="col-lg-12">
                     <div class="tab-content">
@@ -1099,9 +1161,39 @@
                                 let k = index
                               ">
                               <td>{{ k + 1 }}</td>
-                              <td>{{ rowId.Item }}</td>
-                              <td>{{ rowId.Description }}</td>
-                              <td>{{ rowId.Value }}</td>
+                              <td>
+                                <mat-form-field appearance="fill">
+                                  <mat-label>Choose</mat-label>
+                                  <mat-select [(ngModel)]="rowId.Item" [disabled]="disabled">
+                                    <mat-option value="Filfillment">Filfillment
+                                    </mat-option>
+                                    <mat-option value="Fulfillment">Fulfillment
+                                    </mat-option>
+                                    <mat-option value="Packing Materials">Packing
+                                      Materials</mat-option>
+                                    <mat-option value="Order Handling">Order Handling
+                                    </mat-option>
+                                    <mat-option value="Shipping">Shipping</mat-option>
+                                    <mat-option value="Storage Charges">Storage Charges
+                                    </mat-option>
+                                    <mat-option value="Value Added Services">Value Added
+                                      Services</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </td>
+                              <td>
+                                <mat-form-field appearance="fill">
+                                  <mat-label>Description</mat-label>
+                                  <input matInput [(ngModel)]="rowId.Description" [disabled]="disabled">
+                                </mat-form-field>
+                              </td>
+                              <td>
+                                <mat-form-field appearance="fill">
+                                  <mat-label>Sub total</mat-label>
+                                  <input matInput [(ngModel)]="rowId.Value" [disabled]="disabled">
+                                  <span matPrefix>$&nbsp;</span>
+                                </mat-form-field>
+                              </td>
                               <td></td>
                             </tr>
                           </tbody>
@@ -1111,6 +1203,7 @@
                     </div>
                   </div>
                 </div>
+
                 <div class="display-flex pt-5">
                   <div class="col-lg-12 pl-0">
                     <span class="span-yellow material-icons pr-2">
@@ -1119,62 +1212,103 @@
                     <span class="card-body-header">Ship to Address</span>
                     <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                       <div class="col-lg-3 pl-0">
-                        <p class="info-label">Attention To</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Attention To</mat-label>
+                          <input matInput [(ngModel)]="rowId.ShipToAttentionTo ">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Attention To</p>
                         <p class="info-label-value">
                           {{ rowId.ShipToAttentionTo }}
-                        </p>
+                        </p> -->
                       </div>
                       <div class="col-lg-3 pl-0">
-                        <p class="info-label">Contact Person</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Attention To</mat-label>
+                          <input matInput [(ngModel)]="rowId.ShipToAttentionTo ">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Contact Person</p>
                         <p class="info-label-value">
                           {{ rowId.BillToContactPerson }}
-                        </p>
+                        </p> -->
                       </div>
                       <div class="col-lg-3 pl-0">
-                        <p class="info-label">Email</p>
-                        <p class="info-label-value">{{ rowId.ShipToEmail }}</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Attention To</mat-label>
+                          <input matInput [(ngModel)]="rowId.ShipToAttentionTo ">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Email</p>
+                        <p class="info-label-value">{{ rowId.ShipToEmail }}</p> -->
                       </div>
                       <div class="col-lg-3 pl-0">
-                        <p class="info-label">Phone</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Attention To</mat-label>
+                          <input matInput [(ngModel)]="rowId.ShipToAttentionTo ">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Phone</p>
                         <p class="info-label-value">
                           {{ rowId.BillToPhoneNo }}
-                        </p>
+                        </p> -->
                       </div>
                     </div>
                     <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                       <div class="col-lg-3 pl-0">
-                        <p class="info-label">Address 1</p>
-                        <p class="info-label-value">{{ rowId.ShipToAdd1 }}</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Attention To</mat-label>
+                          <input matInput [(ngModel)]="rowId.ShipToAttentionTo ">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Address 1</p>
+                        <p class="info-label-value">{{ rowId.ShipToAdd1 }}</p> -->
                       </div>
                       <div class="col-lg-3 pl-0">
-                        <p class="info-label">Address 2</p>
-                        <p class="info-label-value">{{ rowId.ShipToAdd2 }}</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Attention To</mat-label>
+                          <input matInput [(ngModel)]="rowId.ShipToAttentionTo ">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Address 2</p>
+                        <p class="info-label-value">{{ rowId.ShipToAdd2 }}</p> -->
                       </div>
                       <div class="col-lg-3 pl-0">
-                        <p class="info-label">City</p>
-                        <p class="info-label-value">{{ rowId.ShipToCity }}</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Attention To</mat-label>
+                          <input matInput [(ngModel)]="rowId.ShipToAttentionTo ">
+                        </mat-form-field>
+                        <!-- <p class="info-label">City</p>
+                        <p class="info-label-value">{{ rowId.ShipToCity }}</p> -->
                       </div>
                       <div class="col-lg-3 pl-0">
-                        <p class="info-label">Postcode</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Attention To</mat-label>
+                          <input matInput [(ngModel)]="rowId.ShipToAttentionTo ">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Postcode</p>
                         <p class="info-label-value">
                           {{ rowId.ShipToPostCode }}
-                        </p>
+                        </p> -->
                       </div>
                     </div>
                     <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                       <div class="col-lg-3 pl-0">
-                        <p class="info-label">State</p>
-                        <p class="info-label-value">{{ rowId.ShipToState }}</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Attention To</mat-label>
+                          <input matInput [(ngModel)]="rowId.ShipToAttentionTo ">
+                        </mat-form-field>
+                        <!-- <p class="info-label">State</p>
+                        <p class="info-label-value">{{ rowId.ShipToState }}</p> -->
                       </div>
                       <div class="col-lg-3 pl-0">
-                        <p class="info-label">Country</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Attention To</mat-label>
+                          <input matInput [(ngModel)]="rowId.ShipToAttentionTo ">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Country</p>
                         <p class="info-label-value">
                           {{ rowId.ShipToCountry }}
-                        </p>
+                        </p> -->
                       </div>
                     </div>
                   </div>
                 </div>
+
                 <div class="display-flex pt-5">
                   <div class="col-lg-12 pl-0 pr-0">
                     <span class="span-yellow material-icons pr-2">
@@ -1183,80 +1317,132 @@
                     <span class="card-body-header">Billing Details</span>
                     <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                       <div class="col-lg-3 pl-0 pr-0">
-                        <p class="info-label">Bill-to No</p>
-                        <p class="info-label-value">{{ rowId.BillToNo }}</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Bill-to No</mat-label>
+                          <input matInput [(ngModel)]="rowId.BillToNo">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Bill-to No</p>
+                        <p class="info-label-value">{{ rowId.BillToNo }}</p> -->
                       </div>
                       <div class="col-lg-3 pr-0">
-                        <p class="info-label">Attention To</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Attention To</mat-label>
+                          <input matInput [(ngModel)]="rowId.ShipToAttentionTo">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Attention To</p>
                         <p class="info-label-value">
                           {{ rowId.ShipToAttentionTo }}
-                        </p>
+                        </p> -->
                       </div>
                       <div class="col-lg-3 pl-0 pr-0">
-                        <p class="info-label">Contact Person</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Contact Person</mat-label>
+                          <input matInput [(ngModel)]="rowId.BillToContactPerson">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Contact Person</p>
                         <p class="info-label-value">
                           {{ rowId.BillToContactPerson }}
-                        </p>
+                        </p> -->
                       </div>
                       <div class="col-lg-3 pr-0">
-                        <p class="info-label">Email</p>
-                        <p class="info-label-value">{{ rowId.BillToEmail }}</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Email</mat-label>
+                          <input matInput [(ngModel)]="rowId.BillToEmail">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Email</p>
+                        <p class="info-label-value">{{ rowId.BillToEmail }}</p> -->
                       </div>
                     </div>
                     <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                       <div class="col-lg-3 pl-0 pr-0">
-                        <p class="info-label">Phone</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Phone</mat-label>
+                          <input matInput [(ngModel)]="rowId.BillToPhoneNo">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Phone</p>
                         <p class="info-label-value">
                           {{ rowId.BillToPhoneNo }}
-                        </p>
+                        </p> -->
                       </div>
                       <div class="col-lg-3 pr-0">
-                        <p class="info-label">Address 1</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Address 1</mat-label>
+                          <input matInput [(ngModel)]="rowId.BillToAddress1">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Address 1</p>
                         <p class="info-label-value">
                           {{ rowId.BillToAddress1 }}
-                        </p>
+                        </p> -->
                       </div>
                       <div class="col-lg-3 pl-0 pr-0">
-                        <p class="info-label">Address 2</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Address 2</mat-label>
+                          <input matInput [(ngModel)]="rowId.BillToAddress2">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Address 2</p>
                         <p class="info-label-value">
                           {{ rowId.BillToAddress2 }}
-                        </p>
+                        </p> -->
                       </div>
                       <div class="col-lg-3 pr-0">
-                        <p class="info-label">City</p>
-                        <p class="info-label-value">{{ rowId.BillToCity }}</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>City</mat-label>
+                          <input matInput [(ngModel)]="rowId.BillToCity">
+                        </mat-form-field>
+                        <!-- <p class="info-label">City</p>
+                        <p class="info-label-value">{{ rowId.BillToCity }}</p> -->
                       </div>
                     </div>
                     <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                       <div class="col-lg-3 pl-0 pr-0">
-                        <p class="info-label">Postcode</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Postcode</mat-label>
+                          <input matInput [(ngModel)]="rowId.BillToPostCode">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Postcode</p>
                         <p class="info-label-value">
                           {{ rowId.BillToPostCode }}
-                        </p>
+                        </p> -->
                       </div>
                       <div class="col-lg-3 pr-0">
-                        <p class="info-label">State</p>
-                        <p class="info-label-value">{{ rowId.BillToState }}</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>State</mat-label>
+                          <input matInput [(ngModel)]="rowId.BillToState">
+                        </mat-form-field>
+                        <!-- <p class="info-label">State</p>
+                        <p class="info-label-value">{{ rowId.BillToState }}</p> -->
                       </div>
                       <div class="col-lg-3 pl-0 pr-0">
-                        <p class="info-label">Country</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Country</mat-label>
+                          <input matInput [(ngModel)]="rowId.BillToCountry">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Country</p>
                         <p class="info-label-value">
                           {{ rowId.BillToCountry }}
-                        </p>
+                        </p> -->
                       </div>
                       <div class="col-lg-3 pr-0">
-                        <p class="info-label">Co-ordinator</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Co-ordinator</mat-label>
+                          <input matInput [(ngModel)]="rowId.BillToCoordinator">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Co-ordinator</p>
                         <p class="info-label-value">
                           {{ rowId.BillToCoordinator }}
-                        </p>
+                        </p> -->
                       </div>
                     </div>
                     <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                       <div class="col-lg-6 pl-0 pr-0">
-                        <p class="info-label">Sales Person</p>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Sales Person</mat-label>
+                          <input matInput [(ngModel)]="rowId.BillToSalesPerson">
+                        </mat-form-field>
+                        <!-- <p class="info-label">Sales Person</p>
                         <p class="info-label-value">
                           {{ rowId.BillToSalesPerson }}
-                        </p>
+                        </p> -->
                       </div>
                     </div>
                   </div>
@@ -1264,6 +1450,115 @@
               </div>
             </div>
           </ng-container>
+        </div>
+      </div>
+    </div>
+    <!--Misc Billing-->
+    <div *ngIf="currentSelectedType === orderDetailTypesConstant.MISC_BILLING" class="col-lg-10 padding-l-0px">
+      <div class="card card-custom example example-compact gutter-b orders-job-table-card">
+        <div class="card-header pr-0">
+          <div class="row full-width">
+            <div class="col-lg-12 pt-2 pb-2 pr-0" style="padding-top: 0px !important">
+              <div class="float-left display-flex">
+                <h3 class="card-title font-weight-bolder text-dark" style="padding-top: 12px;">Misc Billing</h3>
+              </div>
+              <div class="float-right display-flex">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body" *ngFor="let rowId of shipmentInfoList; let i = index">
+          <table class="table table-head-custom table-vertical-center">
+            <thead>
+              <tr class="text-left">
+                <th>#</th>
+                <th>Cost Category</th>
+                <th>Description</th>
+                <th>Sub-Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="
+                                let rowId of shipmentInfoList[i].MiscBilling;
+                                let k = index
+                              ">
+                <td>{{ k + 1 }}</td>
+                <td>{{ rowId.Item }}</td>
+                <td>{{ rowId.Description }}</td>
+                <td>{{ rowId.Value }}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!--Special Instruction-->
+    <div *ngIf="currentSelectedType === orderDetailTypesConstant.SPECIAL_INSTRUCTIONS" class="col-lg-10 padding-l-0px">
+      <div class="card card-custom example example-compact gutter-b orders-job-table-card">
+        <div class="card-header pr-0">
+          <div class="row full-width">
+            <div class="col-lg-12 pt-2 pb-2 pr-0" style="padding-top: 0px !important">
+              <div class="float-left display-flex">
+                <h3 class="card-title font-weight-bolder text-dark" style="padding-top: 12px;">Special Instructions</h3>
+              </div>
+              <div class="float-right display-flex">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <table class="table table-head-custom table-vertical-center">
+            <thead>
+              <tr class="text-left">
+                <th>#</th>
+                <th>Department</th>
+                <th>Instructions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>ABC</td>
+                <td>Lorem ipum dolor imit</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!--Invoice-->
+    <div *ngIf="currentSelectedType === orderDetailTypesConstant.INVOICE" class="col-lg-10 padding-l-0px">
+      <div class="card card-custom example example-compact gutter-b orders-job-table-card">
+        <div class="card-header pr-0">
+          <div class="row full-width">
+            <div class="col-lg-12 pt-2 pb-2 pr-0" style="padding-top: 0px !important">
+              <div class="float-left display-flex">
+                <h3 class="card-title font-weight-bolder text-dark" style="padding-top: 12px;">Invoice</h3>
+              </div>
+              <div class="float-right display-flex">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <table class="table table-head-custom table-vertical-center">
+            <thead>
+              <tr class="text-left">
+                <th>#</th>
+                <th>Position</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Top</td>
+                <td>Lorem ipum dolor imit</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

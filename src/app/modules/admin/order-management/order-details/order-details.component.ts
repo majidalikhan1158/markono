@@ -16,6 +16,9 @@ import { AppPageRoutes } from '../../../shared/enums/app-constants';
 import { ApexAxisChartSeries, ApexDataLabels, ApexGrid, ApexPlotOptions, ApexTitleSubtitle, ApexXAxis, ChartComponent } from "ng-apexcharts";
 import { ApexNonAxisChartSeries, ApexResponsive, ApexChart } from "ng-apexcharts";
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { expandableRowAnimation } from '../../platemaking/expandable-row.animation';
+import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
+import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 
 export type TimeValueAnalysisChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -55,7 +58,8 @@ const ActivityLog_DATA: ActivityLogModel[] = [
   selector: 'app-order-details',
   templateUrl: './order-details.component.html',
   styleUrls: ['./order-details.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  animations: [expandableRowAnimation],
 })
 export class OrderDetailsComponent implements OnInit {
   //#region declaration 
@@ -78,7 +82,7 @@ export class OrderDetailsComponent implements OnInit {
   positionOptions: TooltipPosition[] = ['below', 'above', 'left', 'right'];
   position = new FormControl(this.positionOptions[1]);
   columnsToDisplay = ['Cust PO No.', 'Order Date', 'RDD', 'Qty', 'Order Type', 'Order Status',];
-  displayedColumnsJob: string[] = ['Id', 'JobNo', 'ISBNPartNo', 'CreatedDateTime', 'RequestedDeliveryDate', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode'];
+  displayedColumnsJob: string[] = ['Id', 'JobNo', 'ISBNPartNo', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode', 'expandRow'];
   dataSourceJob;
   orderInfoList;
   shipmentInfoList;
@@ -89,6 +93,7 @@ export class OrderDetailsComponent implements OnInit {
   orderDetailTypesConstant = OrderDetailTypes;
   ExpansionIcons = ExpansionIcons;
   rowIdToExpand = 1;
+  rowIdToExpandJob = 0;
   tableFilters: OrderInfoDetailSearchFilters = {
     currentSelectedFilter: '',
     jobNo: '',
@@ -120,11 +125,16 @@ export class OrderDetailsComponent implements OnInit {
     'activity',
     'status',
   ];
+  shipmentTermList: DDLListModal[] = [];
+  shipmentModeList: DDLListModal[] = [];
+  shipmentAgentList: DDLListModal[] = [];
+  disabled = false;
   //#endregion
 
   constructor(private router: Router,
     private route: ActivatedRoute,
     private orderService: OrderService,
+    private store: CaseStore,
     private cd: ChangeDetectorRef) {
     this.dataSourceJobInfo = new MatTableDataSource<JobInfoHeaderModel>(this.dataArrayJobInfo);
     this.dataSourceActivityLog = new MatTableDataSource<ActivityLogModel>(this.dataArrayActivityLog);
@@ -260,6 +270,7 @@ export class OrderDetailsComponent implements OnInit {
     this.getOrderInfo();
     this.getOrderJob();
     this.getShimpmentInfo();
+    this.getDropDownData();
   }
 
   public generateData(count, yrange) {
@@ -514,5 +525,16 @@ export class OrderDetailsComponent implements OnInit {
     if (tabChangeEvent.index == 1 || tabChangeEvent.index == 3) {
       this.showFiller = !this.showFiller
     }
+  }
+
+  private getDropDownData = () => {
+    this.store.caseDropDownStore.subscribe(result => {
+      if (result && result.data) {
+        this.shipmentTermList = result.data.shipmentTermList;
+        this.shipmentModeList = result.data.shipmentModeList;
+        this.shipmentAgentList = result.data.shipmentAgentList;
+      }
+      this.cd.detectChanges();
+    });
   }
 }

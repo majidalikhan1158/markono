@@ -178,6 +178,12 @@ app-order-details {
         flex: none;
         width: 75px;
     }
+    .mat-row {
+        .mat-column-JobNo {
+            color: #5face2;
+            font-weight: bold;
+        }
+    }
     .mat-column-ISBNPartNo {
         flex: none;
         width: 150px;
@@ -199,5 +205,17 @@ app-order-details {
         visibility: visible;
         margin-top: 282px;
         margin-right: 36px;
+    }
+    .expandable-row {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        background-color: #fafafa;
+        min-height: 0;
+        overflow: hidden;
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+    .mat-column-expandRow {
+        flex: none;
+        width: 50px;
     }
 }

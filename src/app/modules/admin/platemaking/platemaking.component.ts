@@ -17,13 +17,7 @@ import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 import { Router } from '@angular/router';
 import { PlatemakingDataList } from 'src/app/modules/shared/mock-data/platemaking-data-list';
 import { StatusTypes, PlatemakingListModel, StatusTypesArray } from 'src/app/modules/shared/models/plate-making';
-import { OrderService } from 'src/app/modules/services/core/services/order.service';
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
-import { Subscription } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { TokenType } from 'src/app/modules/shared/enums/app-enums';
-import { AppAuthService } from '../../services/core/services/app-auth.service';
-import { CaseHelperService } from '../../shared/enums/helpers/case-helper.service';
 import {
   ExpansionIcons,
 } from 'src/app/modules/shared/enums/app-constants';
@@ -35,7 +29,6 @@ import { expandableRowAnimation } from './expandable-row.animation';
   templateUrl: './platemaking.component.html',
   styleUrls: ['./platemaking.component.scss'],
   encapsulation: ViewEncapsulation.None,
-
   animations: [expandableRowAnimation],
 })
 export class PlatemakingComponent implements OnInit {

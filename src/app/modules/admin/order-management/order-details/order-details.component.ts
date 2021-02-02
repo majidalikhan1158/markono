@@ -537,4 +537,10 @@ export class OrderDetailsComponent implements OnInit {
       this.cd.detectChanges();
     });
   }
+
+  toggleExpandableJob(id: number): void {
+    this.rowIdToExpandJob = this.rowIdToExpandJob === id
+      ? 0
+      : id;
+  }
 }

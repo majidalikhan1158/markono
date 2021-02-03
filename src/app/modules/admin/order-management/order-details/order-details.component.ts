@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { MatSelectionListChange } from '@angular/material/list';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrderDetailTypes, OrderDetailTypesArray } from 'src/app/modules/shared/enums/order-management/order-constants';
@@ -19,7 +19,10 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { expandableRowAnimation } from '../../platemaking/expandable-row.animation';
 import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
-
+import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { MatSort } from '@angular/material/sort';
 export type TimeValueAnalysisChartOptions = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
@@ -59,11 +62,26 @@ const ActivityLog_DATA: ActivityLogModel[] = [
   templateUrl: './order-details.component.html',
   styleUrls: ['./order-details.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  animations: [expandableRowAnimation],
+  // animations: [expandableRowAnimation],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0', visibility: 'hidden' })),
+      state('expanded', style({ height: '*', visibility: 'visible' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
-export class OrderDetailsComponent implements OnInit {
+export class OrderDetailsComponent implements OnInit, AfterViewInit {
   //#region declaration 
+  displayedColumns = ['Id', 'JobNo', 'ISBNPartNo', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode', 'expandRow'];
+  dataSource: MatTableDataSource<Element>;
+  @ViewChild('sort', { static: false }) sort: MatSort;
+  @Input() createCaseMode: CreateCaseMode;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild("chart") chart: ChartComponent;
+  expandedElement: any;
+  isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow');
+  nextPosition: number = 0;
   public timeValueAnalysisChartOptions: Partial<TimeValueAnalysisChartOptions>;
   public timeValueMapChartOptions: Partial<TimeValueMapChartOptions>;
   public timeValueProcessChartOptions: Partial<TimeValueProcessChartOptions>;
@@ -76,8 +94,7 @@ export class OrderDetailsComponent implements OnInit {
     'orderType',
     'orderStatus',
   ];
-  @Input() createCaseMode: CreateCaseMode;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   showFiller = true;
   positionOptions: TooltipPosition[] = ['below', 'above', 'left', 'right'];
   position = new FormControl(this.positionOptions[1]);
@@ -93,7 +110,7 @@ export class OrderDetailsComponent implements OnInit {
   orderDetailTypesConstant = OrderDetailTypes;
   ExpansionIcons = ExpansionIcons;
   rowIdToExpand = 1;
-  rowIdToExpandJob = 0;
+  rowIdToExpandJob = 1;
   tableFilters: OrderInfoDetailSearchFilters = {
     currentSelectedFilter: '',
     jobNo: '',
@@ -129,18 +146,23 @@ export class OrderDetailsComponent implements OnInit {
   shipmentModeList: DDLListModal[] = [];
   shipmentAgentList: DDLListModal[] = [];
   disabled = false;
+  showBox = false;
   //#endregion
 
   constructor(private router: Router,
     private route: ActivatedRoute,
     private orderService: OrderService,
     private store: CaseStore,
+    public overlay: Overlay,
+    public viewContainerRef: ViewContainerRef,
     private cd: ChangeDetectorRef) {
+    this.dataSource = new MatTableDataSource();
     this.dataSourceJobInfo = new MatTableDataSource<JobInfoHeaderModel>(this.dataArrayJobInfo);
     this.dataSourceActivityLog = new MatTableDataSource<ActivityLogModel>(this.dataArrayActivityLog);
   }
 
   ngOnInit(): void {
+    this.dataSource.data = data;
     this.timeValueAnalysisChartOptions = {
       series: [44, 55, 13],
       chart: {
@@ -295,6 +317,7 @@ export class OrderDetailsComponent implements OnInit {
   initializeDatatable = () => {
     this.dataSourceJob = new MatTableDataSource<CaseDetail>(this.dataJobArray);
     this.dataSourceJob.paginator = this.paginator;
+    this.dataSource.paginator = this.paginator;
     this.dataSourceJob.filterPredicate = this.customFilterPredicate();
     this.cd.detectChanges();
   }
@@ -522,6 +545,7 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
+    this.openOverlay()
     if (tabChangeEvent.index == 1 || tabChangeEvent.index == 3) {
       this.showFiller = !this.showFiller
     }
@@ -542,5 +566,69 @@ export class OrderDetailsComponent implements OnInit {
     this.rowIdToExpandJob = this.rowIdToExpandJob === id
       ? 0
       : id;
+    // const shipmentToExpand = this.shipmentInfoList.find((x) => x.Id === id);
+    // if (this.rowIdToExpand === shipmentToExpand.Id) {
+    //   this.rowIdToExpand = 0;
+    //   this.shouldShowShipmentDetails = !this.shouldShowShipmentDetails;
+    // } else {
+    //   this.rowIdToExpand = shipmentToExpand.Id;
+    //   this.shouldShowShipmentDetails = true;
+    // }
+  }
+
+  openOverlay() {
+    // let config = new OverlayConfig();
+
+    // config.positionStrategy = this.overlay.position()
+    //   .global()
+    //   .left(`${this.nextPosition}px`)
+    //   .top(`${this.nextPosition}px`);
+
+    // this.nextPosition += 30;
+
+    // config.hasBackdrop = true;
+
+    // let overlayRef = this.overlay.create(config);
+
+    // overlayRef.backdropClick().subscribe(() => {
+    //   overlayRef.dispose();
+    // });
+
+    // overlayRef.attach(new ComponentPortal(OrderDetailsComponent, this.viewContainerRef));
+  }
+
+  boxShow() {
+    this.showBox = !this.showBox;
+  }
+  ngAfterViewInit() {
   }
 }
+export interface Element {
+  name: string;
+  position: number;
+  weight: number;
+  symbol: string;
+}
+
+const data: Element[] = [
+  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
+  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
+  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
+  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
+  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
+  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
+  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
+  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
+  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
+  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
+  { position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na' },
+  { position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg' },
+  { position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al' },
+  { position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si' },
+  { position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P' },
+  { position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S' },
+  { position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl' },
+  { position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar' },
+  { position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K' },
+  { position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca' },
+];

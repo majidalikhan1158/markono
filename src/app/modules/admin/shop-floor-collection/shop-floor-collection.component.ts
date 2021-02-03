@@ -80,14 +80,14 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   subscriptions: Subscription;
   selectedProductSpec = 'Main Component';
   constructor(private layout: LayoutService,
-              private auth: AppAuthService,
-              private shopFloorService: ShopFloorService,
-              private helper: ShopFloorHelperService,
-              private snack: SnackBarService,
-              private ref: ChangeDetectorRef,
-              private modalService: ModalService,
-              private store: CaseStore,
-              private ui: SpinnerService) {
+    private auth: AppAuthService,
+    private shopFloorService: ShopFloorService,
+    private helper: ShopFloorHelperService,
+    private snack: SnackBarService,
+    private ref: ChangeDetectorRef,
+    private modalService: ModalService,
+    private store: CaseStore,
+    private ui: SpinnerService) {
     this.setStyling();
   }
 
@@ -279,7 +279,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
   }
 
   emptyCall = () => {
-    return ;
+    return;
   }
 
   callToMachineStatusSubscription = (machineStatusLink: string, showMessage = false) => {
@@ -289,12 +289,12 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
         this.machineSelectedStatusAction = this.machineStatusActionVM.machineStatusActionList.find(x => x.current);
         this.selectedStatusActionId = this.machineSelectedStatusAction ? this.machineSelectedStatusAction.id : 'Choose';
       } else {
-        showMessage ? this.snack.open('Unable to get machine status action') : this.emptyCall() ;
+        showMessage ? this.snack.open('Unable to get machine status action') : this.emptyCall();
       }
       this.counter++;
       this.ref.detectChanges();
     }, (err: HttpErrorResponse) => {
-      showMessage ? this.snack.open('Unable to get machine status action') : this.emptyCall() ;
+      showMessage ? this.snack.open('Unable to get machine status action') : this.emptyCall();
     });
   }
 
@@ -305,12 +305,12 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
         const activeAction = this.machineCurrentJobVM.machineJobActionsList.find(x => x.active);
         this.selectedJobAction = activeAction ? activeAction.actionLink : 'Choose';
       } else {
-        showMessage ? this.snack.open('Unable to get machine current job') : this.emptyCall() ;
+        showMessage ? this.snack.open('Unable to get machine current job') : this.emptyCall();
       }
       this.counter++;
       this.ref.detectChanges();
     }, (err: HttpErrorResponse) => {
-      showMessage ? this.snack.open('Unable to get machine current job') : this.emptyCall() ;
+      showMessage ? this.snack.open('Unable to get machine current job') : this.emptyCall();
     });
   }
 
@@ -321,12 +321,12 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
         // tslint:disable-next-line: max-line-length
         this.commulativeOutputChartOptions = this.getCommulativeOutputChartOptions(this.machineCommulativeOutputVM) as unknown as CommulativeChartOptions;
       } else {
-        showMessage ? this.snack.open('Unable to get machine commulative output') : this.emptyCall() ;
+        showMessage ? this.snack.open('Unable to get machine commulative output') : this.emptyCall();
       }
       this.counter++;
       this.ref.detectChanges();
     }, (err: HttpErrorResponse) => {
-      showMessage ? this.snack.open('Unable to get machine commulative output') : this.emptyCall() ;
+      showMessage ? this.snack.open('Unable to get machine commulative output') : this.emptyCall();
     });
   }
 
@@ -338,14 +338,14 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
         const unitsPerMinutes = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.count);
         const unitsFromDate = this.machineCurrentJobUnitsVM.unitsPerMinutesList.map(x => x.fromDate);
         this.unitsProducedChartOptions =
-        (this.getUnitsProducePerMinuteChart(unitsPerMinutes, unitsFromDate) as unknown) as UnitsProducedChartOptions;
+          (this.getUnitsProducePerMinuteChart(unitsPerMinutes, unitsFromDate) as unknown) as UnitsProducedChartOptions;
       } else {
-        showMessage ? this.snack.open('Unable to get machine current job units') : this.emptyCall() ;
+        showMessage ? this.snack.open('Unable to get machine current job units') : this.emptyCall();
       }
       this.counter++;
       this.ref.detectChanges();
     }, (err: HttpErrorResponse) => {
-      showMessage ? this.snack.open('Unable to get machine current job units') : this.emptyCall() ;
+      showMessage ? this.snack.open('Unable to get machine current job units') : this.emptyCall();
     });
   }
 
@@ -374,7 +374,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
           this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = this.helper.mapToScheduleJobsModal(resp.body);
         } else {
           this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = [];
-          showMessage ? this.snack.open('No schedule jobs found') : this.emptyCall() ;
+          showMessage ? this.snack.open('No schedule jobs found') : this.emptyCall();
         }
         this.counter++;
         this.shouldShowScheduleLoader = false;
@@ -383,7 +383,7 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
       (err: HttpErrorResponse) => {
         this.shouldShowScheduleLoader = false;
         this.machineScheduleJobsVMList = this.machineScheduleJobsFilterList = [];
-        showMessage ? this.snack.open('No schedule jobs found') : this.emptyCall() ;
+        showMessage ? this.snack.open('No schedule jobs found') : this.emptyCall();
       }
     );
   }
@@ -395,14 +395,14 @@ export class ShopFloorCollectionComponent implements OnInit, OnDestroy {
         const { seriesData, ranges } = this.getTimelineSeriesData(this.machineStatusTimelineVM?.itemList);
         this.timeLineChartOptions = this.getTimeLineChartOptions(seriesData, ranges) as TimeLineChartOptions;
       } else {
-        showMessage ? this.snack.open('Unable to get machine status timeline') : this.emptyCall() ;
+        showMessage ? this.snack.open('Unable to get machine status timeline') : this.emptyCall();
       }
       this.counter++;
-      showMessage ? this.ui.reset() : this.emptyCall() ;
+      showMessage ? this.ui.reset() : this.emptyCall();
       this.ref.detectChanges();
     }, (err: HttpErrorResponse) => {
-      showMessage ? this.ui.reset() : this.emptyCall() ;
-      showMessage ? this.snack.open('Unable to get machine status timeline') : this.emptyCall() ;
+      showMessage ? this.ui.reset() : this.emptyCall();
+      showMessage ? this.snack.open('Unable to get machine status timeline') : this.emptyCall();
     });
   }
 

@@ -216,6 +216,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
       isbn: product.isbn,
       VersionNo: product.versionNo
     };
+    this.store.reset();
     this.productService.getProductDetails(reqObj).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
         const productDetails = resp.body.result[0];

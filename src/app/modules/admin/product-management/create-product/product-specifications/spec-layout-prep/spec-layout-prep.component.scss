@@ -98,8 +98,7 @@ app-spec-layout-prep {
         padding-left: 10px;
         padding-right: 0px;
         padding-top: 0px;
-        // padding-bottom: 10px;
-        text-align: center;
+        text-align: left;
         font: normal normal normal 12px/14px Roboto;
         letter-spacing: 0px !important;
         opacity: 1;
@@ -110,13 +109,15 @@ app-spec-layout-prep {
         font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-normal) var(--unnamed-font-size-14) /
             var(--unnamed-line-spacing-17) var(--unnamed-font-family-roboto);
         letter-spacing: var(--unnamed-character-spacing-0);
-        text-align: center;
+        text-align: left;
         font: normal normal normal 14px/17px Roboto;
         letter-spacing: 0px;
         color: #484848;
         opacity: 1;
         padding-right: 0px;
         line-height: 3;
+        padding-bottom: 0px !important;
+        padding-top: 0px !important;
     }
 
     .product-activitiy-table tbody tr.expandedRow td {
@@ -175,5 +176,9 @@ app-spec-layout-prep {
     .padding-11 td {
         // width: 20% !important;
         padding: 6px !important;
+    }
+
+    .selected-background {
+        background:#F9F9F9 !important;
     }
 }

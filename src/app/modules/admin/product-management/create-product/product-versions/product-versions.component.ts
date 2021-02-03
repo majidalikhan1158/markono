@@ -21,10 +21,19 @@ export class ProductVersionsComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   dataArray: ProductVersions[];
   dataSource;
+  description: string;
   constructor(public store: ProductSpecStore, private snak: SnackBarService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.subscription = this.store.$productSpecStore.subscribe(resp => {
+      const selectedVersion = resp.selectedVersion;
+      if (selectedVersion && selectedVersion.VersionDescription) {
+       this.description = selectedVersion.VersionDescription;
+      }
+    });
+
     this.getVersions();
+
     this.subscription = this.store.$productSpecStore.subscribe(resp => {
       if (resp && resp.generalVM && resp.generalVM.productNumber && this.productIsbnNumber !== resp.generalVM.productNumber) {
         this.productIsbnNumber = resp.generalVM.productNumber;
@@ -32,19 +41,23 @@ export class ProductVersionsComponent implements OnInit, OnDestroy {
         this.store.getVersions(this.productIsbnNumber);
       }
     });
+
   }
 
   getVersions = () => {
-    this.store.$productVersionList.subscribe(resp => {
+    let selectedVersion = '';
+    this.subscription = this.store.$productVersionList.subscribe(resp => {
       resp.forEach(item => {
         if (item.VersionNo === this.selectedVersion) {
           item.active = true;
-          this.handleVersionSelection(item.Id);
+          item.VersionDescription = this.description;
+          selectedVersion = item.Id;
         }
       });
       this.productVersionList = this.dataArray = resp.sort((a, b) => {
         return (new Date(b.CreatedDateTime) as any) - (new Date(a.CreatedDateTime) as any);
       });
+      this.handleVersionSelection(selectedVersion);
       this.initializeDatatable();
     });
   }
@@ -59,6 +72,9 @@ export class ProductVersionsComponent implements OnInit, OnDestroy {
     const selectedVersion = this.productVersionList.find(x => x.Id === versionId);
     if (selectedVersion && showMessage > 0) {
       this.snak.open(`Version has been selected successfully to ${selectedVersion?.VersionNo ?? ''}`);
+    }
+    if (selectedVersion) {
+      selectedVersion.VersionDescription = this.description;
     }
     this.store.setSelectedVersion(selectedVersion);
   }

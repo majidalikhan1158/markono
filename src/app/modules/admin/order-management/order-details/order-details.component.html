@@ -1403,7 +1403,7 @@
               </div>
             </div>
           </div>
-          <div class="card-body" *ngFor="let rowId of shipmentInfoList; let i = index">
+          <div class="card-body">
             <table class="table table-head-custom table-vertical-center">
               <thead>
                 <tr class="text-left">
@@ -1414,7 +1414,7 @@
                   <th></th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody *ngFor="let rowId of shipmentInfoList; let i = index">
                 <tr *ngFor="
                     let row of shipmentInfoList[i].MiscBilling;
                     let k = index

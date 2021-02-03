@@ -1030,7 +1030,7 @@
                   <div class="col-lg-3 pl-0">
                     <mat-form-field appearance="fill">
                       <mat-label>Billable?</mat-label>
-                      <mat-select [(ngModel)]="rowId.Billable" [disabled]="disabled">
+                      <mat-select [(ngModel)]="rowId.Billable" disabled>
                         <mat-option value="true">Yes</mat-option>
                         <mat-option value="false">No</mat-option>
                       </mat-select>
@@ -1039,8 +1039,7 @@
                   <div class="col-lg-3 pr-0 pl-0">
                     <mat-form-field appearance="fill">
                       <mat-label>Shipment Promised Date</mat-label>
-                      <input matInput [matDatepicker]="picker1" [(ngModel)]="rowId.ShipmentPromisedDate"
-                        [disabled]="disabled">
+                      <input matInput [matDatepicker]="picker1" [(ngModel)]="rowId.ShipmentPromisedDate" disabled>
                       <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                       <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
@@ -1048,7 +1047,7 @@
                   <div class="col-lg-3 pr-0">
                     <mat-form-field appearance="fill">
                       <mat-label>Shipment Mode</mat-label>
-                      <mat-select [(ngModel)]="rowId.ShipmentMode" [disabled]="disabled">
+                      <mat-select [(ngModel)]="rowId.ShipmentMode" disabled>
                         <mat-option *ngFor="let item of shipmentModeList" [value]="item.attributes.description">
                           {{item.attributes.description}}</mat-option>
                       </mat-select>
@@ -1057,7 +1056,7 @@
                   <div class="col-lg-3 pr-0">
                     <mat-form-field appearance="fill">
                       <mat-label>Shipment Terms</mat-label>
-                      <mat-select [(ngModel)]="rowId.ShippingMethod" [disabled]="disabled">
+                      <mat-select [(ngModel)]="rowId.ShippingMethod" disabled>
                         <mat-option *ngFor="let item of shipmentModeList" [value]="item.attributes.description">
                           {{item.attributes.description}}</mat-option>
                       </mat-select>
@@ -1071,7 +1070,7 @@
                   <div class="col-lg-3 pl-0">
                     <mat-form-field appearance="fill">
                       <mat-label>Shipment Agent</mat-label>
-                      <mat-select [(ngModel)]="rowId.ShippingAgent" [disabled]="disabled">
+                      <mat-select [(ngModel)]="rowId.ShippingAgent" disabled>
                         <mat-option *ngFor="let item of shipmentAgentList" [value]="item.attributes.description">
                           {{item.attributes.description}}</mat-option>
                       </mat-select>
@@ -1118,26 +1117,13 @@
                                 let j = index
                               ">
                               <td>{{ j + 1 }}</td>
-                              <td>
-                                {{
-                                ship.ISBNPartNo
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                ship.Title
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                ship.TotalRemaining
-                                }}
-                              </td>
+                              <td> {{ ship.ISBNPartNo }}</td>
+                              <td> {{ ship.Title }} </td>
+                              <td> {{ ship.TotalRemaining }} </td>
                               <td>
                                 <mat-form-field appearance="fill">
                                   <!-- <mat-label>Shipment Qty</mat-label> -->
-                                  <input matInput type="number" value="{{ship.RequestedQty
-                                    }}" [disabled]="disabled" />
+                                  <input matInput type="number" value="{{ship.RequestedQty }}" disabled />
                                 </mat-form-field>
                               </td>
                             </tr>
@@ -1183,7 +1169,7 @@
                             <td>
                               <mat-form-field appearance="fill">
                                 <mat-label>Choose</mat-label>
-                                <mat-select [(ngModel)]="rowId.Item" [disabled]="disabled">
+                                <mat-select [(ngModel)]="rowId.Item" disabled>
                                   <mat-option value="Filfillment">Filfillment
                                   </mat-option>
                                   <mat-option value="Fulfillment">Fulfillment
@@ -1201,13 +1187,13 @@
                             <td>
                               <mat-form-field appearance="fill">
                                 <mat-label>Description</mat-label>
-                                <input matInput [(ngModel)]="rowId.Description" [disabled]="disabled" />
+                                <input matInput [(ngModel)]="rowId.Description" disabled />
                               </mat-form-field>
                             </td>
                             <td>
                               <mat-form-field appearance="fill">
                                 <mat-label>Sub total</mat-label>
-                                <input matInput [(ngModel)]="rowId.Value" [disabled]="disabled" />
+                                <input matInput [(ngModel)]="rowId.Value" disabled />
                                 <span matPrefix>$&nbsp;</span>
                               </mat-form-field>
                             </td>
@@ -1231,13 +1217,13 @@
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Attention To</mat-label>
-                        <input matInput [(ngModel)]="rowId.ShipToAttentionTo">
+                        <input matInput [(ngModel)]="rowId.ShipToAttentionTo" disabled>
                       </mat-form-field>
                     </div>
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Contact Person</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToContactPerson">
+                        <input matInput [(ngModel)]="rowId.BillToContactPerson" disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1245,13 +1231,13 @@
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Email</mat-label>
-                        <input type="email" matInput [(ngModel)]="rowId.ShipToEmail">
+                        <input type="email" matInput [(ngModel)]="rowId.ShipToEmail" disabled>
                       </mat-form-field>
                     </div>
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Phone</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToPhoneNo">
+                        <input matInput [(ngModel)]="rowId.BillToPhoneNo" disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1259,13 +1245,13 @@
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Address 1</mat-label>
-                        <input matInput [(ngModel)]="rowId.ShipToAdd1">
+                        <input matInput [(ngModel)]="rowId.ShipToAdd1" disabled>
                       </mat-form-field>
                     </div>
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Address 2</mat-label>
-                        <input matInput [(ngModel)]="rowId.ShipToAdd2">
+                        <input matInput [(ngModel)]="rowId.ShipToAdd2" disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1273,13 +1259,13 @@
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
                         <mat-label>City</mat-label>
-                        <input matInput [(ngModel)]="rowId.ShipToCity ">
+                        <input matInput [(ngModel)]="rowId.ShipToCity " disabled>
                       </mat-form-field>
                     </div>
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Postcode</mat-label>
-                        <input matInput [(ngModel)]="rowId.ShipToPostCode">
+                        <input matInput [(ngModel)]="rowId.ShipToPostCode" disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1287,13 +1273,13 @@
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
                         <mat-label>State</mat-label>
-                        <input matInput [(ngModel)]=" rowId.ShipToState ">
+                        <input matInput [(ngModel)]=" rowId.ShipToState " disabled>
                       </mat-form-field>
                     </div>
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Country</mat-label>
-                        <input matInput [(ngModel)]=" rowId.ShipToCountry">
+                        <input matInput [(ngModel)]=" rowId.ShipToCountry" disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1307,13 +1293,13 @@
                     <div class="col-lg-6 pl-0 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Bill-to No</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToNo">
+                        <input matInput [(ngModel)]="rowId.BillToNo" disabled>
                       </mat-form-field>
                     </div>
                     <div class="col-lg-6 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Attention To</mat-label>
-                        <input matInput [(ngModel)]="rowId.ShipToAttentionTo">
+                        <input matInput [(ngModel)]="rowId.ShipToAttentionTo" disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1321,13 +1307,13 @@
                     <div class="col-lg-6 pl-0 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Contact Person</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToContactPerson">
+                        <input matInput [(ngModel)]="rowId.BillToContactPerson" disabled>
                       </mat-form-field>
                     </div>
                     <div class="col-lg-6 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Email</mat-label>
-                        <input type="email" matInput [(ngModel)]="rowId.BillToEmail">
+                        <input type="email" matInput [(ngModel)]="rowId.BillToEmail" disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1335,13 +1321,13 @@
                     <div class="col-lg-6 pl-0 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Phone</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToPhoneNo">
+                        <input matInput [(ngModel)]="rowId.BillToPhoneNo" disabled>
                       </mat-form-field>
                     </div>
                     <div class="col-lg-6 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Address 1</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToAddress1">
+                        <input matInput [(ngModel)]="rowId.BillToAddress1" disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1349,13 +1335,13 @@
                     <div class="col-lg-6 pl-0 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Address 2</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToAddress2">
+                        <input matInput [(ngModel)]="rowId.BillToAddress2" disabled>
                       </mat-form-field>
                     </div>
                     <div class="col-lg-6 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>City</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToCity ">
+                        <input matInput [(ngModel)]="rowId.BillToCity " disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1363,13 +1349,13 @@
                     <div class="col-lg-6 pl-0 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Postcode</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToPostCode">
+                        <input matInput [(ngModel)]="rowId.BillToPostCode" disabled>
                       </mat-form-field>
                     </div>
                     <div class="col-lg-6 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>State</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToState">
+                        <input matInput [(ngModel)]="rowId.BillToState" disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1377,13 +1363,13 @@
                     <div class="col-lg-6 pl-0 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Country</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToCountry">
+                        <input matInput [(ngModel)]="rowId.BillToCountry" disabled>
                       </mat-form-field>
                     </div>
                     <div class="col-lg-6 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Co-ordinator</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToCoordinator">
+                        <input matInput [(ngModel)]="rowId.BillToCoordinator" disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1391,7 +1377,7 @@
                     <div class="col-lg-6 pl-0 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Sales Person</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToSalesPerson">
+                        <input matInput [(ngModel)]="rowId.BillToSalesPerson" disabled>
                       </mat-form-field>
                     </div>
                   </div>

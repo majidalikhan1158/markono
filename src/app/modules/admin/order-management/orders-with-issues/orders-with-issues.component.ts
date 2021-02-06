@@ -15,15 +15,10 @@ import {
 } from 'src/app/modules/shared/models/table-filter-modals';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 import { Router } from '@angular/router';
-import { OrdersModelDataList } from 'src/app/modules/shared/mock-data/orders-data-list';
-import { ViewByArray, OrdersModel, StatusTypesArray, OrderType, OrdersIssueModel } from 'src/app/modules/shared/models/order-management';
+import { ViewByArray, OrdersModel, StatusTypesArray, OrderType, OrdersIssueModel, OrderVM } from 'src/app/modules/shared/models/order-management';
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 import { Subscription } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { TokenType } from 'src/app/modules/shared/enums/app-enums';
-import { AppAuthService } from '../../../services/core/services/app-auth.service';
-import { CaseHelperService } from '../../../shared/enums/helpers/case-helper.service';
-import { OrdersIssueDataList } from 'src/app/modules/shared/mock-data/orders-issue-list';
+import { OrderService } from 'src/app/modules/services/core/services/order.service';
 
 @Component({
   selector: 'app-orders-with-issues',
@@ -36,17 +31,17 @@ export class OrdersWithIssuesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = [
     'id',
-    'jobNo',
-    'customerPoNo',
-    'isbn',
+    'caseNo', //not aviable in api (jobno)
+    'yourReference',
+    'orderNo', //not aviable in api (isbn)
     'orderDate',
-    'rdd',
+    'requestedDeliveryDate',
     'qty',
     'type',
-    'status',
+    'currentActivityStatusCode',
     // 'actions'
   ];
-  dataArray = OrdersIssueDataList;
+  dataArray;
   dataSource;
   tableFilters: OrdersWithIssueSearchFilters = {
     currentSelectedFilter: '',
@@ -69,19 +64,38 @@ export class OrdersWithIssuesComponent implements OnInit {
   chooseList = '';
   viewByFilter = '';
   selectedOrderType = '';
+  subscription: Subscription;
   //#endregion
 
-  constructor(private modalService: ModalService, private router: Router,
-    private snack: SnackBarService,) {
-    this.dataSource = new MatTableDataSource<OrdersIssueModel>(this.dataArray);
+  constructor(private modalService: ModalService,
+    private router: Router,
+    private snack: SnackBarService,
+    private orderService: OrderService,
+    private cd: ChangeDetectorRef,) {
+    //  this.dataSource = new MatTableDataSource<OrdersIssueModel>(this.dataArray);
   }
 
   ngOnInit(): void {
+    this.getAllIssueOrders()
+  }
+
+  getAllIssueOrders() {
+    this.subscription = this.orderService.getAllOrders().subscribe(resp => {
+      this.dataArray = resp.body.result ? resp.body.result as OrderVM[] : [];
+      this.initializeDatatable();
+    });
+  }
+
+  initializeDatatable = () => {
+    this.dataSource = new MatTableDataSource<OrderVM>(this.dataArray);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.filterPredicate = this.customFilterPredicate();
+    this.cd.detectChanges();
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.filterPredicate = this.customFilterPredicate();
+    // this.dataSource.paginator = this.paginator;
+    // this.dataSource.filterPredicate = this.customFilterPredicate();
   }
 
   applySearch(event: Event) {
@@ -276,7 +290,7 @@ export class OrdersWithIssuesComponent implements OnInit {
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
 
-  getCustomerName(number) {
-    return ' Banta Global Turnkey (S) Pte Ltd';
+  getCustomerName(value) {
+    return this.dataArray.find(x => x.id === value).companyName;
   }
 }

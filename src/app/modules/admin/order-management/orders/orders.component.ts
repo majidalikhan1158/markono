@@ -28,7 +28,7 @@ import { AfterViewInit } from '@angular/core';
 export class OrdersComponent implements OnInit {
   //#region declaration
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  displayedColumns: string[] = ['id', 'yourReference', 'orderDate', 'requestedDeliveryDate', 'noOfTitles', 'qty', 'printType', 'currentActivityStatusCode', 'actions'];
+  displayedColumns: string[] = ['id', 'yourReference', 'orderDate', 'requestedDeliveryDate', 'noOfTitles', 'qty', 'type', 'currentActivityStatusCode', 'actions'];
   dataArray = OrdersModelDataList;
   dataSource;
   tableFilters: OrderSearchFilters = {

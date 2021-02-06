@@ -37,83 +37,87 @@
                 </td>
                 <td class="flex-width">{{ orderInfoList[i].Qty }}</td>
                 <td class="flex-width">
-                  <div *ngIf="orderInfoList[i].PrintType == 'Digital'">
+                  <div *ngIf="orderInfoList[i].Type == 'PO'">
                     <img src="./assets/media/misc/ic_print.png" />
                     <span style="padding-left: 12px">Print</span>
                   </div>
-                  <div *ngIf="orderInfoList[i].PrintType != 'Digital'">
+                  <div *ngIf="orderInfoList[i].Type == 'WO'">
                     <img src="./assets/media/misc/ic_warehouse.png" />
                   </div>
                 </td>
                 <td class="flex-width">
                   <!--orange > Pending File Prep-->
                   <div class="status-options" *ngIf="orderInfoList[i].CurrentActivityStatusCode == 301">
-                    <span style="width: 100px">
-                      <span style="width: auto !important"
-                        class="label label-lg label-light-orange label-inline">Pending File Prep</span>
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-orange label-inline">Pending File
+                        Prep</span>
                     </span>
                   </div>
                   <!--green > Order Confirmed-->
                   <div class="status-options" *ngIf="orderInfoList[i].CurrentActivityStatusCode == 207">
-                    <span style="width: 100px">
-                      <span style="width: auto !important" class="label label-lg label-light-green label-inline">Order
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-green label-inline">Order
                         Confirmed</span>
                     </span>
                   </div>
                   <!--purple > RFQ-->
                   <div class="status-options" *ngIf="orderInfoList[i].CurrentActivityStatusCode == 201">
-                    <span style="width: 100px">
-                      <span style="width: auto !important"
-                        class="label label-lg label-light-purple label-inline">RFQ</span>
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-purple label-inline">RFQ</span>
                     </span>
                   </div>
                   <!-- light-blue > Case Created-->
                   <div class="status-options" *ngIf="orderInfoList[i].CurrentActivityStatusCode == 101">
-                    <span style="width: 100px">
-                      <span style="width: auto !important" class="label label-lg label-light-blue label-inline">Case
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Case
                         Created</span>
                     </span>
                   </div>
                   <!-- light-blue > Pending Est-->
                   <div class="status-options" *ngIf="orderInfoList[i].CurrentActivityStatusCode == 202">
-                    <span style="width: 100px">
-                      <span style="width: auto !important" class="label label-lg label-light-blue label-inline">Pending
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Pending
                         Est</span>
                     </span>
                   </div>
                   <!-- light-blue > Est. Compl-->
                   <div class="status-options" *ngIf="orderInfoList[i].CurrentActivityStatusCode == 203">
-                    <span style="width: 100px">
-                      <span style="width: auto !important" class="label label-lg label-light-blue label-inline">Est.
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Est.
                         Compl</span>
                     </span>
                   </div>
                   <!-- light-blue > Printing-->
                   <div class="status-options" *ngIf="orderInfoList[i].CurrentActivityStatusCode == 503">
-                    <span style="width: 100px">
-                      <span style="width: auto !important"
-                        class="label label-lg label-light-blue label-inline">Printing</span>
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Printing</span>
                     </span>
                   </div>
                   <!-- light-blue > Folding Compl-->
                   <div class="status-options" *ngIf="orderInfoList[i].CurrentActivityStatusCode == 602">
-                    <span style="width: 100px">
-                      <span style="width: auto !important" class="label label-lg label-light-blue label-inline">Folding
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Folding
                         Compl</span>
                     </span>
                   </div>
                   <!-- light-blue > Bind Compl-->
                   <div class="status-options" *ngIf="orderInfoList[i].CurrentActivityStatusCode == 801">
-                    <span style="width: 100px">
-                      <span style="width: auto !important" class="label label-lg label-light-blue label-inline">Bind
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Bind
                         Compl</span>
                     </span>
                   </div>
                   <!-- light-blue > Shipped-->
                   <div class="status-options" *ngIf="orderInfoList[i].CurrentActivityStatusCode == 806">
-                    <span style="width: 100px">
-                      <span style="width: auto !important"
-                        class="label label-lg label-light-blue label-inline">Shipped</span>
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Shipped</span>
+                    </span>
+                  </div>
+                  <!-- light-blue > No Setup-->
+                  <div class="status-options" *ngIf="orderInfoList[i].CurrentActivityStatusCode == 21">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">No
+                        Setup</span>
                     </span>
                   </div>
                 </td>
@@ -128,10 +132,8 @@
 
 <div class="row">
   <div class="col-xl-12 display-flex" style="flex: none;">
-    <div class="col-xl-2 padding-l-0px"
-      style="background-color: white;min-width: 200px;padding-right: 0px;max-width: 161px;">
-      <div class="card card-custom example example-compact gutter-b order-details-types"
-        style="box-shadow: none; border-right: 1px solid #e6e6e6;">
+    <div class="col-xl-2 padding-l-0px order-types">
+      <div class="card card-custom example example-compact gutter-b order-details-types">
         <div class="card-body">
           <mat-selection-list [multiple]="false" (selectionChange)="handleOrderDetailTypeChange($event)">
             <mat-list-option *ngFor="let types of orderDetailTypesArray" class="font-14px" [selected]="types.isSelected"
@@ -305,18 +307,16 @@
             <mat-table #table [dataSource]="dataSourceJob" multiTemplateDataRows>
 
               <ng-container matColumnDef="Id">
-                <mat-header-cell *matHeaderCellDef style="padding-left: 20px !important">
-                  #
-                </mat-header-cell>
-                <mat-cell *matCellDef="let element; let i = index">{{
-                  i + 1
-                  }}</mat-cell>
+                <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+                <mat-cell *matCellDef="let element;" style="padding-left: 2px !important">
+                  {{getId()}}
+                </mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="JobNo">
                 <mat-header-cell *matHeaderCellDef>Job No.</mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                  {{ element.JobNo }}
+                  <a href="javascript:;" (click)="drawer.toggle();boxShow()">{{ element.JobNo }}</a>
                 </mat-cell>
               </ng-container>
 
@@ -348,64 +348,84 @@
                 <mat-cell *matCellDef="let element">
                   <!--orange > Pending File Prep-->
                   <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 301">
-                    <span style="width: 100px">
+                    <span class="width-100">
                       <span class="label label-lg label-light-orange label-inline">Pending File Prep</span>
                     </span>
                   </div>
                   <!--green > Order Confirmed-->
                   <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 207">
-                    <span style="width: 100px">
+                    <span class="width-100">
                       <span class="label label-lg label-light-green label-inline">Order Confirmed</span>
                     </span>
                   </div>
                   <!--purple > RFQ-->
                   <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 201">
-                    <span style="width: 100px">
+                    <span class="width-100">
                       <span class="label label-lg label-light-purple label-inline">RFQ</span>
                     </span>
                   </div>
                   <!-- light-blue > Case Created-->
                   <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 101">
-                    <span style="width: 100px">
+                    <span class="width-100">
                       <span class="label label-lg label-light-blue label-inline">Case Created</span>
                     </span>
                   </div>
                   <!-- light-blue > Pending Est-->
                   <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 202">
-                    <span style="width: 100px">
+                    <span class="width-100">
                       <span class="label label-lg label-light-blue label-inline">Pending Est</span>
                     </span>
                   </div>
                   <!-- light-blue > Est. Compl-->
                   <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 203">
-                    <span style="width: 100px">
+                    <span class="width-100">
                       <span class="label label-lg label-light-blue label-inline">Est. Compl</span>
                     </span>
                   </div>
                   <!-- light-blue > Printing-->
                   <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 503">
-                    <span style="width: 100px">
+                    <span class="width-100">
                       <span class="label label-lg label-light-blue label-inline">Printing</span>
                     </span>
                   </div>
                   <!-- light-blue > Folding Compl-->
                   <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 602">
-                    <span style="width: 100px">
+                    <span class="width-100">
                       <span class="label label-lg label-light-blue label-inline">Folding Compl</span>
                     </span>
                   </div>
                   <!-- light-blue > Bind Compl-->
                   <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 801">
-                    <span style="width: 100px">
+                    <span class="width-100">
                       <span class="label label-lg label-light-blue label-inline">Bind Compl</span>
                     </span>
                   </div>
                   <!-- light-blue > Shipped-->
                   <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 806">
-                    <span style="width: 100px">
+                    <span class="width-100">
                       <span class="label label-lg label-light-blue label-inline">Shipped</span>
                     </span>
                   </div>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <mat-form-field appearance="fill" class="font-12px pb-4 width-120">
+                    <mat-label>Choose</mat-label>
+                    <mat-select [(ngModel)]="chooseList">
+                      <mat-option value="Complete">
+                        Complete
+                      </mat-option>
+                      <mat-option value="Processing">
+                        Processing
+                      </mat-option>
+                      <mat-option value="Hold">
+                        Hold
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </mat-cell>
               </ng-container>
 
@@ -473,13 +493,14 @@
               <ng-container matColumnDef="expandRow">
                 <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                 <mat-cell *matCellDef="let element">
+
                   <button mat-icon-button *ngIf="expandedElement != element"
                     [class.expanded]="expandedElement == element" (click)="expandedElement = element">
-                    <mat-icon>keyboard_arrow_down</mat-icon>
+                    <mat-icon class="expansion-icon" style="line-height: 30px;">keyboard_arrow_down</mat-icon>
                   </button>
                   <button mat-icon-button *ngIf="expandedElement == element"
                     [class.expanded]="expandedElement == undefined" (click)="expandedElement = undefined">
-                    <mat-icon>keyboard_arrow_up</mat-icon>
+                    <mat-icon class="expansion-icon" style="line-height: 30px;">keyboard_arrow_up</mat-icon>
                   </button>
                 </mat-cell>
               </ng-container>
@@ -489,8 +510,7 @@
               <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple class="element-row"></mat-row>
 
               <mat-row *matRowDef="let row; columns: ['expandedDetail'];"
-                [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'" style="overflow: hidden"
-                (click)="drawer.toggle();boxShow()">
+                [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'" style="overflow: hidden">
               </mat-row>
 
             </mat-table>
@@ -506,7 +526,7 @@
                     <div class="row full-width">
                       <div class="col-lg-12 pt-2 pb-2 pr-0" style="padding-top: 0px !important">
                         <div class="float-left display-flex">
-                          <h3 class="font-weight-bold m-0">Job Details</h3>
+                          <h3 class="font-weight-bold m-0"><b>Job Details</b></h3>
                         </div>
                         <div class="float-right display-flex">
                           <a href="javascript:;" class="btn btn-xs btn-icon btn-light btn-hover-primary"
@@ -521,117 +541,56 @@
                     <mat-tab-group (selectedTabChange)="tabChanged($event)"
                       [ngClass]="!showBox?'none-display':'show-display'">
                       <mat-tab label="Jobs">
-                        <ng-container>
-                          <mat-table #table [dataSource]="dataSourceJobInfo" class="orders-job-info-table-card">
-                            <ng-container matColumnDef="custPoNo">
-                              <mat-header-cell *matHeaderCellDef>Customer PO No.</mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                {{ element.custPoNo }}
-                              </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="jobNo">
-                              <mat-header-cell *matHeaderCellDef>Job No
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                {{ element.jobNo }}
-                              </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="jobType">
-                              <mat-header-cell *matHeaderCellDef>
-                                Job Type</mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                {{ element.jobType }}
-                              </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="orderDate">
-                              <mat-header-cell *matHeaderCellDef>
-                                Order Date
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                {{ element.orderDate | date: "shortDate" }}
-                              </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="rdd">
-                              <mat-header-cell *matHeaderCellDef>
-                                RDD
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                {{ element.rdd | date: "shortDate" }}
-                              </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="orderType">
-                              <mat-header-cell *matHeaderCellDef>
-                                Type</mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                <div *ngIf="element.orderType == 'Print'">
-                                  <!-- <a href="javascript:;" routerLink="/admin/order-management/order-details"> -->
-                                  <img src="./assets/media/misc/ic_print.png" />
-                                  <!-- </a> -->
-                                  <!-- <span style="padding-left: 12px">Print</span> -->
-                                </div>
-                                <div *ngIf="element.orderType == 'Warehouse'">
-                                  <!-- <a href="javascript:;" routerLink="/admin/order-management/order-details"> -->
-                                  <img src="./assets/media/misc/ic_warehouse.png" />
-                                  <!-- </a> -->
-                                  <!-- <span style="padding-left: 12px">Warehouse</span> -->
-                                </div>
-                              </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="orderStatus">
-                              <mat-header-cell *matHeaderCellDef>
-                                Order Status
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                <div class="status-options" *ngIf="element.orderStatus == 'Pending File Prep'">
-                                  <span style="width: 100px">
-                                    <span class="label label-lg label-light-orange label-inline">Pending File
-                                      Prep</span>
-                                  </span>
-                                </div>
-                                <div class="status-options" *ngIf="element.orderStatus == 'Shipped'">
-                                  <span style="width: 100px">
-                                    <span class="label label-lg label-light-green label-inline">Shipped</span>
-                                  </span>
-                                </div>
-                                <div class="status-options" *ngIf="element.orderStatus == 'Planning'">
-                                  <span style="width: 100px">
-                                    <span class="label label-lg label-light-purple label-inline">Planning</span>
-                                  </span>
-                                </div>
-                                <div class="status-options" *ngIf="element.orderStatus == 'Scheduling'">
-                                  <span style="width: 100px">
-                                    <span class="label label-lg label-light-blue label-inline">Scheduling</span>
-                                  </span>
-                                </div>
-                              </mat-cell>
-                            </ng-container>
-
-                            <mat-header-row *matHeaderRowDef="displayedColumnsJobInfo">
-                            </mat-header-row>
-                            <!--  (click)="toggleExpandable(row.id)" -->
-                            <mat-row *matRowDef="let row; columns: displayedColumnsJobInfo">
-                            </mat-row>
-
-                            <!-- Row shown when there is no matching data. -->
-                            <tr class="mat-row" *matNoDataRow>
-                              <td class="mat-cell text-center" colspan="8">
-                                No data matching the filter
-                              </td>
+                        <table class="table table-head-custom" style="margin-bottom: 0px !important;">
+                          <thead>
+                            <tr class="text-left">
+                              <th>Customer PO No.</th>
+                              <th>Job No</th>
+                              <th>Type</th>
+                              <th>Order Date</th>
+                              <th>Status</th>
                             </tr>
-                          </mat-table>
-                        </ng-container>
+                          </thead>
+                          <tbody>
+                            <ng-container>
+                              <tr *ngFor="let job of dataSourceJobInfo;  let j = index">
+                                <td>{{ job.custPoNo }}</td>
+                                <td>{{ job.jobNo }}</td>
+                                <td>{{ job.jobType }} </td>
+                                <td>{{ job.orderDate }} </td>
+                                <td>
+                                  <div class="status-options" *ngIf="job.orderStatus == 'Pending File Prep'">
+                                    <span class="width-100">
+                                      <span class="label label-lg label-light-orange label-inline">Pending File
+                                        Prep</span>
+                                    </span>
+                                  </div>
+                                  <div class="status-options" *ngIf="job.orderStatus == 'Shipped'">
+                                    <span class="width-100">
+                                      <span class="label label-lg label-light-green label-inline">Shipped</span>
+                                    </span>
+                                  </div>
+                                  <div class="status-options" *ngIf="job.orderStatus == 'Planning'">
+                                    <span class="width-100">
+                                      <span class="label label-lg label-light-purple label-inline">Planning</span>
+                                    </span>
+                                  </div>
+                                  <div class="status-options" *ngIf="job.orderStatus == 'Scheduling'">
+                                    <span class="width-100">
+                                      <span class="label label-lg label-light-blue label-inline">Scheduling</span>
+                                    </span>
+                                  </div>
+                                  <!-- {{ job.orderStatus }} -->
+                                </td>
+                              </tr>
+                            </ng-container>
+                          </tbody>
+                        </table>
                       </mat-tab>
                       <mat-tab label="Analysis">
                         <!--Time value map-->
                         <div class="row">
-                          <div class="card card-custom example example-compact gutter-b order-info-card"
-                            style="width: 100%;box-shadow: none;">
+                          <div class="card card-custom example example-compact gutter-b analysis-card">
                             <div class="card-header">
                               <div class="card-title">
                                 <h3 class="card-label">Time Value Map</h3>
@@ -650,8 +609,7 @@
                         </div>
                         <!--Value-add Process Times-->
                         <div class="row">
-                          <div class="card card-custom example example-compact gutter-b order-info-card"
-                            style="width: 100%;;box-shadow: none;">
+                          <div class="card card-custom example example-compact gutter-b analysis-card">
                             <div class="card-header">
                               <div class="card-title">
                                 <h3 class="card-label">
@@ -672,8 +630,7 @@
                         </div>
                         <!--Time Value Analysis-->
                         <div class="row">
-                          <div class="card card-custom example example-compact gutter-b order-info-card"
-                            style="width: 100%;;box-shadow: none;">
+                          <div class="card card-custom example example-compact gutter-b analysis-card">
                             <div class="card-header">
                               <div class="card-title">
                                 <h3 class="card-label">Time Value Analysis</h3>
@@ -689,84 +646,32 @@
                       </mat-tab>
                       <mat-tab label="Activity Log">
                         <ng-container>
-                          <mat-table #table [dataSource]="dataSourceActivityLog" class="orders-table">
-                            <ng-container matColumnDef="id">
-                              <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                {{ element.id }}
-                              </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="actionDate">
-                              <mat-header-cell *matHeaderCellDef>Activity Date</mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                {{ element.actionDate }}
-                              </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="actionBy">
-                              <mat-header-cell *matHeaderCellDef>Action By
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                {{ element.actionBy }}
-                              </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="source">
-                              <mat-header-cell *matHeaderCellDef>
-                                Source
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                {{ element.source }}
-                              </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="activity">
-                              <mat-header-cell *matHeaderCellDef>
-                                Activity
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                {{ element.activity }}
-                              </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="status">
-                              <mat-header-cell *matHeaderCellDef>Status
-                              </mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                {{ element.status }}
-                              </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="duration">
-                              <mat-header-cell *matHeaderCellDef>
-                                Duration</mat-header-cell>
-                              <mat-cell *matCellDef="let element">
-                                {{ element.duration }}
-                              </mat-cell>
-                            </ng-container>
-
-                            <mat-header-row *matHeaderRowDef="displayedColumnsActivityLog"></mat-header-row>
-                            <!--  (click)="toggleExpandable(row.id)" -->
-                            <mat-row *matRowDef="
-                            let row;
-                            columns: displayedColumnsActivityLog
-                          ">
-                            </mat-row>
-
-                            <!-- Row shown when there is no matching data. -->
-                            <tr class="mat-row" *matNoDataRow>
-                              <div style="
-                              padding-left: 385px;
-                              padding-right: 385px;
-                              text-align: center;
-                              color: rgba(0, 0, 0, 0.54);
-                              font-size: 14px;
-                            ">
-                                No data to show
-                              </div>
-                            </tr>
-                          </mat-table>
+                          <table class="table table-head-custom" style="margin-bottom: 0px !important;">
+                            <thead>
+                              <tr class="text-left">
+                                <th>#</th>
+                                <th>Activity Date</th>
+                                <th>Action By</th>
+                                <th>Source</th>
+                                <th>Activity</th>
+                                <th>Status</th>
+                                <th>Duration</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <ng-container>
+                                <tr *ngFor="let job of dataSourceActivityLog;  let j = index">
+                                  <td>{{ job.id }}</td>
+                                  <td>{{ job.actionDate }}</td>
+                                  <td>{{ job.actionBy }} </td>
+                                  <td>{{ job.source }} </td>
+                                  <td>{{ job.activity}}</td>
+                                  <td>{{ job.status}}</td>
+                                  <td>{{ job.duration}}</td>
+                                </tr>
+                              </ng-container>
+                            </tbody>
+                          </table>
                         </ng-container>
                       </mat-tab>
                     </mat-tab-group>
@@ -1009,8 +914,8 @@
                 <span class="material-icons expansion-icon cursor-pointer" (click)="toggleExpandable(rowId.Id)">
                   {{
                   rowId.Id == rowIdToExpand ?
-                  ExpansionIcons.KEYBOARD_ARROW_UP :
-                  ExpansionIcons.KEYBOARD_ARROW_DOWN
+                  ExpansionIcons.KEYBOARD_ARROW_DOWN :
+                  ExpansionIcons.KEYBOARD_ARROW_UP
                   }}
                 </span>
               </div>
@@ -1111,15 +1016,11 @@
                         </thead>
                         <tbody>
                           <ng-container>
-                            <tr *ngFor="
-                                let ship of shipmentInfoList[i]
-                                  .ShipmentDetail;
-                                let j = index
-                              ">
+                            <tr *ngFor="let ship of shipmentInfoList[i].ShipmentDetail;  let j = index">
                               <td>{{ j + 1 }}</td>
-                              <td> {{ ship.ISBNPartNo }}</td>
-                              <td> {{ ship.Title }} </td>
-                              <td> {{ ship.TotalRemaining }} </td>
+                              <td>{{ ship.ISBNPartNo }}</td>
+                              <td>{{ ship.Title }} </td>
+                              <td>{{ ship.TotalRemaining }} </td>
                               <td>
                                 <mat-form-field appearance="fill">
                                   <!-- <mat-label>Shipment Qty</mat-label> -->
@@ -1161,10 +1062,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr *ngFor="
-                              let rowId of shipmentInfoList[i].MiscBilling;
-                              let k = index
-                            ">
+                          <tr *ngFor="let rowId of shipmentInfoList[i].MiscBilling;  let k = index">
                             <td>{{ k + 1 }}</td>
                             <td>
                               <mat-form-field appearance="fill">
@@ -1415,10 +1313,7 @@
                 </tr>
               </thead>
               <tbody *ngFor="let rowId of shipmentInfoList; let i = index">
-                <tr *ngFor="
-                    let row of shipmentInfoList[i].MiscBilling;
-                    let k = index
-                  ">
+                <tr *ngFor="let row of shipmentInfoList[i].MiscBilling;let k = index">
                   <td>{{ k + 1 }}</td>
                   <td>{{ row.Item }}</td>
                   <td>{{ row.Description }}</td>
@@ -1455,10 +1350,15 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr *ngIf="isNull">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr *ngIf="!isNull">
                   <td>1</td>
-                  <td>ABC</td>
-                  <td>Lorem ipum dolor imit</td>
+                  <td>{{getDepartment()}}</td>
+                  <td>{{getInstructions()}}</td>
                 </tr>
               </tbody>
             </table>
@@ -1489,11 +1389,11 @@
                   <th>Notes</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody *ngFor="let item of invoice_array;">
                 <tr>
-                  <td>1</td>
-                  <td>Top</td>
-                  <td>Lorem ipum dolor imit</td>
+                  <td>{{item.id}}</td>
+                  <td>{{item.Position}}</td>
+                  <td>{{item.Notes}}</td>
                 </tr>
               </tbody>
             </table>

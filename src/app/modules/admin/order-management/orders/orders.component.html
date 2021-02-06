@@ -290,13 +290,13 @@
                         <td mat-cell *matCellDef="let element"> {{element.qty}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="printType">
+                    <ng-container matColumnDef="type">
                         <th mat-header-cell *matHeaderCellDef> Type</th>
                         <td mat-cell *matCellDef="let element">
-                            <div *ngIf="element.printType == 'Digital'">
+                            <div *ngIf="element.type == 'PO'">
                                 <img src="./assets/media/misc/ic_print.png">
                             </div>
-                            <div *ngIf="element.printType == 'warehouse'">
+                            <div *ngIf="element.type == 'WO'">
                                 <img src="./assets/media/misc/ic_warehouse.png">
                             </div>
                         </td>
@@ -364,6 +364,12 @@
                             <div class="status-options" *ngIf="element.currentActivityStatusCode == 806">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-blue label-inline">Shipped</span>
+                                </span>
+                            </div>
+                            <!-- light-blue > No Setup-->
+                            <div class="status-options" *ngIf="element.currentActivityStatusCode == 21">
+                                <span style="width: 100px;">
+                                    <span class="label label-lg label-light-blue label-inline">No Setup</span>
                                 </span>
                             </div>
                         </td>

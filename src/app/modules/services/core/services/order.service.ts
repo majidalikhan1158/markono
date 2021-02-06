@@ -39,7 +39,8 @@ export class OrderService {
   // order-management Module
   public getAllOrders = (): Observable<HttpResponse<any>> => {
     const url = this.endPoint.getAllOrders();
-    const queryParams = `$filter=orderNo ne null`;;
+    //const queryParams = `$filter=orderNo ne null`;;
+    const queryParams = `?$top=100&$filter=isDeleted ne true and orderNo ne null and CaseDetail/all(cd:cd/CurrentActivityStatusCode eq '207')&$orderby=createdDateTime desc`;
     const urlWithParams = `${url}?${queryParams}`;
     return this.http.get(decodeURI(urlWithParams));
   }
@@ -53,6 +54,14 @@ export class OrderService {
   public getShipmentDetails = (request: any): Observable<HttpResponse<any>> => {
     const url = this.endPoint.getShipmentDetails();
     const queryParams = `$filter=caseID eq ${request}&$expand=ShipmentDetail,MiscBilling`;;
+    const urlWithParams = `${url}?${queryParams}`;
+    return this.http.get(decodeURI(urlWithParams));
+  }
+
+  public getAllIssueOrders = (): Observable<HttpResponse<any>> => {
+    const url = this.endPoint.getAllOrders();
+    //const queryParams = `$filter=orderNo ne null`;;
+    const queryParams = `?$top=100&$filter=isDeleted ne true and orderNo ne null and CaseDetail/any(cd:cd/CurrentActivityStatusCode in ('21','22','23','24','25'))&$orderby=createdDateTime desc`;
     const urlWithParams = `${url}?${queryParams}`;
     return this.http.get(decodeURI(urlWithParams));
   }

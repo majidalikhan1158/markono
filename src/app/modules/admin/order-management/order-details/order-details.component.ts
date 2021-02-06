@@ -62,7 +62,6 @@ const ActivityLog_DATA: ActivityLogModel[] = [
   templateUrl: './order-details.component.html',
   styleUrls: ['./order-details.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  // animations: [expandableRowAnimation],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0', visibility: 'hidden' })),
@@ -73,14 +72,13 @@ const ActivityLog_DATA: ActivityLogModel[] = [
 })
 export class OrderDetailsComponent implements OnInit, AfterViewInit {
   //#region declaration 
-  displayedColumns = ['Id', 'JobNo', 'ISBNPartNo', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode', 'expandRow'];
+  displayedColumns = ['Id', 'JobNo', 'ISBNPartNo', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode', 'actions', 'expandRow'];
   dataSource: MatTableDataSource<Element>;
   @ViewChild('sort', { static: false }) sort: MatSort;
   @Input() createCaseMode: CreateCaseMode;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild("chart") chart: ChartComponent;
   expandedElement: any;
-  isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow');
   nextPosition: number = 0;
   public timeValueAnalysisChartOptions: Partial<TimeValueAnalysisChartOptions>;
   public timeValueMapChartOptions: Partial<TimeValueMapChartOptions>;
@@ -94,8 +92,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     'orderType',
     'orderStatus',
   ];
-
-  showFiller = true;
+  showFiller = false;
   positionOptions: TooltipPosition[] = ['below', 'above', 'left', 'right'];
   position = new FormControl(this.positionOptions[1]);
   columnsToDisplay = ['Cust PO No.', 'Order Date', 'RDD', 'Qty', 'Order Type', 'Order Status',];
@@ -147,6 +144,8 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   shipmentAgentList: DDLListModal[] = [];
   disabled = false;
   showBox = false;
+  isNull = false;
+  invoice_array = [];
   //#endregion
 
   constructor(private router: Router,
@@ -157,8 +156,8 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     public viewContainerRef: ViewContainerRef,
     private cd: ChangeDetectorRef) {
     this.dataSource = new MatTableDataSource();
-    this.dataSourceJobInfo = new MatTableDataSource<JobInfoHeaderModel>(this.dataArrayJobInfo);
-    this.dataSourceActivityLog = new MatTableDataSource<ActivityLogModel>(this.dataArrayActivityLog);
+    this.dataSourceJobInfo = this.dataArrayJobInfo;
+    this.dataSourceActivityLog = this.dataArrayActivityLog;
   }
 
   ngOnInit(): void {
@@ -318,6 +317,8 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     this.dataSourceJob.paginator = this.paginator;
     this.dataSourceJob.filterPredicate = this.customFilterPredicate();
     this.cd.detectChanges();
+    this.getDepartment();
+    this.getInvoice();
   }
 
   getOrderJob() {
@@ -545,7 +546,9 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
     this.openOverlay()
     if (tabChangeEvent.index == 1 || tabChangeEvent.index == 3) {
+    } else {
       this.showFiller = !this.showFiller
+
     }
   }
 
@@ -600,5 +603,48 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+  }
+
+  getDepartment() {
+    let a = this.orderInfoList.find(x => x.Id === this.id).SpecialInstructions;
+    if (a !== 'null' || a !== 'null:null,') {
+      this.isNull = true;
+    } else {
+      this.isNull = false;
+      return a;
+    }
+  }
+
+  getInstructions() {
+    return this.orderInfoList.find(x => x.Id === this.id).SpecialInstructions;
+  }
+
+  getInvoice() {
+    let bottom = this.orderInfoList.find(x => x.Id === this.id).NotesOnInvoiceBottom;
+    let top = this.orderInfoList.find(x => x.Id === this.id).NotesOnInvoiceTop;
+    if (top != "" || top != null) {
+      const _json = {
+        'id': '1',
+        'Position': 'Top',
+        'Notes': top
+      };
+      this.invoice_array.push(_json)
+    }
+    if (bottom == "" || bottom == null) {
+
+    } else {
+      const _json = {
+        'id': '2',
+        'Position': 'Bottom',
+        'Notes': bottom
+      };
+      this.invoice_array.push(_json)
+    }
+
+  }
+
+  getId() {
+    let i = 1;
+    return i++
   }
 }

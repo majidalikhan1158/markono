@@ -99,16 +99,22 @@ app-order-details {
     .customer-info-card > .card-body {
         padding: 15px !important;
     }
-    .customer-info-card > .card-header h6 {
-        font-weight: 400;
-        margin-bottom: 0px;
-        font-size: 14px;
+    .customer-info-card {
+        .card-header h6 {
+            font-weight: 400;
+            margin-bottom: 0px;
+            font-size: 14px;
+        }
     }
-    .customer-info-card > div.col-lg-4 {
-        padding-right: 0px;
+    .customer-info-card {
+        .col-lg-4 {
+            padding-right: 0px;
+        }
     }
-    .shipping-info-details-card > .card-body {
-        padding: 12px !important;
+    .shipping-info-details-card {
+        .card-body {
+            padding: 12px !important;
+        }
     }
     .order-info-table-card > mat-row,
     mat-header-row,
@@ -126,6 +132,8 @@ app-order-details {
     }
     .order-details-types {
         min-height: 500px;
+        box-shadow: none;
+        border-right: 1px solid #e6e6e6;
     }
     .mat-column-jobNo {
         flex: none;
@@ -194,8 +202,8 @@ app-order-details {
         position: fixed;
         transform: translateX !important;
         visibility: visible;
-        margin-top: 282px;
-        margin-right: 36px;
+        margin-top: 231px;
+        margin-right: 24px;
     }
     .scssClassName {
         height: 400px;
@@ -203,10 +211,9 @@ app-order-details {
         position: fixed;
         transform: translateX !important;
         visibility: visible;
-        margin-top: 282px;
-        margin-right: 36px;
+        margin-top: 231px;
+        margin-right: 24px;
     }
-
     .expansion-icon {
         width: 26px;
         border-radius: 14px;
@@ -266,5 +273,26 @@ app-order-details {
     .th-table {
         border-top: 0px;
         font: normal normal normal 12px/16px Roboto;
+    }
+    .width-100 {
+        width: 100px;
+    }
+    .width-auto {
+        width: auto !important;
+    }
+    .analysis-card {
+        width: 100%;
+        box-shadow: none;
+    }
+    .order-types {
+        background-color: white;
+        min-width: 200px;
+        padding-right: 0px;
+        max-width: 161px;
+    }
+    .drwaer-job-info {
+        .mat-header-row {
+            padding-left: 20px;
+        }
     }
 }

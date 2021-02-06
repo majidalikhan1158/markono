@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, Output, EventEmitter, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ModalService } from '../../../ui-services/modal.service';
 import { AppPageRoutes, UIModalID } from '../../../enums/app-constants';
-import { ChildIsbnModal } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
+import { ChildIsbnModal, ProductVersions } from 'src/app/modules/services/shared/classes/product-modals/product-modals';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { ProductSpecStore } from '../../../ui-services/product-spec.service';
@@ -155,9 +155,11 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
         this.store.reset();
         const vm = this.getGeneralObj();
         vm.productNumber = value;
-        vm.productDescription = this.description;
+        // vm.productDescription = this.description;
         this.store.setProductSpecStore(vm, ProductSpecTypes.GENERAL);
+        this.setVersionDescription();
         this.router.navigate([AppPageRoutes.CREATE_PRODUCT]);
+        return;
       } else {
         this.snack.open('ISBN and Description is required');
         return;
@@ -182,6 +184,7 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
           this.store.setProductSpecReadonly(false);
           this.helper.transProductDetailToVM(productDetails, 2);
         }
+        this.setVersionDescription();
         this.store.setProductSpecStatus({status: productDetails.Status, tooltipMessage: '' });
         this.router.navigate([AppPageRoutes.VIEW_PRODUCT]);
       } else {
@@ -217,6 +220,19 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
       versionNo: ''
     };
   }
+
+  setVersionDescription = () => {
+    const version: ProductVersions = {
+      Id: '',
+      VersionNo: '',
+      CreatedDateTime: '',
+      CreatedBy: '',
+      VersionDescription: this.description,
+      active: false
+    };
+    this.store.setSelectedVersion(version);
+  }
+
   ngOnDestroy(): void {
     this.acceptEvent.emit();
     // this.router.navigate(['admin/product-management/view']);

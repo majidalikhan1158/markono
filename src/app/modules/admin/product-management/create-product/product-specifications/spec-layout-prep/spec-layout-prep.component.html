@@ -72,8 +72,8 @@
                                 </mat-form-field>
                             </td>
                         </tr>
-                        <tr class="outer-row" *ngIf="layoutPrepVM?.Components.length === 0">
-                            <td colspan="6">No records found</td>
+                        <tr class="outer-row" *ngIf="!(layoutPrepVM?.Components.length > 0) && !shouldShowLoader">
+                            <td colspan="6" style="text-align: center;">No records found</td>
                         </tr>
                         <tr class="outer-row" *ngIf="!layoutPrepVM && shouldShowLoader">
                             <td colspan="6">
@@ -111,33 +111,37 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="outer-row" *ngFor="let row of layoutPrepVM?.ComponentsBreakdown; let i = index">
-                            <td> {{row.ComponentsSNo}} </td>
-                            <td> {{row.ComponentType}} </td>
-                            <td> {{row.Layout}} </td>
-                            <td> {{row.Quantity}} </td>
-                            <td> {{row.PrintingSheets}} </td>
-                            <td> {{row.Scrap}} </td>
-                            <td> {{row.TotalSheets}} </td>
-                            <td> {{row.Colour}} </td>
-                            <td style="width: 10%;"> {{row.Paper}} </td>
-                            <td> {{row.PaperSize}} </td>
-                            <td>
-                                <mat-form-field appearance="fill">
-                                    <mat-select [(ngModel)]="row.MachineType">
-                                        <mat-option value="4 Color Press">4 Color Press</mat-option>
-                                        <mat-option value="5 Color Press">5 Color Press</mat-option>
-                                        <mat-option value="8 Color Press">8 Color Press</mat-option>
-                                        <mat-option value="Mono Press">Mono Press</mat-option>
-                                        <mat-option value="Digital (std)">Digital (std)</mat-option>
-                                        <mat-option value="Digital (Enhance)">Digital (Enhance)</mat-option>
-                                        <mat-option value="Digital (Premium)">Digital (Premium)</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </td>
-                        </tr>
-                        <tr class="outer-row" *ngIf="layoutPrepVM?.ComponentsBreakdown.length === 0">
-                            <td colspan="11">No records found</td>
+                        <ng-container *ngFor="let row of layoutPrepVM?.ComponentsBreakdown; let i = index" >
+                            <tr style="cursor: pointer;"
+                            [ngClass]="selectedComponentBreakdown === row.Id ? 'outer-row selected-background' : 'outer-row'"
+                            (click)="handleComponentBreakdownSelection(row.Id)">
+                                <td> {{row.ComponentsSNo}} </td>
+                                <td> {{row.ComponentType}} </td>
+                                <td> {{row.Layout}} </td>
+                                <td> {{row.Quantity}} </td>
+                                <td> {{row.PrintingSheets}} </td>
+                                <td> {{row.Scrap}} </td>
+                                <td> {{row.TotalSheets}} </td>
+                                <td> {{row.Colour}} </td>
+                                <td style="width: 10%;"> {{row.Paper}} </td>
+                                <td> {{row.PaperSize}} </td>
+                                <td>
+                                    <mat-form-field appearance="fill">
+                                        <mat-select [(ngModel)]="row.MachineType">
+                                            <mat-option value="4 Color Press">4 Color Press</mat-option>
+                                            <mat-option value="5 Color Press">5 Color Press</mat-option>
+                                            <mat-option value="8 Color Press">8 Color Press</mat-option>
+                                            <mat-option value="Mono Press">Mono Press</mat-option>
+                                            <mat-option value="Digital (std)">Digital (std)</mat-option>
+                                            <mat-option value="Digital (Enhance)">Digital (Enhance)</mat-option>
+                                            <mat-option value="Digital (Premium)">Digital (Premium)</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                        </ng-container>
+                        <tr class="outer-row" *ngIf="!(layoutPrepVM?.ComponentsBreakdown.length > 0) && !shouldShowLoader">
+                            <td colspan="11" style="text-align: center;">No records found</td>
                         </tr>
                         <tr class="outer-row" *ngIf="!layoutPrepVM && shouldShowLoader">
                             <td colspan="11">
@@ -175,21 +179,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor="let row of layoutPrepVM?.ProductionActivity;let i = index;">
+                        <ng-container *ngFor="let row of productionActivitiesList;let i = index;">
                             <tr class="outer-row">
                                 <td> {{row.ComponentBreakdownSNo}}</td>
                                 <td> {{row.Dept}} </td>
                                 <td> {{row.Type}} </td>
                                 <td> {{row.Qty}} </td>
                                 <td> {{row.Layout}} </td>
-                                <td> {{row.ProcessCode}} </td>
-                                <td> {{row.Activity}} </td>
+                                <td>
+                                    <span style="display: flex;flex-direction: column; height: 20px">{{row.ProcessCode}}</span> 
+                                    <span style="height: 20px;">{{row.Activity}} </span> 
+                                </td>
+                                <td> ${{row.TotalEstCost}} </td>
+                                <td> 2.86% </td>
                                 <td> {{row.Unit}} </td>
                                 <td> {{row.Duration}} </td>
                                 <td> ${{row.UnitCost}} </td>
                                 <td> ${{row.NewUnitCost}} </td>
-                                <td> ${{row.TotalEstCost}} </td>
-                                <td> 2.86% </td>
                                 <td class="action-column pb-0">
                                     <span class="material-icons expansion-icon" (click)="showDetails(i)">
                                         {{
@@ -291,8 +297,8 @@
                                 </tr>
                             </ng-container>
                         </ng-container>
-                        <tr class="outer-row" *ngIf="layoutPrepVM?.ProductionActivity.length === 0">
-                            <td colspan="14">No records found</td>
+                        <tr class="outer-row" *ngIf="!(productionActivitiesList.length > 0) && !shouldShowLoader">
+                            <td colspan="14" style="text-align: center;">No records found</td>
                         </tr>
                         <tr class="outer-row" *ngIf="!layoutPrepVM && shouldShowLoader">
                             <td colspan="14">

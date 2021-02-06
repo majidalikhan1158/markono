@@ -40,6 +40,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   componentTypes = LayoutPrepComponentTypes;
   impositionListObjectsKey: ImpositionLayoutObject = {};
   paperListObjectsKey: PaperListObject = {};
+  productionActivitiesList: ProductionActivities[] = [];
   columnsToDisplayCompTable = [
     'Component Type',
     'Imposition Layout',
@@ -68,13 +69,13 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
     'Qty',
     'Layout',
     'Process Code',
-    'Activity',
+    'Total Est. Costs',
+    '%',
     'Units',
     'Duration',
     'Unit Costs',
     'New Units Costs',
-    'Total Est. Costs',
-    '%', ''
+    ''
   ];
   productSpecLayoutPrepCompList = ProductSpecLayoutPrepCompList;
   machineTypeList = MachineTypeList;
@@ -88,6 +89,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   productSpec: ProductSpecStoreVM;
   shouldShowLoader = false;
   showAddProductionActivityModal = false;
+  selectedComponentBreakdown: string;
   ngOnInit(): void {
     this.checkLayoutPrepData();
   }
@@ -126,7 +128,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
         this.getDropDownsData();
       } else {
         this.shouldShowLoader = false;
-        this.snack.open(`No record found against ISBN: ${productNumber} and Version No: ${versionNo}`);
+        // this.snack.open(`No record found against ISBN: ${productNumber} and Version No: ${versionNo}`);
       }
       this.layoutPrepCallIsInProgress = false;
     }, (error: HttpErrorResponse) => {
@@ -175,7 +177,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
         const list = resp.body.result as GetPaperResponse[];
         this.paperListObjectsKey[componentType] = list;
       } else {
-        this.paperListObjectsKey[componentType] = 
+        this.paperListObjectsKey[componentType] =
         [{paperNo: this.getPaperNo(paper), itemType: componentType}];
       }
       this.ref.detectChanges();
@@ -292,6 +294,13 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
       this.rowIdToExpand = rowId;
       this.shouldShowDetails = true;
     }
+  }
+
+  handleComponentBreakdownSelection = (componentId: string) => {
+    this.selectedComponentBreakdown = componentId;
+    const filteredList = this.layoutPrepVM.ProductionActivity.filter(x => x.ComponentsBreakdownId === componentId);
+    this.productionActivitiesList = filteredList
+    .sort((a, b) => this.helper.minus(a.SNo as any as number, b.SNo as any as number));
   }
 
   ngOnDestroy(): void {

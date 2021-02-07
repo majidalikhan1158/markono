@@ -6,12 +6,11 @@ import { OrdersComponent } from './orders/orders.component';
 import { SharedModule } from '../../shared/shared.module';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 import { OrdersWithIssuesComponent } from './orders-with-issues/orders-with-issues.component';
-import { OrderJobDetailsComponent } from './order-job-details/order-job-details.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
 
 @NgModule({
-  declarations: [OrdersComponent, OrderDetailsComponent, OrdersWithIssuesComponent, OrderJobDetailsComponent],
+  declarations: [OrdersComponent, OrderDetailsComponent, OrdersWithIssuesComponent],
   imports: [
     CommonModule,
     MaterialUiModule,

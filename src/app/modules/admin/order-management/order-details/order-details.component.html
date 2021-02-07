@@ -11,7 +11,7 @@
         <table class="order-info-table-card">
           <thead>
             <tr class="th-order">
-              <th style="font-weight: normal" *ngFor="let item of columnsToDisplay">
+              <th style="font-weight: normal" *ngFor="let item of displayedColumnsOrderInfo">
                 {{ item }}
               </th>
             </tr>
@@ -157,12 +157,12 @@
                     Jobs
                   </h3>
                   <mat-chip-list #chipList class="table-filter-chips">
-                    <mat-chip [removable]="true" *ngIf="tableFilters.jobNo != ''"
+                    <mat-chip [removable]="true" *ngIf="tableFilters.JobNo != ''"
                       (removed)="removeFilter(tableFilterTypes.JOBNO)">
-                      {{ tableFilters.jobNo }}
+                      {{ tableFilters.JobNo }}
                       <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
-                    <mat-chip [removable]="true" *ngIf="tableFilters.orderDate != ''"
+                    <!-- <mat-chip [removable]="true" *ngIf="tableFilters.orderDate != ''"
                       (removed)="removeFilter(tableFilterTypes.ORDER_DATE)">
                       {{ tableFilters.orderDate | date: "shortDate" }}
                       <mat-icon matChipRemove>cancel</mat-icon>
@@ -171,25 +171,25 @@
                       (removed)="removeFilter(tableFilterTypes.RDD_DATE)">
                       {{ tableFilters.requestedDeliveryDate | date: "shortDate" }}
                       <mat-icon matChipRemove>cancel</mat-icon>
-                    </mat-chip>
-                    <mat-chip [removable]="true" *ngIf="tableFilters.isbn != ''"
+                    </mat-chip> -->
+                    <mat-chip [removable]="true" *ngIf="tableFilters.ISBNPartNo != ''"
                       (removed)="removeFilter(tableFilterTypes.ISBN)">
-                      {{ tableFilters.isbn }}
+                      {{ tableFilters.ISBNPartNo }}
                       <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
-                    <mat-chip [removable]="true" *ngIf="tableFilters.qty != ''"
+                    <mat-chip [removable]="true" *ngIf="tableFilters.OrderQuantity != ''"
                       (removed)="removeFilter(tableFilterTypes.QTY)">
-                      {{ tableFilters.qty }}
+                      {{ tableFilters.OrderQuantity }}
                       <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
-                    <mat-chip [removable]="true" *ngIf="tableFilters.jobType != ''"
+                    <mat-chip [removable]="true" *ngIf="tableFilters.PrintType != ''"
                       (removed)="removeFilter(tableFilterTypes.JOB_TYPE)">
-                      {{ tableFilters.jobType }}
+                      {{ tableFilters.PrintType }}
                       <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
-                    <mat-chip [removable]="true" *ngIf="tableFilters.status != ''"
+                    <mat-chip [removable]="true" *ngIf="tableFilters.CurrentActivityStatusName != ''"
                       (removed)="removeFilter(tableFilterTypes.STATUS)">
-                      {{ tableFilters.status }}
+                      {{ tableFilters.CurrentActivityStatusName }}
                       <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
                   </mat-chip-list>
@@ -219,23 +219,48 @@
                           Clear Filters
                         </a>
                       </div>
+                      <!--jobNo-->
                       <mat-form-field appearance="fill" class="font-12px pb-4">
                         <mat-label>Job No.</mat-label>
                         <mat-icon matPrefix>search</mat-icon>
-                        <input matInput [(ngModel)]="tableFilters.jobNo" (ngModelChange)="
-                          tableFilterChange($event, tableFilterTypes.JOBNO)
-                        " />
+                        <input matInput [(ngModel)]="tableFilters.JobNo" (ngModelChange)="
+                          tableFilterChange($event, tableFilterTypes.JOBNO)" />
                       </mat-form-field>
-
+                      <!--isbn-->
                       <mat-form-field appearance="fill" class="font-12px pb-4">
                         <mat-label>ISBN</mat-label>
                         <mat-icon matPrefix>search</mat-icon>
-                        <input matInput [(ngModel)]="tableFilters.isbn" (ngModelChange)="
+                        <input matInput [(ngModel)]="tableFilters.ISBNPartNo" (ngModelChange)="
                           tableFilterChange($event, tableFilterTypes.ISBN)
                         " />
                       </mat-form-field>
-
+                      <!--qty-->
                       <mat-form-field appearance="fill" class="font-12px pb-4">
+                        <mat-label>Qty.</mat-label>
+                        <mat-icon matPrefix>search</mat-icon>
+                        <input matInput [(ngModel)]="tableFilters.OrderQuantity" (ngModelChange)="
+                          tableFilterChange($event, tableFilterTypes.QTY)
+                        " />
+                      </mat-form-field>
+                      <!--Status-->
+                      <mat-form-field appearance="fill" class="font-12px pb-4">
+                        <mat-label>Status</mat-label>
+                        <mat-select [(ngModel)]="tableFilters.CurrentActivityStatusName" (ngModelChange)="
+                          tableFilterChange($event, tableFilterTypes.STATUS)
+                        ">
+                          <mat-option [value]="item.value" *ngFor="let item of statusTypesList">
+                            {{ item.text }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <!--jobType-->
+                      <span class="filter-menu-heading font-14px pb-4"> Job Type</span>
+                      <div class="printing-type-options display-flex pb-4">
+                        <span class="option-item mr-2"
+                          [ngClass]="{'option-item-selected': selectedJobType == jobTypes.OFFSET, 'option-item mr-2': true}"
+                          (click)="tableFilterChange(jobTypes.OFFSET,tableFilterTypes.JOB_TYPE ) ">Offset</span>
+                      </div>
+                      <!-- <mat-form-field appearance="fill" class="font-12px pb-4">
                         <mat-label>Choose Order Date Range</mat-label>
                         <input [matDatepicker]="pickerorder" matInput [(ngModel)]="tableFilters.orderDate"
                           (ngModelChange)="
@@ -244,9 +269,9 @@
                         <mat-datepicker-toggle matSuffix [for]="pickerorder">
                         </mat-datepicker-toggle>
                         <mat-datepicker #pickerorder></mat-datepicker>
-                      </mat-form-field>
+                      </mat-form-field> -->
 
-                      <mat-form-field appearance="fill" class="font-12px pb-4">
+                      <!-- <mat-form-field appearance="fill" class="font-12px pb-4">
                         <mat-label>Choose RDD Range</mat-label>
                         <input [matDatepicker]="pickerrdd" matInput [(ngModel)]="tableFilters.requestedDeliveryDate"
                           (ngModelChange)="
@@ -254,49 +279,15 @@
                         " />
                         <mat-datepicker-toggle matSuffix [for]="pickerrdd"></mat-datepicker-toggle>
                         <mat-datepicker #pickerrdd></mat-datepicker>
-                      </mat-form-field>
-                      <mat-form-field appearance="fill" class="font-12px pb-4">
-                        <mat-label>Qty.</mat-label>
-                        <mat-icon matPrefix>search</mat-icon>
-                        <input matInput [(ngModel)]="tableFilters.qty" (ngModelChange)="
-                          tableFilterChange($event, tableFilterTypes.QTY)
-                        " />
-                      </mat-form-field>
+                      </mat-form-field> -->
 
-                      <mat-form-field appearance="fill" class="font-12px pb-4">
+                      <!-- <mat-form-field appearance="fill" class="font-12px pb-4">
                         <mat-label>Job Type</mat-label>
                         <mat-icon matPrefix>search</mat-icon>
                         <input matInput [(ngModel)]="tableFilters.jobType" (ngModelChange)="
                           tableFilterChange($event, tableFilterTypes.JOB_TYPE)
                         " />
-                      </mat-form-field>
-
-                      <mat-form-field appearance="fill" class="font-12px pb-4">
-                        <mat-label>Status</mat-label>
-                        <mat-select [(ngModel)]="tableFilters.status" (ngModelChange)="
-                          tableFilterChange($event, tableFilterTypes.STATUS)
-                        ">
-                          <mat-option [value]="item.value" *ngFor="let item of statusTypesList">
-                            {{ item.text }}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-
-                      <span class="filter-menu-heading font-14px pb-4">
-                        Job Type
-                      </span>
-                      <div class="printing-type-options display-flex pb-4">
-                        <span class="option-item mr-2" [ngClass]="{
-                          'option-item-selected':
-                            selectedStatus == jobTypes.OFFSET,
-                          'option-item mr-2': true
-                        }" (click)="
-                          tableFilterChange(
-                            jobTypes.OFFSET,
-                            tableFilterTypes.JOB_TYPE
-                          )
-                        ">Offset</span>
-                      </div>
+                      </mat-form-field> -->
                     </div>
                   </mat-menu>
                 </div>
@@ -316,7 +307,7 @@
               <ng-container matColumnDef="JobNo">
                 <mat-header-cell *matHeaderCellDef>Job No.</mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                  <a href="javascript:;" (click)="drawer.toggle();boxShow()">{{ element.JobNo }}</a>
+                  <a href="javascript:;" (click)="drawer.toggle();boxShow()" cdkOverlayOrigin>{{ element.JobNo }}</a>
                 </mat-cell>
               </ng-container>
 
@@ -414,16 +405,8 @@
                 <mat-cell *matCellDef="let element">
                   <mat-form-field appearance="fill" class="font-12px pb-4 width-120">
                     <mat-label>Choose</mat-label>
-                    <mat-select [(ngModel)]="chooseList">
-                      <mat-option value="Complete">
-                        Complete
-                      </mat-option>
-                      <mat-option value="Processing">
-                        Processing
-                      </mat-option>
-                      <mat-option value="Hold">
-                        Hold
-                      </mat-option>
+                    <mat-select [(ngModel)]="chooseList" (selectionChange)="chooseSelectionChange(element.id)">
+                      <mat-option value="ViewDetails"> View Details</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </mat-cell>
@@ -505,9 +488,9 @@
                 </mat-cell>
               </ng-container>
 
-              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-header-row *matHeaderRowDef="displayedColumnsJob"></mat-header-row>
 
-              <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple class="element-row"></mat-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsJob;" matRipple class="element-row"></mat-row>
 
               <mat-row *matRowDef="let row; columns: ['expandedDetail'];"
                 [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'" style="overflow: hidden">
@@ -518,7 +501,7 @@
             <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 
             <!--mat-drawer-->
-            <mat-drawer-container class="example-container" autosize>
+            <mat-drawer-container class="example-container" autosize cdkPortal>
               <mat-drawer #drawer mode="side" position="end"
                 [ngClass]="{'scssClassName': showFiller==false,'example-sidenav':showFiller==true}">
                 <div class="card card-custom example example-compact gutter-b" style="box-shadow: none;">
@@ -1349,16 +1332,11 @@
                   <th>Instructions</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr *ngIf="isNull">
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr *ngIf="!isNull">
-                  <td>1</td>
-                  <td>{{getDepartment()}}</td>
-                  <td>{{getInstructions()}}</td>
+              <tbody *ngFor="let item of specialInstructionArray;">
+                <tr>
+                  <td>{{item.Id}}</td>
+                  <td>{{item.Department}}</td>
+                  <td>{{item.Instructions}}</td>
                 </tr>
               </tbody>
             </table>
@@ -1389,7 +1367,7 @@
                   <th>Notes</th>
                 </tr>
               </thead>
-              <tbody *ngFor="let item of invoice_array;">
+              <tbody *ngFor="let item of invoiceArray;">
                 <tr>
                   <td>{{item.id}}</td>
                   <td>{{item.Position}}</td>

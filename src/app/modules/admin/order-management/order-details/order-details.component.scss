@@ -295,4 +295,32 @@ app-order-details {
             padding-left: 20px;
         }
     }
+    .mat-header-row {
+        .mat-column-OrderQuantity {
+            flex: none;
+            width: 50px;
+        }
+        .mat-column-PrintType {
+            flex: none;
+            width: 220px;
+        }
+        .mat-column-ISBNPartNo {
+            flex: none;
+            width: 130px;
+        }
+    }
+    .mat-row {
+        .mat-column-OrderQuantity {
+            flex: none;
+            width: 50px;
+        }
+        .mat-column-PrintType {
+            flex: none;
+            width: 220px;
+        }
+        .mat-column-ISBNPartNo {
+            flex: none;
+            width: 130px;
+        }
+    }
 }

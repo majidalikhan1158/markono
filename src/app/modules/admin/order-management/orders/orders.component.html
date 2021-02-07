@@ -116,7 +116,7 @@
                             <mat-form-field appearance="fill" class="font-12px pr-2">
                                 <mat-label>Status</mat-label>
                                 <mat-select [(ngModel)]="viewByFilter"
-                                    (ngModelChange)="viewByFilterChange($event,tableFilterTypes.STATUS)">
+                                    (ngModelChange)="viewByFilterChange($event,tableFilterTypes.TYPE)">
                                     <mat-option [value]="item.value" *ngFor="let item of statusTypesList">
                                         {{item.text}}
                                     </mat-option>
@@ -124,9 +124,9 @@
                             </mat-form-field>
                             <!--mat-chips-->
                             <mat-chip-list #chipList class="table-filter-chips">
-                                <mat-chip [removable]="true" *ngIf="tableFilters.customerPoNo != ''"
-                                    (removed)="removeFilter(tableFilterTypes.CUSTOMER_PONO)">
-                                    {{tableFilters.customerPoNo}}
+                                <mat-chip [removable]="true" *ngIf="tableFilters.yourReference != ''"
+                                    (removed)="removeFilter(tableFilterTypes.YOUR_REFERENCE)">
+                                    {{tableFilters.yourReference}}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.orderDate != ''"
@@ -135,7 +135,7 @@
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.requestedDeliveryDate != ''"
-                                    (removed)="removeFilter(tableFilterTypes.RDD_DATE)">
+                                    (removed)="removeFilter(tableFilterTypes.REQUEST_DELIVERYDATE)">
                                     {{tableFilters.requestedDeliveryDate | date:'shortDate' }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
@@ -149,9 +149,9 @@
                                     {{tableFilters.companyName }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
-                                <mat-chip [removable]="true" *ngIf="tableFilters.orderType != ''"
-                                    (removed)="removeFilter(tableFilterTypes.ORDER_TYPE)">
-                                    {{tableFilters.orderType }}
+                                <mat-chip [removable]="true" *ngIf="tableFilters.type != ''"
+                                    (removed)="removeFilter(tableFilterTypes.TYPE)">
+                                    {{tableFilters.type }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                             </mat-chip-list>
@@ -183,8 +183,8 @@
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Cust PO No.</mat-label>
                                         <mat-icon matPrefix>search</mat-icon>
-                                        <input matInput [(ngModel)]="tableFilters.customerPoNo"
-                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.CUSTOMER_PONO)">
+                                        <input matInput [(ngModel)]="tableFilters.yourReference"
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.YOUR_REFERENCE)">
                                     </mat-form-field>
                                     <!--Choose Order Date Range-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
@@ -201,7 +201,7 @@
                                         <mat-label>Choose RDD Range</mat-label>
                                         <input [matDatepicker]="pickerrdd" matInput
                                             [(ngModel)]="tableFilters.requestedDeliveryDate"
-                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.RDD_DATE)">
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.REQUEST_DELIVERYDATE)">
                                         <mat-datepicker-toggle matSuffix [for]="pickerrdd"></mat-datepicker-toggle>
                                         <mat-datepicker #pickerrdd></mat-datepicker>
                                     </mat-form-field>
@@ -228,11 +228,11 @@
                                     </span>
                                     <div class="printing-type-options display-flex pb-4">
                                         <span class="option-item mr-2"
-                                            [ngClass]="{'option-item-selected': selectedStatus == orderTypes.PRINT, 'option-item mr-2': true}"
-                                            (click)="tableFilterChange(orderTypes.PRINT,tableFilterTypes.ORDER_TYPE)">Print</span>
+                                            [ngClass]="{'option-item-selected': selectedPrintType == printTypes.PRINT, 'option-item mr-2': true}"
+                                            (click)="tableFilterChange(printTypes.PRINT,tableFilterTypes.TYPE)">Print</span>
                                         <span class="option-item mr-2" style="width: 108px;"
-                                            [ngClass]="{'option-item-selected': selectedStatus == orderTypes.WAREHOUSE, 'option-item mr-2': true}"
-                                            (click)="tableFilterChange(orderTypes.WAREHOUSE,tableFilterTypes.ORDER_TYPE)">WareHouse</span>
+                                            [ngClass]="{'option-item-selected': selectedPrintType == printTypes.WAREHOUSE, 'option-item mr-2': true}"
+                                            (click)="tableFilterChange(printTypes.WAREHOUSE,tableFilterTypes.TYPE)">WareHouse</span>
                                     </div>
                                 </div>
                             </mat-menu>
@@ -380,15 +380,10 @@
                         <td mat-cell *matCellDef="let element">
                             <mat-form-field appearance="fill" class="font-12px pb-4 width-120">
                                 <mat-label>Choose</mat-label>
-                                <mat-select [(ngModel)]="chooseList" (selectionChange)="chooseSelectionChange($event)">
-                                    <mat-option value="Complete">
-                                        Complete
-                                    </mat-option>
-                                    <mat-option value="Processing">
-                                        Processing
-                                    </mat-option>
-                                    <mat-option value="Hold">
-                                        Hold
+                                <mat-select [(ngModel)]="chooseList"
+                                    (selectionChange)="chooseSelectionChange(element.id)">
+                                    <mat-option value="View Details">
+                                        View Details
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

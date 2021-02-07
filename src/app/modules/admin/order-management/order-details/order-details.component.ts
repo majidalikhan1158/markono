@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, ElementRef, AfterViewChecked, TemplateRef, Component, Input, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { MatSelectionListChange } from '@angular/material/list';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrderDetailTypes, OrderDetailTypesArray } from 'src/app/modules/shared/enums/order-management/order-constants';
@@ -16,13 +16,13 @@ import { AppPageRoutes } from '../../../shared/enums/app-constants';
 import { ApexAxisChartSeries, ApexDataLabels, ApexGrid, ApexPlotOptions, ApexTitleSubtitle, ApexXAxis, ChartComponent } from "ng-apexcharts";
 import { ApexNonAxisChartSeries, ApexResponsive, ApexChart } from "ng-apexcharts";
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { expandableRowAnimation } from '../../platemaking/expandable-row.animation';
 import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
-import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatSort } from '@angular/material/sort';
+import { CdkOverlayOrigin, OverlayConfig, Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Portal, TemplatePortal, CdkPortal } from '@angular/cdk/portal';
+
 export type TimeValueAnalysisChartOptions = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
@@ -51,10 +51,10 @@ export type TimeValueProcessChartOptions = {
   grid: ApexGrid;
   plotOptions: ApexPlotOptions;
 };
-const JobInfoHeader_DATA: JobInfoHeaderModel[] = [
+const JobInfoHeaderDATA: JobInfoHeaderModel[] = [
   { id: 1, custPoNo: '20005838', jobNo: '968052', orderDate: Date.now(), rdd: Date.now(), jobType: 'Offset', orderType: 'Warehouse', orderStatus: 'Shipped' },
 ];
-const ActivityLog_DATA: ActivityLogModel[] = [
+const ActivityLogDATA: ActivityLogModel[] = [
   { id: 1, actionDate: Date.now(), actionBy: '9780124059351', source: '50,120', activity: 'Offset', status: 'Shipped', duration: '' },
 ];
 @Component({
@@ -72,80 +72,63 @@ const ActivityLog_DATA: ActivityLogModel[] = [
 })
 export class OrderDetailsComponent implements OnInit, AfterViewInit {
   //#region declaration 
-  displayedColumns = ['Id', 'JobNo', 'ISBNPartNo', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode', 'actions', 'expandRow'];
-  dataSource: MatTableDataSource<Element>;
   @ViewChild('sort', { static: false }) sort: MatSort;
   @Input() createCaseMode: CreateCaseMode;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild("chart") chart: ChartComponent;
-  expandedElement: any;
-  nextPosition: number = 0;
-  public timeValueAnalysisChartOptions: Partial<TimeValueAnalysisChartOptions>;
-  public timeValueMapChartOptions: Partial<TimeValueMapChartOptions>;
-  public timeValueProcessChartOptions: Partial<TimeValueProcessChartOptions>;
-  displayedColumnsJobInfo: string[] = [
-    'custPoNo',
-    'jobNo',
-    'jobType',
-    'rdd',
-    'orderDate',
-    'orderType',
-    'orderStatus',
-  ];
-  showFiller = false;
-  positionOptions: TooltipPosition[] = ['below', 'above', 'left', 'right'];
-  position = new FormControl(this.positionOptions[1]);
-  columnsToDisplay = ['Cust PO No.', 'Order Date', 'RDD', 'Qty', 'Order Type', 'Order Status',];
-  displayedColumnsJob: string[] = ['Id', 'JobNo', 'ISBNPartNo', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode', 'expandRow'];
+
+  displayedColumnsOrderInfo = ['Cust PO No.', 'Order Date', 'RDD', 'Qty', 'Order Type', 'Order Status',];
+  displayedColumnsJob: string[] = ['Id', 'JobNo', 'ISBNPartNo', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode', 'actions', 'expandRow'];
+  displayedColumnsJobInfo: string[] = ['custPoNo', 'jobNo', 'jobType', 'rdd', 'orderDate', 'orderType', 'orderStatus',];
+  displayedColumnsActivityLog: string[] = ['id', 'actionDate', 'actionBy', 'source', 'duration', 'activity', 'status'];
+  dataJobArray;
+  dataArrayJobInfo = JobInfoHeaderDATA;
+  dataArrayActivityLog = ActivityLogDATA;
   dataSourceJob;
+  dataSourceJobInfo;
+  dataSourceActivityLog;
   orderInfoList;
   shipmentInfoList;
-  dataJobArray;
-  orderDetailTypesArray = OrderDetailTypesArray;
-  chooseList;
-  currentSelectedType = 'JOBS';
-  orderDetailTypesConstant = OrderDetailTypes;
-  ExpansionIcons = ExpansionIcons;
-  rowIdToExpand = 1;
-  rowIdToExpandJob = 1;
-  tableFilters: OrderInfoDetailSearchFilters = {
-    currentSelectedFilter: '',
-    jobNo: '',
-    isbn: '',
-    orderDate: '',
-    requestedDeliveryDate: '',
-    qty: '',
-    jobType: '',
-    status: '',
-  };
-  tableFilterTypes = OrdersInfoDetailSearchFilterTypes;
   statusTypesList = OrderInfoStatusTypesArray;
-  jobTypes = OrderInfoJobType;
-  selectedStatus = '';
-  globalFilter = '';
-  id = '';
-  subscription: Subscription;
-  shouldShowShipmentDetails = false;
-  dataSourceJobInfo;
-  dataArrayJobInfo = JobInfoHeader_DATA;
-  dataArrayActivityLog = ActivityLog_DATA;
-  dataSourceActivityLog;
-  displayedColumnsActivityLog: string[] = [
-    'id',
-    'actionDate',
-    'actionBy',
-    'source',
-    'duration',
-    'activity',
-    'status',
-  ];
   shipmentTermList: DDLListModal[] = [];
   shipmentModeList: DDLListModal[] = [];
   shipmentAgentList: DDLListModal[] = [];
+  expandedElement: any;
+  nextPosition: number = 0;
+  showFiller = false;
+  positionOptions: TooltipPosition[] = ['below', 'above', 'left', 'right'];
+  position = new FormControl(this.positionOptions[1]);
+  orderDetailTypesArray = OrderDetailTypesArray;
+  orderDetailTypesConstant = OrderDetailTypes;
+  chooseList;
+  currentSelectedType = 'JOBS';
+  ExpansionIcons = ExpansionIcons;
+  rowIdToExpand = 1;
+  rowIdToExpandJob = 1;
+  tableFilters: OrderInfoDetailSearchFilters;
+  tableFilterTypes = OrdersInfoDetailSearchFilterTypes;
+  jobTypes = OrderInfoJobType;
+  selectedJobType = '';
+  globalFilter = '';
+  queryParameterId = '';
+  subscription: Subscription;
+  shouldShowShipmentDetails = false;
   disabled = false;
   showBox = false;
   isNull = false;
-  invoice_array = [];
+  invoiceArray = [];
+  //charts
+  public timeValueAnalysisChartOptions: Partial<TimeValueAnalysisChartOptions>;
+  public timeValueMapChartOptions: Partial<TimeValueMapChartOptions>;
+  public timeValueProcessChartOptions: Partial<TimeValueProcessChartOptions>;
+
+  toggle = false;
+  @ViewChild('drawer') div: ElementRef;
+  @ViewChild(CdkPortal, { read: TemplateRef }) tpl: TemplateRef<{ value: string }>;
+  @ViewChild(CdkOverlayOrigin) origin: CdkOverlayOrigin;
+  overlayRef: OverlayRef | null;
+  portal: Portal<{ $implicit: string }>;
+  specialInstructionArray = [];
   //#endregion
 
   constructor(private router: Router,
@@ -154,8 +137,9 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     private store: CaseStore,
     public overlay: Overlay,
     public viewContainerRef: ViewContainerRef,
-    private cd: ChangeDetectorRef) {
-    this.dataSource = new MatTableDataSource();
+    private cd: ChangeDetectorRef,
+  ) {
+    this.tableFilters = { currentSelectedFilter: '', JobNo: '', ISBNPartNo: '', OrderQuantity: '', PrintType: '', CurrentActivityStatusName: '' };
     this.dataSourceJobInfo = this.dataArrayJobInfo;
     this.dataSourceActivityLog = this.dataArrayActivityLog;
   }
@@ -285,7 +269,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
       }
     };
     this.route.paramMap.subscribe(params => {
-      this.id = params.get('id');
+      this.queryParameterId = params.get('id');
     });
     this.getOrderInfo();
     this.getOrderJob();
@@ -307,7 +291,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   getOrderInfo() {
-    this.subscription = this.orderService.getOrderDeatils(this.id).subscribe(resp => {
+    this.subscription = this.orderService.getOrderDeatils(this.queryParameterId).subscribe(resp => {
       this.orderInfoList = resp.body.result as OrderVM;
     });
   }
@@ -317,19 +301,19 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     this.dataSourceJob.paginator = this.paginator;
     this.dataSourceJob.filterPredicate = this.customFilterPredicate();
     this.cd.detectChanges();
-    this.getDepartment();
+    this.getSpecialInstructions();
     this.getInvoice();
   }
 
   getOrderJob() {
-    this.subscription = this.orderService.getOrderDeatils(this.id).subscribe(resp => {
+    this.subscription = this.orderService.getOrderDeatils(this.queryParameterId).subscribe(resp => {
       this.dataJobArray = resp.body.result[0].CaseDetail as CaseDetail;
       this.initializeDatatable();
     });
   }
 
   getShimpmentInfo() {
-    this.subscription = this.orderService.getShipmentDetails(this.id).subscribe(resp => {
+    this.subscription = this.orderService.getShipmentDetails(this.queryParameterId).subscribe(resp => {
       this.shipmentInfoList = resp.body.result as OrderVM;
     });
   }
@@ -340,13 +324,9 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  chooseSelectionChange(event: Event) {
-
-  }
-
-  applySearch(event: Event) {
-    this.globalFilter = (event.target as HTMLInputElement).value;
-    this.dataSourceJob.filter = JSON.stringify(this.tableFilters);
+  chooseSelectionChange(id) {
+    console.log('id', id)
+    this.router.navigate(['/admin/order-management/order-details/' + id]);
   }
 
   getJobInfo() {
@@ -364,38 +344,36 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     }
   }
 
+  applySearch(event: Event) {
+    this.globalFilter = (event.target as HTMLInputElement).value;
+    this.dataSourceJob.filter = JSON.stringify(this.tableFilters);
+  }
+
   tableFilterChange(filterValue: string, filterPropType: string) {
     if (filterPropType === this.tableFilterTypes.JOB_TYPE) {
-      this.tableFilters.jobType = this.selectedStatus = this.tableFilters.jobType === filterValue ? '' : filterValue;
+      this.tableFilters.PrintType = this.selectedJobType = this.tableFilters.PrintType === filterValue ? '' : filterValue;
     }
     this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSourceJob.filter = JSON.stringify(this.tableFilters);
   }
 
   removeFilter(filterPropType: string) {
-    if (filterPropType === this.tableFilterTypes.ISBN) {
-      this.tableFilters.isbn = '';
-    } else if (filterPropType === this.tableFilterTypes.STATUS) {
-      this.tableFilters.status = this.selectedStatus = '';
-    } else if (filterPropType === this.tableFilterTypes.JOBNO) {
-      this.tableFilters.jobNo = '';
-    } else if (filterPropType === this.tableFilterTypes.ORDER_DATE) {
-      this.tableFilters.orderDate = '';
+    if (filterPropType === this.tableFilterTypes.JOBNO) {
+      this.tableFilters.JobNo = '';
     } else if (filterPropType === this.tableFilterTypes.JOB_TYPE) {
-      this.tableFilters.jobType = '';
+      this.tableFilters.PrintType = this.selectedJobType = '';
+    } else if (filterPropType === this.tableFilterTypes.ISBN) {
+      this.tableFilters.ISBNPartNo = '';
     } else if (filterPropType === this.tableFilterTypes.QTY) {
-      this.tableFilters.qty = '';
-    } else if (filterPropType === this.tableFilterTypes.RDD_DATE) {
-      this.tableFilters.requestedDeliveryDate = '';
+      this.tableFilters.OrderQuantity = '';
+    } else if (filterPropType === this.tableFilterTypes.STATUS) {
+      this.tableFilters.CurrentActivityStatusName = '';
     } else if (filterPropType == 'clear') {
-      this.tableFilters.isbn = '';
-      this.tableFilters.status = this.selectedStatus = '';
-      this.tableFilters.qty = '';
-      this.tableFilters.orderDate = '';
-      this.tableFilters.jobType = '';
-      this.tableFilters.jobNo = '';
-      this.tableFilters.isbn = '';
-      this.tableFilters.requestedDeliveryDate = '';
+      this.tableFilters.PrintType = this.selectedJobType = '';
+      this.tableFilters.ISBNPartNo = '';
+      this.tableFilters.OrderQuantity = '';
+      this.tableFilters.CurrentActivityStatusName = '';
+      this.tableFilters.JobNo = '';
     }
     this.dataSourceJob.filter = JSON.stringify(this.tableFilters);
   }
@@ -406,44 +384,26 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
       filter: string
     ): boolean => {
       let globalMatch = !this.globalFilter;
-
       if (this.globalFilter) {
         // search all text fields
         globalMatch =
-          new Date(data.requestedDeliveryDate)
-            .toLocaleDateString()
-            .toString()
+          data.JobNo?.toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          new Date(data.createdDateTime)
-            .toLocaleDateString()
-            .toString()
+          data.JobType?.toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.jobNo
-            .toString()
+          data.ISBNPartNo?.toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.jobType
-            .toString()
+          data.CurrentActivityStatusName?.toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.iSBNPartNo
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.orderQuantity
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.currentActivityStatusName
-            .toString()
+          data.OrderQuantity?.toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1;
@@ -452,90 +412,58 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
       if (!globalMatch) {
         return;
       }
-      const searchString = JSON.parse(filter) as OrderInfoDetailSearchFilters;
+      const searchString = JSON.parse(filter) as CaseDetail;
       let matchedFilters = 0;
       let filterCounter = 0;
-      if (this.tableFilters.orderDate !== '') {
+      if (this.tableFilters.JobNo !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          new Date(data.createdDateTime)
-            .toLocaleDateString()
-            .trim()
-            .indexOf(
-              new Date(searchString.orderDate).toLocaleDateString()
-            ) !== -1 ? 1 : 0
-        );
-      }
-      if (this.tableFilters.requestedDeliveryDate !== '') {
-        filterCounter++;
-        matchedFilters = matchedFilters + (
-          new Date(data.requestedDeliveryDate)
-            .toLocaleDateString()
-            .trim()
-            .indexOf(
-              new Date(searchString.requestedDeliveryDate).toLocaleDateString()
-            ) !== -1 ? 1 : 0
-        );
-      }
-      if (this.tableFilters.status !== '') {
-        // if (this.tableFilters.status == 'All') {
-
-        // } else {
-        filterCounter++;
-        matchedFilters = matchedFilters + (
-          data.currentActivityStatusName
-            .toString()
+          data.JobNo?.toString()
             .trim()
             .toLowerCase()
-            .indexOf(searchString.status.toLowerCase()) !== -1 ? 1 : 0
-        );
-        //   }
-      }
-      if (this.tableFilters.jobNo !== '') {
-        filterCounter++;
-        matchedFilters = matchedFilters + (
-          data.jobNo
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.jobNo.toLowerCase()) !== -1 ? 1 : 0
+            .indexOf(searchString.JobNo?.toLowerCase()) !== -1 ? 1 : 0
         );
       }
-      if (this.tableFilters.jobType !== '') {
+      if (this.tableFilters.CurrentActivityStatusName !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.jobType
-            .toString()
+          data.CurrentActivityStatusName?.toString()
             .trim()
             .toLowerCase()
-            .indexOf(searchString.jobType.toLowerCase()) !== -1 ? 1 : 0
+            .indexOf(searchString.CurrentActivityStatusName?.toLowerCase()) !== -1 ? 1 : 0
         );
       }
-      if (this.tableFilters.qty !== '') {
+      if (this.tableFilters.PrintType !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.orderQuantity
-            .toString()
+          data.PrintType?.toString()
             .trim()
             .toLowerCase()
-            .indexOf(searchString.qty.toLowerCase()) !== -1 ? 1 : 0
+            .indexOf(searchString.PrintType?.toLowerCase()) !== -1 ? 1 : 0
         );
       }
-      if (this.tableFilters.isbn !== '') {
+      if (this.tableFilters.ISBNPartNo !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.iSBNPartNo
-            .toString()
+          data.ISBNPartNo?.toString()
             .trim()
             .toLowerCase()
-            .indexOf(searchString.isbn.toLowerCase()) !== -1 ? 1 : 0
+            .indexOf(searchString.ISBNPartNo?.toLowerCase()) !== -1 ? 1 : 0
+        );
+      }
+      if (this.tableFilters.OrderQuantity !== '') {
+        filterCounter++;
+        matchedFilters = matchedFilters + (
+          data.OrderQuantity?.toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.OrderQuantity?.toLowerCase()) !== -1 ? 1 : 0
         );
       }
 
       if (filterCounter === 0) { return true; }
       return filterCounter === matchedFilters;
     };
-
     return myFilterPredicate;
   }
 
@@ -578,24 +506,17 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   openOverlay() {
-    // let config = new OverlayConfig();
-
-    // config.positionStrategy = this.overlay.position()
-    //   .global()
-    //   .left(`${this.nextPosition}px`)
-    //   .top(`${this.nextPosition}px`);
-
-    // this.nextPosition += 30;
-
-    // config.hasBackdrop = true;
-
-    // let overlayRef = this.overlay.create(config);
-
-    // overlayRef.backdropClick().subscribe(() => {
-    //   overlayRef.dispose();
-    // });
-
-    // overlayRef.attach(new ComponentPortal(OrderDetailsComponent, this.viewContainerRef));
+    const config = new OverlayConfig();
+    config.positionStrategy = this.overlay.position().connectedTo(
+      this.origin.elementRef,
+      { originX: 'end', originY: 'bottom' },
+      { overlayX: 'start', overlayY: 'top' });
+    config.hasBackdrop = true;
+    this.overlayRef = this.overlay.create(config);
+    this.overlayRef.backdropClick().subscribe(() => {
+      this.overlayRef.dispose();
+    });
+    const view = this.overlayRef.attach(this.portal);
   }
 
   boxShow() {
@@ -605,30 +526,28 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
   }
 
-  getDepartment() {
-    let a = this.orderInfoList.find(x => x.Id === this.id).SpecialInstructions;
+  getSpecialInstructions() {
+    const a = this.orderInfoList.find(x => x.Id === this.queryParameterId).SpecialInstructions;
     if (a !== 'null' || a !== 'null:null,') {
-      this.isNull = true;
-    } else {
-      this.isNull = false;
-      return a;
+      const _json = {
+        'Id': '1',
+        'Department': a.split(":")[0],
+        'Instructions': a.split(":")[1],
+      }
+      this.specialInstructionArray.push(_json);
     }
   }
 
-  getInstructions() {
-    return this.orderInfoList.find(x => x.Id === this.id).SpecialInstructions;
-  }
-
   getInvoice() {
-    let bottom = this.orderInfoList.find(x => x.Id === this.id).NotesOnInvoiceBottom;
-    let top = this.orderInfoList.find(x => x.Id === this.id).NotesOnInvoiceTop;
+    let bottom = this.orderInfoList.find(x => x.Id === this.queryParameterId).NotesOnInvoiceBottom;
+    let top = this.orderInfoList.find(x => x.Id === this.queryParameterId).NotesOnInvoiceTop;
     if (top != "" || top != null) {
       const _json = {
         'id': '1',
         'Position': 'Top',
         'Notes': top
       };
-      this.invoice_array.push(_json)
+      this.invoiceArray.push(_json)
     }
     if (bottom == "" || bottom == null) {
 
@@ -638,7 +557,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
         'Position': 'Bottom',
         'Notes': bottom
       };
-      this.invoice_array.push(_json)
+      this.invoiceArray.push(_json)
     }
 
   }
@@ -647,4 +566,5 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     let i = 1;
     return i++
   }
+
 }

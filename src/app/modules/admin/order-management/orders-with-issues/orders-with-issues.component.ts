@@ -15,7 +15,7 @@ import {
 } from 'src/app/modules/shared/models/table-filter-modals';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 import { Router } from '@angular/router';
-import { ViewByArray, OrdersModel, StatusTypesArray, OrderType, OrdersIssueModel, OrderVM } from 'src/app/modules/shared/models/order-management';
+import { ViewByArray, OrdersModel, StatusTypesArray, OrdersIssueModel, OrderVM } from 'src/app/modules/shared/models/order-management';
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 import { Subscription } from 'rxjs';
 import { OrderService } from 'src/app/modules/services/core/services/order.service';
@@ -59,7 +59,7 @@ export class OrdersWithIssuesComponent implements OnInit {
   selectedStatus = '';
   globalFilter = '';
   statusTypesList = StatusTypesArray;
-  orderTypes = OrderType;
+  orderTypes;
   rowIdToExpand = 0;
   chooseList = '';
   viewByFilter = '';

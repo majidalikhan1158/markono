@@ -48,8 +48,8 @@ export const PlatemakingnSearchFilterTypes = {
 
 export interface OrderSearchFilters {
     currentSelectedFilter: string;
-    orderType: string;
-    customerPoNo: string;
+    type: string;
+    yourReference: string;
     companyName: string;
     orderDate: string;
     requestedDeliveryDate: string;
@@ -57,12 +57,17 @@ export interface OrderSearchFilters {
 }
 
 export const OrderSearchFilterTypes = {
-    ORDER_TYPE: 'ORDER_TYPE',
-    CUSTOMER_PONO: 'CUSTOMER_PONO',
+    TYPE: 'TYPE',
+    YOUR_REFERENCE: 'YOUR_REFERENCE',
     ORDER_DATE: 'ORDER_DATE',
     STATUS: 'STATUS',
     COMPANY_NAME: 'COMPANY_NAME',
-    RDD_DATE: 'RDD_DATE'
+    REQUEST_DELIVERYDATE: 'REQUEST_DELIVERYDATE'
+};
+
+export const PrintTypes = {
+    PRINT: 'PO',
+    WAREHOUSE: 'WO',
 };
 
 export interface OrdersWithIssueSearchFilters {
@@ -88,17 +93,6 @@ export const OrdersWithIssueSearchFilterTypes = {
     PRINTAI_JOBNO: 'PRINTAI_JOBNO'
 };
 
-export interface OrderInfoDetailSearchFilters {
-    currentSelectedFilter: string;
-    jobNo: string;
-    isbn: string;
-    orderDate: string;
-    requestedDeliveryDate: string;
-    qty: string;
-    jobType: string;
-    status: string;
-};
-
 export interface OrderJobInfoDetailSearchFilters {
     currentSelectedFilter: string;
     jobNo: string;
@@ -110,10 +104,21 @@ export interface OrderJobInfoDetailSearchFilters {
     status: string;
 };
 
+export interface OrderInfoDetailSearchFilters {
+    currentSelectedFilter: string;
+    JobNo: string;
+    ISBNPartNo: string;
+    // orderDate: string;
+    // requestedDeliveryDate: string;
+    OrderQuantity: string;
+    PrintType: string;
+    CurrentActivityStatusName: string;
+};
+
 export const OrdersInfoDetailSearchFilterTypes = {
-    ORDER_DATE: 'ORDER_DATE',
+    // ORDER_DATE: 'ORDER_DATE',
     STATUS: 'STATUS',
-    RDD_DATE: 'RDD_DATE',
+    // RDD_DATE: 'RDD_DATE',
     ISBN: 'ISBN',
     JOBNO: 'JOBNO',
     QTY: 'QTY',

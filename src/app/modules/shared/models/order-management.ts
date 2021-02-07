@@ -52,6 +52,7 @@ export interface OrderVM {
     address2: string;
     qty: number;
     noOfTitles: number;
+    type: string;
     caseDetail: CaseDetail[];
     otherCharge: OtherCharge[];
 }
@@ -63,54 +64,54 @@ export interface OtherCharge {
     caseID: number;
 }
 export interface CaseDetail {
-    id: number;
-    caseID: number;
-    caseDetailNo: number;
-    iSBNPartNo: number;
-    printType: string;
-    productVersion: string;
-    parentISBN: string;
-    type: string;
-    componentType: string;
-    jobType: string;
-    productGroup: string;
-    yourReference: string;
-    title: string;
-    lnNo: number;
-    extLnNo: number;
-    jobNo: number;
-    extJobNo: null;
-    sellToNo: string;
-    bindingType: string;
-    totalExtent: number;
-    weight: string;
-    spine: string;
-    additionalUnitPrice: number;
-    additionalQty: number;
-    margin: number;
-    orderQuantity: number;
-    productionQuantity: number;
-    estimatedPrice: number;
-    quotedPrice: number;
-    sellingPrice: number;
-    subTotal: number;
-    samplesRequired: number;
-    bluePrintRequired: number;
-    fGRequired: number;
-    advancesRequired: number;
-    carrierSheet: string;
-    isDeleted: boolean;
-    currentActivityId: number;
-    currentActivityStatusCode: number;
-    currentActivityStatusName: string;
-    createdByUser: string;
-    createdBy: string;
-    createdDateTime: number;
-    updatedByUser: string;
-    updatedBy: string;
-    updatedDateTime: number;
-    requestedDeliveryDate: number
-    caseDetailAddiotional: CaseDetailAdditional[];
+    Id: number;
+    CaseID: string;
+    CaseDetailNo: string;
+    ISBNPartNo: string;
+    PrintType: string;
+    ProductVersion: string;
+    ParentISBN: string;
+    Type: string;
+    ComponentType: string;
+    JobType: string;
+    ProductGroup: string;
+    YourReference: string;
+    Title: string;
+    LnNo: string;
+    ExtLnNo: string;
+    JobNo: string;
+    ExtJobNo: null;
+    SellToNo: string;
+    BindingType: string;
+    TotalExtent: number;
+    Weight: string;
+    Spine: string;
+    AdditionalUnitPrice: number;
+    AdditionalQty: number;
+    Margin: number;
+    OrderQuantity: string;
+    ProductionQuantity: number;
+    EstimatedPrice: number;
+    QuotedPrice: number;
+    SellingPrice: number;
+    SubTotal: number;
+    SamplesRequired: number;
+    BluePrintRequired: number;
+    FGRequired: number;
+    AdvancesRequired: number;
+    CarrierSheet: string;
+    IsDeleted: boolean;
+    CurrentActivityId: number;
+    CurrentActivityStatusCode: number;
+    CurrentActivityStatusName: string;
+    CreatedByUser: string;
+    CreatedBy: string;
+    CreatedDateTime: number;
+    CpdatedByUser: string;
+    CpdatedBy: string;
+    CpdatedDateTime: number;
+    CequestedDeliveryDate: number
+    CaseDetailAddiotional: CaseDetailAdditional[];
 }
 export interface CaseDetailAdditional {
     id: number;
@@ -144,10 +145,6 @@ export const ViewByArray = {
     APPJOB: 'App Job',
 };
 
-export const OrderType = {
-    PRINT: 'Print',
-    WAREHOUSE: 'Warehouse',
-};
 export interface OrderJobModel {
     id: number;
     jobNo: string;

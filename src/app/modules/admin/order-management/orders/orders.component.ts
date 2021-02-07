@@ -7,7 +7,8 @@ import { ViewByArray, OrdersModel, StatusTypesArray, OrderVM } from 'src/app/mod
 import { Subscription } from 'rxjs';
 import { AppPageRoutes } from '../../../shared/enums/app-constants';
 import { OrderService } from 'src/app/modules/services/core/services/order.service';
-import { AfterViewInit } from '@angular/core';
+import { TooltipPosition } from '@angular/material/tooltip';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-orders',
@@ -18,6 +19,8 @@ import { AfterViewInit } from '@angular/core';
 export class OrdersComponent implements OnInit {
   //#region declaration
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  positionOptions: TooltipPosition[] = ['below', 'above', 'left', 'right'];
+  position = new FormControl(this.positionOptions[1]);
   displayedColumns: string[] = ['id', 'yourReference', 'orderDate', 'requestedDeliveryDate', 'noOfTitles', 'qty', 'type', 'currentActivityStatusCode', 'actions'];
   dataArrayOrder: OrderVM[];
   dataSource;
@@ -37,7 +40,7 @@ export class OrdersComponent implements OnInit {
     private router: Router,
     private orderService: OrderService,
     private cd: ChangeDetectorRef,) {
-    this.tableFilters = { orderDate: '', requestedDeliveryDate: '', type: '', yourReference: '', companyName: '', status: '', currentSelectedFilter: '' };
+    this.tableFilters = { orderDate: '', requestedDeliveryDate: '', type: '', yourReference: '', companyName: '', currentActivityStatusName: '', currentSelectedFilter: '' };
   }
 
   ngOnInit(): void {
@@ -83,14 +86,14 @@ export class OrdersComponent implements OnInit {
     } else if (filterPropType === this.tableFilterTypes.REQUEST_DELIVERYDATE) {
       this.tableFilters.requestedDeliveryDate = '';
     } else if (filterPropType === this.tableFilterTypes.STATUS) {
-      this.tableFilters.status = '';
+      this.tableFilters.currentActivityStatusName = '';
     } else if (filterPropType == 'clear') {
       this.tableFilters.orderDate = '';
       this.tableFilters.type = this.selectedPrintType = '';
       this.tableFilters.yourReference = '';
       this.tableFilters.companyName = '';
       this.tableFilters.requestedDeliveryDate = '';
-      this.tableFilters.status = '';
+      this.tableFilters.currentActivityStatusName = '';
     }
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
@@ -167,7 +170,7 @@ export class OrdersComponent implements OnInit {
             .indexOf(searchString.type?.toLowerCase()) !== -1 ? 1 : 0
         );
       }
-      if (this.tableFilters.status !== '') {
+      if (this.tableFilters.currentActivityStatusName !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
           data.currentActivityStatusName?.toString()
@@ -231,6 +234,15 @@ export class OrdersComponent implements OnInit {
 
   getOrdersInfo(id) {
     this.router.navigate(['/admin/order-management/order-details/' + id]);
+  }
+
+  getToolTipData(id) {
+    let printType = this.dataArrayOrder.find(x => x.id === id).type;
+    if (printType == 'PO') {
+      return 'Print';
+    } else {
+      return 'Warehouse';
+    }
   }
 
 }

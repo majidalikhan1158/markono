@@ -301,14 +301,14 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     this.dataSourceJob.paginator = this.paginator;
     this.dataSourceJob.filterPredicate = this.customFilterPredicate();
     this.cd.detectChanges();
-    this.getSpecialInstructions();
-    this.getInvoice();
   }
 
   getOrderJob() {
     this.subscription = this.orderService.getOrderDeatils(this.queryParameterId).subscribe(resp => {
       this.dataJobArray = resp.body.result[0].CaseDetail as CaseDetail;
       this.initializeDatatable();
+      this.getSpecialInstructions();
+      this.getInvoice();
     });
   }
 
@@ -472,11 +472,11 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
-    this.openOverlay()
-    if (tabChangeEvent.index == 1 || tabChangeEvent.index == 3) {
+    // this.openOverlay()
+    if (tabChangeEvent.tab['textLabel'] == 'Jobs' || tabChangeEvent.tab['textLabel'] == 'Activity Log') {
+      this.showFiller = false;
     } else {
-      this.showFiller = !this.showFiller
-
+      this.showFiller = true;
     }
   }
 

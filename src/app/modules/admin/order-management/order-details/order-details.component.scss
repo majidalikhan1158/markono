@@ -69,7 +69,7 @@ app-order-details {
     .order-info-card {
         .card-body {
             padding: 8px !important;
-            min-height: 84px;
+            min-height: 67px;
         }
     }
     .status-options {
@@ -100,10 +100,12 @@ app-order-details {
         padding: 15px !important;
     }
     .customer-info-card {
-        .card-header h6 {
-            font-weight: 400;
-            margin-bottom: 0px;
-            font-size: 14px;
+        .card-header {
+            h6 {
+                font-weight: bold !important;
+                margin-bottom: 0px !important;
+                font-size: 14px;
+            }
         }
     }
     .customer-info-card {
@@ -114,6 +116,9 @@ app-order-details {
     .shipping-info-details-card {
         .card-body {
             padding: 12px !important;
+        }
+        mat-form-field {
+            width: 100%;
         }
     }
     .order-info-table-card > mat-row,
@@ -133,7 +138,7 @@ app-order-details {
     .order-details-types {
         min-height: 500px;
         box-shadow: none;
-        border-right: 1px solid #e6e6e6;
+        border-right: 1px solid #e6e6e6 !important;
     }
     .mat-column-jobNo {
         flex: none;
@@ -202,7 +207,7 @@ app-order-details {
         position: fixed;
         transform: translateX !important;
         visibility: visible;
-        margin-top: 231px;
+        margin-top: 212px;
         margin-right: 24px;
     }
     .scssClassName {
@@ -211,7 +216,7 @@ app-order-details {
         position: fixed;
         transform: translateX !important;
         visibility: visible;
-        margin-top: 231px;
+        margin-top: 212px;
         margin-right: 24px;
     }
     .expansion-icon {
@@ -286,9 +291,9 @@ app-order-details {
     }
     .order-types {
         background-color: white;
-        min-width: 200px;
+        min-width: 160;
         padding-right: 0px;
-        max-width: 161px;
+        max-width: 180px;
     }
     .drwaer-job-info {
         .mat-header-row {

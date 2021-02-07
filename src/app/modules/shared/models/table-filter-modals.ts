@@ -53,7 +53,7 @@ export interface OrderSearchFilters {
     companyName: string;
     orderDate: string;
     requestedDeliveryDate: string;
-    status: string;
+    currentActivityStatusName: string;
 }
 
 export const OrderSearchFilterTypes = {
@@ -72,25 +72,27 @@ export const PrintTypes = {
 
 export interface OrdersWithIssueSearchFilters {
     currentSelectedFilter: string;
-    orderType: string;
-    customerPoNo: string;
+    yourReference: string;
     orderDate: string;
-    rddDate: string;
-    status: string;
+    requestedDeliveryDate: string;
+    currentActivityStatusName: string;
     isbn: string;
     printVisJobNo: string;
     printAiJobNo: string;
+    type: string;
+    companyName: string;
 }
 
 export const OrdersWithIssueSearchFilterTypes = {
-    ORDER_TYPE: 'ORDER_TYPE',
-    CUSTOMER_PONO: 'CUSTOMER_PONO',
-    ORDER_DATE: 'ORDER_DATE',
-    STATUS: 'STATUS',
-    RDD_DATE: 'RDD_DATE',
+    YOURREFERENCE: 'YOUR_REFERENCE',
+    ORDERDATE: 'ORDER_DATE',
+    REQUESTEDDELIVERYDATE: 'REQUESTEDDELIVERYDATE',
+    CURRENTACTIVITYSTATUSNAME: 'CURRENTACTIVITYSTATUSNAME',
     ISBN: 'ISBN',
-    PRINT_VIS_JOBNO: 'PRINT_VIS_JOBNO',
-    PRINTAI_JOBNO: 'PRINTAI_JOBNO'
+    PRINTVISJOBNO: 'PRINTVISJOBNO',
+    PRINTAIJOBNO: 'PRINTAIJOBNO',
+    TYPE: 'TYPE',
+    COMPANYNAME: 'COMPANYNAME'
 };
 
 export interface OrderJobInfoDetailSearchFilters {

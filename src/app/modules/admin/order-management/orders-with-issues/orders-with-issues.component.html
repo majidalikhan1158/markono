@@ -114,24 +114,24 @@
                     <div class="col-lg-12 pt-2 pb-2 pr-0">
                         <div class="float-left display-flex">
                             <mat-chip-list #chipList class="table-filter-chips">
-                                <mat-chip [removable]="true" *ngIf="tableFilters.customerPoNo != ''"
-                                    (removed)="removeFilter(tableFilterTypes.CUSTOMER_PONO)">
-                                    {{tableFilters.customerPoNo}}
+                                <mat-chip [removable]="true" *ngIf="tableFilters.yourReference != ''"
+                                    (removed)="removeFilter(tableFilterTypes.YOURREFERENCE)">
+                                    {{tableFilters.yourReference}}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.orderDate != ''"
-                                    (removed)="removeFilter(tableFilterTypes.ORDER_DATE)">
+                                    (removed)="removeFilter(tableFilterTypes.ORDERDATE)">
                                     {{tableFilters.orderDate | date:'shortDate'}}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
-                                <mat-chip [removable]="true" *ngIf="tableFilters.rddDate != ''"
-                                    (removed)="removeFilter(tableFilterTypes.RDD_DATE)">
-                                    {{tableFilters.rddDate | date:'shortDate' }}
+                                <mat-chip [removable]="true" *ngIf="tableFilters.requestedDeliveryDate != ''"
+                                    (removed)="removeFilter(tableFilterTypes.REQUESTEDDELIVERYDATE)">
+                                    {{tableFilters.requestedDeliveryDate | date:'shortDate' }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
-                                <mat-chip [removable]="true" *ngIf="tableFilters.status != ''"
-                                    (removed)="removeFilter(tableFilterTypes.STATUS)">
-                                    {{tableFilters.status }}
+                                <mat-chip [removable]="true" *ngIf="tableFilters.currentActivityStatusName != ''"
+                                    (removed)="removeFilter(tableFilterTypes.CURRENTACTIVITYSTATUSNAME)">
+                                    {{tableFilters.currentActivityStatusName }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.isbn != ''"
@@ -140,18 +140,23 @@
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.printVisJobNo != ''"
-                                    (removed)="removeFilter(tableFilterTypes.PRINT_VIS_JOBNO)">
+                                    (removed)="removeFilter(tableFilterTypes.PRINTVISJOBNO)">
                                     {{tableFilters.printVisJobNo }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.printAiJobNo != ''"
-                                    (removed)="removeFilter(tableFilterTypes.PRINTAI_JOBNO)">
+                                    (removed)="removeFilter(tableFilterTypes.PRINTAIJOBNO)">
                                     {{tableFilters.printAiJobNo }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
-                                <mat-chip [removable]="true" *ngIf="tableFilters.orderType != ''"
-                                    (removed)="removeFilter(tableFilterTypes.ORDER_TYPE)">
-                                    {{tableFilters.orderType }}
+                                <mat-chip [removable]="true" *ngIf="tableFilters.type != ''"
+                                    (removed)="removeFilter(tableFilterTypes.TYPE)">
+                                    {{tableFilters.type }}
+                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                </mat-chip>
+                                <mat-chip [removable]="true" *ngIf="tableFilters.companyName != ''"
+                                    (removed)="removeFilter(tableFilterTypes.COMPANYNAME)">
+                                    {{tableFilters.companyName }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                             </mat-chip-list>
@@ -179,72 +184,79 @@
                                             Clear Filters
                                         </a>
                                     </div>
+                                    <!--Customer PO No-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Cust PO No.</mat-label>
                                         <mat-icon matPrefix>search</mat-icon>
-                                        <input matInput [(ngModel)]="tableFilters.customerPoNo"
-                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.CUSTOMER_PONO)">
+                                        <input matInput [(ngModel)]="tableFilters.yourReference"
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.YOURREFERENCE)">
                                     </mat-form-field>
-
+                                    <!--PrintVis Job No-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>PrintVis Job No.</mat-label>
                                         <mat-icon matPrefix>search</mat-icon>
                                         <input matInput [(ngModel)]="tableFilters.printVisJobNo"
-                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.PRINT_VIS_JOBNO)">
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.PRINTVISJOBNO)">
                                     </mat-form-field>
-
+                                    <!--Printai Job No.-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Printai Job No.</mat-label>
                                         <mat-icon matPrefix>search</mat-icon>
                                         <input matInput [(ngModel)]="tableFilters.printAiJobNo"
-                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.PRINTAI_JOBNO)">
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.PRINTAIJOBNO)">
                                     </mat-form-field>
-
+                                    <!--ISBN-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>ISBN</mat-label>
                                         <mat-icon matPrefix>search</mat-icon>
                                         <input matInput [(ngModel)]="tableFilters.isbn"
                                             (ngModelChange)="tableFilterChange($event,tableFilterTypes.ISBN)">
                                     </mat-form-field>
-
+                                    <!--Choose Order Date Range-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
-                                        <mat-label>Choose Order Date Range</mat-label>
+                                        <mat-label>Choose Order Date</mat-label>
                                         <input [matDatepicker]="pickerorder" matInput
                                             [(ngModel)]="tableFilters.orderDate"
-                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.ORDER_DATE)">
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.ORDERDATE)">
                                         <mat-datepicker-toggle matSuffix [for]="pickerorder">
                                         </mat-datepicker-toggle>
                                         <mat-datepicker #pickerorder></mat-datepicker>
                                     </mat-form-field>
-
+                                    <!--Choose RDD Range-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
-                                        <mat-label>Choose RDD Range</mat-label>
-                                        <input [matDatepicker]="pickerrdd" matInput [(ngModel)]="tableFilters.rddDate"
-                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.RDD_DATE)">
+                                        <mat-label>Choose RDD</mat-label>
+                                        <input [matDatepicker]="pickerrdd" matInput
+                                            [(ngModel)]="tableFilters.requestedDeliveryDate"
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.REQUESTEDDELIVERYDATE)">
                                         <mat-datepicker-toggle matSuffix [for]="pickerrdd"></mat-datepicker-toggle>
                                         <mat-datepicker #pickerrdd></mat-datepicker>
                                     </mat-form-field>
-
+                                    <!--Status-->
                                     <mat-form-field appearance="fill" class="font-12px pb-4">
                                         <mat-label>Status</mat-label>
-                                        <mat-select [(ngModel)]="tableFilters.status"
-                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.STATUS)">
-                                            <mat-option [value]="item.value" *ngFor="let item of statusTypesList">
-                                                {{item.text}}
-                                            </mat-option>
+                                        <mat-select [(ngModel)]="tableFilters.currentActivityStatusName"
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.CURRENTACTIVITYSTATUSNAME)">
+                                            <mat-option value="No Setup"> No Setup</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-
+                                    <!--Customer Name-->
+                                    <mat-form-field appearance="fill" class="font-12px pb-4">
+                                        <mat-label>Customer Name</mat-label>
+                                        <mat-icon matPrefix>search</mat-icon>
+                                        <input matInput [(ngModel)]="tableFilters.companyName"
+                                            (ngModelChange)="tableFilterChange($event,tableFilterTypes.COMPANYNAME)">
+                                    </mat-form-field>
+                                    <!--Order Type-->
                                     <span class="filter-menu-heading font-14px pb-4">
                                         Order Type
                                     </span>
                                     <div class="printing-type-options display-flex pb-4">
                                         <span class="option-item mr-2"
                                             [ngClass]="{'option-item-selected': selectedStatus == orderTypes.PRINT, 'option-item mr-2': true}"
-                                            (click)="tableFilterChange(orderTypes.PRINT,tableFilterTypes.ORDER_TYPE)">Print</span>
+                                            (click)="tableFilterChange(orderTypes.PRINT,tableFilterTypes.TYPE)">Print</span>
                                         <span class="option-item mr-2" style="width: 108px;"
                                             [ngClass]="{'option-item-selected': selectedStatus == orderTypes.WAREHOUSE, 'option-item mr-2': true}"
-                                            (click)="tableFilterChange(orderTypes.WAREHOUSE,tableFilterTypes.ORDER_TYPE)">WareHouse</span>
+                                            (click)="tableFilterChange(orderTypes.WAREHOUSE,tableFilterTypes.TYPE)">WareHouse</span>
                                     </div>
                                 </div>
                             </mat-menu>

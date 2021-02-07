@@ -18,7 +18,7 @@ export const OrderDetailTypesArray = [
         isSelected: false,
     },
     {
-        value: 'Misc Billing',
+        value: 'Misc Costs',
         id: 3,
         enum: 'MISC_BILLING',
         isSelected: false,

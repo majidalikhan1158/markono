@@ -145,7 +145,8 @@
       </div>
     </div>
 
-    <div style="background-color: white;padding-right: 0px;max-width: 860px;" class="col-xl-10 padding-l-0px">
+    <div style="background-color: white;padding-right: 0px;max-width: 887px;min-width: 709px;"
+      class="col-xl-10 padding-l-0px">
       <!--job-->
       <ng-container *ngIf="currentSelectedType === orderDetailTypesConstant.JOBS">
         <div class="card card-custom example example-compact gutter-b orders-job-table-card" style="box-shadow: none;">
@@ -248,9 +249,7 @@
                         <mat-select [(ngModel)]="tableFilters.CurrentActivityStatusName" (ngModelChange)="
                           tableFilterChange($event, tableFilterTypes.STATUS)
                         ">
-                          <mat-option [value]="item.value" *ngFor="let item of statusTypesList">
-                            {{ item.text }}
-                          </mat-option>
+                          <mat-option value="Order Confirmed"> Order Confirmed</mat-option>
                         </mat-select>
                       </mat-form-field>
                       <!--jobType-->
@@ -405,7 +404,7 @@
                 <mat-cell *matCellDef="let element">
                   <mat-form-field appearance="fill" class="font-12px pb-4 width-120">
                     <mat-label>Choose</mat-label>
-                    <mat-select [(ngModel)]="chooseList" (selectionChange)="chooseSelectionChange(element.id)">
+                    <mat-select [(ngModel)]="chooseList" (selectionChange)="drawer1.toggle()">
                       <mat-option value="ViewDetails"> View Details</mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -416,7 +415,7 @@
               <ng-container matColumnDef="expandedDetail">
                 <mat-cell *matCellDef="let detail">
 
-                  <table class="table">
+                  <table class="table" *ngFor="let item of dataJobArray">
 
                     <tr class="">
                       <td class="td-table">Title</td>
@@ -427,12 +426,12 @@
                       <td class="td-table">BluePrint required</td>
                     </tr>
                     <tr>
-                      <td class="th-table">Passer: Psychology 3e</td>
-                      <td class="th-table">Passer: Psychology 3e</td>
-                      <td class="th-table">Books</td>
-                      <td class="th-table">0</td>
-                      <td class="th-table">0</td>
-                      <td class="th-table">0</td>
+                      <td class="th-table">{{item.Title}}</td>
+                      <td class="th-table">-</td>
+                      <td class="th-table">{{item.ProductGroup}}</td>
+                      <td class="th-table">{{item.EstimatedPrice}}</td>
+                      <td class="th-table">{{item.SamplesRequired}}</td>
+                      <td class="th-table">{{item.BluePrintRequired}}</td>
                     </tr>
                     <tr>
                       <td class="td-table">Total extent</td>
@@ -443,12 +442,12 @@
                       <td class="td-table">Advances required</td>
                     </tr>
                     <tr>
-                      <td class="th-table">1004</td>
-                      <td class="th-table">V0001</td>
-                      <td class="th-table"></td>
-                      <td class="th-table">0</td>
-                      <td class="th-table">10</td>
-                      <td class="th-table">0</td>
+                      <td class="th-table">{{item.TotalExtent}}</td>
+                      <td class="th-table">-</td>
+                      <td class="th-table">-</td>
+                      <td class="th-table">{{item.Weight}}</td>
+                      <td class="th-table">{{item.FGRequired}}</td>
+                      <td class="th-table">{{item.AdvancesRequired}}</td>
                     </tr>
                     <tr>
                       <td class="td-table">Additional Unit price</td>
@@ -459,8 +458,8 @@
                       <td class="td-table"></td>
                     </tr>
                     <tr>
-                      <td class="th-table">0.00</td>
-                      <td class="th-table">0</td>
+                      <td class="th-table">{{item.AdditionalUnitPrice}}</td>
+                      <td class="th-table">{{item.Spine}}</td>
                       <td class="th-table"></td>
                       <td class="th-table"></td>
                       <td class="th-table"></td>
@@ -468,7 +467,6 @@
                     </tr>
 
                   </table>
-
 
                 </mat-cell>
               </ng-container>
@@ -514,6 +512,168 @@
                         <div class="float-right display-flex">
                           <a href="javascript:;" class="btn btn-xs btn-icon btn-light btn-hover-primary"
                             (click)="drawer.toggle();boxShow()">
+                            <i class="ki ki-close icon-xs text-muted"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <mat-tab-group (selectedTabChange)="tabChanged($event)"
+                      [ngClass]="!showBox?'none-display':'show-display'">
+                      <mat-tab label="Jobs">
+                        <table class="table table-head-custom" style="margin-bottom: 0px !important;">
+                          <thead>
+                            <tr class="text-left">
+                              <th>Customer PO No.</th>
+                              <th>Job No</th>
+                              <th>Type</th>
+                              <th>Order Date</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <ng-container>
+                              <tr *ngFor="let job of dataSourceJobInfo;  let j = index">
+                                <td>{{ job.custPoNo }}</td>
+                                <td>{{ job.jobNo }}</td>
+                                <td>{{ job.jobType }} </td>
+                                <td>{{ job.orderDate }} </td>
+                                <td>
+                                  <div class="status-options" *ngIf="job.orderStatus == 'Pending File Prep'">
+                                    <span class="width-100">
+                                      <span class="label label-lg label-light-orange label-inline">Pending File
+                                        Prep</span>
+                                    </span>
+                                  </div>
+                                  <div class="status-options" *ngIf="job.orderStatus == 'Shipped'">
+                                    <span class="width-100">
+                                      <span class="label label-lg label-light-green label-inline">Shipped</span>
+                                    </span>
+                                  </div>
+                                  <div class="status-options" *ngIf="job.orderStatus == 'Planning'">
+                                    <span class="width-100">
+                                      <span class="label label-lg label-light-purple label-inline">Planning</span>
+                                    </span>
+                                  </div>
+                                  <div class="status-options" *ngIf="job.orderStatus == 'Scheduling'">
+                                    <span class="width-100">
+                                      <span class="label label-lg label-light-blue label-inline">Scheduling</span>
+                                    </span>
+                                  </div>
+                                  <!-- {{ job.orderStatus }} -->
+                                </td>
+                              </tr>
+                            </ng-container>
+                          </tbody>
+                        </table>
+                      </mat-tab>
+                      <mat-tab label="Analysis">
+                        <!--Time value map-->
+                        <div class="row">
+                          <div class="card card-custom example example-compact gutter-b analysis-card">
+                            <div class="card-header">
+                              <div class="card-title">
+                                <h3 class="card-label">Time Value Map</h3>
+                              </div>
+                            </div>
+                            <div class="card-body">
+                              <apx-chart [series]="timeValueMapChartOptions.series"
+                                [chart]="timeValueMapChartOptions.chart"
+                                [dataLabels]="timeValueMapChartOptions.dataLabels"
+                                [plotOptions]="timeValueMapChartOptions.plotOptions"
+                                [colors]="timeValueMapChartOptions.colors" [grid]="timeValueMapChartOptions.grid"
+                                [xaxis]="timeValueMapChartOptions.xaxis" [title]="timeValueMapChartOptions.title">
+                              </apx-chart>
+                            </div>
+                          </div>
+                        </div>
+                        <!--Value-add Process Times-->
+                        <div class="row">
+                          <div class="card card-custom example example-compact gutter-b analysis-card">
+                            <div class="card-header">
+                              <div class="card-title">
+                                <h3 class="card-label">
+                                  Value-add Process Times
+                                </h3>
+                              </div>
+                            </div>
+                            <div class="card-body">
+                              <apx-chart [series]="timeValueMapChartOptions.series"
+                                [chart]="timeValueMapChartOptions.chart"
+                                [dataLabels]="timeValueMapChartOptions.dataLabels"
+                                [plotOptions]="timeValueMapChartOptions.plotOptions"
+                                [colors]="timeValueMapChartOptions.colors" [grid]="timeValueMapChartOptions.grid"
+                                [xaxis]="timeValueMapChartOptions.xaxis" [title]="timeValueMapChartOptions.title">
+                              </apx-chart>
+                            </div>
+                          </div>
+                        </div>
+                        <!--Time Value Analysis-->
+                        <div class="row">
+                          <div class="card card-custom example example-compact gutter-b analysis-card">
+                            <div class="card-header">
+                              <div class="card-title">
+                                <h3 class="card-label">Time Value Analysis</h3>
+                              </div>
+                            </div>
+                            <div class="card-body">
+                              <apx-chart [series]="timeValueAnalysisChartOptions.series"
+                                [chart]="timeValueAnalysisChartOptions.chart"
+                                [labels]="timeValueAnalysisChartOptions.labels"></apx-chart>
+                            </div>
+                          </div>
+                        </div>
+                      </mat-tab>
+                      <mat-tab label="Activity Log">
+                        <ng-container>
+                          <table class="table table-head-custom" style="margin-bottom: 0px !important;">
+                            <thead>
+                              <tr class="text-left">
+                                <th>#</th>
+                                <th>Activity Date</th>
+                                <th>Action By</th>
+                                <th>Source</th>
+                                <th>Activity</th>
+                                <th>Status</th>
+                                <th>Duration</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <ng-container>
+                                <tr *ngFor="let job of dataSourceActivityLog;  let j = index">
+                                  <td>{{ job.id }}</td>
+                                  <td>{{ job.actionDate }}</td>
+                                  <td>{{ job.actionBy }} </td>
+                                  <td>{{ job.source }} </td>
+                                  <td>{{ job.activity}}</td>
+                                  <td>{{ job.status}}</td>
+                                  <td>{{ job.duration}}</td>
+                                </tr>
+                              </ng-container>
+                            </tbody>
+                          </table>
+                        </ng-container>
+                      </mat-tab>
+                    </mat-tab-group>
+                  </div>
+                </div>
+              </mat-drawer>
+            </mat-drawer-container>
+
+            <mat-drawer-container class="example-container" autosize cdkPortal>
+              <mat-drawer #drawer1 mode="side" position="end"
+                [ngClass]="{'scssClassName': showFiller==false,'example-sidenav':showFiller==true}">
+                <div class="card card-custom example example-compact gutter-b" style="box-shadow: none;">
+                  <div class="card-header pr-0" style="padding-top: 10px">
+                    <div class="row full-width">
+                      <div class="col-lg-12 pt-2 pb-2 pr-0" style="padding-top: 0px !important">
+                        <div class="float-left display-flex">
+                          <h3 class="font-weight-bold m-0"><b>Job Details</b></h3>
+                        </div>
+                        <div class="float-right display-flex">
+                          <a href="javascript:;" class="btn btn-xs btn-icon btn-light btn-hover-primary"
+                            (click)="drawer1.toggle();boxShow()">
                             <i class="ki ki-close icon-xs text-muted"></i>
                           </a>
                         </div>
@@ -875,8 +1035,9 @@
       </ng-container>
       <!--Shipping Details-->
       <ng-container *ngIf="currentSelectedType === orderDetailTypesConstant.SHIPPING_DETAILS">
-        <ng-container *ngFor="let rowId of shipmentInfoList; let i = index">
-          <div class="card card-custom example example-compact shipping-info-details-card">
+        <ng-container *ngIf="shipmentInfoList.length>0">
+          <div *ngFor="let rowId of shipmentInfoList; let i = index"
+            class="card card-custom example example-compact shipping-info-details-card">
             <div class="card-header">
               <div class="card-title">
                 <h3 class="card-label">Shipment {{i+1}}</h3>
@@ -1093,7 +1254,7 @@
                   <span class="span-yellow material-icons pr-2">
                     stop_circle
                   </span>
-                  <span class="card-body-header">Shipment to Address</span>
+                  <span class="card-body-header">Ship to Address</span>
                   <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
@@ -1268,8 +1429,15 @@
             </div>
           </div>
         </ng-container>
+        <ng-container *ngIf="shipmentInfoList.length==0"> <br>
+          <div class="status-options" style="padding-left: 6px;">
+            <span class="width-100">
+              <span class="label label-lg label-light-orange label-inline">There is no shipment in this order</span>
+            </span>
+          </div>
+        </ng-container>
       </ng-container>
-      <!--Misc Billing-->
+      <!--Misc Costs-->
       <ng-container *ngIf="currentSelectedType === orderDetailTypesConstant.MISC_BILLING">
         <div class="card card-custom example example-compact gutter-b orders-job-table-card" style="box-shadow: none;">
           <div class="card-header pr-0">
@@ -1277,7 +1445,7 @@
               <div class="col-lg-12 pt-2 pb-2 pr-0" style="padding-top: 0px !important">
                 <div class="float-left display-flex">
                   <h3 class="card-title font-weight-bolder text-dark" style="padding-top: 12px">
-                    Misc Billing
+                    Misc Costs
                   </h3>
                 </div>
                 <div class="float-right display-flex"></div>
@@ -1285,26 +1453,37 @@
             </div>
           </div>
           <div class="card-body">
-            <table class="table table-head-custom table-vertical-center">
-              <thead>
-                <tr class="text-left">
-                  <th>#</th>
-                  <th>Cost Category</th>
-                  <th>Description</th>
-                  <th>Sub-Total</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody *ngFor="let rowId of shipmentInfoList; let i = index">
-                <tr *ngFor="let row of shipmentInfoList[i].MiscBilling;let k = index">
-                  <td>{{ k + 1 }}</td>
-                  <td>{{ row.Item }}</td>
-                  <td>{{ row.Description }}</td>
-                  <td>{{ row.Value }}</td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
+            <ng-container *ngIf="shipmentInfoList.length>0">
+              <table class="table table-head-custom table-vertical-center">
+                <thead>
+                  <tr class="text-left">
+                    <th>#</th>
+                    <th>Cost Category</th>
+                    <th>Description</th>
+                    <th>Sub-Total</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let rowId of shipmentInfoList; let i = index">
+                  <tr *ngFor="let row of shipmentInfoList[i].MiscBilling;let k = index">
+                    <td>{{ k + 1 }}</td>
+                    <td>{{ row.Item }}</td>
+                    <td>{{ row.Description }}</td>
+                    <td>{{ row.Value }}</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+            <ng-container *ngIf="shipmentInfoList.length==0">
+              <br>
+              <div class="status-options">
+                <span class="width-100">
+                  <span class="label label-lg label-light-orange label-inline">There is no Misc Costs in this
+                    order</span>
+                </span>
+              </div>
+            </ng-container>
           </div>
         </div>
       </ng-container>
@@ -1324,22 +1503,32 @@
             </div>
           </div>
           <div class="card-body">
-            <table class="table table-head-custom table-vertical-center">
-              <thead>
-                <tr class="text-left">
-                  <th>#</th>
-                  <th>Department</th>
-                  <th>Instructions</th>
-                </tr>
-              </thead>
-              <tbody *ngFor="let item of specialInstructionArray;">
-                <tr>
-                  <td>{{item.Id}}</td>
-                  <td>{{item.Department}}</td>
-                  <td>{{item.Instructions}}</td>
-                </tr>
-              </tbody>
-            </table>
+            <ng-container *ngIf="specialInstructionArray.length>0">
+              <table class="table table-head-custom table-vertical-center">
+                <thead>
+                  <tr class="text-left">
+                    <th>#</th>
+                    <th>Department</th>
+                    <th>Instructions</th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let item of specialInstructionArray;">
+                  <tr>
+                    <td>{{item.Id}}</td>
+                    <td>{{item.Department}}</td>
+                    <td>{{item.Instructions}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+            <ng-container *ngIf="specialInstructionArray.length==0"> <br>
+              <div class="status-options">
+                <span class="width-100">
+                  <span class="label label-lg label-light-orange label-inline">There is no Special Instruction in this
+                    order</span>
+                </span>
+              </div>
+            </ng-container>
           </div>
         </div>
       </ng-container>
@@ -1359,22 +1548,32 @@
             </div>
           </div>
           <div class="card-body">
-            <table class="table table-head-custom table-vertical-center">
-              <thead>
-                <tr class="text-left">
-                  <th>#</th>
-                  <th>Position</th>
-                  <th>Notes</th>
-                </tr>
-              </thead>
-              <tbody *ngFor="let item of invoiceArray;">
-                <tr>
-                  <td>{{item.id}}</td>
-                  <td>{{item.Position}}</td>
-                  <td>{{item.Notes}}</td>
-                </tr>
-              </tbody>
-            </table>
+            <ng-container *ngIf="invoiceArray.length>0">
+              <table class="table table-head-custom table-vertical-center">
+                <thead>
+                  <tr class="text-left">
+                    <th>#</th>
+                    <th>Position</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let item of invoiceArray;">
+                  <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.Position}}</td>
+                    <td>{{item.Notes}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+            <ng-container *ngIf="invoiceArray.length==0">
+              <br>
+              <div class="status-options">
+                <span class="width-100">
+                  <span class="label label-lg label-light-orange label-inline">There is no Invoice in this order</span>
+                </span>
+              </div>
+            </ng-container>
           </div>
         </div>
       </ng-container>

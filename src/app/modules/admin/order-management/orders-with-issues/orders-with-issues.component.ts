@@ -12,6 +12,7 @@ import {
   OrderSearchFilters,
   OrdersWithIssueSearchFilters,
   OrdersWithIssueSearchFilterTypes,
+  PrintTypes,
 } from 'src/app/modules/shared/models/table-filter-modals';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 import { Router } from '@angular/router';
@@ -43,23 +44,13 @@ export class OrdersWithIssuesComponent implements OnInit {
   ];
   dataArray;
   dataSource;
-  tableFilters: OrdersWithIssueSearchFilters = {
-    currentSelectedFilter: '',
-    orderType: '',
-    customerPoNo: '',
-    orderDate: '',
-    rddDate: '',
-    status: '',
-    isbn: '',
-    printVisJobNo: '',
-    printAiJobNo: '',
-  };
+  tableFilters: OrdersWithIssueSearchFilters;
   tableFilterTypes = OrdersWithIssueSearchFilterTypes;
   ViewByArray = ViewByArray;
   selectedStatus = '';
   globalFilter = '';
   statusTypesList = StatusTypesArray;
-  orderTypes;
+  orderTypes = PrintTypes;
   rowIdToExpand = 0;
   chooseList = '';
   viewByFilter = '';
@@ -67,12 +58,10 @@ export class OrdersWithIssuesComponent implements OnInit {
   subscription: Subscription;
   //#endregion
 
-  constructor(private modalService: ModalService,
-    private router: Router,
-    private snack: SnackBarService,
+  constructor(
     private orderService: OrderService,
     private cd: ChangeDetectorRef,) {
-    //  this.dataSource = new MatTableDataSource<OrdersIssueModel>(this.dataArray);
+    this.tableFilters = { currentSelectedFilter: '', yourReference: '', printVisJobNo: '', printAiJobNo: '', isbn: '', orderDate: '', requestedDeliveryDate: '', currentActivityStatusName: '', type: '', companyName: '' };
   }
 
   ngOnInit(): void {
@@ -80,7 +69,7 @@ export class OrdersWithIssuesComponent implements OnInit {
   }
 
   getAllIssueOrders() {
-    this.subscription = this.orderService.getAllOrders().subscribe(resp => {
+    this.subscription = this.orderService.getAllIssueOrders().subscribe(resp => {
       this.dataArray = resp.body.result ? resp.body.result as OrderVM[] : [];
       this.initializeDatatable();
     });
@@ -104,82 +93,90 @@ export class OrdersWithIssuesComponent implements OnInit {
   }
 
   tableFilterChange(filterValue: string, filterPropType: string) {
-    if (filterPropType === this.tableFilterTypes.ORDER_TYPE) {
-      this.tableFilters.orderType = this.selectedStatus = this.tableFilters.orderType === filterValue ? '' : filterValue;
+    if (filterPropType === this.tableFilterTypes.TYPE) {
+      this.tableFilters.type = this.selectedOrderType = this.tableFilters.type === filterValue ? '' : filterValue;
     }
     this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
 
   removeFilter(filterPropType: string) {
-    if (filterPropType === this.tableFilterTypes.ISBN) {
-      this.tableFilters.isbn = '';
-    } else if (filterPropType === this.tableFilterTypes.STATUS) {
-      this.tableFilters.status = this.selectedStatus = '';
-    } else if (filterPropType === this.tableFilterTypes.CUSTOMER_PONO) {
-      this.tableFilters.customerPoNo = '';
-    } else if (filterPropType === this.tableFilterTypes.ORDER_DATE) {
-      this.tableFilters.orderDate = '';
-    } else if (filterPropType === this.tableFilterTypes.ORDER_TYPE) {
-      this.tableFilters.orderType = this.selectedOrderType = '';
-    } else if (filterPropType === this.tableFilterTypes.PRINT_VIS_JOBNO) {
-      this.tableFilters.printVisJobNo = '';
-    } else if (filterPropType === this.tableFilterTypes.PRINTAI_JOBNO) {
+    if (filterPropType === this.tableFilterTypes.YOURREFERENCE) {
+      this.tableFilters.yourReference = '';
+    } else if (filterPropType === this.tableFilterTypes.TYPE) {
+      this.tableFilters.type = this.selectedOrderType = '';
+    } else if (filterPropType === this.tableFilterTypes.PRINTAIJOBNO) {
       this.tableFilters.printAiJobNo = '';
-    } else if (filterPropType === this.tableFilterTypes.RDD_DATE) {
-      this.tableFilters.rddDate = '';
+    } else if (filterPropType === this.tableFilterTypes.PRINTVISJOBNO) {
+      this.tableFilters.printVisJobNo = '';
+    } else if (filterPropType === this.tableFilterTypes.ISBN) {
+      this.tableFilters.isbn = '';
+    } else if (filterPropType === this.tableFilterTypes.ORDERDATE) {
+      this.tableFilters.orderDate = '';
+    } else if (filterPropType === this.tableFilterTypes.REQUESTEDDELIVERYDATE) {
+      this.tableFilters.requestedDeliveryDate = '';
+    } else if (filterPropType === this.tableFilterTypes.CURRENTACTIVITYSTATUSNAME) {
+      this.tableFilters.currentActivityStatusName = '';
+    } else if (filterPropType === this.tableFilterTypes.COMPANYNAME) {
+      this.tableFilters.companyName = '';
     } else if (filterPropType == 'clear') {
-      this.tableFilters.isbn = '';
-      this.tableFilters.status = this.selectedStatus = '';
-      this.tableFilters.customerPoNo = '';
       this.tableFilters.orderDate = '';
-      this.tableFilters.orderType = '';
-      this.tableFilters.printVisJobNo = '';
+      this.tableFilters.type = this.selectedOrderType = '';
+      this.tableFilters.yourReference = '';
+      this.tableFilters.companyName = '';
+      this.tableFilters.requestedDeliveryDate = '';
+      this.tableFilters.currentActivityStatusName = '';
+      this.tableFilters.isbn = '';
       this.tableFilters.printAiJobNo = '';
-      this.tableFilters.rddDate = '';
+      this.tableFilters.printVisJobNo = '';
     }
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
 
   customFilterPredicate() {
     const myFilterPredicate = (
-      data: OrdersIssueModel,
+      data: OrderVM,
       filter: string
     ): boolean => {
       let globalMatch = !this.globalFilter;
-
       if (this.globalFilter) {
         // search all text fields
         globalMatch =
-          new Date(data.rdd)
-            .toLocaleDateString()
+          data.yourReference?.toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.companyName?.toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          new Date(data.requestedDeliveryDate)?.toLocaleDateString()
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          new Date(data.orderDate)
-            .toLocaleDateString()
+          new Date(data.orderDate)?.toLocaleDateString()
             .toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.customerPoNo
-            .toString()
+          data.currentActivityStatusName?.toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.type
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.isbn
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
-          data.status
-            .toString()
+          // data.isbn?.toString()
+          //   .trim()
+          //   .toLowerCase()
+          //   .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          // data.printVisJobNo?.toString()
+          //   .trim()
+          //   .toLowerCase()
+          //   .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          // data.printAiJobNo?.toString()
+          //   .trim()
+          //   .toLowerCase()
+          //   .indexOf(this.globalFilter.toLowerCase()) !== -1 ||
+          data.type?.toString()
             .trim()
             .toLowerCase()
             .indexOf(this.globalFilter.toLowerCase()) !== -1;
@@ -188,80 +185,95 @@ export class OrdersWithIssuesComponent implements OnInit {
       if (!globalMatch) {
         return;
       }
-      const searchString = JSON.parse(filter) as OrdersWithIssueSearchFilters;
+      const searchString = JSON.parse(filter) as OrderVM;
       let matchedFilters = 0;
       let filterCounter = 0;
       if (this.tableFilters.orderDate !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          new Date(data.orderDate)
-            .toLocaleDateString()
+          new Date(data.orderDate)?.toLocaleDateString()
             .trim()
             .indexOf(
               new Date(searchString.orderDate).toLocaleDateString()
             ) !== -1 ? 1 : 0
         );
       }
-      if (this.tableFilters.rddDate !== '') {
+      if (this.tableFilters.requestedDeliveryDate !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          new Date(data.rdd)
-            .toLocaleDateString()
+          new Date(data.requestedDeliveryDate)?.toLocaleDateString()
             .trim()
             .indexOf(
-              new Date(searchString.rddDate).toLocaleDateString()
+              new Date(searchString.requestedDeliveryDate).toLocaleDateString()
             ) !== -1 ? 1 : 0
         );
       }
-      if (this.tableFilters.status !== '') {
-        // if (this.tableFilters.status == 'All') {
-
-        // } else {
+      if (this.tableFilters.type !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.status
-            .toString()
+          data.type?.toString()
             .trim()
             .toLowerCase()
-            .indexOf(searchString.status.toLowerCase()) !== -1 ? 1 : 0
-        );
-        //   }
-      }
-      if (this.tableFilters.customerPoNo !== '') {
-        filterCounter++;
-        matchedFilters = matchedFilters + (
-          data.customerPoNo
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.customerPoNo.toLowerCase()) !== -1 ? 1 : 0
+            .indexOf(searchString.type?.toLowerCase()) !== -1 ? 1 : 0
         );
       }
-      if (this.tableFilters.orderType !== '') {
+      if (this.tableFilters.currentActivityStatusName !== '') {
         filterCounter++;
         matchedFilters = matchedFilters + (
-          data.type
-            .toString()
+          data.currentActivityStatusName?.toString()
             .trim()
             .toLowerCase()
-            .indexOf(searchString.orderType.toLowerCase()) !== -1 ? 1 : 0
+            .indexOf(searchString.currentActivityStatusName?.toLowerCase()) !== -1 ? 1 : 0
+        );
+      }
+      if (this.tableFilters.yourReference !== '') {
+        filterCounter++;
+        matchedFilters = matchedFilters + (
+          data.yourReference?.toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.yourReference?.toLowerCase()) !== -1 ? 1 : 0
+        );
+      }
+      if (this.tableFilters.companyName !== '') {
+        filterCounter++;
+        matchedFilters = matchedFilters + (
+          data.companyName?.toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.companyName?.toLowerCase()) !== -1 ? 1 : 0
         );
       }
       if (this.tableFilters.isbn !== '') {
-        filterCounter++;
-        matchedFilters = matchedFilters + (
-          data.isbn
-            .toString()
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.isbn.toLowerCase()) !== -1 ? 1 : 0
-        );
+        //   filterCounter++;
+        //   matchedFilters = matchedFilters + (
+        //     data.isbn?.toString()
+        //       .trim()
+        //       .toLowerCase()
+        //       .indexOf(searchString.isbn?.toLowerCase()) !== -1 ? 1 : 0
+        //   );
       }
-
+      if (this.tableFilters.printAiJobNo !== '') {
+        // filterCounter++;
+        // matchedFilters = matchedFilters + (
+        //   data.printAiJobNo?.toString()
+        //     .trim()
+        //     .toLowerCase()
+        //     .indexOf(searchString.printAiJobNo?.toLowerCase()) !== -1 ? 1 : 0
+        // );
+      }
+      if (this.tableFilters.printVisJobNo !== '') {
+        // filterCounter++;
+        // matchedFilters = matchedFilters + (
+        //   data.printVisJobNo?.toString()
+        //     .trim()
+        //     .toLowerCase()
+        //     .indexOf(searchString.printVisJobNo?.toLowerCase()) !== -1 ? 1 : 0
+        // );
+      }
       if (filterCounter === 0) { return true; }
       return filterCounter === matchedFilters;
     };
-
     return myFilterPredicate;
   }
 
@@ -281,8 +293,8 @@ export class OrdersWithIssuesComponent implements OnInit {
   }
 
   viewByFilterChange(filterValue: string, filterPropType: string) {
-    if (filterPropType === this.tableFilterTypes.STATUS) {
-      this.tableFilters.status = this.selectedStatus = this.tableFilters.status === filterValue ? '' : filterValue;
+    if (filterPropType === this.tableFilterTypes.CURRENTACTIVITYSTATUSNAME) {
+      this.tableFilters.currentActivityStatusName = this.selectedStatus = this.tableFilters.currentActivityStatusName === filterValue ? '' : filterValue;
     } else {
 
     }

@@ -335,9 +335,9 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
             id: i + 1,
             productNumber: item.isbn,
             title: item.productISBNDetail.title,
-            availableQty: item.orderQty,
+            availableQty: item.prodQty,
             shipmentQty: 0,
-            maximumAllowed: item.orderQty
+            maximumAllowed: item.prodQty
           });
         });
       } else if (this.isShippingDetails) {

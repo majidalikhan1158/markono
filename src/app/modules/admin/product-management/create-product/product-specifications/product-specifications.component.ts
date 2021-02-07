@@ -1,3 +1,4 @@
+import { CreateProductTabs } from './../../../../shared/enums/app-constants';
 import { Component, OnInit, ViewChild, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatSelectionListChange } from '@angular/material/list';
@@ -19,7 +20,6 @@ import { Subscription } from 'rxjs';
 import { ProductVersions } from '../../../../services/shared/classes/product-modals/product-modals';
 import { ProductSpecStatus } from '../../../../shared/enums/product-management/product-interfaces';
 import { StorageKeys } from '../../../../shared/enums/app-constants';
-import { version } from 'moment';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 
 @Component({
@@ -55,6 +55,14 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
 
     this.subscription = this.store.$productSpecUpdateButton.subscribe(resp => {
       this.shouldDisplayUpdateButton = resp;
+    });
+
+    this.subscription = this.store.$IsPrepressModule.subscribe(resp => {
+      if (resp) {
+        this.productSpecTypeOtherArray = this.productSpecTypeOtherArray.filter(x => x.enum !== ProductSpecificationTypes.UNIT_PRICE);
+      } else {
+        this.productSpecTypeOtherArray = this.productSpecTypeOtherArray.filter(x => x.enum !== ProductSpecificationTypes.PROOF_APPROVAL);
+      }
     });
   }
 
@@ -133,7 +141,8 @@ export class ProductSpecificationsComponent implements OnInit, OnDestroy {
       selectedTypeObject.enum ===
         this.productSpecTypesConstant.VERIFY_PRINT_FILE ||
       selectedTypeObject.enum === this.productSpecTypesConstant.LAYOUT_PREP ||
-      selectedTypeObject.enum === this.productSpecTypesConstant.UNIT_PRICE;
+      selectedTypeObject.enum === this.productSpecTypesConstant.UNIT_PRICE ||
+      selectedTypeObject.enum === this.productSpecTypesConstant.PROOF_APPROVAL;
 
     arrayToWork.forEach((item) => {
       if (item.enum === this.selectedProductSpecType) {

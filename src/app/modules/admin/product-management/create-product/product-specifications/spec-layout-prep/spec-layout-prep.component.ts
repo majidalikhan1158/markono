@@ -13,7 +13,7 @@ import { GetPaperRequest, ImpositionLayout, ImpositionLayoutObject, LayoutPrepVM
 import { ProductSpecStoreVM } from '../../../../../shared/models/product-spec';
 import { Subscription } from 'rxjs';
 import { ModalService } from '../../../../../shared/ui-services/modal.service';
-import { ProductionActivities, GetPaperResponse, ImpositionInputs } from '../../../../../shared/models/estimation';
+import { ProductionActivities, GetPaperResponse, ImpositionInputs, ComponentsBreakDown } from '../../../../../shared/models/estimation';
 
 @Component({
   selector: 'app-spec-layout-prep',
@@ -25,7 +25,7 @@ import { ProductionActivities, GetPaperResponse, ImpositionInputs } from '../../
 export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
 
   constructor(private productService: ProductService,
-              private store: ProductSpecStore,
+              public store: ProductSpecStore,
               private snack: SnackBarService,
               private helper: ProductSpecHelperService,
               private ref: ChangeDetectorRef,
@@ -88,8 +88,9 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
   layoutPrepCallIsInProgress = false;
   productSpec: ProductSpecStoreVM;
   shouldShowLoader = false;
-  showAddProductionActivityModal = false;
+  selectedModalToOpen: string;
   selectedComponentBreakdown: string;
+  UimodalIds = UIModalID;
   ngOnInit(): void {
     this.checkLayoutPrepData();
   }
@@ -120,7 +121,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
           element.GrainDirectionInternal = element.GrainDirection == null ? '' : element.GrainDirection ? 'True' : 'False';
         });
         this.layoutPrepVM.Components = this.layoutPrepVM.Components
-        .sort((a, b) => this.helper.minus(b.SNo  as any as number, a.SNo as any as number));
+        .sort((a, b) => this.helper.minus(a.SNo  as any as number, b.SNo as any as number));
         this.layoutPrepVM.ComponentsBreakdown = this.layoutPrepVM.ComponentsBreakdown
         .sort((a, b) => this.helper.minus(a.SNo  as any as number, b.SNo as any as number));
         this.layoutPrepVM.ProductionActivity = this.layoutPrepVM.ProductionActivity
@@ -262,10 +263,10 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
     };
   }
 
-  openAddProductionActivityModal = () => {
-    this.showAddProductionActivityModal = true;
+  openModal = (modalId: string) => {
+    this.selectedModalToOpen = modalId;
     setTimeout(() => {
-      this.modalService.open(UIModalID.ADD_PRODUCTION_ACTIVITIES_MODAL);
+      this.modalService.open(modalId);
     }, 500); // delaying for .5 second
   }
 
@@ -273,9 +274,22 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
     if (!this.layoutPrepVM.ProductionActivity) {
       this.layoutPrepVM.ProductionActivity = [];
     }
-    this.layoutPrepVM.ProductionActivity.push(event);
+    if (event) {
+      this.layoutPrepVM.ProductionActivity.push(event);
+    }
     this.modalService.close(UIModalID.ADD_PRODUCTION_ACTIVITIES_MODAL);
-    this.showAddProductionActivityModal = false;
+    this.selectedModalToOpen = null;
+  }
+
+  handleAddComponentBreakdownEvent = (event: ComponentsBreakDown) => {
+    if (!this.layoutPrepVM.ComponentsBreakdown) {
+      this.layoutPrepVM.ComponentsBreakdown = [];
+    }
+    if (event) {
+      this.layoutPrepVM.ComponentsBreakdown.push(event);
+    }
+    this.modalService.close(UIModalID.ADD_COMPONENT_BREAKDOWN);
+    this.selectedModalToOpen = null;
   }
 
   addLayoutPrepDropdownsKey = (key: string, layoutName: string = '', paper: string= '') => {

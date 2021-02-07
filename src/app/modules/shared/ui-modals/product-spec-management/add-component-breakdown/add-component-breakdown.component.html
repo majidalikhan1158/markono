@@ -1,0 +1,74 @@
+<div class="modal-header">
+    <h4 class="modal-title">Add A Production Activity</h4>
+    <button type="button" class="close" aria-label="Close" (click)="addComponentBreakdown()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body add-production-activity-form position-relative font-12px">
+    <div class="row pb-5" *ngIf="componentBreakdown">
+      <div class="col-lg-12 display-flex pr-0">
+        <div class="col-lg-6 pl-0">
+          <mat-form-field appearance="fill">
+            <mat-label>Component Id</mat-label>
+            <mat-select [(ngModel)]="componentBreakdown.ComponentId" (selectionChange)="handleComponentTypeChange()">
+                <mat-option [value]="item.Id" *ngFor="let item of componentList"> {{item.SNo}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-6 pl-0">
+            <mat-form-field appearance="fill">
+                <mat-label>Component</mat-label>
+                <mat-select [(ngModel)]="componentBreakdown.ComponentType" readonly="true">
+                    <mat-option [value]="item.ComponentType" *ngFor="let item of componentList">{{item.ComponentType}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+      </div>
+      <div class="col-lg-12 display-flex pr-0">
+        <div class="col-lg-6 pl-0">
+          <mat-form-field appearance="fill">
+              <mat-label>Qty</mat-label>
+              <input matInput type="number" min="0" [(ngModel)]="componentBreakdown.Quantity" readonly="true">
+          </mat-form-field>
+        </div>
+        <div class="col-lg-6 pl-0">
+            <mat-form-field appearance="fill">
+                <mat-label>Colour</mat-label>
+                <mat-select [(ngModel)]="componentBreakdown.Colour" readonly="true">
+                    <mat-option value=""></mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+      </div>
+      <div class="col-lg-12 display-flex pr-0">
+        <div class="col-lg-6 pl-0">
+          <mat-form-field appearance="fill">
+            <mat-label>Paper</mat-label>
+            <mat-select [(ngModel)]="componentBreakdown.Paper" readonly="true">
+                <mat-option [value]="item.Paper" *ngFor="let item of componentList">{{item.Paper}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-6 pl-0">
+          <mat-form-field appearance="fill">
+              <mat-label>Machine Type</mat-label>
+              <mat-select [(ngModel)]="componentBreakdown.MachineType">
+                <mat-option value="4 Color Press">4 Color Press</mat-option>
+                <mat-option value="5 Color Press">5 Color Press</mat-option>
+                <mat-option value="8 Color Press">8 Color Press</mat-option>
+                <mat-option value="Mono Press">Mono Press</mat-option>
+                <mat-option value="Digital (std)">Digital (std)</mat-option>
+                <mat-option value="Digital (Enhance)">Digital (Enhance)</mat-option>
+                <mat-option value="Digital (Premium)">Digital (Premium)</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <br><Br>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary ui-modal-cancel-button ui-modal-action-button"
+        (click)="close()">CANCEL</button>
+    <button type="button" class="btn btn-primary ui-modal-action-button" (click)="addComponentBreakdown()">ADD</button>
+  </div>

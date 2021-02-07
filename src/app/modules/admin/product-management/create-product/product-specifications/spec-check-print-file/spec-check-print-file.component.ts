@@ -20,7 +20,7 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
   viewModal: CheckPrintFileVM;
   checked = true;
   subscription: Subscription;
-  constructor(private store: ProductSpecStore, private snack: SnackBarService) { }
+  constructor(public store: ProductSpecStore, private snack: SnackBarService) { }
 
   ngOnInit() {
     this.store.getFileCheckConfig();
@@ -53,7 +53,8 @@ export class SpecCheckPrintFileComponent implements OnInit, OnDestroy {
       checkBoxApproval: false,
       coverFile: null,
       textFile: null,
-      othersFile: null
+      othersFile: null,
+      remarks: ''
     };
   }
 

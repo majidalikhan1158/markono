@@ -104,7 +104,7 @@ export class AddProductionActivityModalComponent implements OnInit, OnDestroy {
   close = () => {
     this.productionActivityVM = null;
     this.subscription?.unsubscribe();
-    this.modalService.close(UIModalID.ADD_PRODUCTION_ACTIVITIES_MODAL);
+    this.acceptEvent.emit(null);
   }
 
   ngOnDestroy(): void {

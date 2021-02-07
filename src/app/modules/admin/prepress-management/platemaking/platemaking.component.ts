@@ -1,11 +1,9 @@
-
 import {
   Component,
   OnInit,
   ViewChild,
   AfterViewInit,
   ViewEncapsulation,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -21,8 +19,8 @@ import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.se
 import {
   ExpansionIcons,
 } from 'src/app/modules/shared/enums/app-constants';
-import { ProductSpecLayoutPrepCompBreakList } from '../../shared/mock-data/layout-prep-comp-break-list';
-import { MachineTypeList } from '../../shared/enums/product-management/product-constants';
+import { ProductSpecLayoutPrepCompBreakList } from '../../../shared/mock-data/layout-prep-comp-break-list';
+import { MachineTypeList } from '../../../shared/enums/product-management/product-constants';
 import { expandableRowAnimation } from './expandable-row.animation';
 @Component({
   selector: 'app-platemaking',
@@ -31,7 +29,7 @@ import { expandableRowAnimation } from './expandable-row.animation';
   encapsulation: ViewEncapsulation.None,
   animations: [expandableRowAnimation],
 })
-export class PlatemakingComponent implements OnInit {
+export class PlatemakingComponent implements OnInit, AfterViewInit {
   //#region declaration
   @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = [
@@ -60,7 +58,7 @@ export class PlatemakingComponent implements OnInit {
     'Qty',
     'Webcode',
     'Status',
-  ]
+  ];
   columnsToDisplayCompBreakTable = [
     'Id',
     'Type',
@@ -99,7 +97,7 @@ export class PlatemakingComponent implements OnInit {
   //#endregion
 
   constructor(private modalService: ModalService, private router: Router,
-    private snack: SnackBarService,) {
+              private snack: SnackBarService, ) {
     this.dataSource = new MatTableDataSource<PlatemakingListModel>(this.dataArray);
   }
 
@@ -135,7 +133,7 @@ export class PlatemakingComponent implements OnInit {
       this.tableFilters.customer = '';
     } else if (filterPropType === this.tableFilterTypes.JOB_NO) {
       this.tableFilters.jobNo = '';
-    } else if (filterPropType == 'clear') {
+    } else if (filterPropType === 'clear') {
       this.tableFilters.platesToBeReadyBy = '';
       this.tableFilters.status = this.selectedStatus = '';
       this.tableFilters.printingDate = '';
@@ -213,7 +211,7 @@ export class PlatemakingComponent implements OnInit {
         );
       }
       if (this.tableFilters.status !== '') {
-        if (this.tableFilters.status == 'All') {
+        if (this.tableFilters.status === 'All') {
 
         } else {
           filterCounter++;
@@ -280,7 +278,7 @@ export class PlatemakingComponent implements OnInit {
     } else {
 
     }
-    //this.tableFilters.currentSelectedFilter = filterPropType;
+    // this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
 }

@@ -1,5 +1,6 @@
 import { CheckPrintQA } from '../../models/product-spec';
-import { ProductSpecTypeObject, SelectionList } from './product-interfaces';
+import { PrepressChecklist, ProductSpecTypeObject, SelectionList } from './product-interfaces';
+import { ChildIsbnModal } from '../../../services/shared/classes/product-modals/product-modals';
 
 export const PrintingTypes = {
   OFFSET: 'Offset',
@@ -18,7 +19,8 @@ export const ProductSpecificationTypes = {
   UNIT_PRICE: 'UNIT_PRICE',
   OTHER_COMPONENT: 'OTHER_COMPONENT',
   VERIFY_PRINT_FILE: 'VERIFY_PRINT_FILE',
-  LAYOUT_PREP: 'LAYOUT_PREP'
+  LAYOUT_PREP: 'LAYOUT_PREP',
+  PROOF_APPROVAL: 'PROOF_APPROVAL'
 };
 
 export const ProductTypes = {
@@ -112,6 +114,13 @@ export const ProductSpecificationTypeOtherArray: ProductSpecTypeObject[] = [
     value: 'Unit Price',
     id: 9,
     enum: 'UNIT_PRICE',
+    isSelected: false,
+    isVisited: false,
+  },
+  {
+    value: 'Proof Approval',
+    id: 9,
+    enum: 'PROOF_APPROVAL',
     isSelected: false,
     isVisited: false,
   },
@@ -743,3 +752,152 @@ export const LayoutPrepComponentTypes = {
   Insert: 'Insert',
   EndPaper: 'EndPaper'
 }
+
+export const CoverProofApprovalList: PrepressChecklist[] = [
+  {
+    title: 'Reset spine width',
+    childTitles: []
+  },
+  {
+    title: 'Set crop mark settings',
+    childTitles: []
+  },
+  {
+    title: 'Check black overprint',
+    childTitles: []
+  },
+  {
+    title: 'Text - 10mm away from spine',
+    childTitles: []
+  },
+  {
+    title: 'Inside cover - Text away from glue area',
+    childTitles: []
+  },
+  {
+    title: 'Unique code font size & position',
+    childTitles: []
+  },
+  {
+    title: 'Printablilty of finishing file',
+    childTitles: []
+  },
+  {
+    title: 'Check warnings in Basic Quality',
+    childTitles: [
+      {
+        title: 'Check white overprint',
+        bullet: 'a'
+      }
+    ]
+  },
+  {
+    title: 'Select template',
+    childTitles: []
+  },
+  {
+    title: 'Check mark location',
+    childTitles: []
+  },
+  {
+    title: 'Output proof',
+    childTitles: []
+  },
+  {
+    title: 'Compare proof with file',
+    childTitles: []
+  },
+  {
+    title: 'Check barcode',
+    childTitles: []
+  },
+  {
+    title: 'Prepare QD form',
+    childTitles: []
+  },
+];
+
+export const TextProofApprovalList: PrepressChecklist[] = [
+  {
+    title: 'Check pagination sheet (if any)',
+    childTitles: []
+  },
+  {
+    title: 'Set Geometry',
+    childTitles: []
+  },
+  {
+    title: 'Set 1st/last page white gap',
+    childTitles: []
+  },
+  {
+    title: 'Amend printer line',
+    childTitles: []
+  },
+  {
+    title: 'Add blank page',
+    childTitles: [
+      {
+        title: 'Design issues (need customer verification)',
+        bullet: 'a'
+      },
+      {
+        title: 'inconsistent design',
+        bullet: 'b'
+      },
+      {
+        title: 'text too close to edge',
+        bullet: 'c'
+      },
+      {
+        title: 'blur image',
+        bullet: 'd'
+      },
+      {
+        title: 'joined image',
+        bullet: 'e'
+      },
+      {
+        title: 'cropped logo',
+        bullet: 'f'
+      },
+      {
+        title: 'potential production issue',
+        bullet: 'g'
+      },
+      {
+        title: 'moire',
+        bullet: 'h'
+      }
+    ]
+  },
+  {
+    title: 'color not matched requirements',
+    childTitles: []
+  },
+  {
+    title: 'Image in CMYK mode',
+    childTitles: []
+  },
+  {
+    title: 'Check warning in Basic Quality',
+    childTitles: [
+      {
+        title: 'Check white overprint',
+        bullet: 'a'
+      }
+    ]
+  },
+  {
+    title: 'Check marks (text, binding, collating, colorbar)',
+    childTitles: []
+  },
+  {
+    title: 'Output proof / low-res pdf',
+    childTitles: []
+  },
+  {
+    title: 'Prepare QD form',
+    childTitles: []
+  },
+]

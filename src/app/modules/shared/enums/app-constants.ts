@@ -14,7 +14,8 @@ export const UIModalID = {
   VIEW_OPERATORS_MODAL: 'VIEW_OPERATORS_MODAL',
   ADD_REASON_MODAL: 'ADD_REASON_MODAL',
   ADD_UPDATE_PASSWORD_MODAL: 'ADD_UPDATE_PASSWORD_MODAL',
-  ADD_PRODUCTION_ACTIVITIES_MODAL: 'ADD_PRODUCTION_ACTIVITIES_MODAL'
+  ADD_PRODUCTION_ACTIVITIES_MODAL: 'ADD_PRODUCTION_ACTIVITIES_MODAL',
+  ADD_COMPONENT_BREAKDOWN: 'ADD_COMPONENT_BREAKDOWN'
 };
 
 export const CreateProductTabs = {
@@ -70,10 +71,10 @@ export const SnackBarPositionY = {
 export const AppModules = {
   DASHBOARD: 'app-dashboard',
   SHOPFLOORCOLLECTION: 'shopfloor-collection',
-  PLATMAKING: 'platemaking',
   CASE_MANAGMENT: 'case-management',
   PRODUCT_MANAGMENT: 'product-management',
-  ORDER_MANAGMENT: 'order-management'
+  ORDER_MANAGMENT: 'order-management',
+  PREPRESS_MANAGMENT: 'prepress-management'
 };
 
 export const AppPages = {
@@ -84,6 +85,8 @@ export const AppPages = {
   SHOP_FLOOR_COLLECTION: 'shopfloor-collection',
   DASHBOARD: 'app-dashboard',
   PLATMAKING: 'platemaking',
+  FILEPREP: 'file-prep',
+  FILEPREP_VIEW: 'file-prep-view',
   USER_PROFILE: 'user-profile',
   ORDER_JOB_DETAIL: 'job-details',
   ORDER_ISSUES: 'orders-with-issues'
@@ -97,7 +100,9 @@ export const AppPageRoutes = {
   VIEW_PRODUCT: `admin/${AppModules.PRODUCT_MANAGMENT}/${AppPages.VIEW}`,
   SHOP_FLOOR_COLLECTION: `/admin/${AppModules.SHOPFLOORCOLLECTION}`,
   DASHBOARD: `/admin/${AppModules.DASHBOARD}`,
-  PLATMAKING: `/admin/${AppModules.PLATMAKING}`,
+  PLATMAKING: `/admin/${AppModules.PREPRESS_MANAGMENT}/${AppPages.PLATMAKING}`,
+  FILEPREP: `/admin/${AppModules.PREPRESS_MANAGMENT}/${AppPages.FILEPREP}`,
+  FILEPREP_VIEW: `/admin/${AppModules.PREPRESS_MANAGMENT}/${AppPages.FILEPREP_VIEW}`,
   USER_PROFILE: `/admin/${AppPages.USER_PROFILE}`,
   LIST_ORDERS: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.LIST}`,
   VIEW_ORDER: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.DETAIL}/:id`,

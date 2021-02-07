@@ -269,6 +269,7 @@ export interface CheckPrintFileVM {
   coverFile: any;
   textFile: any;
   othersFile: any;
+  remarks: string;
 }
 export interface LayoutPrepComponent {
   id: number;

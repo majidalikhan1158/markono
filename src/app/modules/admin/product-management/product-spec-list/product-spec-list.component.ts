@@ -22,6 +22,7 @@ import { ProductSpecStore } from '../../../shared/ui-services/product-spec.servi
 import { Subscription } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { ProductSpecHelperService } from '../../../shared/enums/helpers/product-spec-helper.service';
+import { AppModules } from '../../../shared/enums/app-constants';
 
 @Component({
   selector: 'app-product-spec-list',
@@ -42,6 +43,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   isLoading = true;
   statusTypes = ProductSpecStatusTypes;
+  isPrepressModule = window.location.pathname.toString().includes(AppModules.PREPRESS_MANAGMENT);
   constructor(private modalService: ModalService,
               private router: Router,
               private productService: ProductService,
@@ -223,7 +225,9 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
         this.helper.transProductDetailToVM(productDetails);
         this.store.setProductSpecReadonly(true);
         this.store.setProductSpecStatus({status: productDetails.Status, tooltipMessage: '' });
-        this.router.navigate([AppPageRoutes.VIEW_PRODUCT]);
+        this.isPrepressModule 
+        ? this.router.navigate([AppPageRoutes.FILEPREP_VIEW])
+        : this.router.navigate([AppPageRoutes.VIEW_PRODUCT]);
       } else {
         this.snack.open('No details found');
       }

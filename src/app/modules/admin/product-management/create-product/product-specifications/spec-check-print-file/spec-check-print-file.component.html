@@ -137,11 +137,18 @@
     <mat-divider></mat-divider>
   </div>
 
-  <div class="col-lg-12 pt-3" style="display: grid;">
+  <div class="col-lg-12 pt-3" style="display: grid;" *ngIf="!(store.$IsPrepressModule | async)">
     <mat-checkbox [(ngModel)]="viewModal.checkBoxApproval">
       The customer has acknowledged the print defects/revisions made and has given explicit approval to proceed with
       printing.
     </mat-checkbox>
     <a class="font-14px font-roboto-bold pl-8">Export QD Report</a>
+  </div>
+
+  
+  <div class="col-lg-12 pt-3" style="display: grid;" *ngIf="store.$IsPrepressModule | async">
+    <mat-form-field  appearance="fill" >
+      <textarea matInput placeholder="Enter remarks" [(ngModel)]="viewModal.remarks"></textarea>
+    </mat-form-field>
   </div>
 </div>

@@ -528,7 +528,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
 
   getSpecialInstructions() {
     const a = this.orderInfoList.find(x => x.Id === this.queryParameterId).SpecialInstructions;
-    if (a !== 'null' || a !== 'null:null,') {
+    if (a != null && a != 'null:null,') {
       const _json = {
         'Id': '1',
         'Department': a.split(":")[0],

@@ -1453,7 +1453,7 @@
             </div>
           </div>
           <div class="card-body">
-            <ng-container *ngIf="shipmentInfoList.length>0">
+            <ng-container *ngIf="shipmentInfoList.MiscBilling==[]">
               <table class="table table-head-custom table-vertical-center">
                 <thead>
                   <tr class="text-left">
@@ -1464,7 +1464,7 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody *ngFor="let rowId of shipmentInfoList; let i = index">
+                <tbody>
                   <tr *ngFor="let row of shipmentInfoList[i].MiscBilling;let k = index">
                     <td>{{ k + 1 }}</td>
                     <td>{{ row.Item }}</td>
@@ -1475,7 +1475,7 @@
                 </tbody>
               </table>
             </ng-container>
-            <ng-container *ngIf="shipmentInfoList.length==0">
+            <ng-container *ngIf="shipmentInfoList.MiscBilling!=[]">
               <br>
               <div class="status-options">
                 <span class="width-100">

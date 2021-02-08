@@ -14,7 +14,7 @@
           </mat-tab>
           <mat-tab [disabled]="true" style="padding-left: 0px !important;padding-right: 0px !important;">
             <ng-template mat-tab-label>
-              <button *ngIf="shouldReadonly" mat-button (click)="handleEditMode()" style="margin-left: 180px;"
+              <button *ngIf="shouldReadonly && !(store.$IsPrepressModule | async)" mat-button (click)="handleEditMode()" style="margin-left: 180px;"
               class="btn btn-primary mr-2">Edit</button>
 
               <span [class]="statusClass" *ngIf="productSpecStatus" [style]="shouldReadonly ? 'margin-left: 0px': 'margin-left: 260px'"

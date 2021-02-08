@@ -21,6 +21,7 @@ import { SpecCheckPrintFileComponent } from './create-product/product-specificat
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SpecLayoutPrepComponent } from './create-product/product-specifications/spec-layout-prep/spec-layout-prep.component';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { ProofApprovalComponent } from './create-product/product-specifications/proof-approval/proof-approval.component';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     SpecOtherComponent,
     SpecCheckPrintFileComponent,
     SpecLayoutPrepComponent,
+    ProofApprovalComponent,
   ],
   imports: [
     ProductManagementRoutingModule,
@@ -49,6 +51,24 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     SharedModule,
     NgApexchartsModule,
     NgxMatSelectSearchModule,
+  ],
+  exports: [
+    CreateProductComponent,
+    ProductSpecListComponent,
+    ProductVersionsComponent,
+    PastOrdersComponent,
+    ProductSpecificationsComponent,
+    SpecGeneralComponent,
+    SpecCoverComponent,
+    SpecTextComponent,
+    SpecBindingComponent,
+    SpecChildIsbnComponent,
+    SpecDvdCdComponent,
+    SpecWebcodeComponent,
+    SpecUnitPriceComponent,
+    SpecOtherComponent,
+    SpecCheckPrintFileComponent,
+    SpecLayoutPrepComponent,
   ]
 })
 export class ProductManagementModule {}

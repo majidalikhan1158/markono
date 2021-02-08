@@ -1,3 +1,4 @@
+import { AppModules } from './../../modules/shared/enums/app-constants';
 import { AppPageRoutes } from '../../modules/shared/enums/app-constants';
 export const DynamicAsideMenuConfig = {
   items: [
@@ -35,7 +36,7 @@ export const DynamicAsideMenuConfig = {
       title: 'Orders',
       root: true,
       bullet: 'dot',
-      page: '/admin/order-management',
+      page: `/admin/${AppModules.ORDER_MANAGMENT}`,
       icon: 'flaticon2-browser-2',
       png: './assets/media/menu-logos/ic_productLib.png',
       selected: './assets/media/menu-logos/ic_productLib_Selected.png',
@@ -58,14 +59,14 @@ export const DynamicAsideMenuConfig = {
       title: 'Prepress',
       root: true,
       bullet: 'dot',
-      page: '/admin/platemaking',
+      page: `/admin/${AppModules.PREPRESS_MANAGMENT}`,
       icon: 'flaticon2-browser-2',
       png: './assets/media/menu-logos/ic_platemaking.png',
       selected: './assets/media/menu-logos/ic_platemaking_Selected.png',
       submenu: [
         {
           title: 'File Prep',
-          page: '/file-prep',
+          page: AppPageRoutes.FILEPREP,
           permission: 'accessToPlatemaking'
         },
         {

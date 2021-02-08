@@ -27,3 +27,13 @@ export interface ProductSpecStatus {
   status: string;
   tooltipMessage: string;
 }
+
+export interface PrepressChecklist {
+  title: string;
+  childTitles: PrepressChildChecklist[]
+}
+
+export interface PrepressChildChecklist {
+  title: string;
+  bullet: string;
+}

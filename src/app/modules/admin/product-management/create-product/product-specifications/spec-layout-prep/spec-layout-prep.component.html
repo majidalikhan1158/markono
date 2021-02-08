@@ -57,7 +57,7 @@
                                 </mat-form-field>
                             </td>
                             <td>
-                                <mat-form-field appearance="fill" style="top: 6px !important" >
+                                <mat-form-field appearance="fill">
                                     <mat-select [(ngModel)]="row.Paper">
                                         <ng-container *ngIf="row.Paper">
                                             <mat-option *ngFor="let item of paperListObjectsKey[row.ComponentType]"
@@ -137,6 +137,10 @@
                                             <mat-option value="Digital (Premium)">Digital (Premium)</mat-option>
                                         </mat-select>
                                     </mat-form-field>
+                                    <span class="material-icons delete-icon pl-4 pr-2 cursor-pointer"
+                                        *ngIf="store.$IsPrepressModule | async">
+                                    delete
+                                    </span>
                                 </td>
                             </tr>
                         </ng-container>
@@ -157,6 +161,18 @@
             </div>
             <!--end::Table-->
         </div>
+    </div>
+
+    <a class="pl-3" (click)="openModal('ADD_COMPONENT_BREAKDOWN')" 
+        *ngIf="layoutPrepVM && store.$IsPrepressModule | async">
+        <span class="material-icons add-icon pr-2 cursor-pointer font-18px ">
+            add_circle_outline
+        </span>
+        <span class="font-12px blue-link ">Add Another</span>
+    </a>
+
+    <div class="col-lg-12 pt-6 pb-6">
+        <mat-divider></mat-divider>
     </div>
 
     <div class="col-lg-12 pt-3">
@@ -207,101 +223,107 @@
                                 </td>
                             </tr>
                             <ng-container *ngIf="shouldShowDetails && i == rowIdToExpand" class="width-100">
-                                <table
-                                    class="table table-head-custom table-head-bg table-borderless table-vertical-center product-activitiy-child-table">
-                                    <thead>
-                                        <tr class="text-left text-uppercase expandedRow padding-11" style="border-bottom: 1px solid #e6e6e6;">
-                                            <th class="info-label">In Use</th>
-                                            <th class="info-label">Operation Code</th>
-                                            <th class="info-label">Operation Description</th>
-                                            <th class="info-label"></th>
-                                            <th class="info-label">UOM</th>
-                                            <th class="info-label">Unit Selling Price</th>
-                                            <th class="info-label">Sales Amount</th>
-                                            <th class="info-label">Formula Code</th>
-                                            <th class="info-label">Speed Table</th>
-                                            <th class="info-label"> Price List Code</th>
-                                            <th class="info-label"></th>
-                                            <th class="info-label"></th>
-                                            <th class="info-label"></th>
-                                            <th class="info-label"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                            <td class="info-label">
-                                                <span class="material-icons" style="color:green">
-                                                    done
-                                                </span>
-                                            </td>
-                                            <td class="info-label">110</td>
-                                            <td class="info-label">-</td>
-                                            <td class="info-label">1</td>
-                                            <td class="info-label">MAKEREADYPRINT</td>
-                                            <td class="info-label">16</td>
-                                            <td class="info-label">125.00</td>
-                                            <td class="info-label">4202</td>
-                                            <td class="info-label">-</td>
-                                            <td class="info-label">19212</td>
-                                            <td class="info-label"></td>
-                                            <td class="info-label"></td>
-                                            <td class="info-label"></td>
-                                            <td class="info-label"></td>
-                                        </tr>
-                                        <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                            <td class="info-label"></td>
-                                            <td class="info-label">110</td>
-                                            <td class="info-label">-</td>
-                                            <td class="info-label">1</td>
-                                            <td class="info-label">MAKEREADYPRINT</td>
-                                            <td class="info-label">16</td>
-                                            <td class="info-label">125.00</td>
-                                            <td class="info-label">4202</td>
-                                            <td class="info-label">-</td>
-                                            <td class="info-label">19212</td>
-                                            <td class="info-label"></td>
-                                            <td class="info-label"></td>
-                                            <td class="info-label"></td>
-                                            <td class="info-label"></td>
-                                        </tr>
-                                        <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                            <td class="info-label"></td>
-                                            <td class="info-label">110</td>
-                                            <td class="info-label">-</td>
-                                            <td class="info-label">360</td>
-                                            <td class="info-label">MAKEREADYPRINT</td>
-                                            <td class="info-label">16</td>
-                                            <td class="info-label">125.00</td>
-                                            <td class="info-label">4202</td>
-                                            <td class="info-label">-</td>
-                                            <td class="info-label">19212</td>
-                                            <td class="info-label"></td>
-                                            <td class="info-label"></td>
-                                            <td class="info-label"></td>
-                                            <td class="info-label"></td>
-                                        </tr>
-                                        <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                            <td class="info-label">
-                                                <span class="material-icons" style="color:green">
-                                                    done
-                                                </span>
-                                            </td>
-                                            <td class="info-label">110</td>
-                                            <td class="info-label">-</td>
-                                            <td class="info-label">1</td>
-                                            <td class="info-label">MAKEREADYPRINT</td>
-                                            <td class="info-label">16</td>
-                                            <td class="info-label">125.00</td>
-                                            <td class="info-label">4202</td>
-                                            <td class="info-label">-</td>
-                                            <td class="info-label">19212</td>
-                                            <td class="info-label"></td>
-                                            <td class="info-label"></td>
-                                            <td class="info-label"></td>
-                                            <td class="info-label"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <tr>
+                                    <td colspan="13" class="pl-0">
+                                        <table
+                                        class="table table-head-custom table-head-bg table-borderless 
+                                        table-vertical-center product-activitiy-child-table mb-0">
+                                        <thead>
+                                            <tr class="text-left text-uppercase expandedRow padding-11" style="border-bottom: 1px solid #e6e6e6;">
+                                                <th class="info-label">In Use</th>
+                                                <th class="info-label">Operation Code</th>
+                                                <th class="info-label">Operation Description</th>
+                                                <th class="info-label"></th>
+                                                <th class="info-label">UOM</th>
+                                                <th class="info-label">Unit Selling Price</th>
+                                                <th class="info-label">Sales Amount</th>
+                                                <th class="info-label">Formula Code</th>
+                                                <th class="info-label">Speed Table</th>
+                                                <th class="info-label"> Price List Code</th>
+                                                <th class="info-label"></th>
+                                                <th class="info-label"></th>
+                                                <th class="info-label"></th>
+                                                <th class="info-label"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                                <td class="info-label">
+                                                    <span class="material-icons" style="color:green">
+                                                        done
+                                                    </span>
+                                                </td>
+                                                <td class="info-label">110</td>
+                                                <td class="info-label">-</td>
+                                                <td class="info-label">1</td>
+                                                <td class="info-label">MAKEREADYPRINT</td>
+                                                <td class="info-label">16</td>
+                                                <td class="info-label">125.00</td>
+                                                <td class="info-label">4202</td>
+                                                <td class="info-label">-</td>
+                                                <td class="info-label">19212</td>
+                                                <td class="info-label"></td>
+                                                <td class="info-label"></td>
+                                                <td class="info-label"></td>
+                                                <td class="info-label"></td>
+                                            </tr>
+                                            <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                                <td class="info-label"></td>
+                                                <td class="info-label">110</td>
+                                                <td class="info-label">-</td>
+                                                <td class="info-label">1</td>
+                                                <td class="info-label">MAKEREADYPRINT</td>
+                                                <td class="info-label">16</td>
+                                                <td class="info-label">125.00</td>
+                                                <td class="info-label">4202</td>
+                                                <td class="info-label">-</td>
+                                                <td class="info-label">19212</td>
+                                                <td class="info-label"></td>
+                                                <td class="info-label"></td>
+                                                <td class="info-label"></td>
+                                                <td class="info-label"></td>
+                                            </tr>
+                                            <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                                <td class="info-label"></td>
+                                                <td class="info-label">110</td>
+                                                <td class="info-label">-</td>
+                                                <td class="info-label">360</td>
+                                                <td class="info-label">MAKEREADYPRINT</td>
+                                                <td class="info-label">16</td>
+                                                <td class="info-label">125.00</td>
+                                                <td class="info-label">4202</td>
+                                                <td class="info-label">-</td>
+                                                <td class="info-label">19212</td>
+                                                <td class="info-label"></td>
+                                                <td class="info-label"></td>
+                                                <td class="info-label"></td>
+                                                <td class="info-label"></td>
+                                            </tr>
+                                            <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                                <td class="info-label">
+                                                    <span class="material-icons" style="color:green">
+                                                        done
+                                                    </span>
+                                                </td>
+                                                <td class="info-label">110</td>
+                                                <td class="info-label">-</td>
+                                                <td class="info-label">1</td>
+                                                <td class="info-label">MAKEREADYPRINT</td>
+                                                <td class="info-label">16</td>
+                                                <td class="info-label">125.00</td>
+                                                <td class="info-label">4202</td>
+                                                <td class="info-label">-</td>
+                                                <td class="info-label">19212</td>
+                                                <td class="info-label"></td>
+                                                <td class="info-label"></td>
+                                                <td class="info-label"></td>
+                                                <td class="info-label"></td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                               
                                 <!-- <tr class="expandedRow padding-11" style="border-bottom: 1px solid #e6e6e6;">
                                     <th class="info-label">In Use</th>
                                     <th class="info-label">Operation Code</th>
@@ -410,7 +432,7 @@
             <!--end::Table-->
         </div>
     </div>
-    <a class="pl-3" (click)="openAddProductionActivityModal()" *ngIf="layoutPrepVM">
+    <a class="pl-3" (click)="openModal('ADD_PRODUCTION_ACTIVITIES_MODAL')" *ngIf="layoutPrepVM">
         <span class="material-icons add-icon pr-2 cursor-pointer font-18px ">
             add_circle_outline
         </span>
@@ -419,8 +441,14 @@
 </div>
 
 
-<app-modal id="ADD_PRODUCTION_ACTIVITIES_MODAL" size="modal-md" *ngIf="showAddProductionActivityModal">
+<app-modal id="ADD_PRODUCTION_ACTIVITIES_MODAL" size="modal-md" *ngIf="selectedModalToOpen === UimodalIds.ADD_PRODUCTION_ACTIVITIES_MODAL">
     <app-add-production-activity-modal (acceptEvent)="handleAddProductionActivityModalEvent($event)" 
     [componentBreakDownList]="layoutPrepVM?.ComponentsBreakdown">
     </app-add-production-activity-modal>
+</app-modal>
+
+<app-modal id="ADD_COMPONENT_BREAKDOWN" size="modal-md" *ngIf="selectedModalToOpen === UimodalIds.ADD_COMPONENT_BREAKDOWN">
+    <app-add-component-breakdown (acceptEvent)="handleAddComponentBreakdownEvent($event)"
+    [componentList]="layoutPrepVM?.Components">
+    </app-add-component-breakdown>
 </app-modal>

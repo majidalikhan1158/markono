@@ -1465,7 +1465,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let row of shipmentInfoList[i].MiscBilling;let k = index">
+                  <tr *ngFor="let row of shipmentInfoList.MiscBilling;let k = index">
                     <td>{{ k + 1 }}</td>
                     <td>{{ row.Item }}</td>
                     <td>{{ row.Description }}</td>

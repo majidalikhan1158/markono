@@ -41,7 +41,7 @@ export class SpecUnitPriceComponent implements OnInit, OnDestroy {
   @ViewChild('chart') chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
   viewModal: UnitPriceVM;
-  constructor(private store: ProductSpecStore) {
+  constructor(public store: ProductSpecStore) {
   }
 
   ngOnInit() {

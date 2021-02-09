@@ -24,7 +24,7 @@ export class SpecWebcodeComponent implements OnInit, OnDestroy {
   filteredWebCodeLocationList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   protected onDestroy = new Subject<void>();
   subscription: Subscription;
-  constructor(private store: ProductSpecStore) { }
+  constructor(public store: ProductSpecStore) { }
 
   ngOnInit(): void {
     this.handleUpdateStore();

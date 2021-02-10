@@ -926,3 +926,11 @@ table.job-schedule-table {
   background-color: #E1F0FF !important;
   color: #3699FF !important;
 }
+
+.readonly-box {
+  pointer-events: none !important;
+}
+
+.non-readonly-box {
+  pointer-events: all !important;
+}

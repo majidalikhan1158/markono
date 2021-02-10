@@ -46,7 +46,7 @@ export class SpecChildIsbnComponent implements OnInit, OnDestroy {
   generalVM: GeneralVM;
   protected onDestroy = new Subject<void>();
   subscription: Subscription;
-  constructor(private store: ProductSpecStore, private ref: ChangeDetectorRef) { }
+  constructor(public store: ProductSpecStore, private ref: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.handleUpdateStore();

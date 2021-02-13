@@ -101,7 +101,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   orderDetailTypesArray = OrderDetailTypesArray;
   orderDetailTypesConstant = OrderDetailTypes;
   chooseList;
-  currentSelectedType = 'JOBS';
+  currentSelectedType = 'ITEMS';
   ExpansionIcons = ExpansionIcons;
   rowIdToExpand = 1;
   rowIdToExpandJob = 1;
@@ -129,6 +129,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   overlayRef: OverlayRef | null;
   portal: Portal<{ $implicit: string }>;
   specialInstructionArray = [];
+  miscCostArray = [];
   //#endregion
 
   constructor(private router: Router,
@@ -306,8 +307,9 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   getOrderJob() {
     this.subscription = this.orderService.getOrderDeatils(this.queryParameterId).subscribe(resp => {
       this.dataJobArray = resp.body.result[0].CaseDetail as CaseDetail;
+      this.specialInstructionArray = resp.body.result[0].SpecialInstructionList;
+      this.miscCostArray = resp.body.result[0].OtherCharge;
       this.initializeDatatable();
-      this.getSpecialInstructions();
       this.getInvoice();
     });
   }
@@ -325,7 +327,6 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   chooseSelectionChange(id) {
-    console.log('id', id)
     this.router.navigate(['/admin/order-management/order-details/' + id]);
   }
 
@@ -524,18 +525,6 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-  }
-
-  getSpecialInstructions() {
-    const a = this.orderInfoList.find(x => x.Id === this.queryParameterId).SpecialInstructions;
-    if (a != null && a != 'null:null,') {
-      const _json = {
-        'Id': '1',
-        'Department': a.split(":")[0],
-        'Instructions': a.split(":")[1],
-      }
-      this.specialInstructionArray.push(_json);
-    }
   }
 
   getInvoice() {

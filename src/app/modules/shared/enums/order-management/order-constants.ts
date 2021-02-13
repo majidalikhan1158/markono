@@ -1,8 +1,8 @@
 export const OrderDetailTypesArray = [
     {
-        value: 'Jobs',
+        value: 'Items',
         id: 0,
-        enum: 'JOBS',
+        enum: 'ITEMS',
         isSelected: true,
     },
     {
@@ -38,7 +38,7 @@ export const OrderDetailTypesArray = [
 ];
 
 export const OrderDetailTypes = {
-    JOBS: 'JOBS',
+    ITEMS: 'ITEMS',
     CUSTOMER: 'CUSTOMER',
     SHIPPING_DETAILS: 'SHIPPING_DETAILS',
     MISC_BILLING: 'MISC_BILLING',

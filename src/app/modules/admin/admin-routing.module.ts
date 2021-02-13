@@ -5,7 +5,6 @@ import { AdminComponent } from './admin.component';
 import { Error404Component } from '../errors/error404/error404.component';
 import { ShopFloorCollectionComponent } from './shop-floor-collection/shop-floor-collection.component';
 import { AppDashboardComponent } from './app-dashboard/app-dashboard.component';
-import { PlatemakingComponent } from './platemaking/platemaking.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { AppPages } from '../shared/enums/app-constants';
 
@@ -27,11 +26,19 @@ const routes: Routes = [
           import(`../admin/${AppModules.PRODUCT_MANAGMENT}/product-management.module`).then(
             (m) => m.ProductManagementModule
           ),
-      }, {
+      },
+      {
         path: AppModules.ORDER_MANAGMENT,
         loadChildren: () =>
           import(`../admin/${AppModules.ORDER_MANAGMENT}/order-management.module`).then(
             (m) => m.OrderManagementModule
+          ),
+      },
+      {
+        path: AppModules.PREPRESS_MANAGMENT,
+        loadChildren: () =>
+          import(`../admin/${AppModules.PREPRESS_MANAGMENT}/prepress-management.module`).then(
+            (m) => m.PrepressManagementModule
           ),
       },
       {
@@ -41,10 +48,6 @@ const routes: Routes = [
       {
         path: AppPages.DASHBOARD,
         component: AppDashboardComponent
-      },
-      {
-        path: AppPages.PLATMAKING,
-        component: PlatemakingComponent
       },
       {
         path: '',

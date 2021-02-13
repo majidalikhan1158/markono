@@ -3,15 +3,11 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
-import { AppPageRoutes, CreateProductTabs } from 'src/app/modules/shared/enums/app-constants';
+import { AppModules, AppPageRoutes, CreateProductTabs } from 'src/app/modules/shared/enums/app-constants';
 import { OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ProductSpecStore } from '../../../shared/ui-services/product-spec.service';
 import { Subscription } from 'rxjs';
 import { ProductSpecStatusTypes, StatusList } from '../../../shared/enums/product-management/product-constants';
-import { DynamicPageHeaderLabels } from 'src/app/_metronic/configs/dynamic-page-headers.config';
-import { PageHeader } from 'src/app/modules/shared/models/app-modal';
-import { DynamicHeaderMenuService } from 'src/app/_metronic/core';
-import { Router } from '@angular/router';
 import { SubheaderService } from 'src/app/_metronic/partials/layout/subheader/_services/subheader.service';
 
 @Component({
@@ -30,13 +26,16 @@ export class CreateProductComponent implements OnInit, OnDestroy {
   statusClass: string;
   statusTypes = ProductSpecStatusTypes;
   shouldReadonly: boolean;
-  constructor(private store: ProductSpecStore, private cf: ChangeDetectorRef,
+  isPrepressModule = window.location.pathname.toString().includes(AppModules.PREPRESS_MANAGMENT);
+  constructor(public store: ProductSpecStore, private cf: ChangeDetectorRef,
               private subheader: SubheaderService) {
+                this.store.setIsPrepressModule(this.isPrepressModule);
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
     this.store.reset();
+    this.store.setIsPrepressModule(false);
   }
 
   ngOnInit(): void {

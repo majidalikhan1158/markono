@@ -1,147 +1,155 @@
 <div class="row spec-check-print">
-  <div class="col-lg-12 pb-3">
-    <span class="font-16px font-roboto-bold">Verify Print File</span>
-    <mat-hint class="font-14px d-flex">Check that print file tallies with specs provided</mat-hint>
-  </div>
-
-  <div class="col-lg-12 pt-2 pb-5 pl-0">
-    <mat-divider></mat-divider>
-  </div>
-
-  <div class="col-lg-12 pb-4">
-    <span class="font-14px font-roboto-bold">Upload print files</span>
-  </div>
-
-  <div class="col-lg-12 pb-3 display-flex file-upload-section">
-    <div class="col-lg-4">
-      <div class="row">
-        <span class="file-title">
-          Cover:
-        </span>
-        <span>
-          <input type="file" name="coverFile" id="coverFile" class="inputfile"
-            (change)="handleFileInput($event.target.files,'COVERFILE')">
-          <label for="coverFile">
-            <mat-icon>cloud_upload</mat-icon>
-            <span class="file-label">{{viewModal.coverFile ? 'Replace File' : 'Upload File'}}</span>
-          </label>
-        </span>
-      </div>
-      <div class="row">
-        <mat-chip class="chip" [disableRipple]="true" (removed)="removeFile('COVERFILE')" [removable]="true"
-          *ngIf="viewModal.coverFile">
-          <mat-icon class="chip-file-icon"> insert_drive_file</mat-icon>
-          {{viewModal.coverFile}}
-          <mat-icon matChipRemove class="chip-remove-icon">cancel</mat-icon>
-        </mat-chip>
-      </div>
+  <div class="col-lg-12 pl-0" [ngClass]="(store.$productSpecReadonly | async) ? 'readonly-box' : '' ">
+    <div class="col-lg-12 pb-3">
+        <span class="font-16px font-roboto-bold">Verify Print File</span>
+        <mat-hint class="font-14px d-flex">Check that print file tallies with specs provided</mat-hint>
     </div>
-    <div class="col-lg-4">
-      <div class="row">
-        <span class="file-title">
-          Text:
-        </span>
-        <span>
-          <input type="file" name="textFile" id="textFile" class="inputfile"
-            (change)="handleFileInput($event.target.files,'TEXTFILE')">
-          <label for="textFile">
-            <mat-icon>cloud_upload</mat-icon>
-            <span class="file-label"> {{viewModal.textFile ? 'Replace File' : 'Upload File'}}</span>
-          </label>
-        </span>
-      </div>
-      <div class="row">
-        <mat-chip class="chip" [disableRipple]="true" (removed)="removeFile('TEXTFILE')" [removable]="true"
-          *ngIf="viewModal.textFile">
-          <mat-icon class="chip-file-icon"> insert_drive_file</mat-icon>
-          {{viewModal.textFile}}
-          <mat-icon matChipRemove class="chip-remove-icon">cancel</mat-icon>
-        </mat-chip>
-      </div>
+
+    <div class="col-lg-12 pt-2 pb-5 pl-0">
+      <mat-divider></mat-divider>
     </div>
-    <div class="col-lg-4">
-      <div class="row">
-        <span class="file-title">
-          Others:
-        </span>
-        <span>
-          <input type="file" name="othersFile" id="othersFile" class="inputfile"
-            (change)="handleFileInput($event.target.files,'OTHERSFILE')">
-          <label for="othersFile">
-            <mat-icon>cloud_upload</mat-icon>
-            <span class="file-label"> {{viewModal.othersFile ? 'Replace File' : 'Upload File'}}</span>
-          </label>
-        </span>
-      </div>
-      <div class="row">
-        <mat-chip class="chip" [disableRipple]="true" (removed)="removeFile('OTHERSFILE')" [removable]="true"
-          *ngIf="viewModal.othersFile">
-          <mat-icon class="chip-file-icon"> insert_drive_file</mat-icon>
-          {{viewModal.othersFile}}
-          <mat-icon matChipRemove class="chip-remove-icon">cancel</mat-icon>
-        </mat-chip>
-      </div>
+
+    <div class="col-lg-12 pb-4">
+      <span class="font-14px font-roboto-bold">Upload print files</span>
     </div>
-  </div>
 
-  <div class="col-lg-12 pl-0">
-    <mat-divider></mat-divider>
-  </div>
-
-  <div class="col-lg-12 pt-2 pl-0 display-flex">
-    <div class="col-lg-6">
-      <div class="col-lg-12 pb-3 pt-4">
-        <span class="font-14px font-roboto-bold">Cover</span>
+    <div class="col-lg-12 pb-3 display-flex file-upload-section">
+      <div class="col-lg-4">
+        <div class="row">
+          <span class="file-title">
+            Cover:
+          </span>
+          <span>
+            <input type="file" name="coverFile" id="coverFile" class="inputfile"
+              (change)="handleFileInput($event.target.files,'COVERFILE')">
+            <label for="coverFile">
+              <mat-icon>cloud_upload</mat-icon>
+              <span class="file-label">{{viewModal.coverFile ? 'Replace File' : 'Upload File'}}</span>
+            </label>
+          </span>
+        </div>
+        <div class="row">
+          <mat-chip class="chip" [disableRipple]="true" (removed)="removeFile('COVERFILE')" [removable]="true"
+            *ngIf="viewModal.coverFile">
+            <mat-icon class="chip-file-icon"> insert_drive_file</mat-icon>
+            {{viewModal.coverFile}}
+            <mat-icon matChipRemove class="chip-remove-icon">cancel</mat-icon>
+          </mat-chip>
+        </div>
       </div>
-
-      <div class="col-lg-12 pb-3">
-        <ul class="pl-0">
-          <li class="pb-3" *ngFor="let item of checkPrintQAList">
-            <span class="font-14px font-roboto-regular">
-              {{item.question}}
-            </span>
-            <span class="float-right">
-              <mat-slide-toggle labelPosition="before" [checked] = "viewModal.fileCheckIds.includes(item.id)" (change)="handleToggleChange(item.id)">
-                {{viewModal.fileCheckIds.includes(item.id) ? 'Yes' : 'No'}}
-              </mat-slide-toggle>
-            </span> 
-          </li>
-        </ul>
+      <div class="col-lg-4">
+        <div class="row">
+          <span class="file-title">
+            Text:
+          </span>
+          <span>
+            <input type="file" name="textFile" id="textFile" class="inputfile"
+              (change)="handleFileInput($event.target.files,'TEXTFILE')">
+            <label for="textFile">
+              <mat-icon>cloud_upload</mat-icon>
+              <span class="file-label"> {{viewModal.textFile ? 'Replace File' : 'Upload File'}}</span>
+            </label>
+          </span>
+        </div>
+        <div class="row">
+          <mat-chip class="chip" [disableRipple]="true" (removed)="removeFile('TEXTFILE')" [removable]="true"
+            *ngIf="viewModal.textFile">
+            <mat-icon class="chip-file-icon"> insert_drive_file</mat-icon>
+            {{viewModal.textFile}}
+            <mat-icon matChipRemove class="chip-remove-icon">cancel</mat-icon>
+          </mat-chip>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="row">
+          <span class="file-title">
+            Others:
+          </span>
+          <span>
+            <input type="file" name="othersFile" id="othersFile" class="inputfile"
+              (change)="handleFileInput($event.target.files,'OTHERSFILE')">
+            <label for="othersFile">
+              <mat-icon>cloud_upload</mat-icon>
+              <span class="file-label"> {{viewModal.othersFile ? 'Replace File' : 'Upload File'}}</span>
+            </label>
+          </span>
+        </div>
+        <div class="row">
+          <mat-chip class="chip" [disableRipple]="true" (removed)="removeFile('OTHERSFILE')" [removable]="true"
+            *ngIf="viewModal.othersFile">
+            <mat-icon class="chip-file-icon"> insert_drive_file</mat-icon>
+            {{viewModal.othersFile}}
+            <mat-icon matChipRemove class="chip-remove-icon">cancel</mat-icon>
+          </mat-chip>
+        </div>
       </div>
     </div>
 
-    <mat-divider [vertical]="true"></mat-divider>
+    <div class="col-lg-12 pl-0">
+      <mat-divider></mat-divider>
+    </div>
 
-    <div class="col-lg-5">
-      <div class="col-lg-12 pb-3 pt-4">
-        <span class="font-14px font-roboto-bold">Text</span>
+    <div class="col-lg-12 pt-2 pl-0 display-flex">
+      <div class="col-lg-6">
+        <div class="col-lg-12 pb-3 pt-4">
+          <span class="font-14px font-roboto-bold">Cover</span>
+        </div>
+
+        <div class="col-lg-12 pb-3">
+          <ul class="pl-0">
+            <li class="pb-3" *ngFor="let item of checkPrintQAList">
+              <span class="font-14px font-roboto-regular">
+                {{item.question}}
+              </span>
+              <span class="float-right">
+                <mat-slide-toggle labelPosition="before" [checked] = "viewModal.fileCheckIds.includes(item.id)" (change)="handleToggleChange(item.id)">
+                  {{viewModal.fileCheckIds.includes(item.id) ? 'Yes' : 'No'}}
+                </mat-slide-toggle>
+              </span> 
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="col-lg-12 pb-3">
-        <ul class="pl-0">
-          <li class="pb-3" *ngFor="let item of checkTextQAList; let i = index">
-            <span class="font-14px font-roboto-regular">
-              {{item.question}}
-            </span>
-            <span class="float-right">
-              <mat-slide-toggle labelPosition="before" [checked] = "viewModal.fileCheckIds.includes(item.id)" (change)="handleToggleChange(item.id)">
-                {{viewModal.fileCheckIds.includes(item.id) ? 'Yes' : 'No'}}
-              </mat-slide-toggle>
-            </span> 
-          </li>
-        </ul>
+
+      <mat-divider [vertical]="true"></mat-divider>
+
+      <div class="col-lg-5">
+        <div class="col-lg-12 pb-3 pt-4">
+          <span class="font-14px font-roboto-bold">Text</span>
+        </div>
+        <div class="col-lg-12 pb-3">
+          <ul class="pl-0">
+            <li class="pb-3" *ngFor="let item of checkTextQAList; let i = index">
+              <span class="font-14px font-roboto-regular">
+                {{item.question}}
+              </span>
+              <span class="float-right">
+                <mat-slide-toggle labelPosition="before" [checked] = "viewModal.fileCheckIds.includes(item.id)" (change)="handleToggleChange(item.id)">
+                  {{viewModal.fileCheckIds.includes(item.id) ? 'Yes' : 'No'}}
+                </mat-slide-toggle>
+              </span> 
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-lg-12 pl-0" style="top: -8px">
-    <mat-divider></mat-divider>
-  </div>
+    <div class="col-lg-12 pl-0" style="top: -8px">
+      <mat-divider></mat-divider>
+    </div>
 
-  <div class="col-lg-12 pt-3" style="display: grid;">
-    <mat-checkbox [(ngModel)]="viewModal.checkBoxApproval">
-      The customer has acknowledged the print defects/revisions made and has given explicit approval to proceed with
-      printing.
-    </mat-checkbox>
-    <a class="font-14px font-roboto-bold pl-8">Export QD Report</a>
+    <div class="col-lg-12 pt-3" style="display: grid;" *ngIf="!(store.$IsPrepressModule | async)">
+      <mat-checkbox [(ngModel)]="viewModal.checkBoxApproval">
+        The customer has acknowledged the print defects/revisions made and has given explicit approval to proceed with
+        printing.
+      </mat-checkbox>
+      <a class="font-14px font-roboto-bold pl-8">Export QD Report</a>
+    </div>
+  </div>
+  
+  <div class="col-lg-12 pt-3" style="display: grid;" *ngIf="store.$IsPrepressModule | async">
+    <mat-form-field  appearance="fill" >
+      <textarea matInput placeholder="Enter remarks" [(ngModel)]="viewModal.remarks"></textarea>
+    </mat-form-field>
   </div>
 </div>

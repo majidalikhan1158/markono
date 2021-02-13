@@ -51,7 +51,7 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
   parentRecordId: number;
   subscription: Subscription;
   protected onDestroy = new Subject<void>();
-  constructor(private store: ProductSpecStore, private helper: ProductSpecHelperService) { }
+  constructor(public store: ProductSpecStore, private helper: ProductSpecHelperService) { }
 
   ngOnInit(): void {
     this.handleOtherComponentChooseFilterAutoComplete();

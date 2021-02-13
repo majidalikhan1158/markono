@@ -34,11 +34,13 @@ export class AdminComponent implements OnInit {
         this.handleOrderManagementModuleBreadCrumb(url);
       } else if (url.includes(AppModules.SHOPFLOORCOLLECTION)) {
         this.handleShopfloorManagementModuleBreadCrumb(url);
-      } else if (url.includes(AppModules.PLATMAKING)) {
-        this.handlePlatMakingManagementModuleBreadCrumb(url);
+      } else if (url.includes(AppModules.PREPRESS_MANAGMENT)) {
+        this.handlePrepressManagementModuleBreadCrumb(url);
       } else if (url.includes(AppModules.DASHBOARD)) {
         this.handleDashboardManagementModuleBreadCrumb(url);
-      }
+      } else if (url.includes(AppModules.PREPRESS_MANAGMENT)) {
+        this.handleProductManagementModuleBreadCrumb(url);
+      } 
    }
 
   handleCaseManagementModuleBreadCrumb(url: string) {
@@ -75,6 +77,20 @@ export class AdminComponent implements OnInit {
     this.subheader.setBreadcrumbs(this.breadCrumList);
   }
 
+  handlePrepressCreateProduct = () => {
+    this.subheader.setTitle('Add Product');
+    this.breadCrumList.push({
+      linkText: 'Products Library',
+      linkPath: AppPageRoutes.FILEPREP,
+      title: 'Products Library'
+    }, {
+      linkText: 'Add Product',
+      linkPath: AppPageRoutes.FILEPREP_VIEW,
+      title: 'Add Product'
+    });
+    this.subheader.setBreadcrumbs(this.breadCrumList);
+  }
+
   handleViewProduct = () => {
     this.subheader.setTitle('Product Detail');
     this.breadCrumList.push({
@@ -84,7 +100,7 @@ export class AdminComponent implements OnInit {
     }, {
       linkText: 'Product Detail',
       linkPath: AppPageRoutes.VIEW_PRODUCT,
-      title: 'Product Derail'
+      title: 'Product Detail'
     });
     this.subheader.setBreadcrumbs(this.breadCrumList);
   }
@@ -138,9 +154,15 @@ export class AdminComponent implements OnInit {
     this.clearBreadCrumbList();
   }
 
-  handlePlatMakingManagementModuleBreadCrumb(url: string) {
+  handlePrepressManagementModuleBreadCrumb(url: string) {
     this.clearBreadCrumbList();
-    this.subheader.setTitle('Platemaking');
+    if (url.includes(AppPages.FILEPREP_VIEW)) {
+      this.handlePrepressCreateProduct();
+    } else if (url.includes(AppPages.FILEPREP)) {
+      this.subheader.setTitle('Prepress');
+    } else if (url.includes(AppPages.PLATMAKING)) {
+      this.subheader.setTitle('Platemaking');
+    }
   }
 
   handleDashboardManagementModuleBreadCrumb(url: string) {

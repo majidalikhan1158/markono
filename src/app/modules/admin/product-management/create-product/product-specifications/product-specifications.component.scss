@@ -57,6 +57,12 @@ app-product-specifications {
     color: #7e7e7e;
     padding-left: 27px !important;
   }
+
+  .product-spec-types .text-color.prepress-module .mat-list-text {
+    color: #7e7e7e;
+    padding-left: 0px !important;
+  } 
+  
   .product-spec-types .mat-list-base {
     padding-top: 5px;
     padding-bottom: 5px;
@@ -88,10 +94,6 @@ app-product-specifications {
 
   .product-spec-details mat-form-field {
     width: inherit;
-  }
-
-  .product-spec-details.readonly-box {
-    pointer-events: none !important;
   }
 
   .product-spec-types .mat-expansion-panel-body {

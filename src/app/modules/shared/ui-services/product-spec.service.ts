@@ -41,6 +41,7 @@ export class ProductSpecStore {
   private ProductSpecReadonlySubject = new BehaviorSubject<boolean>(false);
   private ProductSpecUpdateButtonSubject = new BehaviorSubject<boolean>(false);
   private ProductSpecStoreUpdateSubject = new BehaviorSubject<string>(null);
+  private IsPrepressModuleSubject = new BehaviorSubject<boolean>(false);
 
   public $productSpecStore: Observable<ProductSpecStoreVM>;
   public $showJournaFields: Observable<boolean>;
@@ -59,6 +60,7 @@ export class ProductSpecStore {
   public $productSpecReadonly: Observable<boolean>;
   public $productSpecUpdateButton: Observable<boolean>;
   public $productSpecStoreUpdate: Observable<string>;
+  public $IsPrepressModule: Observable<boolean>;
 
   private coverMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private textMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
@@ -121,6 +123,7 @@ export class ProductSpecStore {
     this.$productSpecReadonly = this.ProductSpecReadonlySubject.asObservable();
     this.$productSpecUpdateButton = this.ProductSpecUpdateButtonSubject.asObservable();
     this.$productSpecStoreUpdate = this.ProductSpecStoreUpdateSubject.asObservable();
+    this.$IsPrepressModule = this.IsPrepressModuleSubject.asObservable();
 
     this.$productSpecStore.subscribe((data) => {
       this.currentProductSpecStoreState = data;
@@ -294,6 +297,8 @@ export class ProductSpecStore {
 
   updateStoreByComponentType = (type: string) => this.ProductSpecStoreUpdateSubject.next(type);
 
+  setIsPrepressModule = (flag: boolean) => this.IsPrepressModuleSubject.next(flag);
+  
   setProductSpecReadonly = (flag: boolean) => {
     this.ProductSpecReadonlySubject.next(flag);
     this.setProductSpecUpdateButton(!flag);
@@ -427,7 +432,8 @@ export class ProductSpecStore {
         checkBoxApproval: false,
         othersFile: '',
         textFile: '',
-        coverFile: ''
+        coverFile: '',
+        remarks: ''
       };
       this.setCheckPrintFile(fileCheckVM);
     }));

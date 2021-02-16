@@ -61,6 +61,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
     'Paper',
     'Paper Size',
     'Machine Type',
+    ''
   ];
   columnsToDisplayProdActivityTable = [
     'Com.Id',
@@ -75,7 +76,7 @@ export class SpecLayoutPrepComponent implements OnInit, OnDestroy {
     'Duration',
     'Unit Costs',
     'New Units Costs',
-    ''
+    '',
   ];
   productSpecLayoutPrepCompList = ProductSpecLayoutPrepCompList;
   machineTypeList = MachineTypeList;

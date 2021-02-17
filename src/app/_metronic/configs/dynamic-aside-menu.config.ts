@@ -1,5 +1,5 @@
-import { AppModules } from './../../modules/shared/enums/app-constants';
-import { AppPageRoutes } from '../../modules/shared/enums/app-constants';
+import { AppModules, SidebarIconsNormal } from './../../modules/shared/enums/app-constants';
+import { AppPageRoutes, SidebarIconsSelected } from '../../modules/shared/enums/app-constants';
 export const DynamicAsideMenuConfig = {
   items: [
     {
@@ -8,8 +8,8 @@ export const DynamicAsideMenuConfig = {
       bullet: 'dot',
       page: AppPageRoutes.DASHBOARD,
       icon: 'flaticon2-browser-2',
-      png: './assets/media/menu-logos/ic_dashboard.png',
-      selected: './assets/media/menu-logos/ic_dashboard_Selected.png',
+      png: SidebarIconsNormal.Dashboard,
+      selected: SidebarIconsSelected.Dashboard,
       permission: 'accessToAppDashboard'
     },
     {
@@ -18,8 +18,8 @@ export const DynamicAsideMenuConfig = {
       bullet: 'dot',
       page: AppPageRoutes.LIST_PRODUCT,
       icon: 'flaticon2-browser-2',
-      png: './assets/media/menu-logos/ic_productLib.png',
-      selected: './assets/media/menu-logos/ic_productLib_Selected.png',
+      png: SidebarIconsNormal.Products,
+      selected: SidebarIconsSelected.Products,
       permission: 'accessToListProduct'
     },
     {
@@ -28,8 +28,8 @@ export const DynamicAsideMenuConfig = {
       bullet: 'dot',
       page: AppPageRoutes.LIST_CASE,
       icon: 'flaticon2-browser-2',
-      png: './assets/media/menu-logos/ic_casemanagement.png',
-      selected: './assets/media/menu-logos/ic_casemanagement_Selected.png',
+      png: SidebarIconsNormal.Quotations,
+      selected: SidebarIconsSelected.Quotations,
       permission: 'accessToQuotationList'
     },
     {
@@ -38,8 +38,8 @@ export const DynamicAsideMenuConfig = {
       bullet: 'dot',
       page: `/admin/${AppModules.ORDER_MANAGMENT}`,
       icon: 'flaticon2-browser-2',
-      png: './assets/media/menu-logos/ic_productLib.png',
-      selected: './assets/media/menu-logos/ic_productLib_Selected.png',
+      png: SidebarIconsNormal.Orders,
+      selected: SidebarIconsSelected.Orders,
       submenu: [
         {
           title: 'Create Order',
@@ -61,8 +61,8 @@ export const DynamicAsideMenuConfig = {
       bullet: 'dot',
       page: `/admin/${AppModules.PREPRESS_MANAGMENT}`,
       icon: 'flaticon2-browser-2',
-      png: './assets/media/menu-logos/ic_platemaking.png',
-      selected: './assets/media/menu-logos/ic_platemaking_Selected.png',
+      png: SidebarIconsNormal.Prepress,
+      selected: SidebarIconsSelected.Prepress,
       submenu: [
         {
           title: 'File Prep',
@@ -82,8 +82,8 @@ export const DynamicAsideMenuConfig = {
       bullet: 'dot',
       page: '/admin/planning',
       icon: 'flaticon2-browser-2',
-      png: './assets/media/menu-logos/ic_shopfloorcollection.png',
-      selected: './assets/media/menu-logos/ic_shopfloorcollection_Selected.png',
+      png: SidebarIconsNormal.Planning,
+      selected: SidebarIconsSelected.Planning,
       permission: 'accessToShopFloorCollection'
     },
     {
@@ -92,8 +92,8 @@ export const DynamicAsideMenuConfig = {
       bullet: 'dot',
       page: '/admin/material-visibilty',
       icon: 'flaticon2-browser-2',
-      png: './assets/media/menu-logos/ic_shopfloorcollection.png',
-      selected: './assets/media/menu-logos/ic_shopfloorcollection_Selected.png',
+      png: SidebarIconsNormal.MaterialVisibility,
+      selected: SidebarIconsSelected.MaterialVisibility,
       permission: 'accessToShopFloorCollection'
     },
     {
@@ -102,8 +102,8 @@ export const DynamicAsideMenuConfig = {
       bullet: 'dot',
       page: AppPageRoutes.SHOP_FLOOR_COLLECTION,
       icon: 'flaticon2-browser-2',
-      png: './assets/media/menu-logos/ic_shopfloorcollection.png',
-      selected: './assets/media/menu-logos/ic_shopfloorcollection_Selected.png',
+      png: SidebarIconsNormal.Shopfloor,
+      selected: SidebarIconsSelected.Shopfloor,
       permission: 'accessToShopFloorCollection'
     },
   ]

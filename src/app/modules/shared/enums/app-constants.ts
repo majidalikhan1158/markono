@@ -109,4 +109,31 @@ export const AppPageRoutes = {
   CREATE_ORDER: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.CREATE}`,
   ORDER_ISSUES: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.ORDER_ISSUES}`,
   JOB_DETAILS: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.ORDER_JOB_DETAIL}`
-}
+};
+
+export const IconsPath = {
+  Normal: './assets/media/sidebar-icons/normal-state/',
+  Selected: './assets/media/sidebar-icons/selected-state/'
+};
+
+export const SidebarIconsNormal = {
+  Dashboard: `${IconsPath.Normal}/ic_dashboard.svg`,
+  MaterialVisibility: `${IconsPath.Normal}/ic_materialvisibility.svg`,
+  Orders: `${IconsPath.Normal}/ic_orders.svg`,
+  Planning: `${IconsPath.Normal}/ic_planning.svg`,
+  Prepress: `${IconsPath.Normal}/ic_prepress.svg`,
+  Products: `${IconsPath.Normal}/ic_products.svg`,
+  Quotations: `${IconsPath.Normal}/ic_quotations.svg`,
+  Shopfloor: `${IconsPath.Normal}/ic_shopfloor.svg`
+};
+
+export const SidebarIconsSelected = {
+  Dashboard: `${IconsPath.Selected}/ic_dashboard_selected.svg`,
+  MaterialVisibility: `${IconsPath.Selected}/ic_materialvisibility_selected.svg`,
+  Orders: `${IconsPath.Selected}/ic_orders-selected.svg`,
+  Planning: `${IconsPath.Selected}/ic_planning_selected.svg`,
+  Prepress: `${IconsPath.Selected}/ic_prepress_selected.svg`,
+  Products: `${IconsPath.Selected}/ic_products_selected.svg`,
+  Quotations: `${IconsPath.Selected}/ic_quotation_selected.svg`,
+  Shopfloor: `${IconsPath.Selected}/ic_shopfloor_selected.svg`,
+};

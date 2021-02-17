@@ -115,11 +115,11 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     let shipmentToBeAdded;
     if (!this.isShippingDetails) {
       const isShipmentExist = this.shipmentsInfoVMList.find((x) => x.shipmentId === event.value);
-      if (isShipmentExist) {
-        this.resetShipmentTypeSelect();
-        this.snack.open(`Shipment Type ${isShipmentExist.shippingDetails.shipmentCategory} already added`);
-        return;
-      }
+      // if (isShipmentExist) {
+      //   this.resetShipmentTypeSelect();
+      //   this.snack.open(`Shipment Type ${isShipmentExist.shippingDetails.shipmentCategory} already added`);
+      //   return;
+      // }
       shipmentToBeAdded = this.shipmentTypesArray.find((x) => x.value === event.value);
     } else {
       shipmentToBeAdded = this.shipmentTypesArray.find((x) => x.value === this.selectedShipmentType);
@@ -150,13 +150,13 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
       this.shipmentsInfoVMList.push(obj);
       this.shouldShowShipmentDetails = false;
       this.resetShipmentTypeSelect();
-      this.displayShipmentDetails(obj.shipmentId);
+      this.displayShipmentDetails(obj.boxId);
     }
   }
 
-  displayShipmentDetails(shipmentId) {
+  displayShipmentDetails(boxId) {
     const shipmentToExpand = this.shipmentsInfoVMList.find(
-      (x) => x.shipmentId === shipmentId
+      (x) => x.boxId === boxId
     );
     if (this.boxIdToExpand === shipmentToExpand.boxId) {
       this.boxIdToExpand = 0;

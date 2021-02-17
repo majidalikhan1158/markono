@@ -26,8 +26,8 @@ app-order-details {
         //  min-width: 884px;
     }
     .orders-job-table-card .card-body {
-        padding-left: 5px !important;
-        padding-right: 5px !important;
+        // padding-left: 5px !important;
+        // padding-right: 5px !important;
         padding-top: 0px !important;
         padding-bottom: 0px !important;
     }
@@ -245,7 +245,7 @@ app-order-details {
     .expandable-row mat-cell:first-of-type,
     mat-header-cell:first-of-type,
     mat-footer-cell:first-of-type {
-        padding-left: 0px !important;
+        padding-left: 17px !important;
     }
     .expandable-row {
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -265,7 +265,7 @@ app-order-details {
         cursor: pointer;
     }
     .ng-trigger-detailExpand {
-        background-color: #fbfbfb;
+        background-color: #efefef;
     }
     .mat-column-expandedDetail {
         padding-left: 0px !important;
@@ -305,10 +305,10 @@ app-order-details {
             flex: none;
             width: 50px;
         }
-        .mat-column-PrintType {
-            flex: none;
-            width: 220px;
-        }
+        // .mat-column-PrintType {
+        // flex: none;
+        // width: 220px;
+        //  }
         .mat-column-ISBNPartNo {
             flex: none;
             width: 130px;
@@ -319,10 +319,10 @@ app-order-details {
             flex: none;
             width: 50px;
         }
-        .mat-column-PrintType {
-            flex: none;
-            width: 220px;
-        }
+        // .mat-column-PrintType {
+        //     flex: none;
+        //     width: 220px;
+        // }
         .mat-column-ISBNPartNo {
             flex: none;
             width: 130px;

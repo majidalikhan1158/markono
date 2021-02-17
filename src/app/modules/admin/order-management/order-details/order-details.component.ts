@@ -155,15 +155,21 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     this.timeValueAnalysisChartOptions = {
       series: [44, 55, 13],
       chart: {
-        type: 'donut'
+        type: 'donut',
+        width: 280,
       },
       labels: ['Lorem', 'Ipsum', 'Dolor'],
       responsive: [
         {
-          breakpoint: 480,
+          breakpoint: 100,
           options: {
             chart: {
-              width: 200
+              width: 10
+            },
+            pie: {
+              donut: {
+                size: '65%'
+              }
             },
             dataLabels: {
               enabled: false,
@@ -187,7 +193,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
 
       ],
       chart: {
-        height: 150,
+        height: 100,
         type: 'heatmap'
       },
       plotOptions: {
@@ -333,7 +339,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   chooseSelectionChange(id) {
-    this.router.navigate(['/admin/order-management/order-details/' + id]);
+    //this.router.navigate(['/admin/order-management/order-details/' + id]);
   }
 
   getJobInfo() {

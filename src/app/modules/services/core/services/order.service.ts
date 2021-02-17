@@ -47,13 +47,13 @@ export class OrderService {
 
   public getOrderDeatils = (request: any): Observable<HttpResponse<any>> => {
     const url = this.endPoint.getOrderDeatils();
-    const queryParams = `$filter=id eq ${request}&$expand=CaseDetail($expand=CaseDetailAdditional),OtherCharge`;;
+    const queryParams = `$filter=id eq ${request} and isDeleted ne true & $expand = CaseDetail($filter=isDeleted ne true ;$expand = CaseDetailAdditional),OtherCharge,SpecialInstructionList`;
     const urlWithParams = `${url}?${queryParams}`;
     return this.http.get(decodeURI(urlWithParams));
   }
   public getShipmentDetails = (request: any): Observable<HttpResponse<any>> => {
     const url = this.endPoint.getShipmentDetails();
-    const queryParams = `$filter=caseID eq ${request}&$expand=ShipmentDetail,MiscBilling`;;
+    const queryParams = `$filter=caseID eq ${request}&$expand=ShipmentDetail,MiscBilling`;
     const urlWithParams = `${url}?${queryParams}`;
     return this.http.get(decodeURI(urlWithParams));
   }
@@ -61,7 +61,7 @@ export class OrderService {
   public getAllIssueOrders = (): Observable<HttpResponse<any>> => {
     const url = this.endPoint.getAllOrders();
     //const queryParams = `$filter=orderNo ne null`;;
-    const queryParams = `?$top=100&$filter=isDeleted ne true and orderNo ne null and CaseDetail/any(cd:cd/CurrentActivityStatusCode in ('21','22','23','24','25'))&$orderby=createdDateTime desc`;
+    const queryParams = `?$top=100&$filter=isDeleted ne true and orderNo ne null and CaseDetail/any(cd:cd/CurrentActivityStatusCode in ('21','22','23','24','25'))&$expand=CaseDetail &$orderby=createdDateTime desc`;
     const urlWithParams = `${url}?${queryParams}`;
     return this.http.get(decodeURI(urlWithParams));
   }

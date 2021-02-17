@@ -32,14 +32,14 @@ export class OrdersWithIssuesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = [
     'id',
-    'caseNo', //not aviable in api (jobno)
-    'yourReference',
-    'orderNo', //not aviable in api (isbn)
-    'orderDate',
-    'requestedDeliveryDate',
-    'qty',
-    'type',
-    'currentActivityStatusCode',
+    'JobNo', //not aviable in api (jobno)
+    'YourReference',
+    'ISBNPartNo', //not aviable in api (isbn)
+    'OrderDate',
+    'RequestedDeliveryDate',
+    'Qty',
+    'Type',
+    'CurrentActivityStatusCode',
     // 'actions'
   ];
   dataArray;
@@ -303,6 +303,6 @@ export class OrdersWithIssuesComponent implements OnInit {
   }
 
   getCustomerName(value) {
-    return this.dataArray.find(x => x.id === value).companyName;
+    return this.dataArray.find(x => x.id === value).CompanyName;
   }
 }

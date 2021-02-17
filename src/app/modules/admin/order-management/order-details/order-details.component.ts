@@ -2,8 +2,10 @@ import { AfterViewInit, ChangeDetectorRef, ElementRef, AfterViewChecked, Templat
 import { MatSelectionListChange } from '@angular/material/list';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrderDetailTypes, OrderDetailTypesArray } from 'src/app/modules/shared/enums/order-management/order-constants';
-import { ActivityLogModel, CaseDetail, JobInfoHeaderModel, OrderInfoJobType, OrderInfoStatusTypesArray,
-  OrderJobModel, OrdersModel, OrderVM } from 'src/app/modules/shared/models/order-management';
+import {
+  ActivityLogModel, CaseDetail, JobInfoHeaderModel, OrderInfoJobType, OrderInfoStatusTypesArray,
+  OrderJobModel, OrdersModel, OrderVM
+} from 'src/app/modules/shared/models/order-management';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { FormControl } from '@angular/forms';
 import { CreateCaseMode } from 'src/app/modules/shared/enums/app-enums';
@@ -14,8 +16,10 @@ import { OrderService } from 'src/app/modules/services/core/services/order.servi
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { AppPageRoutes } from '../../../shared/enums/app-constants';
-import { ApexAxisChartSeries, ApexDataLabels, ApexGrid, ApexPlotOptions, ApexTitleSubtitle,
-   ApexXAxis, ChartComponent } from 'ng-apexcharts';
+import {
+  ApexAxisChartSeries, ApexDataLabels, ApexGrid, ApexPlotOptions, ApexTitleSubtitle,
+  ApexXAxis, ChartComponent
+} from 'ng-apexcharts';
 import { ApexNonAxisChartSeries, ApexResponsive, ApexChart } from 'ng-apexcharts';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
@@ -79,9 +83,9 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('chart') chart: ChartComponent;
 
-  displayedColumnsOrderInfo = ['Cust PO No.', 'Order Date', 'RDD', 'Qty', 'Order Type', 'Order Status', ];
+  displayedColumnsOrderInfo = ['Cust PO No.', 'Order Date', 'RDD', 'Qty', 'Order Type', 'Order Status',];
   displayedColumnsJob: string[] = ['Id', 'JobNo', 'ISBNPartNo', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode', 'actions', 'expandRow'];
-  displayedColumnsJobInfo: string[] = ['custPoNo', 'jobNo', 'jobType', 'rdd', 'orderDate', 'orderType', 'orderStatus', ];
+  displayedColumnsJobInfo: string[] = ['custPoNo', 'jobNo', 'jobType', 'rdd', 'orderDate', 'orderType', 'orderStatus',];
   displayedColumnsActivityLog: string[] = ['id', 'actionDate', 'actionBy', 'source', 'duration', 'activity', 'status'];
   dataJobArray;
   dataArrayJobInfo = JobInfoHeaderDATA;
@@ -103,7 +107,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   orderDetailTypesArray = OrderDetailTypesArray;
   orderDetailTypesConstant = OrderDetailTypes;
   chooseList;
-  currentSelectedType = 'JOBS';
+  currentSelectedType = 'ITEMS';
   ExpansionIcons = ExpansionIcons;
   rowIdToExpand = 1;
   rowIdToExpandJob = 1;
@@ -131,15 +135,16 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   overlayRef: OverlayRef | null;
   portal: Portal<{ $implicit: string }>;
   specialInstructionArray = [];
+  miscCostArray = [];
   //#endregion
 
   constructor(private router: Router,
-              private route: ActivatedRoute,
-              private orderService: OrderService,
-              private store: CaseStore,
-              public overlay: Overlay,
-              public viewContainerRef: ViewContainerRef,
-              private cd: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private orderService: OrderService,
+    private store: CaseStore,
+    public overlay: Overlay,
+    public viewContainerRef: ViewContainerRef,
+    private cd: ChangeDetectorRef,
   ) {
     this.tableFilters = { currentSelectedFilter: '', JobNo: '', ISBNPartNo: '', OrderQuantity: '', PrintType: '', CurrentActivityStatusName: '' };
     this.dataSourceJobInfo = this.dataArrayJobInfo;
@@ -150,15 +155,21 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     this.timeValueAnalysisChartOptions = {
       series: [44, 55, 13],
       chart: {
-        type: 'donut'
+        type: 'donut',
+        width: 280,
       },
       labels: ['Lorem', 'Ipsum', 'Dolor'],
       responsive: [
         {
-          breakpoint: 480,
+          breakpoint: 100,
           options: {
             chart: {
-              width: 200
+              width: 10
+            },
+            pie: {
+              donut: {
+                size: '65%'
+              }
             },
             dataLabels: {
               enabled: false,
@@ -182,7 +193,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
 
       ],
       chart: {
-        height: 150,
+        height: 100,
         type: 'heatmap'
       },
       plotOptions: {
@@ -308,8 +319,9 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   getOrderJob() {
     this.subscription = this.orderService.getOrderDeatils(this.queryParameterId).subscribe(resp => {
       this.dataJobArray = resp.body.result[0].CaseDetail as CaseDetail;
+      this.specialInstructionArray = resp.body.result[0].SpecialInstructionList;
+      this.miscCostArray = resp.body.result[0].OtherCharge;
       this.initializeDatatable();
-      this.getSpecialInstructions();
       this.getInvoice();
     });
   }
@@ -327,8 +339,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   chooseSelectionChange(id) {
-    console.log('id', id);
-    this.router.navigate(['/admin/order-management/order-details/' + id]);
+    //this.router.navigate(['/admin/order-management/order-details/' + id]);
   }
 
   getJobInfo() {
@@ -526,18 +537,6 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-  }
-
-  getSpecialInstructions() {
-    const a = this.orderInfoList.find(x => x.Id === this.queryParameterId).SpecialInstructions;
-    if (a != null && a != 'null:null,') {
-      const _json = {
-        Id: '1',
-        Department: a.split(':')[0],
-        Instructions: a.split(':')[1],
-      };
-      this.specialInstructionArray.push(_json);
-    }
   }
 
   getInvoice() {

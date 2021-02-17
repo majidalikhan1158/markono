@@ -272,14 +272,14 @@
                         <td mat-cell *matCellDef="let element;let i=index"> {{i+1}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="caseNo">
+                    <ng-container matColumnDef="JobNo">
                         <th mat-header-cell *matHeaderCellDef> Job No </th>
-                        <td mat-cell *matCellDef="let element"> - </td>
+                        <td mat-cell *matCellDef="let element"> {{element.CaseDetail[0].JobNo}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="yourReference">
+                    <ng-container matColumnDef="YourReference">
                         <th mat-header-cell *matHeaderCellDef>Customer PO No.</th>
-                        <td mat-cell *matCellDef="let element">{{element.yourReference }}
+                        <td mat-cell *matCellDef="let element">{{element.YourReference }}
                             <br>
                             <span class="cutomer-name">
                                 {{ getCustomerName(element.id)}}
@@ -287,42 +287,43 @@
                         </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="orderNo">
+                    <ng-container matColumnDef="ISBNPartNo">
                         <th mat-header-cell *matHeaderCellDef>ISBN </th>
-                        <td mat-cell *matCellDef="let element"> - </td>
+                        <td mat-cell *matCellDef="let element"> {{element.CaseDetail[0].ISBNPartNo}}</td>
                     </ng-container>
 
-                    <ng-container matColumnDef="orderDate">
+                    <ng-container matColumnDef="OrderDate">
                         <th mat-header-cell *matHeaderCellDef> Order Date </th>
-                        <td mat-cell *matCellDef="let element"> {{element.orderDate | date:'shortDate'}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.CaseDetail[0].OrderDate | date:'shortDate'}}
+                        </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="requestedDeliveryDate">
+                    <ng-container matColumnDef="RequestedDeliveryDate">
                         <th mat-header-cell *matHeaderCellDef> RDD </th>
                         <td mat-cell *matCellDef="let element">
-                            <ng-container *ngIf="element.requestedDeliveryDate===null">
+                            <ng-container *ngIf="element.CaseDetail[0].RequestedDeliveryDate===null">
                                 -
                             </ng-container>
-                            <ng-container *ngIf="element.requestedDeliveryDate!==null">
-                                {{element.requestedDeliveryDate | date:'shortDate'}}
+                            <ng-container *ngIf="element.CaseDetail[0].RequestedDeliveryDate!==null">
+                                {{element.CaseDetail[0].RequestedDeliveryDate | date:'shortDate'}}
                             </ng-container>
                         </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="qty">
+                    <ng-container matColumnDef="Qty">
                         <th mat-header-cell *matHeaderCellDef> Qty </th>
-                        <td mat-cell *matCellDef="let element"> {{element.qty}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.Qty}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="type">
+                    <ng-container matColumnDef="Type">
                         <th mat-header-cell *matHeaderCellDef> Type</th>
                         <td mat-cell *matCellDef="let element">
-                            <div *ngIf="element.type == 'PO'">
+                            <div *ngIf="element.Type == 'PO'">
                                 <!-- <a href="javascript:;" routerLink="/admin/order-management/order-details"> -->
                                 <img src="./../../../../../assets/media/misc/ic_print.png">
                                 <!-- </a> -->
                             </div>
-                            <div *ngIf="element.type == 'WO'">
+                            <div *ngIf="element.Type == 'WO'">
                                 <!-- <a href="javascript:;" routerLink="/admin/order-management/order-details"> -->
                                 <img src="./../../../../../assets/media/misc/ic_warehouse.png">
                                 <!-- </a> -->
@@ -330,72 +331,72 @@
                         </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="currentActivityStatusCode">
+                    <ng-container matColumnDef="CurrentActivityStatusCode">
                         <th mat-header-cell *matHeaderCellDef> Status </th>
                         <td mat-cell *matCellDef="let element">
                             <!--orange > Pending File Prep-->
-                            <div class="status-options" *ngIf="element.currentActivityStatusCode == 301">
+                            <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 301">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-orange label-inline">Pending File
                                         Prep</span>
                                 </span>
                             </div>
                             <!--green > Order Confirmed-->
-                            <div class="status-options" *ngIf="element.currentActivityStatusCode == 207">
+                            <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 207">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-green label-inline">Order Confirmed</span>
                                 </span>
                             </div>
                             <!--purple > RFQ-->
-                            <div class="status-options" *ngIf="element.currentActivityStatusCode == 201">
+                            <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 201">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-purple label-inline">RFQ</span>
                                 </span>
                             </div>
                             <!-- light-blue > Case Created-->
-                            <div class="status-options" *ngIf="element.currentActivityStatusCode == 101">
+                            <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 101">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-blue label-inline">Case Created</span>
                                 </span>
                             </div>
                             <!-- light-blue > Pending Est-->
-                            <div class="status-options" *ngIf="element.currentActivityStatusCode == 202">
+                            <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 202">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-blue label-inline">Pending Est</span>
                                 </span>
                             </div>
                             <!-- light-blue > Est. Compl-->
-                            <div class="status-options" *ngIf="element.currentActivityStatusCode == 203">
+                            <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 203">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-blue label-inline">Est. Compl</span>
                                 </span>
                             </div>
                             <!-- light-blue > Printing-->
-                            <div class="status-options" *ngIf="element.currentActivityStatusCode == 503">
+                            <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 503">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-blue label-inline">Printing</span>
                                 </span>
                             </div>
                             <!-- light-blue > Folding Compl-->
-                            <div class="status-options" *ngIf="element.currentActivityStatusCode == 602">
+                            <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 602">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-blue label-inline">Folding Compl</span>
                                 </span>
                             </div>
                             <!-- light-blue > Bind Compl-->
-                            <div class="status-options" *ngIf="element.currentActivityStatusCode == 801">
+                            <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 801">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-blue label-inline">Bind Compl</span>
                                 </span>
                             </div>
                             <!-- light-blue > Shipped-->
-                            <div class="status-options" *ngIf="element.currentActivityStatusCode == 806">
+                            <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 806">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-blue label-inline">Shipped</span>
                                 </span>
                             </div>
                             <!-- light-blue > No Setup-->
-                            <div class="status-options" *ngIf="element.currentActivityStatusCode == 21">
+                            <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 21">
                                 <span style="width: 100px;">
                                     <span class="label label-lg label-light-blue label-inline">No Setup</span>
                                 </span>

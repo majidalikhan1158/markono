@@ -145,17 +145,17 @@
       </div>
     </div>
 
-    <div style="background-color: white;padding-right: 0px;max-width: 887px;min-width: 709px;"
-      class="col-xl-10 padding-l-0px">
+    <div class="col-xl-10 padding-l-0px"
+      style="background-color: white;padding-right: 0px;max-width: 887px;min-width: 709px;">
       <!--job-->
-      <ng-container *ngIf="currentSelectedType === orderDetailTypesConstant.JOBS">
+      <ng-container *ngIf="currentSelectedType === orderDetailTypesConstant.ITEMS">
         <div class="card card-custom example example-compact gutter-b orders-job-table-card" style="box-shadow: none;">
           <div class="card-header pr-0">
             <div class="row full-width">
               <div class="col-lg-12 pt-2 pb-2 pr-0" style="padding-top: 0px !important">
                 <div class="float-left display-flex">
                   <h3 class="card-title font-weight-bolder text-dark" style="padding-top: 12px">
-                    Jobs
+                    Items
                   </h3>
                   <mat-chip-list #chipList class="table-filter-chips">
                     <mat-chip [removable]="true" *ngIf="tableFilters.JobNo != ''"
@@ -298,7 +298,7 @@
 
               <ng-container matColumnDef="Id">
                 <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
-                <mat-cell *matCellDef="let element;" style="padding-left: 2px !important">
+                <mat-cell *matCellDef="let element;" style="padding-left: 17px !important">
                   {{getId()}}
                 </mat-cell>
               </ng-container>
@@ -426,8 +426,8 @@
                       <td class="td-table">BluePrint required</td>
                     </tr>
                     <tr>
-                      <td class="th-table">{{item.Title}}</td>
-                      <td class="th-table">-</td>
+                      <td class="th-table" style="width: 200px;">{{item.Title}}</td>
+                      <td class="th-table">{{item.SellToNo}}</td>
                       <td class="th-table">{{item.ProductGroup}}</td>
                       <td class="th-table">{{item.EstimatedPrice}}</td>
                       <td class="th-table">{{item.SamplesRequired}}</td>
@@ -443,8 +443,8 @@
                     </tr>
                     <tr>
                       <td class="th-table">{{item.TotalExtent}}</td>
-                      <td class="th-table">-</td>
-                      <td class="th-table">-</td>
+                      <td class="th-table">{{item.ProductVersion }}</td>
+                      <td class="th-table">{{item.QuoteNo }}</td>
                       <td class="th-table">{{item.Weight}}</td>
                       <td class="th-table">{{item.FGRequired}}</td>
                       <td class="th-table">{{item.AdvancesRequired}}</td>
@@ -500,7 +500,7 @@
 
             <!--mat-drawer-->
             <mat-drawer-container class="example-container" autosize cdkPortal>
-              <mat-drawer #drawer mode="side" position="end"
+              <mat-drawer #drawer mode="over" position="end"
                 [ngClass]="{'scssClassName': showFiller==false,'example-sidenav':showFiller==true}">
                 <div class="card card-custom example example-compact gutter-b" style="box-shadow: none;">
                   <div class="card-header pr-0" style="padding-top: 10px">
@@ -1453,7 +1453,7 @@
             </div>
           </div>
           <div class="card-body">
-            <ng-container *ngIf="shipmentInfoList.MiscBilling==[]">
+            <ng-container *ngIf="miscCostArray.length>0">
               <table class="table table-head-custom table-vertical-center">
                 <thead>
                   <tr class="text-left">
@@ -1465,7 +1465,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let row of shipmentInfoList.MiscBilling;let k = index">
+                  <tr *ngFor="let row of miscCostArray;let k = index">
                     <td>{{ k + 1 }}</td>
                     <td>{{ row.Item }}</td>
                     <td>{{ row.Description }}</td>
@@ -1475,7 +1475,7 @@
                 </tbody>
               </table>
             </ng-container>
-            <ng-container *ngIf="shipmentInfoList.MiscBilling!=[]">
+            <ng-container *ngIf="miscCostArray.length==0">
               <br>
               <div class="status-options">
                 <span class="width-100">
@@ -1512,11 +1512,17 @@
                     <th>Instructions</th>
                   </tr>
                 </thead>
-                <tbody *ngFor="let item of specialInstructionArray;">
-                  <tr>
-                    <td>{{item.Id}}</td>
-                    <td>{{item.Department}}</td>
-                    <td>{{item.Instructions}}</td>
+                <tbody>
+                  <tr *ngFor="let item of specialInstructionArray;let i=index">
+                    <td>{{i+1}}</td>
+                    <td>
+                      <ng-container *ngIf="item.Dept!==null">{{item.Dept}}</ng-container>
+                      <ng-container *ngIf="item.Dept===null">-</ng-container>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="item.Instruction!==null">{{item.Instruction}}</ng-container>
+                      <ng-container *ngIf="item.Instruction===null">-</ng-container>
+                    </td>
                   </tr>
                 </tbody>
               </table>

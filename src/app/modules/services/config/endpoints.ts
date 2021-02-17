@@ -12,7 +12,7 @@ export const Endpoints = {
         getShipmentMode: 'ShipmentMode/GetShipmentMode',
         getShipmentTerm: 'ShippingTerms/GetShippingTerms',
         getShipmentAgent: 'ShippingAgent/GetShippingAgent',
-        getCustomerDetail: 'https://cors-anywhere.herokuapp.com/http://app.markono.com/PODUAT/Case/GetCustomerData',
+        getCustomerDetail: 'https://app.markono.com/eMotionAPIUAT/api/Customer/Search',
         createCase: 'Case/CreateCase',
         createShipment: 'Shipment/CreateShipment'
 

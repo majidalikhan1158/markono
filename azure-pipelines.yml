@@ -18,5 +18,5 @@ steps:
 - script: |
     npm install -g @angular/cli
     npm install
-    ng build --prod --aot --base-href="\markono\"
+    ng build --prod --aot --base-href="\PrintAIDev\"
   displayName: 'npm install and build'

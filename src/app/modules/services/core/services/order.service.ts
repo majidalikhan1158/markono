@@ -47,7 +47,8 @@ export class OrderService {
 
   public getOrderDeatils = (request: any): Observable<HttpResponse<any>> => {
     const url = this.endPoint.getOrderDeatils();
-    const queryParams = `$filter=id eq ${request} and isDeleted ne true & $expand = CaseDetail($filter=isDeleted ne true ;$expand = CaseDetailAdditional),OtherCharge,SpecialInstructionList`;
+    const queryParams = `$filter=id eq ${request} and isDeleted ne true & $expand = CaseDetail($filter=isDeleted ne true ;$expand = CaseDetailAdditional),OtherCharge,DepartmentSpecialInstructions`
+    //  const queryParams = `$filter=id eq ${request} and isDeleted ne true & $expand = CaseDetail($filter=isDeleted ne true ;$expand = CaseDetailAdditional),OtherCharge,SpecialInstructionList`;
     const urlWithParams = `${url}?${queryParams}`;
     return this.http.get(decodeURI(urlWithParams));
   }

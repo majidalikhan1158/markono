@@ -146,14 +146,14 @@ export const ViewByArray = {
 };
 
 export interface OrderJobModel {
-    id: number;
-    jobNo: string;
-    isbn: string;
-    orderDate: number;
-    rdd: number;
-    qty: string;
-    jobType: string;
-    status: string;
+    Id: number;
+    JobNo: string;
+    ISBNPartNo: string;
+    // orderDate: number;
+    // rdd: number;
+    OrderQuantity: string;
+    PrintType: string;
+    CurrentActivityStatusCode: string;
 }
 export interface OrdersIssueModel {
     id: number;
@@ -177,12 +177,12 @@ export interface ActivityLogModel {
 }
 export interface JobInfoHeaderModel {
     id: number;
-    custPoNo: string;
+    isbn: string;
     jobNo: string;
     jobType: string;
     orderDate: number;
     rdd: number;
-    orderType: string;
+    qty: string;
     orderStatus: string;
 }
 export interface JobInfoDetailModel {

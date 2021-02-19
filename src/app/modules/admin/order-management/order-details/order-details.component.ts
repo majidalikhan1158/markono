@@ -17,8 +17,9 @@ import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { AppPageRoutes } from '../../../shared/enums/app-constants';
 import {
-  ApexAxisChartSeries, ApexDataLabels, ApexGrid, ApexPlotOptions, ApexTitleSubtitle,
-  ApexXAxis, ChartComponent
+  ApexAxisChartSeries, ApexDataLabels, ApexFill, ApexGrid, ApexLegend, ApexPlotOptions, ApexStroke, ApexTheme, ApexTitleSubtitle,
+  ApexTooltip,
+  ApexXAxis, ApexYAxis, ChartComponent
 } from 'ng-apexcharts';
 import { ApexNonAxisChartSeries, ApexResponsive, ApexChart } from 'ng-apexcharts';
 import { MatTabChangeEvent } from '@angular/material/tabs';
@@ -28,40 +29,53 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { MatSort } from '@angular/material/sort';
 import { CdkOverlayOrigin, OverlayConfig, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { Portal, TemplatePortal, CdkPortal } from '@angular/cdk/portal';
+import { OrderJobDataList } from 'src/app/modules/shared/mock-data/order-job-list';
+import { MatDrawer } from '@angular/material/sidenav';
 
-export type TimeValueAnalysisChartOptions = {
-  series: ApexNonAxisChartSeries;
-  chart: ApexChart;
-  responsive: ApexResponsive[];
-  labels: any;
-};
 export type TimeValueMapChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   dataLabels: ApexDataLabels;
-  fill: any;
-  colors: any;
-  title: ApexTitleSubtitle;
-  xaxis: ApexXAxis;
-  grid: ApexGrid;
   plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  stroke: ApexStroke;
+  title: ApexTitleSubtitle;
+  tooltip: ApexTooltip;
+  fill: ApexFill;
+  legend: ApexLegend;
+  theme: ApexTheme;
 };
 export type TimeValueProcessChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   dataLabels: ApexDataLabels;
-  fill: any;
-  colors: any;
-  title: ApexTitleSubtitle;
-  xaxis: ApexXAxis;
-  grid: ApexGrid;
   plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  stroke: ApexStroke;
+  title: ApexTitleSubtitle;
+  tooltip: ApexTooltip;
+  fill: ApexFill;
+  legend: ApexLegend;
+  theme: ApexTheme;
+};
+export type TimeValueAnalysisChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  responsive: ApexResponsive[];
+  labels: any;
+  fill: ApexFill;
+  legend: ApexLegend;
+  dataLabels: ApexDataLabels;
+  theme: ApexTheme;
+  stroke: ApexStroke;
 };
 const JobInfoHeaderDATA: JobInfoHeaderModel[] = [
-  { id: 1, custPoNo: '20005838', jobNo: '968052', orderDate: Date.now(), rdd: Date.now(), jobType: 'Offset', orderType: 'Warehouse', orderStatus: 'Shipped' },
+  { id: 1, isbn: '9780124059351', jobNo: 'PV : 968052 PA :', orderDate: Date.now(), rdd: Date.now(), jobType: 'Offset', qty: '50,120', orderStatus: 'Shipped' },
 ];
 const ActivityLogDATA: ActivityLogModel[] = [
-  { id: 1, actionDate: Date.now(), actionBy: '9780124059351', source: '50,120', activity: 'Offset', status: 'Shipped', duration: '' },
+  { id: 1, actionDate: Date.now(), actionBy: 'Manager', source: 'POD', activity: 'Department: POD, Activity: POD Received', status: 'Scheduling', duration: '-' },
 ];
 @Component({
   selector: 'app-order-details',
@@ -87,6 +101,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   displayedColumnsJob: string[] = ['Id', 'JobNo', 'ISBNPartNo', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode', 'actions', 'expandRow'];
   displayedColumnsJobInfo: string[] = ['custPoNo', 'jobNo', 'jobType', 'rdd', 'orderDate', 'orderType', 'orderStatus',];
   displayedColumnsActivityLog: string[] = ['id', 'actionDate', 'actionBy', 'source', 'duration', 'activity', 'status'];
+  // dataJobArray;
   dataJobArray;
   dataArrayJobInfo = JobInfoHeaderDATA;
   dataArrayActivityLog = ActivityLogDATA;
@@ -124,18 +139,20 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   isNull = false;
   invoiceArray = [];
   // charts
-  public timeValueAnalysisChartOptions: Partial<TimeValueAnalysisChartOptions>;
   public timeValueMapChartOptions: Partial<TimeValueMapChartOptions>;
   public timeValueProcessChartOptions: Partial<TimeValueProcessChartOptions>;
+  public timeValueAnalysisChartOptions: Partial<TimeValueAnalysisChartOptions>;
 
-  toggle = false;
-  @ViewChild('drawer') div: ElementRef;
-  @ViewChild(CdkPortal, { read: TemplateRef }) tpl: TemplateRef<{ value: string }>;
-  @ViewChild(CdkOverlayOrigin) origin: CdkOverlayOrigin;
-  overlayRef: OverlayRef | null;
-  portal: Portal<{ $implicit: string }>;
+  //toggle = false;
+  // @ViewChild('drawer') div: ElementRef;
+  // @ViewChild(CdkPortal, { read: TemplateRef }) tpl: TemplateRef<{ value: string }>;
+  // @ViewChild(CdkOverlayOrigin) origin: CdkOverlayOrigin;
+  @ViewChild('drawer', { static: false }) public drawer!: MatDrawer;
+  //overlayRef: OverlayRef | null;
+  //portal: Portal<{ $implicit: string }>;
   specialInstructionArray = [];
   miscCostArray = [];
+  showJobNo: any;
   //#endregion
 
   constructor(private router: Router,
@@ -152,140 +169,210 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.timeValueAnalysisChartOptions = {
-      series: [44, 55, 13],
-      chart: {
-        type: 'donut',
-        width: 280,
-      },
-      labels: ['Lorem', 'Ipsum', 'Dolor'],
-      responsive: [
-        {
-          breakpoint: 100,
-          options: {
-            chart: {
-              width: 10
-            },
-            pie: {
-              donut: {
-                size: '65%'
-              }
-            },
-            dataLabels: {
-              enabled: false,
-            },
-            legend: {
-              position: 'bottom'
-            }
-          }
-        }
-      ]
-    };
     this.timeValueMapChartOptions = {
       series: [
         {
-          name: 'Target TAT',
-          data: this.generateData(8, {
-            min: 0,
-            max: 90
-          })
+          name: "Prepress (ENVA)",
+          data: [0, 44]
         },
-
+        {
+          name: "Prepress (NVA)",
+          data: [0, 53]
+        },
+        {
+          name: "Prepress (VA)",
+          data: [0, 12]
+        },
+        {
+          name: "Prepress (VA)",
+          data: [0, 9]
+        },
+        {
+          name: "Printing(VA)",
+          data: [0, 20]
+        },
+        {
+          name: "Fulfillment(VA)",
+          data: [0, 5]
+        }
       ],
       chart: {
-        height: 100,
-        type: 'heatmap'
+        type: "bar",
+        height: 200,
+        width: 500,
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+        // stackType: "100%"
       },
       plotOptions: {
-        heatmap: {
-          shadeIntensity: 0.5,
-          colorScale: {
-            ranges: [
-              {
-                from: -30,
-                to: 5,
-                name: 'Prepress (ENVA)',
-                color: '#00A100'
-              },
-              {
-                from: 6,
-                to: 20,
-                name: 'Prepress (NVA)',
-                color: '#128FD9'
-              },
-              {
-                from: 21,
-                to: 45,
-                name: 'Prepress (VA)',
-                color: '#FFB200'
-              },
-              {
-                from: 46,
-                to: 55,
-                name: 'Prepress (VA)',
-                color: '#FF0000'
-              }, {
-                from: 46,
-                to: 55,
-                name: '  Printing(VA)',
-                color: '#FF0000'
-              }, {
-                from: 46,
-                to: 55,
-                name: 'Fulfillment(VA)',
-                color: '#FF0000'
-              },
-            ]
-          }
+        bar: {
+          horizontal: true
         }
       },
       dataLabels: {
         enabled: false
       },
-      colors: [
-        '#F3B415',
-        '#F27036',
-        '#663F59',
-        '#6A6E94',
-        '#4E88B4',
-        '#00A7C6',
-        '#18D8D8',
-        '#A9D794',
-        '#46AF78',
-        '#A93F55',
-        '#8C5E58',
-        '#2176FF',
-        '#33A1FD',
-        '#7A918D',
-        '#BAFF29'
-      ],
-      xaxis: {
-        type: 'category',
-        categories: [
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          ''
-        ]
+      theme: {
+        mode: "light",
+        palette: "palette3",
+        monochrome: {
+          enabled: true,
+          color: "#0EDB28",
+          shadeTo: "light",
+          shadeIntensity: 0.65
+        }
+      },
+      stroke: {
+        width: 1,
+        colors: ["#fff"]
       },
       title: {
-        text: ''
+        // text: "100% Stacked Bar"
       },
-      grid: {
-        padding: {
-          right: 20
+      xaxis: {
+        categories: ["This Job", "Target TAT"]
+      },
+      yaxis: {},
+
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val + "K";
+          }
         }
+      },
+      fill: {
+        opacity: 1
+      },
+      legend: {
+        position: "top",
+        horizontalAlign: "left",
+        offsetX: 10
       }
+    };
+    this.timeValueProcessChartOptions = {
+      series: [
+        {
+          name: "Prepress",
+          data: [0, 1000]
+        },
+        {
+          name: "Printing",
+          data: [0, 2000]
+        },
+        {
+          name: "Fulfillment",
+          data: [0, 3000]
+        }
+      ],
+      chart: {
+        type: "bar",
+        height: 200,
+        width: 500,
+        stacked: true,
+        toolbar: {
+          show: false
+        }
+        // stackType: "100%"
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      theme: {
+        mode: "light",
+        palette: "palette3",
+        monochrome: {
+          enabled: true,
+          color: "#0EDB28",
+          shadeTo: "light",
+          shadeIntensity: 1
+        }
+      },
+      stroke: {
+        width: 1,
+        colors: ["#fff"]
+      },
+      title: {
+        // text: "100% Stacked Bar"
+      },
+      xaxis: {
+        categories: ["This Job", "Target Time"]
+      },
+      yaxis: {},
+
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val + "K";
+          }
+        }
+      },
+      fill: {
+        opacity: 1
+      },
+      legend: {
+        position: "top",
+        horizontalAlign: "left",
+        offsetX: 10
+      }
+    };
+    this.timeValueAnalysisChartOptions = {
+      series: [44, 55, 41],
+      chart: {
+        width: 250,
+        type: "donut"
+      },
+      labels: ["Lorem", "Ipsum", "Dolor"],
+      dataLabels: {
+        enabled: false
+      },
+      theme: {
+        mode: "light",
+        palette: "palette3",
+        monochrome: {
+          enabled: true,
+          color: "#2680EB",
+          shadeTo: "light",
+          shadeIntensity: 1
+        }
+      },
+      stroke: {
+        width: 0,
+        colors: ["#fff"]
+      },
+      fill: {
+        opacity: 1
+      },
+      legend: {
+        formatter: function (val, opts) {
+          return val + " - " + opts.w.globals.series[opts.seriesIndex];
+        }
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      ]
     };
     this.route.paramMap.subscribe(params => {
       this.queryParameterId = params.get('id');
     });
     this.getOrderInfo();
-    this.getOrderJob();
     this.getShimpmentInfo();
     this.getDropDownData();
   }
@@ -306,6 +393,11 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   getOrderInfo() {
     this.subscription = this.orderService.getOrderDeatils(this.queryParameterId).subscribe(resp => {
       this.orderInfoList = resp.body.result as OrderVM;
+      this.dataJobArray = resp.body.result[0].CaseDetail as CaseDetail;
+      this.specialInstructionArray = resp.body.result[0].DepartmentSpecialInstructions;
+      this.miscCostArray = resp.body.result[0].OtherCharge;
+      this.initializeDatatable();
+      this.getInvoice();
     });
   }
 
@@ -314,16 +406,6 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     this.dataSourceJob.paginator = this.paginator;
     this.dataSourceJob.filterPredicate = this.customFilterPredicate();
     this.cd.detectChanges();
-  }
-
-  getOrderJob() {
-    this.subscription = this.orderService.getOrderDeatils(this.queryParameterId).subscribe(resp => {
-      this.dataJobArray = resp.body.result[0].CaseDetail as CaseDetail;
-      this.specialInstructionArray = resp.body.result[0].SpecialInstructionList;
-      this.miscCostArray = resp.body.result[0].OtherCharge;
-      this.initializeDatatable();
-      this.getInvoice();
-    });
   }
 
   getShimpmentInfo() {
@@ -518,20 +600,6 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     // }
   }
 
-  openOverlay() {
-    const config = new OverlayConfig();
-    config.positionStrategy = this.overlay.position().connectedTo(
-      this.origin.elementRef,
-      { originX: 'end', originY: 'bottom' },
-      { overlayX: 'start', overlayY: 'top' });
-    config.hasBackdrop = true;
-    this.overlayRef = this.overlay.create(config);
-    this.overlayRef.backdropClick().subscribe(() => {
-      this.overlayRef.dispose();
-    });
-    const view = this.overlayRef.attach(this.portal);
-  }
-
   boxShow() {
     this.showBox = !this.showBox;
   }
@@ -568,4 +636,11 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     return i++;
   }
 
+  showSideNav(): void {
+    this.drawer.toggle();
+  }
+
+  getJobNo(jobNo) {
+    this.showJobNo = jobNo;
+  }
 }

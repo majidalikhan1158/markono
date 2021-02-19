@@ -54,16 +54,8 @@
     <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
       <a class="menu-link" [routerLink]="item.page" [ngClass]="{ 'active ': isMenuItemActive(item.page) }"
         routerLinkActive="active">
-        <ng-container *ngIf="item.title=='Platemaking'">
-          <img class="png-icon" style="height: 16px !important;" *ngIf="!isMenuItemActive(item.page)"
-            src="{{item.png}}" />
-          <img class="png-icon" style="height: 16px !important;" *ngIf="isMenuItemActive(item.page)"
-            src="{{item.selected}}" />
-        </ng-container>
-        <ng-container *ngIf="item.title!='Platemaking'">
-          <img class="png-icon" *ngIf="!isMenuItemActive(item.page)" src="{{item.png}}" />
-          <img class="png-icon" *ngIf="isMenuItemActive(item.page)" src="{{item.selected}}" />
-        </ng-container>
+        <img class="png-icon" *ngIf="!isMenuItemActive(item.page)" src="{{item.png}}" />
+        <img class="png-icon" *ngIf="isMenuItemActive(item.page)" src="{{item.selected}}" />
         <!-- <span [inlineSVG]="item.svg" cacheSVG="true" class="svg-icon menu-icon"></span> -->
         <span class="menu-text" [translate]="item.translate">{{item.title}}</span>
       </a>

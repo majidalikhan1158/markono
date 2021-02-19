@@ -104,7 +104,7 @@
             <!--begin::Table-->
             <div class="">
                 <table
-                    class="table table-head-custom table-head-bg table-borderless table-vertical-center component-table">
+                    class="table table-head-custom table-head-bg table-borderless table-vertical-center component-table table-responsive">
                     <thead>
                         <tr class="text-left text-uppercase">
                             <th *ngFor="let item of columnsToDisplayCompBreakTable"> {{item}}</th>
@@ -137,9 +137,11 @@
                                             <mat-option value="Digital (Premium)">Digital (Premium)</mat-option>
                                         </mat-select>
                                     </mat-form-field>
+                                </td>
+                                <td>
                                     <span class="material-icons delete-icon pl-4 pr-2 cursor-pointer"
                                         *ngIf="store.$IsPrepressModule | async">
-                                    delete
+                                        delete
                                     </span>
                                 </td>
                             </tr>
@@ -188,7 +190,7 @@
             <!--begin::Table-->
             <div class="">
                 <table
-                    class="table table-head-custom table-head-bg table-borderless table-vertical-center product-activitiy-table">
+                    class="table table-head-custom table-head-bg table-borderless table-vertical-center product-activitiy-table table-responsive">
                     <thead>
                         <tr class="text-left text-uppercase">
                             <th *ngFor="let item of columnsToDisplayProdActivityTable"> {{item}}</th>
@@ -203,8 +205,7 @@
                                 <td> {{row.Qty}} </td>
                                 <td> {{row.Layout}} </td>
                                 <td>
-                                    <span style="display: flex;flex-direction: column; height: 20px">{{row.ProcessCode}}</span> 
-                                    <span style="height: 20px;">{{row.Activity}} </span> 
+                                    {{row.ProcessCode}} {{row.Activity}}
                                 </td>
                                 <td> ${{row.TotalEstCost}} </td>
                                 <td> 2.86% </td>
@@ -224,7 +225,7 @@
                             </tr>
                             <ng-container *ngIf="shouldShowDetails && i == rowIdToExpand" class="width-100">
                                 <tr>
-                                    <td colspan="13" class="pl-0">
+                                    <td colspan="14" class="pl-0">
                                         <table
                                         class="table table-head-custom table-head-bg table-borderless 
                                         table-vertical-center product-activitiy-child-table mb-0">

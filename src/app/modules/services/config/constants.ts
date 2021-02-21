@@ -13,6 +13,7 @@ export class Constants {
     public readonly API_ENDPOINT_ORDER_SERVICES: string = 'OrderServicesDev/api/';
     public readonly API_ENDPOINT_PRODUCT_SERVICES: string = 'ProductServicesDev/api/';
     public readonly API_ENDPOINT_ESTIMATION_SERVICES: string = 'EstimationServicesDev/api/';
+    public readonly API_ENDPOINT_EMOTION_SERVICES: string = 'eMotionAPIDev/api/';
     public readonly API_ENDPOINT_SHOP_FLOOR_SERVICES: string = `${environment.SHOP_FLOOR_CONTEXT_PATH}/api/`;
     public readonly AUTH_CRED_ORDER_TOKEN = {
         username: 'webDev',
@@ -31,5 +32,9 @@ export class Constants {
         password: 'AhET0@!D',
         grant_type: 'password',
         client_id: 'mpmui'
+    };
+    public readonly AUTH_CRED_EMOTION_TOKEN = {
+        username: 'TestLogin',
+        password: 'markono'
     };
 }

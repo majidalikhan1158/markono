@@ -21,6 +21,9 @@ export class ApiEndpointsService {
   private getShopFloorServicesEndpoint = () =>
     `${this.constants.API_BASE_ADDRESS}${this.constants.API_ENDPOINT_SHOP_FLOOR_SERVICES}`
 
+  private getEmotionServicesEndpoint = () =>
+    `${this.constants.API_BASE_ADDRESS}${this.constants.API_ENDPOINT_EMOTION_SERVICES}`
+
   private getEstimationServicesEndPoint = () =>
     `${this.constants.API_BASE_ADDRESS}${this.constants.API_ENDPOINT_ESTIMATION_SERVICES}`
 
@@ -33,14 +36,17 @@ export class ApiEndpointsService {
   getEstimationServicesTokenUrl = () =>
     `${this.getEstimationServicesEndPoint()}${Endpoints.authentication.getEstimationServicesToken}`
 
-  public getShopFloorTokenUrl = () =>
+  getShopFloorTokenUrl = () =>
     `${Endpoints.authentication.getShopFloorCollectionToken}`
+
+  getEmotionServicesTokenUrl = () =>
+    `${this.getEmotionServicesEndpoint()}${Endpoints.authentication.getEmotionServicesToken}`
 
   getCaseTypeUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.case.getCaseType}`
 
   getCustomerDetailUrl = () =>
-    `${Endpoints.case.getCustomerDetail}`
+    `${this.getEmotionServicesEndpoint()}${Endpoints.case.getCustomerDetail}`
 
   getShipmentModeUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.case.getShipmentMode}`

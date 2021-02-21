@@ -23,7 +23,8 @@ export enum TokenType {
     ORDER,
     PRODUCT,
     SHOPFLOOR,
-    ESTIMATION
+    ESTIMATION,
+    EMOTION
 }
 
 export enum RecordType {

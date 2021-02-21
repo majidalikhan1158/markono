@@ -77,7 +77,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       setTimeout(_ => this.trigger.openPanel());
       // call api to get customer results
-      this.matAutoCompleteSubscription = this.orderService.getCustomerDetail({sellToNo: this.generalVM.isbnOwner}).subscribe(resp => {
+      this.matAutoCompleteSubscription = this.orderService.getCustomerDetail({CustCode: this.generalVM.isbnOwner}).subscribe(resp => {
         const details = resp.body as unknown as IsbnOwner[];
         this.isbnOwnerList = details && details.length > 0 ? details : [];
         this.isLoading = false;

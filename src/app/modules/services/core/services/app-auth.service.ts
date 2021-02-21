@@ -16,11 +16,13 @@ export class AppAuthService {
   productToken: Observable<ApiAuthToken>;
   shopFloorToken: Observable<ShopFloorApiToken>;
   estimationToken: Observable<ApiAuthToken>;
+  emotionToken: Observable<string>;
 
   private orderTokenSubject = new BehaviorSubject<ApiAuthToken>(null);
   private productTokenSubject = new BehaviorSubject<ApiAuthToken>(null);
   private shopFloorTokenSubject = new BehaviorSubject<ShopFloorApiToken>(null);
   private estimationTokenSubject = new BehaviorSubject<ApiAuthToken>(null);
+  private emotionTokenSubject = new BehaviorSubject<string>(null);
 
   constructor(
     private http: ApiHttpService,
@@ -31,6 +33,7 @@ export class AppAuthService {
     this.productToken = this.productTokenSubject.asObservable();
     this.shopFloorToken = this.shopFloorTokenSubject.asObservable();
     this.estimationToken = this.estimationTokenSubject.asObservable();
+    this.emotionToken = this.emotionTokenSubject.asObservable();
   }
 
   getTokenFromServer = (tokenType: TokenType): Observable<HttpResponse<any>> =>
@@ -40,6 +43,8 @@ export class AppAuthService {
       ? this.getProductToken()
       : tokenType === TokenType.ESTIMATION
       ? this.getEstimationToken()
+      : tokenType === TokenType.EMOTION
+      ? this.getEmotionToken()
       : this.getShopFloorToken()
 
   getOrderToken = (): Observable<HttpResponse<any>> =>
@@ -72,6 +77,12 @@ export class AppAuthService {
     );
   }
 
+  getEmotionToken = (): Observable<HttpResponse<any>> =>
+  this.http.post(
+    this.endPoint.getEmotionServicesTokenUrl(),
+    this.constants.AUTH_CRED_EMOTION_TOKEN
+  )
+
   saveToken = (resp: any, tokenType: TokenType) => {
     if (tokenType === TokenType.ORDER) {
       this.orderTokenSubject.next(resp as ApiAuthToken);
@@ -93,6 +104,9 @@ export class AppAuthService {
       this.estimationTokenSubject.next(resp as ApiAuthToken);
       localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.ESTIMATION_TOKEN_EXPIRY}`, resp.result.expire);
       localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.ESTIMATION_TOKEN}`, resp.result.token);
+    } else if (tokenType === TokenType.EMOTION) {
+      this.estimationTokenSubject.next(resp);
+      localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.EMOTION_TOKEN}`, resp);
     }
   }
 
@@ -115,6 +129,10 @@ export class AppAuthService {
   }
 
   isTokenExpired = (tokenType: TokenType): boolean => {
+    if (tokenType === TokenType.EMOTION) {
+      return false;
+    }
+
     const expiresAt = this.getExpiresAt(tokenType);
     if (!expiresAt) {
       return true;
@@ -146,6 +164,8 @@ export class AppAuthService {
       return StorageKeys.SHOP_FLOOR_TOKEN;
     } else if (tokenType === TokenType.ESTIMATION) {
       return StorageKeys.ESTIMATION_TOKEN;
+    } else if (tokenType === TokenType.EMOTION) {
+      return StorageKeys.EMOTION_TOKEN;
     }
     return '';
   }
@@ -159,6 +179,8 @@ export class AppAuthService {
       return StorageKeys.SHOP_FLOOR_TOKEN_EXPIRY;
     } else if (tokenType === TokenType.ESTIMATION) {
       return StorageKeys.ESTIMATION_TOKEN_EXPIRY;
+    } else if (tokenType === TokenType.EMOTION) {
+      return StorageKeys.EMOTION_TOKEN_EXPIRY;
     }
     return '';
   }

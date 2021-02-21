@@ -5,6 +5,7 @@ export const Endpoints = {
         getOrderServicesToken: 'Authentication/GetToken',
         getProductServicesToken: 'GetToken',
         getEstimationServicesToken: 'GetToken',
+        getEmotionServicesToken: 'Auth/GetToken',
         getShopFloorCollectionToken: `https://keycloak.markono.com/auth/realms/${environment.SHOP_FLOOR_AUTH_REALM}/protocol/openid-connect/token`
     },
     case: {
@@ -12,7 +13,7 @@ export const Endpoints = {
         getShipmentMode: 'ShipmentMode/GetShipmentMode',
         getShipmentTerm: 'ShippingTerms/GetShippingTerms',
         getShipmentAgent: 'ShippingAgent/GetShippingAgent',
-        getCustomerDetail: 'https://app.markono.com/eMotionAPIUAT/api/Customer/Search',
+        getCustomerDetail: 'Customer/Search',
         createCase: 'Case/CreateCase',
         createShipment: 'Shipment/CreateShipment'
 

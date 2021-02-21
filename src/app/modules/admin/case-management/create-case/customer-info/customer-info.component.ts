@@ -71,7 +71,7 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       setTimeout(_ => this.trigger.openPanel());
       // call api to get customer results
-      this.matAutoCompleteSubscription = this.orderService.getCustomerDetail({sellToNo: this.customerInfoVM.customerId}).subscribe(resp => {
+      this.matAutoCompleteSubscription = this.orderService.getCustomerDetail({CustCode: this.customerInfoVM.customerId}).subscribe(resp => {
         const details = resp.body as unknown as CustomerDetailVM[];
         this.customerDetailVMList = details && details.length > 0 ? details : [];
         if (this.customerDetailVMList.length === 0) {

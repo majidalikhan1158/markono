@@ -1,3 +1,4 @@
+import { TokenType } from './../../../shared/enums/app-enums';
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
@@ -87,6 +88,11 @@ export class JwtInterceptor implements HttpInterceptor {
   addAuthenticationToken(request: HttpRequest<any>, tokenType: TokenType) {
     const userToken = this.appAuth.getToken(tokenType);
     let contentType = 'application/json';
+    
+    if (request.url.includes(Endpoints.authentication.getEmotionServicesToken)) {
+      return request;
+    }
+
     if (request.url.includes(environment.SHOP_FLOOR_AUTH_REALM)) {
       contentType = 'application/x-www-form-urlencoded';
       return request.clone({
@@ -101,32 +107,12 @@ export class JwtInterceptor implements HttpInterceptor {
       return request.clone({
         setHeaders: {
           'Content-Type': `${contentType}`,
-          Authorization: `Bearer ${userToken}`,
+          Authorization: `${tokenType === TokenType.EMOTION ? 'Basic' : 'Bearer'} ${userToken}`,
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
           'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
         },
       });
-      // if (userToken) {
-      //   return request.clone({
-      //     setHeaders: {
-      //       'Content-Type': `${contentType}`,
-      //       Authorization: `Bearer ${userToken}`,
-      //       'Access-Control-Allow-Origin': '*',
-      //       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
-      //       'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-      //     },
-      //   });
-      // } else {
-      //   return request.clone({
-      //     setHeaders: {
-      //       'Content-Type': `${contentType}`,
-      //       'Access-Control-Allow-Origin': '*',
-      //       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
-      //       'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-      //     },
-      //   });
-      // }
     }
   }
 
@@ -141,6 +127,8 @@ export class JwtInterceptor implements HttpInterceptor {
       this.tokenType = TokenType.SHOPFLOOR;
     } else if (url.includes(this.constants.API_ENDPOINT_ESTIMATION_SERVICES)) {
       this.tokenType = TokenType.ESTIMATION;
+    } else if (url.includes(this.constants.API_ENDPOINT_EMOTION_SERVICES)) {
+      this.tokenType = TokenType.EMOTION;
     }
   }
 }

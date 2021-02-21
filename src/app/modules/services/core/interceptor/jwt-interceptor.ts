@@ -1,4 +1,3 @@
-import { TokenType } from './../../../shared/enums/app-enums';
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
@@ -88,7 +87,7 @@ export class JwtInterceptor implements HttpInterceptor {
   addAuthenticationToken(request: HttpRequest<any>, tokenType: TokenType) {
     const userToken = this.appAuth.getToken(tokenType);
     let contentType = 'application/json';
-    
+
     if (request.url.includes(Endpoints.authentication.getEmotionServicesToken)) {
       return request;
     }

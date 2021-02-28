@@ -392,4 +392,13 @@ app-order-details {
     .mat-tab-body-content {
         padding-top: 10px !important;
     }
+    .shipping-info-details-table {
+        .mat-form-field {
+            margin-bottom: -20px !important;
+        }
+        .mat-form-field-flex {
+            padding-left: 10px !important;
+            padding-top: 0px !important;
+        }
+    }
 }

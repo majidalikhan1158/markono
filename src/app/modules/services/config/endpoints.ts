@@ -46,7 +46,10 @@ export const Endpoints = {
     },
     order: {
         getAllOrders: 'GetCases',
-        getShipmentDetails: 'GetShipments'
+        getShipmentDetails: 'GetShipments',
+        getShipmentModes: 'GetShipmentModes',
+        getShipmentAgents: 'GetShippingAgents',
+        getShipmentTerms: 'GetShippingTerms'
     },
 
 };

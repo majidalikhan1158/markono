@@ -882,7 +882,7 @@
               </div>
               <div class="card-title">
                 <span class="font-12px color-AFAFAF pr-2">Shipment Qty: </span>
-                <span class="font-12px card-label">{{ rowId.ShippedQty}}</span>
+                <span class="font-12px card-label"> {{getTotalShipmentQty(rowId.Id)}}</span>
               </div>
               <div class="card-toolbar">
                 <span class="material-icons expansion-icon cursor-pointer" (click)="toggleExpandable(rowId.Id)">
@@ -894,7 +894,7 @@
                 </span>
               </div>
             </div>
-            <div class="card-body" *ngIf="!shouldShowShipmentDetails && rowId.Id != rowIdToExpand">
+            <div class="card-body" *ngIf="shouldShowShipmentDetails && rowId.Id == rowIdToExpand">
               <div class="row">
                 <div class="col-lg-12">
                   <span class="span-yellow material-icons pr-2">
@@ -910,8 +910,8 @@
                     <mat-form-field appearance="fill">
                       <mat-label>Billable?</mat-label>
                       <mat-select [(ngModel)]="rowId.Billable" disabled>
-                        <mat-option value="true">Yes</mat-option>
-                        <mat-option value="false">No</mat-option>
+                        <mat-option [value]="true">Yes</mat-option>
+                        <mat-option [value]="false">No</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
@@ -927,8 +927,8 @@
                     <mat-form-field appearance="fill">
                       <mat-label>Shipment Mode</mat-label>
                       <mat-select [(ngModel)]="rowId.ShipmentMode" disabled>
-                        <mat-option *ngFor="let item of shipmentModeList" [value]="item.attributes.description">
-                          {{item.attributes.description}}</mat-option>
+                        <mat-option *ngFor="let item of shipmentModeList" [value]="item.description">
+                          {{item.description}}</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
@@ -936,8 +936,8 @@
                     <mat-form-field appearance="fill">
                       <mat-label>Shipment Terms</mat-label>
                       <mat-select [(ngModel)]="rowId.ShippingMethod" disabled>
-                        <mat-option *ngFor="let item of shipmentModeList" [value]="item.attributes.description">
-                          {{item.attributes.description}}</mat-option>
+                        <mat-option *ngFor="let item of shipmentModeList" [value]="item.description">
+                          {{item.description}}</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
@@ -950,8 +950,8 @@
                     <mat-form-field appearance="fill">
                       <mat-label>Shipment Agent</mat-label>
                       <mat-select [(ngModel)]="rowId.ShippingAgent" disabled>
-                        <mat-option *ngFor="let item of shipmentAgentList" [value]="item.attributes.description">
-                          {{item.attributes.description}}</mat-option>
+                        <mat-option *ngFor="let item of shipmentAgentList" [value]="item.description">
+                          {{item.description}}</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>

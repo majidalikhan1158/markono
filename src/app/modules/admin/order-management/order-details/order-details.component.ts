@@ -31,6 +31,8 @@ import { CdkOverlayOrigin, OverlayConfig, Overlay, OverlayRef } from '@angular/c
 import { Portal, TemplatePortal, CdkPortal } from '@angular/cdk/portal';
 import { OrderJobDataList } from 'src/app/modules/shared/mock-data/order-job-list';
 import { MatDrawer } from '@angular/material/sidenav';
+import { ShippingInfoVM } from 'src/app/modules/shared/models/create-case';
+import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
 
 export type TimeValueMapChartOptions = {
   series: ApexAxisChartSeries;
@@ -111,9 +113,9 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   orderInfoList;
   shipmentInfoList;
   statusTypesList = OrderInfoStatusTypesArray;
-  shipmentTermList: DDLListModal[] = [];
-  shipmentModeList: DDLListModal[] = [];
-  shipmentAgentList: DDLListModal[] = [];
+  shipmentTermList;
+  shipmentModeList;
+  shipmentAgentList;
   expandedElement: any;
   nextPosition = 0;
   showFiller = false;
@@ -153,12 +155,14 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   specialInstructionArray = [];
   miscCostArray = [];
   showJobNo: any;
+  _json = {};
   //#endregion
 
   constructor(private router: Router,
     private route: ActivatedRoute,
     private orderService: OrderService,
     private store: CaseStore,
+    private helper: ProductSpecHelperService,
     public overlay: Overlay,
     public viewContainerRef: ViewContainerRef,
     private cd: ChangeDetectorRef,
@@ -410,7 +414,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
 
   getShimpmentInfo() {
     this.subscription = this.orderService.getShipmentDetails(this.queryParameterId).subscribe(resp => {
-      this.shipmentInfoList = resp.body.result as OrderVM;
+      this.shipmentInfoList = resp.body.result as ShippingInfoVM;
     });
   }
 
@@ -576,14 +580,24 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   private getDropDownData = () => {
-    this.store.caseDropDownStore.subscribe(result => {
-      if (result && result.data) {
-        this.shipmentTermList = result.data.shipmentTermList;
-        this.shipmentModeList = result.data.shipmentModeList;
-        this.shipmentAgentList = result.data.shipmentAgentList;
+    this.orderService.getShipmentModesList().subscribe(resp => {
+      if (resp) {
+        this.shipmentModeList = resp.body.result;
       }
-      this.cd.detectChanges();
     });
+    this.cd.detectChanges();
+    this.orderService.getShipmentAgentsList().subscribe(resp => {
+      if (resp) {
+        this.shipmentAgentList = resp.body.result;
+      }
+    });
+    this.cd.detectChanges();
+    this.orderService.getShipmentTermsList().subscribe(resp => {
+      if (resp) {
+        this.shipmentTermList = resp.body.result;
+      }
+    });
+    this.cd.detectChanges();
   }
 
   toggleExpandableJob(id: number): void {
@@ -642,5 +656,16 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
 
   getJobNo(jobNo) {
     this.showJobNo = jobNo;
+  }
+
+  getTotalShipmentQty = (shipmentId: number): number => {
+    const shipmentRecord = this.shipmentInfoList.find(x => x.Id === shipmentId);
+    let totalQty = 0;
+    if (shipmentRecord) {
+      for (let i = 0; i < shipmentRecord.ShipmentDetail.length; i++) {
+        totalQty = shipmentRecord.ShipmentDetail[i].RequestedQty;
+      }
+    }
+    return totalQty > 0 ? totalQty : 0;
   }
 }

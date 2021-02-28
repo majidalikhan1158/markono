@@ -6,7 +6,6 @@ import { ResponseModal } from '../../shared/classes/response-modal';
 import { HttpResponse } from '@angular/common/http';
 import { ProductResponseModal } from '../../shared/classes/product-modals/product-modals';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -36,6 +35,7 @@ export class OrderService {
 
   public createShipment = (request: any): Observable<HttpResponse<ResponseModal>> =>
     this.http.post(this.endPoint.getCreateShipmentUrl(), request)
+
   // order-management Module
   public getAllOrders = (): Observable<HttpResponse<any>> => {
     const url = this.endPoint.getAllOrders();
@@ -52,6 +52,7 @@ export class OrderService {
     const urlWithParams = `${url}?${queryParams}`;
     return this.http.get(decodeURI(urlWithParams));
   }
+
   public getShipmentDetails = (request: any): Observable<HttpResponse<any>> => {
     const url = this.endPoint.getShipmentDetails();
     const queryParams = `$filter=caseID eq ${request}&$expand=ShipmentDetail,MiscBilling`;
@@ -66,5 +67,14 @@ export class OrderService {
     const urlWithParams = `${url}?${queryParams}`;
     return this.http.get(decodeURI(urlWithParams));
   }
+
+  public getShipmentModesList = (): Observable<HttpResponse<ResponseModal>> =>
+    this.http.get(this.endPoint.getShipmentModesList())
+
+  public getShipmentAgentsList = (): Observable<HttpResponse<ResponseModal>> =>
+    this.http.get(this.endPoint.getShipmentAgentsList())
+
+  public getShipmentTermsList = (): Observable<HttpResponse<ResponseModal>> =>
+    this.http.get(this.endPoint.getShipmentTermsList())
 
 }

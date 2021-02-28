@@ -115,6 +115,15 @@ export class ApiEndpointsService {
   getShipmentDetails = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.order.getShipmentDetails}`
 
+  getShipmentAgentsList = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.order.getShipmentAgents}`
+
+  getShipmentModesList = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.order.getShipmentModes}`
+
+  getShipmentTermsList = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.order.getShipmentTerms}`
+
   setLiveVersion = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.setLiveVersion}`
 

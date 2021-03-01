@@ -27,6 +27,7 @@
         <button mat-button (click)="handleStepperBackEvent(createCaseSteps.CASE_DETAILS)" class="btn btn-primary stepper-back-button mr-2">Back</button>
         <button mat-button 
           *ngIf="shouldDisplayCreateCaseButton" 
+          [disabled]="disableCreateCaseButton"
           (click)="createCase()" class="btn btn-primary stepper-next-button">Create Case</button>
       </div>
     </mat-step>

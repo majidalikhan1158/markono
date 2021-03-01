@@ -20,7 +20,7 @@
                         <mat-option *ngIf="isLoading" class="is-loading" value="0">Loading...</mat-option>
                         <ng-container *ngIf="!isLoading">
                         <mat-option *ngFor="let item of isbnOwnerList" [value]="item">
-                            <span>{{item.ISBN}}</span>
+                            <span>{{item.ISBN}} - {{item.VersionNo}}</span>
                         </mat-option> 
                         </ng-container>
                     </mat-autocomplete>

@@ -12,6 +12,7 @@ import { Operators } from '../models/shop-floor';
   providedIn: 'root'
 })
 export class CaseStore {
+  
   public productDetailsId: Observable<number>;
   public createCaseStore: Observable<CreateCaseViewModel>;
   public caseDropDownStore: Observable<DDLObjectModal>;
@@ -157,9 +158,11 @@ export class CaseStore {
   setCaseType = (caseType) => {
     this.caseTypeSubject.next(caseType);
   }
+
   setCaseType2 = (caseType) => {
     this.caseTypeSubject2.next(caseType);
   }
+  
   setEditEmbeddedLinkButton = (caseType) => {
     this.dashboardEmbededLinkSubject.next(caseType);
   }

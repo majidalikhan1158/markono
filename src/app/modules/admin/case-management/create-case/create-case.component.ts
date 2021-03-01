@@ -11,7 +11,6 @@ import { CreateCaseStepperEvent } from 'src/app/modules/shared/models/app-modal'
 import {
   CreateCaseSteps,
   CreateCaseMode,
-  RecordType,
 } from 'src/app/modules/shared/enums/app-enums';
 import { CaseBaseService } from '../case-base.service';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
@@ -40,6 +39,7 @@ export class CreateCaseComponent implements OnInit {
   shouldShowSummary = false;
   subscription: Subscription;
   shouldDisplayCreateCaseButton = true;
+  disableCreateCaseButton = false;
   constructor(
     private ref: ChangeDetectorRef,
     private caseBaseService: CaseBaseService,
@@ -91,6 +91,7 @@ export class CreateCaseComponent implements OnInit {
   }
 
   createCase = () => {
+    this.disableCreateCaseButton = true;
     this.subscription = this.store.createCaseStore.subscribe(data => {
       const mappedData = this.caseHelper.transCaseDataToCaseApiModal(data);
       this.orderService.createCase(mappedData).subscribe(resp => {
@@ -135,8 +136,8 @@ export class CreateCaseComponent implements OnInit {
   }
 
   endCreateProcess = () => {
-    // location.reload();
     this.subscription?.unsubscribe();
+    location.reload();
     this.ref.detectChanges();
   }
 

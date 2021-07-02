@@ -3,6 +3,7 @@ import { ModalService } from '../../../ui-services/modal.service';
 import { UIModalID } from '../../../enums/app-constants';
 import { ProductDetailModals, ProductDetailsVM } from '../../../models/create-case';
 import { CaseStore } from '../../../ui-services/create-case.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-blueprint-modal',
@@ -15,6 +16,8 @@ export class AddBlueprintModalComponent implements OnInit, OnDestroy {
   @Output() acceptEvent = new EventEmitter<ProductDetailModals[]>();
   bluePrintListVM: ProductDetailModals[] = [];
   productDetailsVMList: ProductDetailsVM[] = [];
+  subscription: Subscription;
+  enableDeleteButton = false;
   constructor(private modalService: ModalService, private store: CaseStore) { }
 
   ngOnInit(): void {
@@ -25,7 +28,7 @@ export class AddBlueprintModalComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.createCaseStore.subscribe((resp) => {
+    this.subscription = this.store.createCaseStore.subscribe((resp) => {
       if (
         resp &&
         resp.productDetailsList &&
@@ -35,6 +38,7 @@ export class AddBlueprintModalComponent implements OnInit, OnDestroy {
         const productRecord = this.productDetailsVMList.find(x => x.id === this.recordId);
         if (productRecord && productRecord.productISBNDetail && productRecord.productISBNDetail.bluePrintList.length > 0) {
           this.bluePrintListVM = productRecord.productISBNDetail.bluePrintList;
+          this.enableDeleteButton = true;
         }
       }
       if (this.bluePrintListVM.length === 0) {
@@ -43,10 +47,11 @@ export class AddBlueprintModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  addBluePrint() {
+  addBluePrint(isAddMode: number) {
     const actualList = this.bluePrintListVM.filter(x => x.quantity > 0);
     this.acceptEvent.emit(actualList);
     this.bluePrintListVM = [];
+    this.enableDeleteButton = false;
     this.modalService.close(UIModalID.ADD_BLUEPRINT_MODAL);
   }
 
@@ -73,5 +78,6 @@ export class AddBlueprintModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 }

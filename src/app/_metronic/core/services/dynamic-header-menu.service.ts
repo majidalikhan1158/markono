@@ -16,6 +16,7 @@ export class DynamicHeaderMenuService {
   private shouldDisplayProductSpecButtonSubject = new BehaviorSubject<boolean>(false);
   private shouldHeaderDisplaySubject = new BehaviorSubject<boolean>(true);
   private shouldDisplayAddNewQuotationButtonSubject = new BehaviorSubject<boolean>(false);
+  private shouldDisplayEmbededLinkButtonSubject = new BehaviorSubject<boolean>(false);
   private shouldDisplayEditEmbeddedLinkButtonSubject = new BehaviorSubject<string>(null);
   menuConfig$: Observable<any>;
   headerLabel$: Observable<PageHeader>;
@@ -23,6 +24,7 @@ export class DynamicHeaderMenuService {
   shouldDisplayProductSpecButton$: Observable<boolean>;
   shouldDisplayAddNewQuotationButton$: Observable<boolean>;
   shouldDisplayEditEmbeddedLink$: Observable<string>;
+  shouldDisplayEmbededLinkButton$: Observable<boolean>;
   constructor() {
     this.menuConfig$ = this.menuConfigSubject.asObservable();
     this.headerLabel$ = this.headerLabelSubject.asObservable();
@@ -30,6 +32,7 @@ export class DynamicHeaderMenuService {
     this.shouldDisplayProductSpecButton$ = this.shouldDisplayProductSpecButtonSubject.asObservable();
     this.shouldDisplayAddNewQuotationButton$ = this.shouldDisplayAddNewQuotationButtonSubject.asObservable();
     this.shouldDisplayEditEmbeddedLink$ = this.shouldDisplayEditEmbeddedLinkButtonSubject.asObservable();
+    this.shouldDisplayEmbededLinkButton$ = this.shouldDisplayEmbededLinkButtonSubject.asObservable();
 
     this.loadMenu();
   }
@@ -62,6 +65,10 @@ export class DynamicHeaderMenuService {
 
   public displayAddNewQuotationButton(flag: boolean) {
     this.shouldDisplayAddNewQuotationButtonSubject.next(flag);
+  }
+
+  public setDisplayEmbededLinkButton(flag: boolean) {
+    this.shouldDisplayEmbededLinkButtonSubject.next(flag);
   }
 
   public setEditEmbeddedLink(link: string) {

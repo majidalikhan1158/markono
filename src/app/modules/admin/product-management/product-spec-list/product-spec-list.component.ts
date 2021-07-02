@@ -23,6 +23,8 @@ import { Subscription } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { ProductSpecHelperService } from '../../../shared/enums/helpers/product-spec-helper.service';
 import { AppModules } from '../../../shared/enums/app-constants';
+import { CaseStore } from '../../../shared/ui-services/create-case.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-spec-list',
@@ -41,21 +43,29 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
   selectedPrintingType = '';
   globalFilter = '';
   subscription: Subscription;
+  productListSubscription: Subscription;
+  totalRecordListSubscription: Subscription;
   isLoading = true;
+  isNodata = false;
   statusTypes = ProductSpecStatusTypes;
   isPrepressModule = window.location.pathname.toString().includes(AppModules.PREPRESS_MANAGMENT);
+  isbnSearch = '';
+  totalRecord = 10;
+  pageIndex = 0;
+  pageSize = 10;
   constructor(private modalService: ModalService,
               private router: Router,
               private productService: ProductService,
               private cd: ChangeDetectorRef,
               private snack: SnackBarService,
               private store: ProductSpecStore,
+              private caseStore: CaseStore,
               private helper: ProductSpecHelperService) {
-    this.tableFilters  = { createdDate: '', printingType: '', createdBy: '', isbnOwner: '', currentSelectedFilter: ''};
+    this.tableFilters = { createdDate: '', printingType: '', createdBy: '', isbnOwner: '', currentSelectedFilter: '' };
   }
 
   ngOnInit() {
-    this.getProductSpecList();
+    this.getProcustListTotalRecord();
     this.modalService.modalToBeOpen.subscribe(modalId => {
       if (modalId && modalId === UIModalID.ADD_PRODUCT_SPEC_MODAL) {
         this.modalService?.open(modalId);
@@ -63,31 +73,50 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
     });
   }
 
-  getProductSpecList = () => {
-    this.subscription = this.productService.getProductSpecList().subscribe(resp => {
-      this.dataArray = resp.body.result ? (resp.body.result as ProductSpecsList[]).sort((a, b) => {
-        return (new Date(b.createdDateTime) as any) - (new Date(a.createdDateTime) as any);
-      }) : [];
+  getProductSpecList = (top: number = 10, skip: number = 0) => {
+    this.productListSubscription?.unsubscribe();
+    this.productListSubscription = this.productService.getProductSpecList(this.isbnSearch, top, skip).subscribe(resp => {
+      this.dataArray = resp.body.result ? (resp.body.result as ProductSpecsList[]) : [];
+      this.isNodata = this.dataArray && this.dataArray.length > 0 ? false : true;
       this.initializeDatatable();
+    });
+  }
+
+  getProcustListTotalRecord = () => {
+    this.totalRecordListSubscription = this.productService.getProductListTotalRecord(this.isbnSearch).subscribe(resp => {
+      this.getProductSpecList();
+      this.totalRecord = resp.body.result;
     });
   }
 
   initializeDatatable = () => {
     this.dataSource = new MatTableDataSource<ProductSpecsList>(this.dataArray);
     this.dataSource.paginator = this.paginator;
+    setTimeout(() => {
+      if (this.dataSource && this.dataSource.paginator) {
+        this.dataSource.paginator.length = this.totalRecord;
+        this.dataSource.paginator.pageIndex = this.pageIndex;
+      }
+    }, 100);
+
     this.dataSource.filterPredicate = this.customFilterPredicate();
     this.isLoading = false;
     this.cd.detectChanges();
   }
 
   applySearch(event: Event) {
-    this.globalFilter = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = JSON.stringify(this.tableFilters);
+    this.globalFilter = this.isbnSearch = (event.target as HTMLInputElement).value.trim();
+    this.dataSource = [];
+    this.isLoading = true;
+    this.pageIndex = 0;
+    this.getProductSpecList();
+    this.getProcustListTotalRecord();
+    // this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
 
   tableFilterChange(filterValue: string, filterPropType: string) {
     if (filterPropType === this.tableFilterTypes.PRINTING_TYPE) {
-      this.tableFilters.printingType = this.selectedPrintingType =  this.tableFilters.printingType === filterValue ? '' : filterValue;
+      this.tableFilters.printingType = this.selectedPrintingType = this.tableFilters.printingType === filterValue ? '' : filterValue;
     }
     this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSource.filter = JSON.stringify(this.tableFilters);
@@ -168,7 +197,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
       }
       if (this.tableFilters.printingType !== '') {
         filterCounter++;
-        matchedFilters = matchedFilters +  (
+        matchedFilters = matchedFilters + (
           data.printType?.toString()
             .trim()
             .toLowerCase()
@@ -177,7 +206,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
       }
       if (this.tableFilters.createdBy !== '') {
         filterCounter++;
-        matchedFilters = matchedFilters +  (
+        matchedFilters = matchedFilters + (
           data.createdBy?.toString()
             .trim()
             .toLowerCase()
@@ -186,7 +215,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
       }
       if (this.tableFilters.isbnOwner !== '') {
         filterCounter++;
-        matchedFilters = matchedFilters +  (
+        matchedFilters = matchedFilters + (
           data.isbnOwner?.toString()
             .trim()
             .toLowerCase()
@@ -205,7 +234,7 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
     this.router.navigate([AppPageRoutes.CREATE_PRODUCT]);
   }
 
-  handleModalRejectEvent(modalId: string) {}
+  handleModalRejectEvent(modalId: string) { }
 
   goToDetails = (row: ProductSpecsList) => {
     const product = this.dataArray.find(x => x.id === row.id);
@@ -213,7 +242,6 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
       this.snack.open('Unable to fetch details');
       return;
     }
-
     const reqObj = {
       isbn: product.isbn,
       VersionNo: product.versionNo
@@ -221,13 +249,20 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
     this.store.reset();
     this.productService.getProductDetails(reqObj).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
-        const productDetails = resp.body.result[0];
+        let productDetails = null;
+        if (resp.body.result.length > 1) {
+          productDetails = resp.body.result.find(x => x.Revision === row.revision);
+        } else {
+          productDetails = resp.body.result[0];
+        }
+        this.store.setPlanningModuleState(false);
+        this.caseStore.setJobNo(null);
         this.helper.transProductDetailToVM(productDetails);
         this.store.setProductSpecReadonly(true);
-        this.store.setProductSpecStatus({status: productDetails.Status, tooltipMessage: '' });
-        this.isPrepressModule 
-        ? this.router.navigate([AppPageRoutes.FILEPREP_VIEW])
-        : this.router.navigate([AppPageRoutes.VIEW_PRODUCT]);
+        this.store.setProductSpecStatus({ status: productDetails.Status, tooltipMessage: '' });
+        this.isPrepressModule
+          ? this.router.navigate([AppPageRoutes.FILEPREP_VIEW])
+          : this.router.navigate([AppPageRoutes.VIEW_PRODUCT]);
       } else {
         this.snack.open('No details found');
       }
@@ -236,5 +271,14 @@ export class ProductSpecListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription?.unsubscribe();
+    this.productListSubscription?.unsubscribe();
+  }
+
+  lazyLoadPage(event: any) {
+    this.dataSource = [];
+    this.isLoading = true;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getProductSpecList(event.pageSize, event.pageSize * event.pageIndex);
   }
 }

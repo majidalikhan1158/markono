@@ -1,5 +1,5 @@
 <!--begin::Notice-->
-<div class="row pt-5 responsive">
+<div class="row pt-5 responsive" *ngIf="0 > 1">
     <div class="col-lg-12 display-flex">
         <div class="card card-custom example example-compact gutter-b platemaking-header-card">
             <div class="card-body">
@@ -134,12 +134,12 @@
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.platesToBeReadyBy != ''"
                                     (removed)="removeFilter(tableFilterTypes.PLATESTOBEREADBY_DATE)">
-                                    {{tableFilters.platesToBeReadyBy | date:'shortDate' }}
+                                    {{tableFilters.platesToBeReadyBy | dateFormat }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.printingDate != ''"
                                     (removed)="removeFilter(tableFilterTypes.SCHEDULEDPRINTING_DATE)">
-                                    {{tableFilters.printingDate | date:'shortDate' }}
+                                    {{tableFilters.printingDate | dateFormat }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.status != ''"
@@ -246,15 +246,13 @@
 
                     <ng-container matColumnDef="platesToBeReadyBy">
                         <mat-header-cell *matHeaderCellDef> Plates to be ready by</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.platesToBeReadyBy |
-                            date:'shortDate' }}
+                        <mat-cell *matCellDef="let element"> {{element.platesToBeReadyBy | dateFormat }}
                         </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="printingDate">
                         <mat-header-cell *matHeaderCellDef> Printing Date </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.printingDate |
-                            date:'shortDate' }} </mat-cell>
+                        <mat-cell *matCellDef="let element"> {{element.printingDate  | dateFormat}} </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="qty">

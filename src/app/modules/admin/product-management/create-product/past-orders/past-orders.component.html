@@ -4,7 +4,7 @@
     <!-- Position Column -->
     <ng-container matColumnDef="orderDate">
         <mat-header-cell *matHeaderCellDef> Order Date </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.orderDate | date:'shortDate'}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.orderDate | dateFormat}} </mat-cell>
     </ng-container>
     <!-- Name Column -->
     <ng-container matColumnDef="jobNo">

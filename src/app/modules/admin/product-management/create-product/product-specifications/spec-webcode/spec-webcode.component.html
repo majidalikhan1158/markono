@@ -1,6 +1,6 @@
-<div class="row spec-web-code" [ngClass]="(store.$productSpecReadonly | async) ? 'readonly-box' : '' ">
+<div class="row spec-web-code" [ngClass]="((store.$productSpecReadonly | async) || (store.$IsProductCreated | async)) ? 'readonly-box' : '' ">
     <div class="col-lg-12">
-        <span class="font-16px font-roboto-bold">Create Specs</span>
+        <span class="font-16px font-roboto-bold">{{store.$productSpecHeading | async}}</span>
         <mat-hint class="font-14px d-flex">Webcode</mat-hint>
     </div>
 
@@ -21,7 +21,7 @@
                             {{viewModal[i].id}}
                         <td>
                             <mat-form-field appearance="fill">
-                                <mat-label>Choose Location</mat-label>
+                                <mat-label>Choose Location <span class="asteric">*</span></mat-label>
                                 <mat-select [(ngModel)]="viewModal[i].webcodeLocation">
                                     <mat-option>
                                         <ngx-mat-select-search [formControl]="webCodeLocationFltrCtrl" placeholderLabel="Search..">
@@ -33,7 +33,7 @@
                         </td>
                         <td>
                             <mat-form-field appearance="fill">
-                                <mat-label>Choose</mat-label>
+                                <mat-label>Choose <span class="asteric">*</span></mat-label>
                                 <mat-select [(ngModel)]="viewModal[i].noOfWebcode">
                                     <mat-option [value]="1">1</mat-option>
                                     <mat-option [value]="2">2</mat-option>
@@ -62,7 +62,7 @@
                         </td>
                         <td class="action-column">
                             <span class="material-icons delete-icon pr-2 cursor-pointer"
-                                (click)="deleteRow(viewModal[i].id)" *ngIf="viewModal.length > 1">
+                                (click)="deleteRow(viewModal[i].id)" *ngIf="viewModal.length > 0">
                                 delete
                             </span>
                         </td>

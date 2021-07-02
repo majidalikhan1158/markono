@@ -15,7 +15,9 @@ export const UIModalID = {
   ADD_REASON_MODAL: 'ADD_REASON_MODAL',
   ADD_UPDATE_PASSWORD_MODAL: 'ADD_UPDATE_PASSWORD_MODAL',
   ADD_PRODUCTION_ACTIVITIES_MODAL: 'ADD_PRODUCTION_ACTIVITIES_MODAL',
-  ADD_COMPONENT_BREAKDOWN: 'ADD_COMPONENT_BREAKDOWN'
+  ADD_COMPONENT_BREAKDOWN: 'ADD_COMPONENT_BREAKDOWN',
+  PROMPT_MODAL: 'PROMPT_MODAL',
+  VIEW_ALL_REVISIONS_MODAL: 'VIEW_ALL_REVISIONS_MODAL'
 };
 
 export const CreateProductTabs = {
@@ -36,7 +38,8 @@ export const StorageKeys = {
   ESTIMATION_TOKEN_EXPIRY: 'ESTIMATION_TOKEN_EXPIRY',
   EMOTION_TOKEN: 'EMOTION_TOKEN',
   EMOTION_TOKEN_EXPIRY: 'EMOTION_TOKEN_EXPIRY',
-  APP_ERRORS: 'APP_ERRORS'
+  APP_ERRORS: 'APP_ERRORS',
+  DASHBOARD_URL: 'DASHBOARD_URL'
 };
 
 export const PrintingTypesArray = [
@@ -76,7 +79,8 @@ export const AppModules = {
   CASE_MANAGMENT: 'case-management',
   PRODUCT_MANAGMENT: 'product-management',
   ORDER_MANAGMENT: 'order-management',
-  PREPRESS_MANAGMENT: 'prepress-management'
+  PREPRESS_MANAGMENT: 'prepress-management',
+  PLANNING_MANAGMENT: 'planning-management'
 };
 
 export const AppPages = {
@@ -91,7 +95,8 @@ export const AppPages = {
   FILEPREP_VIEW: 'file-prep-view',
   USER_PROFILE: 'user-profile',
   ORDER_JOB_DETAIL: 'job-details',
-  ORDER_ISSUES: 'orders-with-issues'
+  ORDER_ISSUES: 'orders-with-issues',
+  ORDER_DETAILS: 'order-details'
 };
 
 export const AppPageRoutes = {
@@ -110,7 +115,10 @@ export const AppPageRoutes = {
   VIEW_ORDER: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.DETAIL}/:id`,
   CREATE_ORDER: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.CREATE}`,
   ORDER_ISSUES: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.ORDER_ISSUES}`,
-  JOB_DETAILS: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.ORDER_JOB_DETAIL}`
+  JOB_DETAILS: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.ORDER_JOB_DETAIL}`,
+  LIST_PLANNING: `/admin/${AppModules.PLANNING_MANAGMENT}/${AppPages.LIST}`,
+  PLANNING_DETAIL: `/admin/${AppModules.PLANNING_MANAGMENT}/${AppPages.DETAIL}`,
+  ORDER_DETAILS: `/admin/${AppModules.ORDER_MANAGMENT}/${AppPages.ORDER_DETAILS}`
 };
 
 export const IconsPath = {

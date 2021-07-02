@@ -1,10 +1,8 @@
-import { AfterViewInit, ChangeDetectorRef, ElementRef, AfterViewChecked, TemplateRef, Component, Input, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { MatSelectionListChange } from '@angular/material/list';
 import { MatTableDataSource } from '@angular/material/table';
-import { OrderDetailTypes, OrderDetailTypesArray } from 'src/app/modules/shared/enums/order-management/order-constants';
-import {
-  ActivityLogModel, CaseDetail, JobInfoHeaderModel, OrderInfoJobType, OrderInfoStatusTypesArray,
-  OrderJobModel, OrdersModel, OrderVM
+import { ActivityLogDATA, JobInfoHeaderDATA, OrderDetailTypes, OrderDetailTypesArray } from 'src/app/modules/shared/enums/order-management/order-constants';
+import { CaseDetail, OrderInfoJobType, OrderInfoStatusTypesArray, OrderVM
 } from 'src/app/modules/shared/models/order-management';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { FormControl } from '@angular/forms';
@@ -17,22 +15,21 @@ import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { AppPageRoutes } from '../../../shared/enums/app-constants';
 import {
-  ApexAxisChartSeries, ApexDataLabels, ApexFill, ApexGrid, ApexLegend, ApexPlotOptions, ApexStroke, ApexTheme, ApexTitleSubtitle,
+  ApexAxisChartSeries, ApexDataLabels, ApexFill, ApexLegend, ApexPlotOptions, ApexStroke, ApexTheme, ApexTitleSubtitle,
   ApexTooltip,
   ApexXAxis, ApexYAxis, ChartComponent
 } from 'ng-apexcharts';
 import { ApexNonAxisChartSeries, ApexResponsive, ApexChart } from 'ng-apexcharts';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatSort } from '@angular/material/sort';
-import { CdkOverlayOrigin, OverlayConfig, Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { Portal, TemplatePortal, CdkPortal } from '@angular/cdk/portal';
-import { OrderJobDataList } from 'src/app/modules/shared/mock-data/order-job-list';
+import { Overlay } from '@angular/cdk/overlay';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ShippingInfoVM } from 'src/app/modules/shared/models/create-case';
 import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
+import { CostCategory } from 'src/app/modules/services/shared/classes/response-modal';
+import { CaseBaseService } from '../../case-management/case-base.service';
 
 export type TimeValueMapChartOptions = {
   series: ApexAxisChartSeries;
@@ -73,12 +70,7 @@ export type TimeValueAnalysisChartOptions = {
   theme: ApexTheme;
   stroke: ApexStroke;
 };
-const JobInfoHeaderDATA: JobInfoHeaderModel[] = [
-  { id: 1, isbn: '9780124059351', jobNo: 'PV : 968052 PA :', orderDate: Date.now(), rdd: Date.now(), jobType: 'Offset', qty: '50,120', orderStatus: 'Shipped' },
-];
-const ActivityLogDATA: ActivityLogModel[] = [
-  { id: 1, actionDate: Date.now(), actionBy: 'Manager', source: 'POD', activity: 'Department: POD, Activity: POD Received', status: 'Scheduling', duration: '-' },
-];
+
 @Component({
   selector: 'app-order-details',
   templateUrl: './order-details.component.html',
@@ -99,9 +91,9 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('chart') chart: ChartComponent;
 
-  displayedColumnsOrderInfo = ['Cust PO No.', 'Order Date', 'RDD', 'Qty', 'Order Type', 'Order Status',];
+  displayedColumnsOrderInfo = ['Cust PO No.', 'Order Date', 'RDD', 'Qty', 'Order Type', 'Order Status', ];
   displayedColumnsJob: string[] = ['Id', 'JobNo', 'ISBNPartNo', 'OrderQuantity', 'PrintType', 'CurrentActivityStatusCode', 'actions', 'expandRow'];
-  displayedColumnsJobInfo: string[] = ['custPoNo', 'jobNo', 'jobType', 'rdd', 'orderDate', 'orderType', 'orderStatus',];
+  displayedColumnsJobInfo: string[] = ['custPoNo', 'jobNo', 'jobType', 'rdd', 'orderDate', 'orderType', 'orderStatus', ];
   displayedColumnsActivityLog: string[] = ['id', 'actionDate', 'actionBy', 'source', 'duration', 'activity', 'status'];
   // dataJobArray;
   dataJobArray;
@@ -126,7 +118,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   chooseList;
   currentSelectedType = 'ITEMS';
   ExpansionIcons = ExpansionIcons;
-  rowIdToExpand = 1;
+  rowIdToExpand = 0;
   rowIdToExpandJob = 1;
   tableFilters: OrderInfoDetailSearchFilters;
   tableFilterTypes = OrdersInfoDetailSearchFilterTypes;
@@ -140,68 +132,64 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   showBox = false;
   isNull = false;
   invoiceArray = [];
+  costCategoryList: CostCategory[] = [];
   // charts
   public timeValueMapChartOptions: Partial<TimeValueMapChartOptions>;
   public timeValueProcessChartOptions: Partial<TimeValueProcessChartOptions>;
   public timeValueAnalysisChartOptions: Partial<TimeValueAnalysisChartOptions>;
-
-  //toggle = false;
-  // @ViewChild('drawer') div: ElementRef;
-  // @ViewChild(CdkPortal, { read: TemplateRef }) tpl: TemplateRef<{ value: string }>;
-  // @ViewChild(CdkOverlayOrigin) origin: CdkOverlayOrigin;
   @ViewChild('drawer', { static: false }) public drawer!: MatDrawer;
-  //overlayRef: OverlayRef | null;
-  //portal: Portal<{ $implicit: string }>;
   specialInstructionArray = [];
   miscCostArray = [];
   showJobNo: any;
-  _json = {};
+  isLoading = true;
+  jsonObject = {};
   //#endregion
 
   constructor(private router: Router,
-    private route: ActivatedRoute,
-    private orderService: OrderService,
-    private store: CaseStore,
-    private helper: ProductSpecHelperService,
-    public overlay: Overlay,
-    public viewContainerRef: ViewContainerRef,
-    private cd: ChangeDetectorRef,
+              private route: ActivatedRoute,
+              private orderService: OrderService,
+              private store: CaseStore,
+              public overlay: Overlay,
+              public viewContainerRef: ViewContainerRef,
+              private cd: ChangeDetectorRef,
+              private caseBaseService: CaseBaseService
   ) {
     this.tableFilters = { currentSelectedFilter: '', JobNo: '', ISBNPartNo: '', OrderQuantity: '', PrintType: '', CurrentActivityStatusName: '' };
     this.dataSourceJobInfo = this.dataArrayJobInfo;
     this.dataSourceActivityLog = this.dataArrayActivityLog;
+    this.caseBaseService.getServerData();
   }
 
   ngOnInit(): void {
     this.timeValueMapChartOptions = {
       series: [
         {
-          name: "Prepress (ENVA)",
+          name: 'Prepress (ENVA)',
           data: [0, 44]
         },
         {
-          name: "Prepress (NVA)",
+          name: 'Prepress (NVA)',
           data: [0, 53]
         },
         {
-          name: "Prepress (VA)",
+          name: 'Prepress (VA)',
           data: [0, 12]
         },
         {
-          name: "Prepress (VA)",
+          name: 'Prepress (VA)',
           data: [0, 9]
         },
         {
-          name: "Printing(VA)",
+          name: 'Printing(VA)',
           data: [0, 20]
         },
         {
-          name: "Fulfillment(VA)",
+          name: 'Fulfillment(VA)',
           data: [0, 5]
         }
       ],
       chart: {
-        type: "bar",
+        type: 'bar',
         height: 200,
         width: 500,
         stacked: true,
@@ -219,31 +207,31 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
         enabled: false
       },
       theme: {
-        mode: "light",
-        palette: "palette3",
+        mode: 'light',
+        palette: 'palette3',
         monochrome: {
           enabled: true,
-          color: "#0EDB28",
-          shadeTo: "light",
+          color: '#0EDB28',
+          shadeTo: 'light',
           shadeIntensity: 0.65
         }
       },
       stroke: {
         width: 1,
-        colors: ["#fff"]
+        colors: ['#fff']
       },
       title: {
         // text: "100% Stacked Bar"
       },
       xaxis: {
-        categories: ["This Job", "Target TAT"]
+        categories: ['This Job', 'Target TAT']
       },
       yaxis: {},
 
       tooltip: {
         y: {
-          formatter: function (val) {
-            return val + "K";
+          formatter(val) {
+            return val + 'K';
           }
         }
       },
@@ -251,28 +239,28 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
         opacity: 1
       },
       legend: {
-        position: "top",
-        horizontalAlign: "left",
+        position: 'top',
+        horizontalAlign: 'left',
         offsetX: 10
       }
     };
     this.timeValueProcessChartOptions = {
       series: [
         {
-          name: "Prepress",
+          name: 'Prepress',
           data: [0, 1000]
         },
         {
-          name: "Printing",
+          name: 'Printing',
           data: [0, 2000]
         },
         {
-          name: "Fulfillment",
+          name: 'Fulfillment',
           data: [0, 3000]
         }
       ],
       chart: {
-        type: "bar",
+        type: 'bar',
         height: 200,
         width: 500,
         stacked: true,
@@ -290,31 +278,31 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
         enabled: false
       },
       theme: {
-        mode: "light",
-        palette: "palette3",
+        mode: 'light',
+        palette: 'palette3',
         monochrome: {
           enabled: true,
-          color: "#0EDB28",
-          shadeTo: "light",
+          color: '#0EDB28',
+          shadeTo: 'light',
           shadeIntensity: 1
         }
       },
       stroke: {
         width: 1,
-        colors: ["#fff"]
+        colors: ['#fff']
       },
       title: {
         // text: "100% Stacked Bar"
       },
       xaxis: {
-        categories: ["This Job", "Target Time"]
+        categories: ['This Job', 'Target Time']
       },
       yaxis: {},
 
       tooltip: {
         y: {
-          formatter: function (val) {
-            return val + "K";
+          formatter(val) {
+            return val + 'K';
           }
         }
       },
@@ -322,8 +310,8 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
         opacity: 1
       },
       legend: {
-        position: "top",
-        horizontalAlign: "left",
+        position: 'top',
+        horizontalAlign: 'left',
         offsetX: 10
       }
     };
@@ -331,32 +319,32 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
       series: [44, 55, 41],
       chart: {
         width: 250,
-        type: "donut"
+        type: 'donut'
       },
-      labels: ["Lorem", "Ipsum", "Dolor"],
+      labels: ['Lorem', 'Ipsum', 'Dolor'],
       dataLabels: {
         enabled: false
       },
       theme: {
-        mode: "light",
-        palette: "palette3",
+        mode: 'light',
+        palette: 'palette3',
         monochrome: {
           enabled: true,
-          color: "#2680EB",
-          shadeTo: "light",
+          color: '#2680EB',
+          shadeTo: 'light',
           shadeIntensity: 1
         }
       },
       stroke: {
         width: 0,
-        colors: ["#fff"]
+        colors: ['#fff']
       },
       fill: {
         opacity: 1
       },
       legend: {
-        formatter: function (val, opts) {
-          return val + " - " + opts.w.globals.series[opts.seriesIndex];
+        formatter(val, opts) {
+          return val + ' - ' + opts.w.globals.series[opts.seriesIndex];
         }
       },
       responsive: [
@@ -367,7 +355,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
               width: 200
             },
             legend: {
-              position: "bottom"
+              position: 'bottom'
             }
           }
         }
@@ -409,6 +397,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     this.dataSourceJob = new MatTableDataSource<CaseDetail>(this.dataJobArray);
     this.dataSourceJob.paginator = this.paginator;
     this.dataSourceJob.filterPredicate = this.customFilterPredicate();
+    this.isLoading = false;
     this.cd.detectChanges();
   }
 
@@ -425,7 +414,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   chooseSelectionChange(id) {
-    //this.router.navigate(['/admin/order-management/order-details/' + id]);
+    // this.router.navigate(['/admin/order-management/order-details/' + id]);
   }
 
   getJobInfo() {
@@ -467,7 +456,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
       this.tableFilters.OrderQuantity = '';
     } else if (filterPropType === this.tableFilterTypes.STATUS) {
       this.tableFilters.CurrentActivityStatusName = '';
-    } else if (filterPropType == 'clear') {
+    } else if (filterPropType === 'clear') {
       this.tableFilters.PrintType = this.selectedJobType = '';
       this.tableFilters.ISBNPartNo = '';
       this.tableFilters.OrderQuantity = '';
@@ -572,7 +561,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
 
   tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
     // this.openOverlay()
-    if (tabChangeEvent.tab['textLabel'] == 'Jobs' || tabChangeEvent.tab['textLabel'] == 'Activity Log') {
+    if (tabChangeEvent.tab['textLabel'] === 'Jobs' || tabChangeEvent.tab['textLabel'] === 'Activity Log') {
       this.showFiller = false;
     } else {
       this.showFiller = true;
@@ -580,24 +569,38 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   }
 
   private getDropDownData = () => {
-    this.orderService.getShipmentModesList().subscribe(resp => {
-      if (resp) {
-        this.shipmentModeList = resp.body.result;
+    this.store.caseDropDownStore.subscribe(result => {
+      if (result && result.data) {
+        this.shipmentTermList = result.data.shipmentTermList;
+        this.shipmentModeList = result.data.shipmentModeList;
+        // this.shipmentAgentList = result.data.shipmentAgentList;
+        this.costCategoryList = result.data.shippingInfoCostCategoryList;
       }
+      this.cd.detectChanges();
     });
-    this.cd.detectChanges();
+    // this.orderService.getShipmentModesList().subscribe(resp => {
+    //   if (resp) {
+    //     this.shipmentModeList = resp.body.result;
+    //   }
+    // });
+    // this.cd.detectChanges();
     this.orderService.getShipmentAgentsList().subscribe(resp => {
       if (resp) {
         this.shipmentAgentList = resp.body.result;
       }
     });
-    this.cd.detectChanges();
-    this.orderService.getShipmentTermsList().subscribe(resp => {
-      if (resp) {
-        this.shipmentTermList = resp.body.result;
-      }
-    });
-    this.cd.detectChanges();
+    // this.cd.detectChanges();
+    // this.orderService.getShipmentTermsList().subscribe(resp => {
+    //   if (resp) {
+    //     this.shipmentTermList = resp.body.result;
+    //   }
+    // });
+    // this.cd.detectChanges();
+    // this.orderService.getShippingInfoCostCategory().subscribe(resp => {
+    //   if (resp) {
+    //     this.costCategoryList = resp.body.result;
+    //   }
+    // });
   }
 
   toggleExpandableJob(id: number): void {
@@ -624,25 +627,22 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
   getInvoice() {
     const bottom = this.orderInfoList.find(x => x.Id === this.queryParameterId).NotesOnInvoiceBottom;
     const top = this.orderInfoList.find(x => x.Id === this.queryParameterId).NotesOnInvoiceTop;
-    if (top != '' || top != null) {
-      const _json = {
+    if (top) {
+      const json = {
         id: '1',
         Position: 'Top',
         Notes: top
       };
-      this.invoiceArray.push(_json);
+      this.invoiceArray.push(json);
     }
-    if (bottom === '' || bottom == null) {
-
-    } else {
-      const _json = {
+    if (bottom) {
+      const json = {
         id: '2',
         Position: 'Bottom',
         Notes: bottom
       };
-      this.invoiceArray.push(_json);
+      this.invoiceArray.push(json);
     }
-
   }
 
   getId() {
@@ -662,6 +662,7 @@ export class OrderDetailsComponent implements OnInit, AfterViewInit {
     const shipmentRecord = this.shipmentInfoList.find(x => x.Id === shipmentId);
     let totalQty = 0;
     if (shipmentRecord) {
+      // tslint:disable-next-line:prefer-for-of
       for (let i = 0; i < shipmentRecord.ShipmentDetail.length; i++) {
         totalQty = shipmentRecord.ShipmentDetail[i].RequestedQty;
       }

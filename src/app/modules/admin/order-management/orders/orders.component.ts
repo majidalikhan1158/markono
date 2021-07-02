@@ -3,9 +3,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { OrderSearchFilters, OrderSearchFilterTypes, PrintTypes, } from 'src/app/modules/shared/models/table-filter-modals';
 import { Router } from '@angular/router';
-import { ViewByArray, OrdersModel, StatusTypesArray, OrderVM } from 'src/app/modules/shared/models/order-management';
+import {StatusTypesArray, OrderVM, OrderDetailVM } from 'src/app/modules/shared/models/order-management';
 import { Subscription } from 'rxjs';
-import { AppPageRoutes } from '../../../shared/enums/app-constants';
 import { OrderService } from 'src/app/modules/services/core/services/order.service';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { FormControl } from '@angular/forms';
@@ -23,6 +22,7 @@ export class OrdersComponent implements OnInit {
   position = new FormControl(this.positionOptions[1]);
   displayedColumns: string[] = ['id', 'yourReference', 'orderDate', 'requestedDeliveryDate', 'noOfTitles', 'qty', 'type', 'currentActivityStatusCode', 'actions'];
   dataArrayOrder: OrderVM[];
+  dataArrayOrderDetails: OrderDetailVM[];
   dataSource;
   tableFilters: OrderSearchFilters;
   tableFilterTypes = OrderSearchFilterTypes;
@@ -34,22 +34,69 @@ export class OrdersComponent implements OnInit {
   chooseList = '';
   viewByFilter = '';
   subscription: Subscription;
+  isLoading = true;
+  showJob = false;
+  totalRecord = 10;
+  pageIndex = 0;
+  pageSize = 10;
+  searchValue = '';
+  isNodata = false;
+  totalRecordJobListSubscription: Subscription;
+  totalRecordOrderListSubscription: Subscription;
   //#endregion
 
   constructor(
     private router: Router,
     private orderService: OrderService,
-    private cd: ChangeDetectorRef,) {
-    this.tableFilters = { orderDate: '', requestedDeliveryDate: '', type: '', yourReference: '', companyName: '', currentActivityStatusName: '', currentSelectedFilter: '' };
+    private cd: ChangeDetectorRef ) {
+    this.tableFilters = { jobNo: '', orderDate: '', requestedDeliveryDate: '', type: '', yourReference: '',
+    companyName: '', currentActivityStatusName: '', currentSelectedFilter: '' };
   }
 
   ngOnInit(): void {
-    this.getAllOrders();
+    this.getAllOrderTotalRecord();
   }
 
-  getAllOrders() {
-    this.subscription = this.orderService.getAllOrders().subscribe(resp => {
+  getAllOrders(top: number = 10, skip: number = 0) {
+    this.subscription = this.orderService.getAllOrders(this.searchValue, top, skip).subscribe(resp => {
       this.dataArrayOrder = resp.body.result ? resp.body.result as OrderVM[] : [];
+      this.initializeDatatable();
+    });
+  }
+
+  getAllOrderTotalRecord = () => {
+    this.totalRecordOrderListSubscription = this.orderService.getOrderListTotalRecord(this.searchValue).subscribe(resp => {
+      this.getAllOrders();
+      this.totalRecord = resp.body.result;
+    });
+  }
+
+  getAllJobTotalRecord = () => {
+    this.totalRecordJobListSubscription = this.orderService.getAllJobListTotalRecord(this.searchValue).subscribe(resp => {
+      this.totalRecord = resp.body.result;
+    });
+  }
+
+  getAllJobs(top: number = 10, skip: number = 0) {
+    this.subscription = this.orderService.getAllOrderDetails(this.searchValue, top, skip).subscribe(resp => {
+      this.dataArrayOrderDetails = resp.body.result ? resp.body.result as OrderDetailVM[] : [];
+      this.dataArrayOrder = [];
+      this.isNodata = (this.dataArrayOrder && this.dataArrayOrder.length > 0) ? false : true;
+      this.dataArrayOrderDetails.map( a => {
+        const obj = {
+          jobNo: a.jobNo,
+          orderDate: a.orderDate ,
+          requestedDeliveryDate: a.requestedDeliveryDate ,
+          noOfTitles: 1 ,
+          qty: a.orderQuantity,
+          type: a.type ,
+          currentActivityStatusCode: a.currentActivityStatusCode,
+          id: a.caseID,
+          yourReference: a.yourReference,
+          isbnPartNo: a.isbnPartNo
+        } as unknown as OrderVM;
+        this.dataArrayOrder.push(obj);
+      });
       this.initializeDatatable();
     });
   }
@@ -57,13 +104,31 @@ export class OrdersComponent implements OnInit {
   initializeDatatable = () => {
     this.dataSource = new MatTableDataSource<OrderVM>(this.dataArrayOrder);
     this.dataSource.paginator = this.paginator;
-    this.dataSource.filterPredicate = this.customFilterPredicate();
+    setTimeout(() => {
+      this.dataSource.paginator.length = this.totalRecord;
+      this.dataSource.paginator.pageIndex = this.pageIndex;
+      }, 100);
+    if (this.showJob) {
+      this.getAllJobTotalRecord();
+    }
+    this.dataSource.filterPredicate = this.showJob ? this.customFilterPredicateForJob() : this.customFilterPredicate();
+    this.isLoading = false;
     this.cd.detectChanges();
   }
 
   applySearch(event: Event) {
-    this.globalFilter = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = JSON.stringify(this.tableFilters);
+    this.globalFilter = this.searchValue = (event.target as HTMLInputElement).value;
+    // this.dataSource.filter = JSON.stringify(this.tableFilters);
+    this.dataSource = [];
+    this.isLoading = true;
+    this.pageIndex = 0;
+    if (this.showJob) {
+      this.getAllJobTotalRecord();
+      this.getAllJobs();
+    } else {
+      this.getAllOrderTotalRecord();
+      this.getAllOrders();
+    }
   }
 
   tableFilterChange(filterValue: string, filterPropType: string) {
@@ -81,13 +146,15 @@ export class OrdersComponent implements OnInit {
       this.tableFilters.type = this.selectedPrintType = '';
     } else if (filterPropType === this.tableFilterTypes.YOUR_REFERENCE) {
       this.tableFilters.yourReference = '';
+    } else if (filterPropType === this.tableFilterTypes.JOB_NO) {
+      this.tableFilters.jobNo = '';
     } else if (filterPropType === this.tableFilterTypes.COMPANY_NAME) {
       this.tableFilters.companyName = '';
     } else if (filterPropType === this.tableFilterTypes.REQUEST_DELIVERYDATE) {
       this.tableFilters.requestedDeliveryDate = '';
     } else if (filterPropType === this.tableFilterTypes.STATUS) {
       this.tableFilters.currentActivityStatusName = '';
-    } else if (filterPropType == 'clear') {
+    } else if (filterPropType === 'clear') {
       this.tableFilters.orderDate = '';
       this.tableFilters.type = this.selectedPrintType = '';
       this.tableFilters.yourReference = '';
@@ -96,6 +163,43 @@ export class OrdersComponent implements OnInit {
       this.tableFilters.currentActivityStatusName = '';
     }
     this.dataSource.filter = JSON.stringify(this.tableFilters);
+  }
+
+  customFilterPredicateForJob() {
+    const myFilterPredicate = (
+      data: OrderVM,
+      filter: string
+    ): boolean => {
+      let globalMatch = !this.globalFilter;
+      if (this.globalFilter) {
+        // search all text fields
+        globalMatch =
+        data.jobNo?.toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.globalFilter.toLowerCase()) !== -1;
+      }
+
+      if (!globalMatch) {
+        return;
+      }
+      const searchString = JSON.parse(filter) as OrderVM;
+      let matchedFilters = 0;
+      let filterCounter = 0;
+      if (this.tableFilters.jobNo !== '') {
+        filterCounter++;
+        matchedFilters = matchedFilters + (
+          data.yourReference?.toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.jobNo?.toLowerCase()) !== -1 ? 1 : 0
+        );
+      }
+
+      if (filterCounter === 0) { return true; }
+      return filterCounter === matchedFilters;
+    };
+    return myFilterPredicate;
   }
 
   customFilterPredicate() {
@@ -204,12 +308,6 @@ export class OrdersComponent implements OnInit {
     return myFilterPredicate;
   }
 
-  handleModalRejectEvent(modalId: string) { }
-
-  Choose() {
-
-  }
-
   toggleExpandable(id: number): void {
     this.rowIdToExpand = this.rowIdToExpand === id
       ? 0
@@ -226,6 +324,21 @@ export class OrdersComponent implements OnInit {
     }
     this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSource.filter = JSON.stringify(this.tableFilters);
+    this.dataArrayOrder = [];
+    this.dataSource = [];
+    if (filterValue === 'Job') {
+      this.isLoading = true;
+      this.getAllJobTotalRecord();
+      this.getAllJobs();
+      this.showJob = true;
+      this.displayedColumns = ['id', 'yourReference', 'orderDate', 'requestedDeliveryDate', 'poNumber', 'isbnPartNo', 'qty', 'type', 'currentActivityStatusCode', 'actions'];
+    } else {
+      this.isLoading = true;
+      this.getAllOrderTotalRecord();
+      this.getAllOrders();
+      this.showJob = false;
+      this.displayedColumns = ['id', 'yourReference', 'orderDate', 'requestedDeliveryDate', 'noOfTitles', 'qty', 'type', 'currentActivityStatusCode', 'actions'];
+    }
   }
 
   getCustomerName(value) {
@@ -237,11 +350,24 @@ export class OrdersComponent implements OnInit {
   }
 
   getToolTipData(id) {
-    let printType = this.dataArrayOrder.find(x => x.id === id).type;
-    if (printType == 'PO') {
+    const printType = this.dataArrayOrder.find(x => x.id === id).type;
+    if (printType === 'PO') {
       return 'Print';
     } else {
       return 'Warehouse';
+    }
+  }
+
+  lazyLoadPage(event: any) {
+    this.dataArrayOrder = [];
+    this.dataSource = [];
+    this.isLoading = true;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    if (this.showJob) {
+      this.getAllJobs(event.pageSize, event.pageSize * event.pageIndex);
+    } else {
+      this.getAllOrders(event.pageSize, event.pageSize * event.pageIndex);
     }
   }
 

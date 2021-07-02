@@ -1,6 +1,5 @@
 import { CheckPrintQA } from '../../models/product-spec';
 import { PrepressChecklist, ProductSpecTypeObject, SelectionList } from './product-interfaces';
-import { ChildIsbnModal } from '../../../services/shared/classes/product-modals/product-modals';
 
 export const PrintingTypes = {
   OFFSET: 'Offset',
@@ -128,37 +127,37 @@ export const ProductSpecificationTypeOtherArray: ProductSpecTypeObject[] = [
 
 export const ProductTypeList: SelectionList[] = [
   {
-    value: 1,
+    value: 'Books',
     text: 'Books',
     enum: 'BOOKS',
   },
   {
-    value: 2,
+    value: 'Brochures/Catalogues',
     text: 'Brochures/Catalogues',
     enum: 'BROCHURES_CATALOGUES',
   },
   {
-    value: 3,
+    value: 'IT Cards/Manuals',
     text: 'IT Cards/Manuals',
     enum: 'IT_CARDS_MANAUALS',
   },
   {
-    value: 4,
+    value: 'Journals',
     text: 'Journals',
     enum: 'JOURNALS',
   },
   {
-    value: 5,
+    value: 'Magazines/Newsletter',
     text: 'Magazines/Newsletter',
     enum: 'MAGAZINES_NEWSLETTER',
   },
   {
-    value: 6,
+    value: 'Non-print Component',
     text: 'Non-print Component',
     enum: 'NON_PRINT_COMPONENT',
   },
   {
-    value: 7,
+    value: 'Others',
     text: 'Others',
     enum: 'OTHERS',
   },
@@ -166,47 +165,47 @@ export const ProductTypeList: SelectionList[] = [
 
 export const FinishingTypeList: SelectionList[] = [
   {
-    value: 1,
+    value: 'Anti Scuff Matt Lamination',
     text: 'Anti Scuff Matt Lamination',
     enum: 'AntiScuffMattLamination',
   },
   {
-    value: 2,
+    value: 'Debossing',
     text: 'Debossing',
     enum: 'Debossing',
   },
   {
-    value: 3,
+    value: 'Embossing',
     text: 'Embossing',
     enum: 'Embossing',
   },
   {
-    value: 4,
+    value: 'Gloss Lamination',
     text: 'Gloss Lamination',
     enum: 'GlossLamination',
   },
   {
-    value: 5,
+    value: 'High Scuff Matt Lamination',
     text: 'High Scuff Matt Lamination',
     enum: 'HighScuffMattLamination',
   },
   {
-    value: 6,
+    value: 'Hot Stamping',
     text: 'Hot Stamping',
     enum: 'HotStamping',
   },
   {
-    value: 7,
+    value: 'Matt Lamination',
     text: 'Matt Lamination',
     enum: 'MattLamination',
   },
   {
-    value: 8,
+    value: 'UV Varnish',
     text: 'UV Varnish',
     enum: 'UVVarnish',
   },
   {
-    value: 9,
+    value: 'Velvet Lamination',
     text: 'Velvet Lamination',
     enum: 'VelvetLamination',
   },
@@ -214,52 +213,52 @@ export const FinishingTypeList: SelectionList[] = [
 
 export const BindingTypeList: SelectionList[] = [
   {
-    value: 1,
+    value: 'Case Bound',
     text: 'Case Bound',
     enum: 'CASEBOUND'
   },
   {
-    value: 2,
+    value: 'Flexi Bound',
     text: 'Flexi Bound',
     enum: 'FLEXIBOUND'
   },
   {
-    value: 3,
+    value: 'Folding',
     text: 'Folding',
     enum: 'FOLDING'
   },
   {
-    value: 4,
+    value: 'Full Canadian Wire-O',
     text: 'Full Canadian Wire-O',
     enum: 'FULLCANADIANWIROO'
   },
   {
-    value: 5,
+    value: 'Half Canadian Wire-O',
     text: 'Half Canadian Wire-O',
     enum: 'HALFCANADIANWIROO'
   },
   {
-    value: 6,
+    value: 'Paper Back',
     text: 'Paper Back',
     enum: 'PAPERBACK'
   },
   {
-    value: 7,
+    value: 'Saddle Stitch',
     text: 'Saddle Stitch',
     enum: 'SADDLESTITCH'
   },
   {
-    value: 8,
+    value: 'Spiral Bound',
     text: 'Spiral Bound',
     enum: 'SPIRALBOUND'
   },
   {
-    value: 9,
+    value: 'Trim to size',
     text: 'Trim to size',
     enum: 'TRIMTOSIZE'
   },
   {
-    value: 10,
+    value: 'Wire-O Binding',
     text: 'Wire-O Binding',
     enum: 'WIREOBINDING'
   },
@@ -267,22 +266,22 @@ export const BindingTypeList: SelectionList[] = [
 
 export const BindingMethodList: SelectionList[] = [
   {
-    value: 1,
+    value: 'Threadsewn',
     text: 'Threadsewn',
     enum: 'Threadsewn'
   },
   {
-    value: 2,
+    value: 'Notch Binding',
     text: 'Notch Binding',
     enum: 'Notch Binding'
   },
   {
-    value: 3,
+    value: 'Perfect Binding',
     text: 'Perfect Binding',
     enum: 'Perfect Binding'
   },
   {
-    value: 4,
+    value: 'PUR Binding',
     text: 'PUR Binding',
     enum: 'PUR Binding'
   }
@@ -298,14 +297,24 @@ export const OtherComponentChooseList = [
 'Tip-In'
 ];
 
+export const OtherComponentChooseTypes = {
+  INSERT: 'Insert',
+  JACKET: 'Jacket',
+  OTHERSPECIALINSTRUCTION: 'Other Special Instruction',
+  OTHERS: 'Others',
+  SLIPCASE: 'Slip case',
+  STICKER: 'Sticker',
+  TIPIN: 'Tip-In'
+};
+
 export const BookSpineTypeList: SelectionList[] = [
   {
-    value: 1,
+    value: 'Square',
     text: 'Square',
     enum: 'Square'
   },
   {
-    value: 2,
+    value: 'Round',
     text: 'Round',
     enum: 'Round'
   }
@@ -313,40 +322,40 @@ export const BookSpineTypeList: SelectionList[] = [
 
 export const HeadTailBandColorTypeList: SelectionList[] = [
   {
-    value: 1,
+    value: 'Black',
     text: 'Black',
     enum: 'Black'
   },
   {
-    value: 2,
+    value: 'White',
     text: 'White',
     enum: 'White'
   },
   {
-    value: 3,
+    value: 'Black/White',
     text: 'Black/White',
     enum: 'Black/White'
   },
   {
-    value: 4,
-    text: 'Black/White',
-    enum: 'Black/White'
-  },
-  {
-    value: 5,
+    value: 'Navy',
     text: 'Navy',
     enum: 'Navy'
+  },
+  {
+    value: 'Red/Yellow',
+    text: 'Red/Yellow',
+    enum: 'Red/Yellow'
   }
 ];
 
 export const GreyboardThicknessList: SelectionList[] = [
   {
-    value: 1,
+    value: '2.5mm',
     text: '2.5mm',
     enum: '2.5mm'
   },
   {
-    value: 2,
+    value: '3mm',
     text: '3mm',
     enum: '3mm'
   }
@@ -405,17 +414,17 @@ export const ColorTypeList = [
 
 export const StitchTypeList: SelectionList[] = [
   {
-    value: 1,
+    value: '2-side stitch',
     text: '2-side stitch',
     enum: '2SIDESTITCH'
   },
   {
-    value: 2,
+    value: '3-side stitch',
     text: '3-side stitch',
     enum: '3SIDESTITCH'
   },
   {
-    value: 3,
+    value: '4-side stitch',
     text: '4-side stitch',
     enum: '4SIDESTITCH'
   },
@@ -423,22 +432,22 @@ export const StitchTypeList: SelectionList[] = [
 
 export const WireOColorList: SelectionList[] = [
   {
-    value: 1,
+    value: 'Black',
     text: 'Black',
     enum: 'BLACK'
   },
   {
-    value: 2,
+    value: 'White',
     text: 'White',
     enum: 'WHITE'
   },
   {
-    value: 3,
+    value: 'Silver',
     text: 'Silver',
     enum: 'SILVER'
   },
   {
-    value: 4,
+    value: 'Others',
     text: 'Others',
     enum: 'OTHERS'
   },
@@ -446,17 +455,17 @@ export const WireOColorList: SelectionList[] = [
 
 export const CoilColorList: SelectionList[] = [
   {
-    value: 1,
+    value: 'Black',
     text: 'Black',
     enum: 'BLACK'
   },
   {
-    value: 2,
+    value: 'White',
     text: 'White',
     enum: 'WHITE'
   },
   {
-    value: 3,
+    value: 'Others',
     text: 'Others',
     enum: 'OTHERS'
   },
@@ -750,8 +759,8 @@ export const LayoutPrepComponentTypes = {
   None: '',
   Jacket: 'Jacket',
   Insert: 'Insert',
-  EndPaper: 'EndPaper'
-}
+  EndPaper: 'Endpaper'
+};
 
 export const CoverProofApprovalList: PrepressChecklist[] = [
   {
@@ -900,4 +909,4 @@ export const TextProofApprovalList: PrepressChecklist[] = [
     title: 'Prepare QD form',
     childTitles: []
   },
-]
+];

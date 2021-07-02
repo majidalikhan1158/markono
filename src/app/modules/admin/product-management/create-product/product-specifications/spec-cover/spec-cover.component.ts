@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   ColorTypeList,
   CoverTypeList,
@@ -46,39 +47,52 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   filteredFinishingTypeInside: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   protected onDestroy = new Subject<void>();
   subscription: Subscription;
-  constructor(public store: ProductSpecStore) { }
+
+  constructor(public store: ProductSpecStore, private helper: ProductSpecHelperService, private ref: ChangeDetectorRef) {
+    ref.detach();
+    setInterval(() => {
+      this.ref.detectChanges();
+    }, 100);
+  }
+
 
   ngOnInit(): void {
-    this.handleUpdateStore();
-    this.getCoverSectionApiData();
-    this.getDefaultRecord();
+    setTimeout(() => {
+      this.handleUpdateStore();
+      this.store.getMaterialWeight('Cover', ProductSpecTypes.COVER);
+      this.store.getFinishingTypes('Cover', ProductSpecTypes.COVER);
+      this.getCoverSectionApiData();
+    }, 1000);
   }
 
   handleUpdateStore = () => {
     this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
-      if (resp && resp === this.productSpecTypesConstant.COVER ) {
-         this.pushToStore();
+      if (resp && resp === this.productSpecTypesConstant.COVER) {
+        this.pushToStore();
       }
     });
   }
 
   getCoverSectionApiData = () => {
-    this.subscription = this.store.$coverMaterialDataList.subscribe(list => {
-      this.materialDataList = list;
-      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort();
-      this.handleMaterialWeightFilterAutoComplete();
-    });
+    this.store.$coverMaterialDataList.subscribe(list => {
+      if (list && list.length > 0) {
+        this.materialDataList = list;
+        this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort();
+        this.handleMaterialWeightFilterAutoComplete();
 
-    this.subscription = this.store.$coverFinishingTypeList.subscribe(list => {
-      this.finishingTypeList = list.sort();
-      this.handleFinishingTypeInsideFilterAutoComplete();
-      this.handleFinishingTypeOutsideFilterAutoComplete();
+        this.subscription = this.store.$coverFinishingTypeList.subscribe(list => {
+          this.finishingTypeList = list.sort();
+          this.handleFinishingTypeInsideFilterAutoComplete();
+          this.handleFinishingTypeOutsideFilterAutoComplete();
+        });
+        this.getDefaultRecord();
+      }
     });
   }
 
   handleCoverTypeChange = () => {
     if (this.viewModal.coverType !== 'Self-cover') {
-      this.store.getCoverMaterialWeight('Cover',  ProductSpecTypes.COVER);
+      this.store.getMaterialWeight('Cover', ProductSpecTypes.COVER);
       this.store.getFinishingTypes('Cover', ProductSpecTypes.COVER);
     }
   }
@@ -87,9 +101,15 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
     if (type === 'MATERIALWEIGHT') {
       const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.coverMaterialWeight);
       this.materialList = [...new Set(records.map(x => x.PaperMaterial))].sort();
+      this.filteredMaterialList.next([]);
+      this.filteredMaterialBrandList.next([]);
       this.handleMaterialFilterAutoComplete();
+      this.handleMaterialWeightChange('MATERIAL');
     } else if (type === 'MATERIAL') {
-      const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal.coverMaterial);
+      console.log('this.viewModal.coverMaterialWeight is=>', this.viewModal.coverMaterialWeight);
+      console.log('this.viewModal.coverMaterial is=>', this.viewModal.coverMaterial);
+      console.log('this.materialDataList =>', this.materialDataList);
+      const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.coverMaterialWeight && x.PaperMaterial === this.viewModal.coverMaterial);
       this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))].sort();
       this.handleMaterialBrandFilterAutoComplete();
     }
@@ -111,20 +131,30 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
     }
   }
 
-  addPantoneColourOutside(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+  addPantoneColourOutside(event: Event, color: string) {
+    let value;
+    if (event) {
+      value = (event.target as HTMLInputElement).value;
+      (event.target as HTMLInputElement).value = '';
+    } else {
+      value = color;
+    }
     if (value !== '' && this.viewModal.pantoneColourOutside.indexOf(value) === -1) {
       this.viewModal.pantoneColourOutside.push(value);
     }
-    (event.target as HTMLInputElement).value = '';
   }
 
-  addPantoneColourInside(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+  addPantoneColourInside(event: Event, color: string) {
+    let value;
+    if (event) {
+      value = (event.target as HTMLInputElement).value;
+      (event.target as HTMLInputElement).value = '';
+    } else {
+      value = color;
+    }
     if (value !== '' && this.viewModal.pantoneColourInside.indexOf(value) === -1) {
       this.viewModal.pantoneColourInside.push(value);
     }
-    (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelectionOutside(item: string) {
@@ -165,11 +195,12 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
       coverMaterialWeight: '',
       coverMaterial: '',
       materialBrand: '',
-      coverType: '',
+      coverType: this.viewModal?.coverType ? this.viewModal.coverType : '',
       noOfColourExtent: 0,
       noOfMonoExtent: 0,
       totalExtent: 0,
       noOfColours: 0,
+      selectedColours: '',
       colorTypeOutside: [],
       colorTypeInside: [],
       pantoneColourInside: [],
@@ -186,7 +217,7 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   }
 
   handleMaterialWeightFilterAutoComplete = () => {
-    this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+    this.filteredMaterialWeightList.next(this.materialWeightList.slice().sort(this.helper.sortComparer));
     this.materialWeightFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
@@ -219,14 +250,14 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
     // get the search keyword
     let search = this.materialWeightFltrCtrl.value;
     if (!search) {
-      this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+      this.filteredMaterialWeightList.next(this.materialWeightList.slice().sort(this.helper.sortComparer));
       return;
     } else {
       search = search.toLowerCase();
     }
     // filter the banks
     this.filteredMaterialWeightList.next(
-      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
+      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1).sort(this.helper.sortComparer)
     );
   }
 
@@ -321,7 +352,7 @@ export class SpecCoverComponent implements OnInit, OnDestroy {
   }
 
   pushToStore = () => {
-    if (this.viewModal){
+    if (this.viewModal) {
       this.store.setProductSpecStore(this.viewModal, ProductSpecTypes.COVER);
     }
   }

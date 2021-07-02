@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h4 class="modal-title">Versions</h4>
-    <button type="button" class="close" aria-label="Close" (click)="save()">
+    <button type="button" class="close" aria-label="Close" (click)="close()">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
@@ -24,7 +24,7 @@
         <!-- Name Column -->
         <ng-container matColumnDef="createdDate">
             <mat-header-cell *matHeaderCellDef> Date Created </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.createdDate | date:'shortDate'}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.createdDate | dateFormat}} </mat-cell>
         </ng-container>
         <!-- Weight Column -->
         <ng-container matColumnDef="createdBy">
@@ -33,7 +33,7 @@
         </ng-container>
         <!-- Symbol Column -->
         <ng-container matColumnDef="versionDescription">
-            <mat-header-cell *matHeaderCellDef> Version Description </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.versionDescription}} </mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

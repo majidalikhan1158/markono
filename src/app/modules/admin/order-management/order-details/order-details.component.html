@@ -23,7 +23,7 @@
                   {{ orderInfoList[i].YourReference }}
                 </td>
                 <td class="flex-width">
-                  {{ orderInfoList[i].OrderDate | date: "shortDate" }}
+                  {{ orderInfoList[i].OrderDate  | dateFormat }}
                 </td>
                 <td class="flex-width">
                   <ng-container *ngIf="orderInfoList[i].RequestedDeliveryDate === null">
@@ -31,7 +31,7 @@
                   </ng-container>
                   <ng-container *ngIf="orderInfoList[i].RequestedDeliveryDate !== null">
                     {{
-                    orderInfoList[i].RequestedDeliveryDate | date: "shortDate"
+                    orderInfoList[i].RequestedDeliveryDate  | dateFormat
                     }}
                   </ng-container>
                 </td>
@@ -136,6 +136,9 @@
       <div class="card card-custom example example-compact gutter-b order-details-types">
         <div class="card-body">
           <mat-selection-list [multiple]="false" (selectionChange)="handleOrderDetailTypeChange($event)">
+            <mat-list-option class="selectbox-header font-12px">
+              ORDER DETAILS
+            </mat-list-option>
             <mat-list-option *ngFor="let types of orderDetailTypesArray" class="font-14px" [selected]="types.isSelected"
               [value]="types.enum">
               {{ types.value }}
@@ -410,9 +413,9 @@
 
               <!-- Expanded Content Column - The detail row is made up of this one column -->
               <ng-container matColumnDef="expandedDetail">
-                <mat-cell *matCellDef="let detail">
+                <mat-cell *matCellDef="let element">
 
-                  <table class="table" *ngFor="let item of dataJobArray">
+                  <table class="table">
 
                     <tr class="">
                       <td class="td-table">Title</td>
@@ -423,12 +426,12 @@
                       <td class="td-table">BluePrint required</td>
                     </tr>
                     <tr>
-                      <td class="th-table" style="width: 200px;">{{item.Title}}</td>
-                      <td class="th-table">{{item.SellToNo}}</td>
-                      <td class="th-table">{{item.ProductGroup}}</td>
-                      <td class="th-table">{{item.EstimatedPrice}}</td>
-                      <td class="th-table">{{item.SamplesRequired}}</td>
-                      <td class="th-table">{{item.BluePrintRequired}}</td>
+                      <td class="th-table" style="width: 200px;">{{element.Title}}</td>
+                      <td class="th-table">{{element.SellToNo}}</td>
+                      <td class="th-table">{{element.ProductGroup}}</td>
+                      <td class="th-table">{{element.EstimatedPrice}}</td>
+                      <td class="th-table">{{element.SamplesRequired}}</td>
+                      <td class="th-table">{{element.BluePrintRequired}}</td>
                     </tr>
                     <tr>
                       <td class="td-table">Total extent</td>
@@ -439,12 +442,12 @@
                       <td class="td-table">Advances required</td>
                     </tr>
                     <tr>
-                      <td class="th-table">{{item.TotalExtent}}</td>
-                      <td class="th-table">{{item.ProductVersion }}</td>
-                      <td class="th-table">{{item.QuoteNo }}</td>
-                      <td class="th-table">{{item.Weight}}</td>
-                      <td class="th-table">{{item.FGRequired}}</td>
-                      <td class="th-table">{{item.AdvancesRequired}}</td>
+                      <td class="th-table">{{element.TotalExtent}}</td>
+                      <td class="th-table">{{element.ProductVersion }}</td>
+                      <td class="th-table">{{element.QuoteNo }}</td>
+                      <td class="th-table">{{element.Weight}}</td>
+                      <td class="th-table">{{element.FGRequired}}</td>
+                      <td class="th-table">{{element.AdvancesRequired}}</td>
                     </tr>
                     <tr>
                       <td class="td-table">Additional Unit price</td>
@@ -455,8 +458,8 @@
                       <td class="td-table"></td>
                     </tr>
                     <tr>
-                      <td class="th-table">{{item.AdditionalUnitPrice}}</td>
-                      <td class="th-table">{{item.Spine}}</td>
+                      <td class="th-table">{{element.AdditionalUnitPrice}}</td>
+                      <td class="th-table">{{element.Spine}}</td>
                       <td class="th-table"></td>
                       <td class="th-table"></td>
                       <td class="th-table"></td>
@@ -466,7 +469,7 @@
                   </table>
 
                 </mat-cell>
-              </ng-container>
+              </ng-container> 
 
               <ng-container matColumnDef="expandRow">
                 <mat-header-cell *matHeaderCellDef> </mat-header-cell>
@@ -493,6 +496,10 @@
 
             </mat-table>
 
+            <div *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
+              <mat-progress-spinner color="primary" mode="indeterminate">
+              </mat-progress-spinner>
+            </div>
             <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 
             <!--mat-drawer-->
@@ -865,7 +872,7 @@
       </ng-container>
       <!--Shipping Details-->
       <ng-container *ngIf="currentSelectedType === orderDetailTypesConstant.SHIPPING_DETAILS">
-        <ng-container *ngIf="shipmentInfoList.length>0">
+        <ng-container *ngIf="shipmentInfoList?.length>0">
           <div *ngFor="let rowId of shipmentInfoList; let i = index"
             class="card card-custom example example-compact shipping-info-details-card">
             <div class="card-header">
@@ -885,11 +892,12 @@
                 <span class="font-12px card-label"> {{getTotalShipmentQty(rowId.Id)}}</span>
               </div>
               <div class="card-toolbar">
-                <span class="material-icons expansion-icon cursor-pointer" (click)="toggleExpandable(rowId.Id)">
+                <span class="material-icons expansion-icon cursor-pointer" 
+                (click)="toggleExpandable(rowId.Id)">
                   {{
                   rowId.Id == rowIdToExpand ?
-                  ExpansionIcons.KEYBOARD_ARROW_DOWN :
-                  ExpansionIcons.KEYBOARD_ARROW_UP
+                  ExpansionIcons.KEYBOARD_ARROW_UP:
+                  ExpansionIcons.KEYBOARD_ARROW_DOWN 
                   }}
                 </span>
               </div>
@@ -909,7 +917,7 @@
                   <div class="col-lg-3 pl-0">
                     <mat-form-field appearance="fill">
                       <mat-label>Billable?</mat-label>
-                      <mat-select [(ngModel)]="rowId.Billable" disabled>
+                      <mat-select [(ngModel)]="rowId.Billable" disabled >
                         <mat-option [value]="true">Yes</mat-option>
                         <mat-option [value]="false">No</mat-option>
                       </mat-select>
@@ -925,19 +933,18 @@
                   </div>
                   <div class="col-lg-3 pr-0">
                     <mat-form-field appearance="fill">
-                      <mat-label>Shipment Mode</mat-label>
-                      <mat-select [(ngModel)]="rowId.ShipmentMode" disabled>
-                        <mat-option *ngFor="let item of shipmentModeList" [value]="item.description">
-                          {{item.description}}</mat-option>
-                      </mat-select>
+                      <mat-label>Shipment Delivery Date</mat-label>
+                      <input matInput [matDatepicker]="picker1" [(ngModel)]="rowId.ExpectedDeliveryDate" disabled>
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
                   </div>
                   <div class="col-lg-3 pr-0">
                     <mat-form-field appearance="fill">
-                      <mat-label>Shipment Terms</mat-label>
-                      <mat-select [(ngModel)]="rowId.ShippingMethod" disabled>
-                        <mat-option *ngFor="let item of shipmentModeList" [value]="item.description">
-                          {{item.description}}</mat-option>
+                      <mat-label>Shipment Mode</mat-label>
+                      <mat-select [(ngModel)]="rowId.ShipmentMode" disabled>
+                        <mat-option *ngFor="let item of shipmentModeList" [value]="item.attributes.code">
+                          {{item.attributes.description}}</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
@@ -948,17 +955,26 @@
                 <div class="col-lg-12 display-flex">
                   <div class="col-lg-3 pl-0">
                     <mat-form-field appearance="fill">
+                      <mat-label>Shipment Terms</mat-label>
+                      <mat-select [(ngModel)]="rowId.ShippingMethod" disabled>
+                        <mat-option *ngFor="let item of shipmentTermList" [value]="item.attributes.code">
+                          {{item.attributes.description}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-3 pl-0 pr-0">
+                    <mat-form-field appearance="fill">
                       <mat-label>Shipment Agent</mat-label>
                       <mat-select [(ngModel)]="rowId.ShippingAgent" disabled>
-                        <mat-option *ngFor="let item of shipmentAgentList" [value]="item.description">
+                        <mat-option *ngFor="let item of shipmentAgentList" [value]="item.code">
                           {{item.description}}</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <div class="col-lg-3 pr-0 pl-0">
+                  <div class="col-lg-3 pr-0">
                     <mat-form-field appearance="fill">
                       <mat-label>Account No</mat-label>
-                      <input matInput [(ngModel)]="rowId.AccountNo" disabled />
+                      <input matInput [(ngModel)]="rowId.AccountNo"  disabled/>
                     </mat-form-field>
                   </div>
                 </div>
@@ -1041,31 +1057,22 @@
                             <td>
                               <mat-form-field appearance="fill">
                                 <mat-label>Choose</mat-label>
-                                <mat-select [(ngModel)]="rowId.Item" disabled>
-                                  <mat-option value="Filfillment">Filfillment
-                                  </mat-option>
-                                  <mat-option value="Fulfillment">Fulfillment
-                                  </mat-option>
-                                  <mat-option value="Packing Materials">Packing Materials</mat-option>
-                                  <mat-option value="Order Handling">Order Handling
-                                  </mat-option>
-                                  <mat-option value="Shipping">Shipping</mat-option>
-                                  <mat-option value="Storage Charges">Storage Charges
-                                  </mat-option>
-                                  <mat-option value="Value Added Services">Value Added Services</mat-option>
+                                <mat-select [(ngModel)]="rowId.ChargesCode" disabled>
+                                  <mat-option *ngFor="let item of costCategoryList" [value]="item.Code">
+                                    {{item.Description}}</mat-option>
                                 </mat-select>
                               </mat-form-field>
                             </td>
                             <td>
                               <mat-form-field appearance="fill">
                                 <mat-label>Description</mat-label>
-                                <input matInput [(ngModel)]="rowId.Description" disabled />
+                                <input matInput [(ngModel)]="rowId.Description"  disabled/>
                               </mat-form-field>
                             </td>
                             <td>
                               <mat-form-field appearance="fill">
                                 <mat-label>Sub total</mat-label>
-                                <input matInput [(ngModel)]="rowId.Value" disabled />
+                                <input matInput [(ngModel)]="rowId.Value"  disabled/>
                                 <span matPrefix>$&nbsp;</span>
                               </mat-form-field>
                             </td>
@@ -1095,7 +1102,7 @@
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
                         <mat-label>Contact Person</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToContactPerson" disabled>
+                        <input matInput [(ngModel)]="rowId.ShipToContactNo" disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1145,7 +1152,7 @@
                     <div class="col-lg-6 pl-0">
                       <mat-form-field appearance="fill">
                         <mat-label>State</mat-label>
-                        <input matInput [(ngModel)]=" rowId.ShipToState " disabled>
+                        <input matInput [(ngModel)]="rowId.ShipToState" disabled>
                       </mat-form-field>
                     </div>
                     <div class="col-lg-6 pl-0">
@@ -1213,7 +1220,7 @@
                     <div class="col-lg-6 pr-0">
                       <mat-form-field appearance="fill">
                         <mat-label>City</mat-label>
-                        <input matInput [(ngModel)]="rowId.BillToCity " disabled>
+                        <input matInput [(ngModel)]="rowId.BillToCity" disabled>
                       </mat-form-field>
                     </div>
                   </div>
@@ -1259,7 +1266,7 @@
             </div>
           </div>
         </ng-container>
-        <ng-container *ngIf="shipmentInfoList.length==0"> <br>
+        <ng-container *ngIf="shipmentInfoList?.length==0"> <br>
           <div class="status-options" style="padding-left: 6px;">
             <span class="width-100">
               <span class="label label-lg label-light-orange label-inline">There is no shipment in this order</span>
@@ -1297,7 +1304,7 @@
                 <tbody>
                   <tr *ngFor="let row of miscCostArray;let k = index">
                     <td>{{ k + 1 }}</td>
-                    <td>{{ row.ChargesCode }}</td>
+                    <td>{{ row.CostCategory }}</td>
                     <td>{{ row.Description }}</td>
                     <td>{{ row.Value }}</td>
                     <td></td>

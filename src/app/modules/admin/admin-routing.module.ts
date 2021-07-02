@@ -42,6 +42,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: AppModules.PLANNING_MANAGMENT,
+        loadChildren: () =>
+          import(`../admin/${AppModules.PLANNING_MANAGMENT}/planning-management.module`).then(
+            (m) => m.PlanningManagementModule
+          ),
+      },
+      {
         path: AppPages.SHOP_FLOOR_COLLECTION,
         component: ShopFloorCollectionComponent
       },

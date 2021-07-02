@@ -1,0 +1,124 @@
+app-verify-print-file {
+    .spec-check-print .mat-slide-toggle-thumb {
+        height: 15px;
+        width: 15px;
+    }
+    
+    .spec-check-print .mat-slide-toggle-thumb-container {
+        top: -1px;
+    }
+
+    .spec-check-print .mat-slide-toggle .mat-slide-toggle-ripple {
+        top: calc(50% - 12px);
+        left: calc(50% - 12px);
+        height: 20px;
+        width: 20px;
+    }
+
+    .spec-check-print .mat-slide-toggle-bar {
+        width: 33px;
+    }
+    
+    .spec-check-print li {
+        list-style-type:none;
+    }
+
+    .spec-check-print li:before{
+        content:'\00b7'; 
+        font-size:50px; 
+        line-height:24px; 
+        vertical-align:middle;
+        padding-right: 10px;
+    }
+
+    .spec-check-print .mat-divider.mat-divider-vertical {
+        height: 100%;
+        margin-top: -8px;
+    }
+
+    .spec-check-print .mat-checkbox-label {
+        font-size: 14px;
+        font-family: 'Roboto-Regular';
+    }
+
+    .spec-check-print a {
+        margin-top: 2px;
+        text-decoration: underline !important;
+        color: #5FACE2;
+        cursor: pointer;
+    }
+
+    .spec-check-print .file-upload-section .material-icons {
+        color: #5FACE2;
+        cursor: pointer;
+    }
+
+    .spec-check-print .file-title{
+        font-size: 14px;
+        font-family: 'Roboto-Regular';
+        padding-right: 10px;
+    }
+
+    .spec-check-print .file-label{
+        font-size: 14px;
+        font-family: 'Roboto-Medium';
+        text-transform: uppercase;
+        color: #5FACE2;
+        cursor: pointer;
+        vertical-align: super;
+    }
+
+    .spec-check-print .file-upload-section .inputfile {
+        /* visibility: hidden etc. wont work */
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+    .spec-check-print .file-upload-section .inputfile:focus + label {
+        /* keyboard navigation */
+        outline: none;
+    }
+
+    .spec-check-print .file-upload-section .chip {
+        background-color: #EEF6FB;
+        // min-width: 200px;
+        height: 35px;
+        border-radius: 6px;
+        font-size: 12px;
+        padding-top: 8px;
+        padding-bottom: 7px;
+        padding-left: 0;
+        padding-right: 0;
+        font-family: 'Roboto-Regular';
+        box-shadow: none !important;
+    }
+
+    .spec-check-print .file-upload-section .chip-file-icon {
+        font-size: 16px !important;
+        vertical-align: sub;
+        margin-left: 15px;
+        color: #343434;
+        cursor: text !important;
+    }
+
+    .spec-check-print .file-upload-section .chip-remove-icon {
+        margin-left: 10px;
+        margin-right: 12px;
+        vertical-align: sub;
+    }
+
+    .spec-check-print .file-upload-section .chip-remove-icon:hover {
+        opacity: 1 !important;
+    }
+
+    // .spec-check-print .text-area-field {
+    //     border-radius: 6px;
+    //     padding-left: 15px;
+    //     padding-right: 15px;
+    // }
+
+}

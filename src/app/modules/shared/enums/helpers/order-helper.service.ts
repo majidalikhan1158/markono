@@ -55,6 +55,9 @@ export class OrderHelperService {
       noOfTitles: data.NoOfTitles,
       caseDetail: data.CaseDetail,
       otherCharge: data.OtherCharge,
+      isbnPartNo: data.isbnPartNo,
+      type: data.type,
+      jobNo: data.jobNo
     };
   }
 }

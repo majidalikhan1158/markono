@@ -10,7 +10,7 @@ export interface AddRemoveSpecTypeEvent {
 }
 
 export interface SelectionList {
-  value: number;
+  value: any;
   text: string;
   enum: string;
 }

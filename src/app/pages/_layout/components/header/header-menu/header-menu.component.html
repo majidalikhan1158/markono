@@ -58,9 +58,10 @@
             *ngFor="let bc of breadcrumbs"
             routerLinkActive="active"
           >
-            <a [routerLink]="bc.linkPath" class="text-muted">
+            <a *ngIf="bc.linkPath" [routerLink]="bc.linkPath" class="text-muted">
               {{ bc.linkText }}
             </a>
+            <span *ngIf="!bc.linkPath" class="text-muted">{{ bc.linkText }}</span>
           </li>
         </ul>
         <!--end::Breadcrumb-->

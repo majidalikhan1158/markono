@@ -1,3 +1,4 @@
+import { ActivityLogModel, JobInfoHeaderModel } from './../../models/order-management';
 export const OrderDetailTypesArray = [
     {
         value: 'Items',
@@ -86,3 +87,27 @@ export const JobDetailTypes = {
     ANALYSIS: 'ANALYSIS',
     ACTIVITY_LOG: 'ACTIVITY_LOG',
 };
+
+export const JobInfoHeaderDATA: JobInfoHeaderModel[] = [
+    {
+        id: 1,
+        isbn: '9780124059351',
+        jobNo: 'PV : 968052 PA :',
+        orderDate: Date.now(),
+        rdd: Date.now(),
+        jobType: 'Offset',
+        qty: '50,120',
+        orderStatus: 'Shipped'
+    },
+  ];
+export const  ActivityLogDATA: ActivityLogModel[] = [
+    {
+        id: 1,
+        actionDate: Date.now(),
+        actionBy: 'Manager',
+        source: 'POD',
+        activity: 'Department: POD, Activity: POD Received',
+        status: 'Scheduling',
+        duration: '-'
+    },
+  ];

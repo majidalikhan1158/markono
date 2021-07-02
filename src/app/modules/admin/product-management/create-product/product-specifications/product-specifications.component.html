@@ -80,43 +80,59 @@
             <div class="row pb-5">
                 <div class="col-lg-12 pt-10 text-right">
                     <button mat-button (click)="handleBackEvent()"
-                        *ngIf="(selectedProductSpecType !== productSpecTypesConstant.GENERAL && 
-                        selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && 
-                        selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
-                        selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE &&
-                        selectedProductSpecType !== productSpecTypesConstant.PROOF_APPROVAL) && !shouldReadonly"
-                        [ngClass]="shouldDisplayUpdateButton ? 'btn btn-primary stepper-back-button mr-2' : 'btn btn-primary stepper-back-button mr-2'">
-                        Back</button>
-                    
+                            *ngIf="(selectedProductSpecType !== productSpecTypesConstant.GENERAL && 
+                            selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && 
+                            selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
+                            selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE &&
+                            selectedProductSpecType !== productSpecTypesConstant.PROOF_APPROVAL) && !shouldReadonly"
+                            [ngClass]="shouldDisplayUpdateButton ? 'btn btn-primary stepper-back-button mr-2' : 'btn btn-primary stepper-back-button mr-2'">
+                        Back
+                    </button>
+
+                    <button mat-button *ngIf="shouldDisplayUpdateButton && 
+                            selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
+                            selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE &&
+                            selectedProductSpecType !== productSpecTypesConstant.PROOF_APPROVAL"
+                            (click)="cancelProductSpec()"
+                            class="btn outline-button mr-4">
+                        Cancel
+                    </button>
+
                     <button mat-button *ngIf="shouldDisplayUpdateButton && 
                             selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
                             selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE &&
                             selectedProductSpecType !== productSpecTypesConstant.PROOF_APPROVAL"
                             (click)="updateProductSpec()"
-                        class="btn outline-button mr-4">
+                            class="btn outline-button mr-4">
                         Update
                     </button>
 
                     <button mat-button (click)="handleCreateButtonClick()"
-                        *ngIf="(!shouldDisplayUpdateButton && !shouldReadonly) && 
+                        *ngIf="(!shouldDisplayUpdateButton && !shouldReadonly && !(store.$IsProductCreated | async)) && 
                             (selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
                             selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE &&
                             selectedProductSpecType !== productSpecTypesConstant.PROOF_APPROVAL)"
-                        class="btn outline-button mr-2">Create</button>
+                            class="btn outline-button mr-2">
+                        Create
+                    </button>
                     
                     <button mat-button (click)="handleNextEvent()"
                         *ngIf="(selectedProductSpecType !== productSpecTypesConstant.UNIT_PRICE && 
                             selectedProductSpecType !== productSpecTypesConstant.LAYOUT_PREP && 
                             selectedProductSpecType !== productSpecTypesConstant.VERIFY_PRINT_FILE &&
                             selectedProductSpecType !== productSpecTypesConstant.PROOF_APPROVAL) && !shouldReadonly"
-                        class="btn btn-primary stepper-next-button">Next</button>
-
+                            class="btn btn-primary stepper-next-button">
+                        Next
+                    </button>
 
                     <button mat-button (click)="createProductSpec()"
                         *ngIf="selectedProductSpecType === productSpecTypesConstant.LAYOUT_PREP || 
                             selectedProductSpecType === productSpecTypesConstant.VERIFY_PRINT_FILE || 
                             selectedProductSpecType === productSpecTypesConstant.PROOF_APPROVAL"
-                        class="btn btn-primary stepper-next-button">Save</button>
+                            class="btn btn-primary stepper-next-button"
+                            [disabled]="shouldDisableLayoutPrepANDVerifyFileSaveButton">
+                        Save
+                    </button>
                 </div>
             </div>
         </ng-container>

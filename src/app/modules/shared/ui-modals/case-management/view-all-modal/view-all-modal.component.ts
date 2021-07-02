@@ -17,7 +17,6 @@ import { CaseStore } from '../../../ui-services/create-case.service';
 import { ModalService } from '../../../ui-services/modal.service';
 import { SnackBarService } from '../../../ui-services/snack-bar.service';
 import { Subscription } from 'rxjs';
-import { version } from 'moment';
 
 @Component({
   selector: 'app-view-all-modal',

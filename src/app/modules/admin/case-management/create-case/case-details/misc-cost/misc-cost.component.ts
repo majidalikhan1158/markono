@@ -9,8 +9,8 @@ import {
 import { MiscCostVM } from 'src/app/modules/shared/models/create-case';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import { CreateCaseMode, CreateCaseDataType } from 'src/app/modules/shared/enums/app-enums';
-import { CostCategory } from 'src/app/modules/shared/enums/case-management/case-contants';
 import { Subscription } from 'rxjs';
+import { CostCategory } from '../../../../../services/shared/classes/response-modal';
 
 @Component({
   selector: 'app-misc-cost',
@@ -22,9 +22,9 @@ export class MiscCostComponent implements OnInit, OnDestroy {
   @Input() createCaseMode: CreateCaseMode;
   createCaseModes = CreateCaseMode;
   disabled = false;
-  costCategoryArray = CostCategory;
   columnsToDisplay = ['#', 'Cost Category', 'Description', 'Sub-Total', ''];
   miscCostVMList: MiscCostVM[] = [];
+  costCategoryList: CostCategory[] = [];
   subscription: Subscription;
   constructor(
     private store: CaseStore,
@@ -33,15 +33,25 @@ export class MiscCostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.getDropDownData();
     this.disabled = this.createCaseMode === CreateCaseMode.EDIT;
     this.getDefaultRecord();
+  }
+
+  private getDropDownData = () => {
+    this.store.caseDropDownStore.subscribe(result => {
+      if (result && result.data) {
+        this.costCategoryList = result.data.miscBillingCostCategoryList;
+      }
+      this.ref.detectChanges();
+    });
   }
 
   addRow() {
     const totalRows = this.miscCostVMList.length;
     this.miscCostVMList.push({
       id: totalRows + 1,
-      costCategory: 0,
+      costCategory: '',
       description: '',
       subTotal: 0,
     });
@@ -79,7 +89,7 @@ export class MiscCostComponent implements OnInit, OnDestroy {
   initialObject = (): MiscCostVM => {
     return {
       id: this.miscCostVMList.length + 1,
-      costCategory: 0,
+      costCategory: '',
       description: '',
       subTotal: null
     };

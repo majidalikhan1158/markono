@@ -27,6 +27,11 @@ import { ProductService } from 'src/app/modules/services/core/services/product.s
 import { HttpErrorResponse } from '@angular/common/http';
 import { CaseHelperService } from 'src/app/modules/shared/enums/helpers/case-helper.service';
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
+import { Subscription } from 'rxjs';
+import { PrintingTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
+import { UIModalID, AppPageRoutes } from '../../../../../shared/enums/app-constants';
+import { Route } from '@angular/compiler/src/core';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-details',
@@ -35,16 +40,17 @@ import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.se
   encapsulation: ViewEncapsulation.None,
 })
 export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
+
   @Input() createCaseMode: CreateCaseMode;
   createCaseModes = CreateCaseMode;
   disabled = false;
   columnsToDisplay = [
     '#',
-    'ISBN',
-    'Print Type',
-    'Order Qty',
-    'Prod Qty',
-    'Margin(%)',
+    'ISBN <span class="asteric">*</span>',
+    'Print Type <span class="asteric">*</span>',
+    'Order Qty <span class="asteric">*</span>',
+    'Prod Qty <span class="asteric">*</span>',
+    'Margin(%)' ,
     'Selling Price',
     'Sub-Total',
   ];
@@ -55,13 +61,15 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   printTypeList = PrintingTypesArray;
   recordIdPassToModal = 0;
   currentIndex: number;
+  subscription: Subscription;
   constructor(
     private modalService: ModalService,
     private store: CaseStore,
     private productService: ProductService,
     private ref: ChangeDetectorRef,
     private helper: CaseHelperService,
-    private snack: SnackBarService
+    private snack: SnackBarService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -74,6 +82,11 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
       this.createCaseMode = changes['createCaseMode'].currentValue;
       this.disabled = this.createCaseMode === CreateCaseMode.EDIT;
     }
+  }
+
+  isbnChange(i: any) {
+    console.log('onchange working');
+    this.productDetailsVMList[i].isbn = this.productDetailsVMList[i].isbn.trim();
   }
 
   showProductDetails(rowId: number) {
@@ -152,7 +165,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getDefaultRecord = () => {
-    this.store.createCaseStore.subscribe((resp) => {
+    this.subscription = this.store.createCaseStore.subscribe((resp) => {
       if (
         resp &&
         resp.productDetailsList &&
@@ -182,20 +195,22 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private getLiveVersion = (modal: ProductDetailsVM) => {
-    // this.disabled = true;
-    this.productService.getLiveVersion(modal).subscribe(
+    this.subscription = this.productService.getProductDeatils(modal.isbn, modal.printType).subscribe(
       (resp) => {
         if (
           resp &&
           resp.body &&
           resp.body.result &&
-          resp.body.result.data.length > 0
+          resp.body.result.length > 0
         ) {
-          modal.productISBNDetail = this.helper.transToProductISBNDetailVM(
-            resp.body.result.data[0]
-          );
-          modal = this.calculateSubTotal(modal);
-          this.showProductDetails(modal.id);
+          modal.productISBNDetail = this.helper.transPoductDetailToProductISBNDetailVM(resp.body.result[0]);
+          const printType = this.printTypeList.find(x => x.value === modal.printType.toString());
+          if (printType && printType.enum.toLowerCase() === PrintingTypes.OFFSET.toLowerCase()){
+            this.calculateEstimatedPrice(modal);
+          } else {
+            modal = this.calculateSubTotal(modal);
+            this.showProductDetails(modal.id);
+          }
         } else {
           this.snack.open('No details found', '', 'top');
           modal.productISBNDetail = this.getEmptyDetail();
@@ -212,6 +227,31 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     );
   }
 
+  calculateEstimatedPrice = (modal: ProductDetailsVM) => {
+    const reqObj = {
+      isbn: modal.isbn,
+      isbnVersion: modal.productISBNDetail.specsVersionNo,
+      isbnRevision: modal.productISBNDetail.revisionNo,
+      quantity: modal.orderQty
+    };
+    this.subscription = this.productService.getEstimatedPriceProductDetails(reqObj).subscribe(resp => {
+      if (resp && resp.body?.result && resp.body?.result.price) {
+        modal.productISBNDetail.estimatedPrice = resp.body.result.price;
+        modal = this.calculateSubTotal(modal);
+        this.showProductDetails(modal.id);
+      } else {
+        modal = this.calculateSubTotal(modal);
+        this.showProductDetails(modal.id);
+      }
+      const index = this.productDetailsVMList.findIndex(x => x.id === modal.id);
+      if (index >= 0) {
+        this.productDetailsVMList[index] = modal;
+      }
+      this.disabled = false;
+      this.ref.detectChanges();
+    });
+  }
+
   getEmptyDetail = (): ProductISBNDetailVM => {
     return {
       id: '',
@@ -219,6 +259,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
       totalExtent: 0,
       bindingType: '',
       productGroup: '',
+      carrierSheet: '',
       samplesRequired: 0,
       bluePrintRequired: 0,
       specsVersionNo: '',
@@ -234,12 +275,14 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
       bluePrintList: [],
       fgList: [],
       advancesList: [],
-      spineWidth: 0
+      spineWidth: 0,
+      revisionNo: ''
     };
   }
 
   ngOnDestroy(): void {
     this.pushToStore();
+    this.subscription?.unsubscribe();
   }
 
   pushToStore = () => {
@@ -258,17 +301,16 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     let total = 0;
     if (bluePrintList.length > 0) {
       bluePrintList.forEach(item => {
-        // tslint:disable-next-line: radix
-        total = parseInt(total.toString()) + parseInt(item.quantity.toString());
+        total = this.helper.sum(total, item.quantity);
       });
-      this.productDetailsVMList.forEach(item => {
-        if (item.id === this.recordIdPassToModal) {
-          item.productISBNDetail.bluePrintList = bluePrintList;
-          item.productISBNDetail.bluePrintRequired = total;
-        }
-      });
-      this.pushToStore();
     }
+    this.productDetailsVMList.forEach(item => {
+      if (item.id === this.recordIdPassToModal) {
+        item.productISBNDetail.bluePrintList = bluePrintList;
+        item.productISBNDetail.bluePrintRequired = total;
+      }
+    });
+    this.pushToStore();
     this.recordIdPassToModal = 0;
     this.store.setProductDetailsId(0);
   }
@@ -277,20 +319,18 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     let total = 0;
     if (sampleList.length > 0) {
       sampleList.forEach(item => {
-        // tslint:disable-next-line: radix
-        total = parseInt(total.toString()) + parseInt(item.quantity.toString());
+        total = this.helper.sum(total, item.quantity);
       });
-      this.productDetailsVMList.forEach(item => {
-        if (item.id === this.recordIdPassToModal) {
-          item.productISBNDetail.sampleList = sampleList;
-          item.productISBNDetail.samplesRequired = total;
-          // tslint:disable-next-line: radix
-          item.prodQty = parseInt(item.orderQty.toString()) + parseInt(total.toString());
-          item = this.calculateSubTotal(item);
-        }
-      });
-      this.pushToStore();
     }
+    this.productDetailsVMList.forEach(item => {
+      if (item.id === this.recordIdPassToModal) {
+        item.productISBNDetail.sampleList = sampleList;
+        item.productISBNDetail.samplesRequired = total;
+        item.prodQty = this.helper.sum(item.orderQty, total);
+        item = this.calculateSubTotal(item);
+      }
+    });
+    this.pushToStore();
     this.recordIdPassToModal = 0;
     this.store.setProductDetailsId(0);
   }
@@ -299,17 +339,16 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     let total = 0;
     if (fgList.length > 0) {
       fgList.forEach(item => {
-        // tslint:disable-next-line: radix
-        total = parseInt(total.toString()) + parseInt(item.quantity.toString());
+        total = this.helper.sum(total, item.quantity);
       });
-      this.productDetailsVMList.forEach(item => {
-        if (item.id === this.recordIdPassToModal) {
-          item.productISBNDetail.fgList = fgList;
-          item.productISBNDetail.fGRequired = total;
-        }
-      });
-      this.pushToStore();
     }
+    this.productDetailsVMList.forEach(item => {
+      if (item.id === this.recordIdPassToModal) {
+        item.productISBNDetail.fgList = fgList;
+        item.productISBNDetail.fGRequired = total;
+      }
+    });
+    this.pushToStore();
     this.recordIdPassToModal = 0;
     this.store.setProductDetailsId(0);
   }
@@ -318,17 +357,16 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     let total = 0;
     if (advancesList.length > 0) {
       advancesList.forEach(item => {
-        // tslint:disable-next-line: radix
-        total = parseInt(total.toString()) + parseInt(item.quantity.toString());
+        total = this.helper.sum(total, item.quantity);
       });
-      this.productDetailsVMList.forEach(item => {
-        if (item.id === this.recordIdPassToModal) {
-          item.productISBNDetail.advancesList = advancesList;
-          item.productISBNDetail.advancesRequired = total;
-        }
-      });
-      this.pushToStore();
     }
+    this.productDetailsVMList.forEach(item => {
+      if (item.id === this.recordIdPassToModal) {
+        item.productISBNDetail.advancesList = advancesList;
+        item.productISBNDetail.advancesRequired = total;
+      }
+    });
+    this.pushToStore();
     this.recordIdPassToModal = 0;
     this.store.setProductDetailsId(0);
   }
@@ -347,11 +385,72 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, OnChanges {
     this.modalService.open(modalId);
   }
 
+  openUiViewAllRevisionssModal = (modalId: string, index: number) => {
+    this.currentIndex = index;
+    const currentISBN = this.productDetailsVMList[index]?.isbn ?? '';
+    const versionNo = this.productDetailsVMList[index]?.productISBNDetail?.specsVersionNo ?? '';
+    const revisionNo = this.productDetailsVMList[index]?.productISBNDetail?.revisionNo ?? '';
+    this.store.setViewRevisionISBN({currentISBN, versionNo, revisionNo});
+    this.modalService.open(modalId);
+  }
+
   handleViewAllEvent = (data: any) => {
     if (data) {
       this.productDetailsVMList[this.currentIndex].productISBNDetail.specsVersionNo = data;
     }
     this.currentIndex = null;
     this.store.setViewVersionISBN(null);
+  }
+
+  handleViewAllRevisionEvent = (revisionNo: string) => {
+    const previousRevisionNo = this.productDetailsVMList[this.currentIndex].productISBNDetail.revisionNo;
+    if (revisionNo && previousRevisionNo !== revisionNo) {
+      const reqObj = {
+        ISBN: this.productDetailsVMList[this.currentIndex].isbn,
+        VERSIONNO: this.productDetailsVMList[this.currentIndex].productISBNDetail.specsVersionNo,
+        REVISIONNO: revisionNo
+      };
+      this.getProductDetailViaRevisionNoChange(reqObj, this.currentIndex);
+    }
+    this.currentIndex = null;
+    this.store.setViewRevisionISBN(null);
+  }
+
+  getProductDetailViaRevisionNoChange = (reqObj: any, index: number) => {
+    let modal = this.productDetailsVMList[index];
+    this.subscription = this.productService.getProductDetailViaRevisionNo(reqObj).subscribe(
+      (resp) => {
+        if (
+          resp &&
+          resp.body &&
+          resp.body.result &&
+          resp.body.result.length > 0
+        ) {
+          modal.productISBNDetail = this.helper.transToProductISBNDetailVMViaRevisionChange(resp.body.result[0]);
+          this.rowIdToExpand = 0;
+          const printType = this.printTypeList.find(x => x.value === modal.printType.toString());
+          if (printType && printType.enum.toLowerCase() === PrintingTypes.OFFSET.toLowerCase()){
+            this.calculateEstimatedPrice(modal);
+          } else {
+            modal = this.calculateSubTotal(modal);
+            this.showProductDetails(modal.id);
+          }
+        } else {
+          this.snack.open(`No revision detail found for ${reqObj.REVISIONNO}`, '', 'top');
+         // modal.productISBNDetail = this.getEmptyDetail();
+        }
+        this.productDetailsVMList[index] = modal;
+        this.ref.detectChanges();
+      },
+      (err: HttpErrorResponse) => {
+        // modal.productISBNDetail = this.getEmptyDetail();
+        this.snack.open(`No revision detail found for ${reqObj.REVISIONNO}`, '', 'top');
+        this.ref.detectChanges();
+      }
+    );
+  }
+
+  goToAddProduct = () => {
+    window.open(AppPageRoutes.CREATE_PRODUCT, 'blank');
   }
 }

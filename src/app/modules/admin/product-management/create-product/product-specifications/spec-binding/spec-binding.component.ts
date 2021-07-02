@@ -105,8 +105,13 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
 
   handleUpdateStore = () => {
     this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
-      if (resp && resp === this.productSpecTypesConstant.BINDING ) {
+      if (!resp) {
+        return;
+      }
+      if (resp === this.productSpecTypesConstant.BINDING ) {
          this.pushToStore();
+      } else if (this.parentComponent === ProductSpecTypes.OTHER_COMPONENT || this.parentComponent === ProductSpecTypes.DVD_CD) {
+        this.pushToStore();
       }
     });
   }
@@ -131,7 +136,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
 
   getApiData = () => {
     this.store.getBindingTypes('Binding');
-    this.store.getCoverMaterialWeight(this.componentType.text, this.componentType.componentType);
+    this.store.getMaterialWeight(this.componentType.text, this.componentType.componentType);
     this.store.getFinishingTypes(this.componentType.text, this.componentType.componentType);
 
     this.store.$bindingTypeList.subscribe(list => {
@@ -161,9 +166,12 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     if (type === 'MATERIALWEIGHT') {
       const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.caseBound?.endPaperWeight);
       this.materialList = [...new Set(records.map(x => x.PaperMaterial))].sort();
+      this.filteredMaterialList.next([]);
+      this.filteredMaterialBrandList.next([]);
       this.handleMaterialFilterAutoComplete();
+      this.handleMaterialWeightChange('MATERIAL');
     } else if (type === 'MATERIAL') {
-      const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal.caseBound?.endPaperMaterial);
+      const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.caseBound?.endPaperWeight && x.PaperMaterial === this.viewModal.caseBound?.endPaperMaterial);
       this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))].sort();
       this.handleMaterialBrandFilterAutoComplete();
     }
@@ -179,13 +187,18 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     }
   }
 
-  addPantoneColour(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+  addPantoneColour(event: Event, color: string) {
+    let value;
+    if (event) {
+      value = (event.target as HTMLInputElement).value;
+      (event.target as HTMLInputElement).value = '';
+    } else {
+      value = color;
+    }
     if (value !== '' && this.viewModal.caseBound.pantoneColour.indexOf(value) === -1) {
       this.countNoOfColors++;
       this.viewModal.caseBound.pantoneColour.push(value);
     }
-    (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelection(item: string) {
@@ -293,7 +306,7 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
   }
 
   handleMaterialWeightFilterAutoComplete = () => {
-    this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+    this.filteredMaterialWeightList.next(this.materialWeightList.slice().sort(this.helper.sortComparer));
     this.materialWeightFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
@@ -326,14 +339,14 @@ export class SpecBindingComponent implements OnInit, OnDestroy {
     // get the search keyword
     let search = this.materialWeightFltrCtrl.value;
     if (!search) {
-      this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+      this.filteredMaterialWeightList.next(this.materialWeightList.slice().sort(this.helper.sortComparer));
       return;
     } else {
       search = search.toLowerCase();
     }
     // filter the banks
     this.filteredMaterialWeightList.next(
-      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
+      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1).sort(this.helper.sortComparer)
     );
   }
 

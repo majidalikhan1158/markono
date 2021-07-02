@@ -6,7 +6,6 @@ import { SharedModule } from '../../shared/shared.module';
 import { PrepressManagementRoutingModule } from './prepress-management-routing.module';
 
 
-
 @NgModule({
   declarations: [PlatemakingComponent],
   imports: [

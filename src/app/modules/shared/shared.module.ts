@@ -19,6 +19,9 @@ import { GroupByPipeModule } from './pipe/group-by.pipe';
 import { UpdatePasswordModalComponent } from './ui-modals/order-management/update-password-modal/update-password-modal.component';
 import { AddProductionActivityModalComponent } from './ui-modals/product-spec-management/add-production-activity-modal/add-production-activity-modal.component';
 import { AddComponentBreakdownComponent } from './ui-modals/product-spec-management/add-component-breakdown/add-component-breakdown.component';
+import { PromptModalComponent } from './ui-modals/shop-floor-management/prompt-modal/prompt-modal.component';
+import { ViewAllRevisionsModalComponent } from './ui-modals/case-management/view-all-revisions-modal/view-all-revisions-modal.component';
+import { DateFormatPipe } from './pipe/date-format.pipe';
 
 @NgModule({
   declarations: [
@@ -34,7 +37,10 @@ import { AddComponentBreakdownComponent } from './ui-modals/product-spec-managem
     AddReasonModalComponent,
     UpdatePasswordModalComponent,
     AddProductionActivityModalComponent,
-    AddComponentBreakdownComponent
+    AddComponentBreakdownComponent,
+    PromptModalComponent,
+    ViewAllRevisionsModalComponent,
+    DateFormatPipe
   ],
   imports: [CommonModule, MaterialUiModule, NgbDropdownModule, SumPipeModule, GroupByPipeModule],
   exports: [
@@ -50,7 +56,10 @@ import { AddComponentBreakdownComponent } from './ui-modals/product-spec-managem
     AddReasonModalComponent,
     UpdatePasswordModalComponent,
     AddProductionActivityModalComponent,
-    AddComponentBreakdownComponent
+    AddComponentBreakdownComponent,
+    PromptModalComponent,
+    ViewAllRevisionsModalComponent,
+    DateFormatPipe
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DATA, useValue: {} },

@@ -5,6 +5,7 @@ export interface LayoutPrepVM {
     CaseDetailType: string;
     ISBNNo: string;
     ISBNVersionNo: string;
+    ISBNRevision: string;
     OrderQuantity: number;
     ProdQuantity: number;
     Status: string;
@@ -23,7 +24,10 @@ export interface LayoutPrepVM {
     UpdatedDateTime: Date;
     Components: ImpositionInputs[];
     ComponentsBreakdown: ComponentsBreakDown[];
-    ProductionActivity: ProductionActivities[];
+    ProductionActivity: ProductionActivity[];
+    components: impositionInputs[];
+    componentsBreakdown: componentsBreakDown[];
+    productionActivity: productionActivity[];
 }
 
 export interface ImpositionInputs {
@@ -42,6 +46,7 @@ export interface ImpositionInputs {
     CreatedDateTime: Date;
     UpdatedBy: string;
     UpdatedDateTime: Date;
+    ProductAdditionalComponentId: string;
 }
 
 export interface ComponentsBreakDown {
@@ -72,7 +77,7 @@ export interface ComponentsBreakDown {
 }
 
 export interface ProductionActivities {
-    ProductionProcesses: [];
+    ProductionProcesses: ProductionProcesses[];
     Id: string;
     ComponentsBreakdownId: string;
     EstimationCaseDetailId: string;
@@ -95,6 +100,93 @@ export interface ProductionActivities {
     CreatedDateTime: Date;
     UpdatedBy: string;
     UpdatedDateTime: Date;
+    AvgCost: number;
+    VendorCode: string;
+}
+
+export interface ProductionActivity {
+    ProductionProcesses: ProductionProcesses[];
+    Id: string;
+    ComponentsBreakdownId: string;
+    EstimationCaseDetailId: string;
+    Dept: string;
+    Type: string;
+    Qty: number;
+    Layout: string;
+    ProcessCode: string;
+    Activity: string;
+    Unit: number;
+    Duration: number;
+    UnitCost: number;
+    NewUnitCost: number;
+    TotalEstCost: number;
+    ComponentBreakdownSNo: string;
+    SNo: number;
+    Deleted: boolean;
+    SheetID: string;
+    CreatedBy: string;
+    CreatedDateTime: Date;
+    UpdatedBy: string;
+    UpdatedDateTime: Date;
+    AvgCost: number;
+    VendorCode: string;
+}
+
+export interface ProductionProcesses {
+    Amount: number;
+    CreatedBy: string;
+    CreatedDateTime: Date;
+    Deleted: boolean;
+    Description: string;
+    Duration: number;
+    EstimationCaseDetailId: string;
+    FormulaId: number;
+    Id: string;
+    ItemCode: string;
+    ItemType: string;
+    Mandatory: boolean;
+    Outsource: boolean;
+    Price: number;
+    PriceListId: any;
+    ProcessCode: string;
+    ProcessType: string;
+    ProductionActivityId: string;
+    ProductionActivitySNo: number;
+    Quantity: number;
+    SNo: number;
+    Speed: number;
+    UOM: string;
+    UpdatedBy: string;
+    UpdatedDateTime: Date;
+}
+
+// tslint:disable-next-line:class-name
+export interface productionProcesses {
+    amount: number;
+    createdBy: string;
+    createdDateTime: Date;
+    deleted: boolean;
+    description: string;
+    duration: number;
+    estimationCaseDetailId: string;
+    formulaId: number;
+    id: string;
+    itemCode: string;
+    itemType: string;
+    mandatory: boolean;
+    outsource: boolean;
+    price: number;
+    priceListId: any;
+    processCode: string;
+    processType: string;
+    productionActivityId: string;
+    productionActivitySNo: number;
+    quantity: number;
+    sNo: number;
+    speed: number;
+    uom: string;
+    updatedBy: string;
+    updatedDateTime: Date;
 }
 
 export interface ImpositionLayout {
@@ -117,6 +209,51 @@ export interface GetPaperRequest {
     Weight: string;
 }
 
+export interface ReleaseRequest {
+    caseDetailNo: string;
+    statusCode: number;
+    updatedBy: string;
+}
+
+export interface CaseActivityRequest {
+    documentId: string;
+    documentTpe: string;
+    toCode: string;
+}
+
+export class FileCheckParam {
+    id: string;
+    checked: boolean;
+}
+
+export class UpdateCaseProductFileCheckParam {
+    fileCheckParamList: FileCheckParam[];
+    actionUser: string;
+}
+
+export class ApprovalParam {
+    jobNo: string;
+    requiredDate: Date;
+    forWho: string;
+    quantity: number;
+    specialInstruction: string;
+    acknowledged: boolean;
+    createdBy: string;
+}
+
+export class EstimationFileCheckReturnModal {
+    fileCheckConfigId: number;
+    component: string;
+    question: string;
+    productId: string;
+    checked: boolean;
+    createdDateTime: Date;
+    createdBy: string;
+    updatedDateTime: Date;
+    updatedBy: string;
+    id: string;
+}
+
 export interface GetPaperResponse {
     // weight: string;
     // paperMaterial: string;
@@ -133,11 +270,11 @@ export interface GetPaperResponse {
 
 export interface ImpositionLayoutObject {
     [key: string]: ImpositionLayout[];
-  }
+}
 
 export interface PaperListObject {
     [key: string]: GetPaperResponse[];
-  }
+}
 
 export interface ActivitySettings {
     id: string;
@@ -156,4 +293,81 @@ export interface ActivitySettings {
     updatedDateTime: Date;
     hide: boolean;
     defaultActivity: string;
+}
+
+
+// tslint:disable-next-line:class-name
+export interface impositionInputs {
+    id: string;
+    componentType: string;
+    impositionLayout: string;
+    cuttingSizeDepth: number;
+    cuttingSizeWidth: number;
+    paper: string;
+    grainDirection: boolean;
+    grainDirectionInternal: string;
+    estimationCaseDetailid: string;
+    sNo: number;
+    sheetID: string;
+    createdBy: string;
+    createdDateTime: Date;
+    updatedBy: string;
+    updatedDateTime: Date;
+}
+
+// tslint:disable-next-line:class-name
+export interface componentsBreakDown {
+    id: string;
+    sNo: number;
+    quantity: number;
+    layout: string;
+    layoutDescription: string;
+    colour: string;
+    paper: string;
+    paperSize: string;
+    machineType: string;
+    processCode: string;
+    componentType: string;
+    printingSheets: number;
+    scrap: number;
+    totalSheets: number;
+    componentId: string;
+    estimationCaseDetailid: string;
+    componentsSNo: number;
+    deleted: boolean;
+    sheetID: string;
+    printingMethod: string;
+    createdBy: string;
+    createdDateTime: Date;
+    updatedBy: string;
+    updatedDateTime: Date;
+}
+
+// tslint:disable-next-line:class-name
+export interface productionActivity {
+    productionProcesses: productionProcesses[];
+    id: string;
+    componentsBreakdownId: string;
+    estimationCaseDetailId: string;
+    dept: string;
+    type: string;
+    qty: number;
+    layout: string;
+    processCode: string;
+    activity: string;
+    unit: number;
+    duration: number;
+    unitCost: number;
+    newUnitCost: number;
+    totalEstCost: number;
+    componentBreakdownSNo: string;
+    sNo: number;
+    deleted: boolean;
+    sheetID: string;
+    createdBy: string;
+    createdDateTime: Date;
+    updatedBy: string;
+    updatedDateTime: Date;
+    avgCost: number;
+    vendorCode: string;
 }

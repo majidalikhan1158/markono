@@ -23,8 +23,8 @@
                                                 [(ngModel)]="miscCostVMList[i].costCategory" 
                                                 [disabled]="disabled"
                                                 (change)="handleChangeToSyncWithStore()">
-                                                <mat-option *ngFor="let item of costCategoryArray"
-                                                [value]="item.value">{{item.text}}</mat-option>
+                                                <mat-option *ngFor="let item of costCategoryList" [value]="item.Code">
+                                                    {{item.Description}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </td>

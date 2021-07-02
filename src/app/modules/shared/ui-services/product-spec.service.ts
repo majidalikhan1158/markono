@@ -19,6 +19,7 @@ import { ProductGroupDDL, MaterialDataList, ProductVersions, SpineWidthThickness
   SpineWidthParamHistory, FileCheckConfig, ProductSpecsList, UserFileCheckConfig } from '../../services/shared/classes/product-modals/product-modals';
 import { AddRemoveSpecTypeEvent, ProductSpecStatus, ProductSpecTypeObject } from '../enums/product-management/product-interfaces';
 import { ProductSpecificationTypes } from '../enums/product-management/product-constants';
+import { LayoutPrepVM } from '../models/estimation';
 
 @Injectable({
   providedIn: 'root',
@@ -42,6 +43,9 @@ export class ProductSpecStore {
   private ProductSpecUpdateButtonSubject = new BehaviorSubject<boolean>(false);
   private ProductSpecStoreUpdateSubject = new BehaviorSubject<string>(null);
   private IsPrepressModuleSubject = new BehaviorSubject<boolean>(false);
+  private productSpecHeadingSubject = new BehaviorSubject<string>('Create Specs');
+  private planningModuleStateSubject = new BehaviorSubject<boolean>(false);
+  private IsProductCreatedSubject = new BehaviorSubject<boolean>(false);
 
   public $productSpecStore: Observable<ProductSpecStoreVM>;
   public $showJournaFields: Observable<boolean>;
@@ -61,11 +65,15 @@ export class ProductSpecStore {
   public $productSpecUpdateButton: Observable<boolean>;
   public $productSpecStoreUpdate: Observable<string>;
   public $IsPrepressModule: Observable<boolean>;
+  public $productSpecHeading: Observable<string>;
+  public $planningModuleState: Observable<boolean>;
+  public $IsProductCreated: Observable<boolean>;
 
   private coverMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private textMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private childIsbnMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private otherMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
+  private otherSlipCaseMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private dvdCdMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private bindingMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
   private bindingOtherComponentMaterialDataListSubject = new BehaviorSubject<MaterialDataList[]>([]);
@@ -75,6 +83,7 @@ export class ProductSpecStore {
   private textFinishingTypeListSubject = new BehaviorSubject<string[]>([]);
   private childIsbnFinishingTypeListSubject = new BehaviorSubject<string[]>([]);
   private otherFinishingTypeListSubject = new BehaviorSubject<string[]>([]);
+  private otherSlipCaseFinishingTypeListSubject = new BehaviorSubject<string[]>([]);
   private dvdCdFinishingTypeListSubject = new BehaviorSubject<string[]>([]);
   private bindingFinishingTypeListSubject = new BehaviorSubject<string[]>([]);
   private bindingOtherComponentFinishingTypeListSubject = new BehaviorSubject<string[]>([]);
@@ -85,6 +94,7 @@ export class ProductSpecStore {
   public $textMaterialDataList: Observable<MaterialDataList[]>;
   public $childIsbnMaterialDataList: Observable<MaterialDataList[]>;
   public $otherMaterialDataList: Observable<MaterialDataList[]>;
+  public $otherSlipCaseMaterialDataList: Observable<MaterialDataList[]>;
   public $dvdCdMaterialDataList: Observable<MaterialDataList[]>;
   public $bindingMaterialDataList: Observable<MaterialDataList[]>;
   public $bindingOtherComponentMaterialDataList: Observable<MaterialDataList[]>;
@@ -94,6 +104,7 @@ export class ProductSpecStore {
   public $textFinishingTypeList: Observable<string[]>;
   public $childIsbnFinishingTypeList: Observable<string[]>;
   public $otherFinishingTypeList: Observable<string[]>;
+  public $otherSlipCaseFinishingTypeList: Observable<string[]>;
   public $dvdCdFinishingTypeList: Observable<string[]>;
   public $bindingFinishingTypeList: Observable<string[]>;
   public $bindingOtherComponentFinishingTypeList: Observable<string[]>;
@@ -124,6 +135,9 @@ export class ProductSpecStore {
     this.$productSpecUpdateButton = this.ProductSpecUpdateButtonSubject.asObservable();
     this.$productSpecStoreUpdate = this.ProductSpecStoreUpdateSubject.asObservable();
     this.$IsPrepressModule = this.IsPrepressModuleSubject.asObservable();
+    this.$productSpecHeading = this.productSpecHeadingSubject.asObservable();
+    this.$planningModuleState = this.planningModuleStateSubject.asObservable();
+    this.$IsProductCreated = this.IsProductCreatedSubject.asObservable();
 
     this.$productSpecStore.subscribe((data) => {
       this.currentProductSpecStoreState = data;
@@ -149,6 +163,7 @@ export class ProductSpecStore {
     this.$textMaterialDataList = this.textMaterialDataListSubject.asObservable();
     this.$childIsbnMaterialDataList = this.childIsbnMaterialDataListSubject.asObservable();
     this.$otherMaterialDataList = this.otherMaterialDataListSubject.asObservable();
+    this.$otherSlipCaseMaterialDataList = this.otherSlipCaseMaterialDataListSubject.asObservable();
     this.$dvdCdMaterialDataList = this.dvdCdMaterialDataListSubject.asObservable();
     this.$bindingMaterialDataList = this.bindingMaterialDataListSubject.asObservable();
     this.$bindingDvdCdMaterialDataList = this.bindingDvdCdMaterialDataListSubject.asObservable();
@@ -158,6 +173,7 @@ export class ProductSpecStore {
     this.$textFinishingTypeList = this.textFinishingTypeListSubject.asObservable();
     this.$childIsbnFinishingTypeList = this.childIsbnFinishingTypeListSubject.asObservable();
     this.$otherFinishingTypeList = this.otherFinishingTypeListSubject.asObservable();
+    this.$otherSlipCaseFinishingTypeList = this.otherSlipCaseFinishingTypeListSubject.asObservable();
     this.$dvdCdFinishingTypeList = this.dvdCdFinishingTypeListSubject.asObservable();
     this.$bindingFinishingTypeList = this.bindingFinishingTypeListSubject.asObservable();
     this.$bindingDvdCdFinishingTypeList = this.bindingDvdCdFinishingTypeListSubject.asObservable();
@@ -190,6 +206,8 @@ export class ProductSpecStore {
       this.setCheckPrintFile(data as CheckPrintFileVM);
     } else if (type === ProductSpecTypes.UNIT_PRICE) {
       this.setUnitPriceVM(data as UnitPriceVM);
+    } else if (type === ProductSpecTypes.LAYOUT_PREP) {
+      this.setLayoutPrepVM(data as LayoutPrepVM);
     }
   }
 
@@ -273,6 +291,12 @@ export class ProductSpecStore {
     this.handleModalValidation(data, ProductSpecificationTypes.UNIT_PRICE);
   }
 
+  private setLayoutPrepVM = (data: LayoutPrepVM) => {
+    this.currentProductSpecStoreState.layoutPrep = data;
+    this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
+    this.handleModalValidation(data, ProductSpecificationTypes.LAYOUT_PREP);
+  }
+
   setSelectedVersion = (selectedVersion: ProductVersions) => {
     this.currentProductSpecStoreState.selectedVersion = selectedVersion;
     this.productSpecStoreSubject.next(this.currentProductSpecStoreState);
@@ -290,6 +314,14 @@ export class ProductSpecStore {
     this.productSpecTypeObjectListSubject.next(list);
   }
 
+  setProductSpecHeading = (heading: string) => {
+    this.productSpecHeadingSubject.next(heading);
+  }
+
+  setPlanningModuleState = (flag: boolean) => {
+    this.planningModuleStateSubject.next(flag);
+  }
+
   /** PRODUCT SPEC UI observables */
   setShouldShowJournalFields = (flag: boolean) => this.showJournaFieldsSubject.next(flag);
 
@@ -298,11 +330,17 @@ export class ProductSpecStore {
   updateStoreByComponentType = (type: string) => this.ProductSpecStoreUpdateSubject.next(type);
 
   setIsPrepressModule = (flag: boolean) => this.IsPrepressModuleSubject.next(flag);
-  
+
   setProductSpecReadonly = (flag: boolean) => {
-    this.ProductSpecReadonlySubject.next(flag);
     this.setProductSpecUpdateButton(!flag);
+    this.ProductSpecReadonlySubject.next(flag);
   }
+
+  setProductSpecReadonlyOnly = (flag: boolean) => {
+    this.ProductSpecReadonlySubject.next(flag);
+  }
+
+  setIsProductCreated = (flag: boolean) => this.IsProductCreatedSubject.next(flag);
 
 
   setProductSpecUpdateButton = (flag: boolean) => this.ProductSpecUpdateButtonSubject.next(flag);
@@ -318,7 +356,7 @@ export class ProductSpecStore {
     });
   }
 
-  getCoverMaterialWeight = (componentType: string, tabType: ProductSpecTypes) => {
+  getMaterialWeight = (componentType: string, tabType: ProductSpecTypes, save2SecondList: boolean = false) => {
     const reqObj = {
       printType: this.currentProductSpecStoreState.generalVM.printingType,
       isDeleted: false,
@@ -326,19 +364,33 @@ export class ProductSpecStore {
     };
     this.productService.getCoverMaterialWeight(reqObj).subscribe((resp) => {
       const result = (resp.body.result as unknown) as MaterialDataList[];
-      this.setMaterialDataListSubject(result, tabType);
+      if (save2SecondList) {
+        this.setMaterialDataListSubjectToSecondList(result, tabType);
+      } else {
+        this.setMaterialDataListSubject(result, tabType);
+      }
     });
   }
 
-  getFinishingTypes = (componentType: string, tabType: ProductSpecTypes) => {
+  getFinishingTypes = (componentType: string, tabType: ProductSpecTypes, save2SecondList: boolean = false) => {
     const reqObj = {
       isDeleted: false,
       componentType
     };
     this.productService.getFinishingTypes(reqObj).subscribe((resp) => {
       const result = [...((resp.body.result as unknown) as any[]).map(x => x.FinishingName)];
-      this.setFinishingTypeListSubject(result, tabType);
+      if (save2SecondList) {
+        this.setFinishingTypeListSubjectToSecondList(result, tabType);
+      } else {
+        this.setFinishingTypeListSubject(result, tabType);
+      }
     });
+  }
+
+  setFinishingTypeListSubjectToSecondList = (result: string[], tabType: ProductSpecTypes) => {
+   if (tabType === ProductSpecTypes.OTHER_COMPONENT) {
+      this.otherSlipCaseFinishingTypeListSubject.next(result);
+    }
   }
 
   setFinishingTypeListSubject = (result: string[], tabType: ProductSpecTypes) => {
@@ -381,6 +433,12 @@ export class ProductSpecStore {
     }
   }
 
+  setMaterialDataListSubjectToSecondList = (result: MaterialDataList[], tabType: ProductSpecTypes) => {
+    if (tabType === ProductSpecTypes.OTHER_COMPONENT) {
+      this.otherSlipCaseMaterialDataListSubject.next(result);
+    }
+  }
+
   getBindingTypes = (componentType: string) => {
     const reqObj = {
       isDeleted: false,
@@ -408,6 +466,10 @@ export class ProductSpecStore {
       const result = (resp.body.result as unknown) as ProductVersions[];
       this.productVersionListSubject.next(result);
     }));
+  }
+
+  setVersions = (versions: ProductVersions[]) => {
+    this.productVersionListSubject.next(versions);
   }
 
   getFileCheckConfig = () => {
@@ -479,8 +541,9 @@ export class ProductSpecStore {
 
     return !this.spineWidthParamHistory ||
       this.spineWidthParamHistory.bindingType !== bindingVM?.bindingType ||
-      this.spineWidthParamHistory.noOfColourExtent !== textVM?.noOfColourExtent ||
-      this.spineWidthParamHistory.noOfMonoExtent !== textVM?.noOfMonoExtent;
+      this.spineWidthParamHistory.TxtNoOfOneColourExtent !== textVM?.TxtNoOfOneColourExtent ||
+      this.spineWidthParamHistory.TxtNoOfTwoColourExtent !== textVM?.TxtNoOfTwoColourExtent ||
+      this.spineWidthParamHistory.TxtNoOfFourColourExtent !== textVM?.TxtNoOfFourColourExtent;
   }
 
   private getThickness = () => {
@@ -511,15 +574,17 @@ export class ProductSpecStore {
     const bindingVM = this.currentProductSpecStoreState.bindingVM;
     if (this.spineWidthParamHistory) {
       this.spineWidthParamHistory.bindingType = bindingVM.bindingType;
-      this.spineWidthParamHistory.noOfColourExtent = this.currentProductSpecStoreState.textVM?.noOfColourExtent;
-      this.spineWidthParamHistory.noOfMonoExtent = this.currentProductSpecStoreState.textVM?.noOfMonoExtent;
+      this.spineWidthParamHistory.TxtNoOfOneColourExtent = this.currentProductSpecStoreState.textVM?.TxtNoOfOneColourExtent;
+      this.spineWidthParamHistory.TxtNoOfTwoColourExtent = this.currentProductSpecStoreState.textVM?.TxtNoOfTwoColourExtent;
+      this.spineWidthParamHistory.TxtNoOfFourColourExtent = this.currentProductSpecStoreState.textVM?.TxtNoOfFourColourExtent;
       this.spineWidthParamHistory.thickness = this.spineWidthThickness;
       // this.spineWidthParamHistorySubject.next(this.spineWidthParamHistory);
     } else {
       this.spineWidthParamHistory = {
         bindingType: bindingVM.bindingType,
-        noOfColourExtent: this.currentProductSpecStoreState.textVM?.noOfColourExtent,
-        noOfMonoExtent: this.currentProductSpecStoreState.textVM?.noOfMonoExtent,
+        TxtNoOfOneColourExtent: this.currentProductSpecStoreState.textVM?.TxtNoOfOneColourExtent,
+        TxtNoOfTwoColourExtent: this.currentProductSpecStoreState.textVM?.TxtNoOfTwoColourExtent,
+        TxtNoOfFourColourExtent: this.currentProductSpecStoreState.textVM?.TxtNoOfFourColourExtent,
         thickness: this.spineWidthThickness
       };
     }
@@ -603,8 +668,9 @@ export class ProductSpecStore {
       height: generalVM?.height > 0 ? generalVM?.height : 0,
       coverMaterialWeight,
       textMaterialWeight,
-      noOfColourExtent: textVM?.noOfColourExtent > 0 ? textVM?.noOfColourExtent : 0,
-      noOfMonoExtent: textVM?.noOfMonoExtent > 0 ? textVM?.noOfMonoExtent : 0,
+      TxtNoOfOneColourExtent: textVM?.TxtNoOfOneColourExtent > 0 ? textVM?.TxtNoOfOneColourExtent : 0,
+      TxtNoOfTwoColourExtent: textVM?.TxtNoOfTwoColourExtent > 0 ? textVM?.TxtNoOfTwoColourExtent : 0,
+      TxtNoOfFourColourExtent: textVM?.TxtNoOfFourColourExtent > 0 ? textVM?.TxtNoOfFourColourExtent : 0,
       spineWidth: generalVM?.spinWidth > 0 ? generalVM?.spinWidth : 0,
       bindingType: bindingVM?.bindingType ? bindingVM?.bindingType : ''
     };
@@ -612,18 +678,7 @@ export class ProductSpecStore {
 
   isValidModal = (obj: any): boolean => {
     const isValid = true;
-    // for (const key in obj) {
-    //   console.log(key, '-------------------', obj[key], '-----------------------------', typeof obj[key]);
-    //   if (typeof obj[key] === 'number' && obj[key] <= 0 )
-    //   {
-    //     isValid = false;
-    //   }
-    //   else
-    //   if (typeof obj[key] === 'string' && !obj[key])
-    //   {
-    //     isValid = false;
-    //   }
-		// }
+// tslint:disable-next-line:indent
 	   return isValid;
   }
 }

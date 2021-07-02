@@ -1,0 +1,452 @@
+app-planning-detail {
+    .card-header {
+        min-height: 45px !important;
+    }
+    .card-header .card-title h3.card-label {
+        font-size: 20px !important;
+        font-family: "Roboto-Bold" !important;
+        font-weight: bold !important;
+    }
+
+    .planning-info-card {
+        .card-body {
+            padding: 8px !important;
+            min-height: 67px;
+            padding-left: 20px !important;
+        }
+        .card-header {
+            background-color: #fbfbfb !important;
+        }
+    }
+
+    .orders-job-table-card {
+        mat-row,
+        mat-header-row,
+        mat-footer-row {
+            border-bottom-width: 1px !important;
+        }
+    }
+    .card-body {
+        padding: 0px !important;
+        padding-bottom: 8px;
+    }
+    .card.card-custom > .card-body {
+        padding: 0px;
+    }
+    .orders-job-table-card .card-body {
+        // padding-left: 5px !important;
+        // padding-right: 5px !important;
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        border-bottom: 1px solid #e6e6e6;
+    }
+    .orders-job-table-card .orders-table {
+        width: 100%;
+    }
+    .orders-job-table-card .mat-form-field.mat-paginator-page-size-select {
+        margin-top: -12px;
+    }
+    .orders-job-table-card .mat-form-field.mat-paginator-page-size-select .mat-form-field-flex {
+        width: 70px;
+    }
+    .orders-job-table-card .mat-form-field.mat-paginator-page-size-select .mat-form-field-infix {
+        border: 1px solid #dfdfdf;
+        padding-left: 10px;
+        padding-right: 5px;
+    }
+    .orders-job-table-card .mat-form-field.mat-paginator-page-size-select .mat-form-field-ripple {
+        background-color: transparent;
+    }
+    .orders-job-table-card .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+        color: rgba(0, 0, 0, 0.54) !important;
+    }
+    .orders-job-table-card .mat-paginator-container {
+        color: #343434;
+        font-family: "Roboto-Regular";
+        font-size: 14px;
+    }
+    .order-info-table-card .mat-form-field-wrapper {
+        padding-bottom: 0px !important;
+    }
+    .order-info-table-card .mat-header-row {
+        min-height: 44px;
+        border-bottom: 0px !important;
+    }
+    .order-info-table-card .mat-header-row {
+        min-height: 35px;
+    }
+ 
+    .status-options {
+        .label.label-lg.label-inline {
+            width: auto !important;
+        }
+    }
+    .mat-column-actions {
+        flex: none;
+        width: 125px;
+    }
+    .orders-job-table-card .mat-form-field-wrapper {
+        padding-bottom: 0px !important;
+    }
+    .orders-job-table-card .mat-form-field-appearance-fill .mat-form-field-flex {
+        padding-top: 5px !important;
+        margin-top: 10px !important;
+    }
+    .order-details-types .mat-list-single-selected-option {
+        border-radius: 2px;
+        background: #eef6fb;
+    }
+    .order-details-types .mat-list-single-selected-option .mat-list-text {
+        color: #5face2;
+        font-family: "Roboto-Bold";
+    }
+
+    .order-details-types .mat-list-base {
+        padding-top: 0 !important;
+    }
+
+    .order-details-types .selectbox-header {
+        background: #EFEFEF;
+        pointer-events: none;
+        font-family: 'Roboto-Bold';
+        color: #0D171E;
+    }
+
+    
+    .mat-selection-list:focus{
+        outline: none;
+    }
+
+    .label-mat-selection .mat-pseudo-checkbox  {
+        display: none !important;
+    }
+    .order-details-types .mat-expansion-panel-body {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
+    .order-details-types .sub-types{
+        background-color: #F9F9F9;
+    }
+
+    .customer-info-card > .card-body {
+        padding: 15px !important;
+    }
+    .customer-info-card {
+        .card-header {
+            h6 {
+                font-weight: bold !important;
+                margin-bottom: 0px !important;
+                font-size: 14px;
+            }
+        }
+    }
+    .customer-info-card {
+        .col-lg-4 {
+            padding-right: 0px;
+        }
+    }
+    .shipping-info-details-card {
+        .card-body {
+            padding: 12px !important;
+        }
+        mat-form-field {
+            width: 100%;
+        }
+    }
+    .order-info-table-card > mat-row,
+    mat-header-row,
+    mat-footer-row {
+        border-bottom-width: 0px !important;
+    }
+    .expansion-icon {
+        width: 26px;
+        border-radius: 14px;
+        height: 26px;
+        background: #e6e6e6;
+        font-size: 21px !important;
+        text-align: center;
+        line-height: 1.3;
+    }
+    .order-details-types {
+        min-height: 400px;
+        box-shadow: none;
+        border-right: 1px solid #e6e6e6 !important;
+        margin-bottom: 0px;
+    }
+    .mat-column-jobNo {
+        flex: none;
+        width: 77px;
+    }
+    .mat-column-isbn {
+        flex: none;
+        width: 135px;
+    }
+    .card-body-header {
+        font-weight: bold;
+    }
+    .shipping-info-details-table {
+        border: 1px solid #ebedf3;
+    }
+    .table.table-head-custom thead th {
+        text-transform: none;
+        font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-normal) var(--unnamed-font-size-14) /
+            var(--unnamed-line-spacing-17) var(--unnamed-font-family-roboto);
+        letter-spacing: var(--unnamed-character-spacing-0);
+        color: var(--unnamed-color-afafaf);
+        text-align: left;
+        font: normal normal normal 12px/17px Roboto;
+        letter-spacing: 0px;
+        color: #afafaf;
+        opacity: 1;
+    }
+    .order-info-table-card > .mat-row {
+        margin-top: -8px;
+    }
+    .mat-icon-button i,
+    .mat-icon-button .mat-icon {
+        line-height: 38px;
+    }
+    .pd-2 {
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+    .flex-width {
+        flex: none;
+        width: 150px;
+    }
+    .th-order {
+        font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-normal) var(--unnamed-font-size-12) /
+            var(--unnamed-line-spacing-16) var(--unnamed-font-family-roboto);
+        letter-spacing: var(--unnamed-character-spacing-0);
+        color: var(--unnamed-color-afafaf);
+        text-align: left;
+        font: normal normal normal 12px/16px Roboto;
+        letter-spacing: 0px;
+        color: #afafaf;
+        opacity: 1;
+        th {
+            font-weight: normal;
+        }
+    }
+    .mat-column-Id {
+        flex: none;
+        width: 40px;
+    }
+    .mat-column-JobNo {
+        flex: none;
+        width: 80px;
+    }
+    .mat-row {
+        .mat-column-JobNo {
+            color: #0D171E;
+            font-weight: bold;
+        }
+    }
+    .mat-column-ISBNPartNo {
+        flex: none;
+        width: 180px;
+    }
+    .example-sidenav {
+        height: 400px;
+        width: 550px;
+        position: fixed;
+        transform: translateX !important;
+        visibility: visible;
+        margin-top: 212px;
+        margin-right: 24px;
+    }
+    .scssClassName {
+        height: 400px;
+        width: 810px;
+        position: fixed;
+        transform: translateX !important;
+        visibility: visible;
+        margin-top: 212px;
+        margin-right: 24px;
+    }
+    .none-display {
+        display: none;
+    }
+    .show-display {
+        display: block;
+    }
+    .expandable-row mat-cell:last-of-type,
+    mat-header-cell:last-of-type,
+    mat-footer-cell:last-of-type {
+        padding-right: 0px;
+    }
+    .component-table thead th:first-child {
+        padding-left: 21px !important;
+    }
+    .expandable-row mat-cell:first-of-type,
+    mat-header-cell:first-of-type,
+    mat-footer-cell:first-of-type {
+        padding-left: 17px !important;
+    }
+    .expandable-row {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        background-color: #fafafa;
+        min-height: 0;
+        overflow: hidden;
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+    .mat-column-expandRow {
+        flex: none;
+        width: 50px;
+    }
+    .action-column {
+        padding-right: 35px;
+        padding-left: 5px;
+        cursor: pointer;
+    }
+    .ng-trigger-detailExpand {
+        background-color: #efefef;
+    }
+    .mat-column-expandedDetail {
+        padding-left: 0px !important;
+    }
+    .td-table {
+        border-top: 0px;
+        color: #afafaf;
+        font: normal normal normal 12px/16px Roboto;
+    }
+    .th-table {
+        border-top: 0px;
+        font: normal normal normal 12px/16px Roboto;
+    }
+    .width-100 {
+        width: 100px;
+    }
+    .width-auto {
+        width: auto !important;
+    }
+    .analysis-card {
+        width: 100%;
+        box-shadow: none;
+    }
+    .order-types {
+        background-color: white;
+        // min-width: 160;
+        padding-right: 0px;
+        width: 200px;
+        // max-width: 180px;
+    }
+    .drwaer-job-info {
+        .mat-header-row {
+            padding-left: 20px;
+        }
+    }
+    .mat-header-row {
+        .mat-column-OrderQuantity {
+            flex: none;
+            width: 70px;
+        }
+        // .mat-column-PrintType {
+        //     flex: none;
+        //     width: 220px;
+        // }
+        .mat-column-ISBNPartNo {
+            flex: none;
+            width: 130px;
+        }
+    }
+    .mat-row {
+        .mat-column-OrderQuantity {
+            flex: none;
+            width: 70px;
+        }
+        // .mat-column-PrintType {
+        //     flex: none;
+        //     width: 220px;
+        // }
+        .mat-column-ISBNPartNo {
+            flex: none;
+            width: 130px;
+        }
+        .mat-column-expandRow {
+            .expansion-icon {
+                line-height: 30px;
+            }
+        }
+    }
+    .mat-drawer-backdrop {
+        position: fixed !important;
+    }
+    .mat-ink-bar {
+        width: 150px !important;
+        visibility: hidden;
+    }
+    @media (min-width: 1200px) {
+        .order-types {
+            width: 200px;
+        }
+    }
+    .no-box-shadow {
+        box-shadow: none;
+    }
+    .margin-0px {
+        margin-bottom: 0px !important;
+        td {
+            height: 45px;
+        }
+    }
+    .padding-left-5px {
+        padding-left: 5%;
+    }
+    .time-chart {
+        margin-left: -15px;
+        padding-top: 15px;
+    }
+    .process-chart {
+        margin-left: -200px;
+        padding-top: 40px;
+    }
+    .analysis-chart {
+        margin-left: -138px;
+        padding-top: 43px;
+    }
+    .clear-filter {
+        padding-left: 161px;
+        display: inline-block;
+        font: normal normal normal 14px/17px Roboto;
+    }
+    .padding-top-12p {
+        padding-top: 12px;
+    }
+    .padding-top-0p {
+        padding-top: 0px !important;
+    }
+    .margin-bottom-0p {
+        margin-bottom: 0px !important;
+    }
+    .mat-tab-body-content {
+        padding-top: 10px !important;
+    }
+    .shipping-info-details-table {
+        .mat-form-field {
+            margin-bottom: -20px !important;
+        }
+        .mat-form-field-flex {
+            padding-left: 10px !important;
+            padding-top: 0px !important;
+        }
+    }
+
+    .items-table .mat-header-cell {
+        color: #AFAFAF !important;
+    }
+
+    .spec-general, .spec-cover, .spec-text, .spec-binding, .spec-other, .spec-child-isbn, .spec-dvd, .spec-web-code, .spec-layout-prep  {
+        padding-left: 10px;
+        padding-top: 5px;
+        padding-right: 5px;
+        padding-bottom: 10px;
+    }
+    .spec-general mat-form-field, .spec-cover mat-form-field, .spec-text mat-form-field, .spec-binding mat-form-field, 
+    .spec-other mat-form-field, .spec-child-isbn mat-form-field, .spec-dvd mat-form-field, .spec-web-code mat-form-field,
+    .spec-layout-prep mat-form-field {
+        width: inherit;
+    }
+}

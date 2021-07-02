@@ -73,6 +73,11 @@ export class HeaderMenuComponent implements OnInit {
     } else {
       this.dynamicHeaderMenuService.displayAddNewQuotationButton(false);
     }
+    if (this.currentUrl === AppPageRoutes.DASHBOARD) {
+      this.dynamicHeaderMenuService.setDisplayEmbededLinkButton(true);
+    } else {
+      this.dynamicHeaderMenuService.setDisplayEmbededLinkButton(false);
+    }
   }
 
   private setHeaderLabel() {

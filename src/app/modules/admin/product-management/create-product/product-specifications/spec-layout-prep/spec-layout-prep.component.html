@@ -1,48 +1,96 @@
-<div class="row spec-layout-prep" [ngClass]="(store.$productSpecReadonly | async) && !(store.$IsPrepressModule | async) ? 'readonly-box' : '' ">
-    <div class="col-lg-12">
+<div class="row spec-layout-prep">
+    <div class="col-lg-10">
         <span class="font-16px font-roboto-bold">Layout Prep</span>
         <mat-hint class="font-14px d-flex">Decide how the product is to be manufactured</mat-hint>
+    </div>
+    <div class="col-lg-2">
+        <button *ngIf="fromPlanning" mat-button (click)="Release()" style="margin-bottom: 10px;"
+              class="btn btn-primary mr-2">Release</button>
     </div>
 
     <div class="col-lg-12 pt-2 pb-4">
         <mat-divider></mat-divider>
     </div>
+    <ng-container *ngIf="!(store.$planningModuleState | async)">
+        <div class="col-lg-12 pl-0" [ngClass]="
+        (store.$productSpecReadonly | async) && 
+        !(store.$IsPrepressModule | async) ? 'readonly-box' : '' ">
+            <div class="col-lg-12 display-flex pl-4">
+                <span class="labels font-14px" style="color: #717171">Imposition Inputs</span>
+            </div>
+            <div class="col-lg-12  display-flex pl-0">
+                <div class="col-lg-4 display-flex-direction-column">
+                    <mat-radio-group class="pt-3" (change)="radioChange()" [(ngModel)]="impositionInput">
+                        <mat-radio-button value="250">250</mat-radio-button>
+                        <mat-radio-button value="500">500</mat-radio-button>
+                        <mat-radio-button value="750">750</mat-radio-button>
+                        <mat-radio-button value="1000">1000</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div class="col-lg-3 display-flex-direction-column">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Desired Qty</mat-label>
+                        <input matInput [(ngModel)]="desiredQuantity" type="number" min="0">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg- display-flex-direction-column" style="top: 0px !important;">
+                    <button class="mat-focus-indicator btn btn-primary mat-button mat-button-base text-upper-case"
+                        (click)="getEstimateLayout()">Calculate</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 pt-6 pb-6">
+            <mat-divider></mat-divider>
+        </div>
+    </ng-container>
 
-    <div class="col-lg-12">
-        <span class="labels font-14px" style="color: #717171">Imposition Inputs</span>
+
+
+    <div class="col-lg-12 pt-3">
+        <span class="labels font-14px">Components</span>
     </div>
-
     <div class="col-lg-12 pt-6 pb-6">
         <mat-divider></mat-divider>
     </div>
-
-    <div class="col-lg-12 padding-0px">
+    <div class="col-lg-12 padding-0px"
+        [ngClass]="(store.$productSpecReadonly | async) && !(store.$IsPrepressModule | async) ? 'readonly-box' : '' ">
         <div class="tab-content">
             <!--begin::Table-->
             <div class="">
-                <table
-                    class="table table-head-custom table-head-bg table-borderless table-vertical-center component-table">
+                <table class="table table-head-custom table-head-bg table-borderless table-vertical-center component-table">
                     <thead>
                         <tr class="text-left text-uppercase">
                             <th *ngFor="let item of columnsToDisplayCompTable"> {{item}}</th>
                         </tr>
                     </thead>
                     <tbody>
+
+                        <!-- default value -->
                         <tr class="outer-row" *ngFor="let row of layoutPrepVM?.Components">
                             <td>{{row.ComponentType === componentTypes.None ? '' : row.ComponentType }}</td>
                             <td>
                                 <mat-form-field appearance="fill" class="width-100">
                                     <mat-select [(ngModel)]="row.ImpositionLayout">
-                                        <mat-option *ngFor="let item of impositionListObjectsKey[row.ComponentType]" [value]="item.layoutName">
-                                            {{item.layoutName}}</mat-option>
+                                        <ng-container *ngIf="row.ImpositionLayout">
+                                            <mat-option *ngFor="let item of impositionListObjectsKey[row.ComponentType]"
+                                                [value]="item.layoutName">
+                                                {{item.layoutName}}</mat-option>
+                                        </ng-container>
                                     </mat-select>
                                 </mat-form-field>
                             </td>
                             <td>
-                                <mat-form-field appearance="fill" class="width-100" *ngIf="!(row.ComponentType === componentTypes.Cover || row.ComponentType === componentTypes.Jacket)" >
-                                    <mat-select [(ngModel)]="row.GrainDirectionInternal">
-                                        <mat-option value="True">True</mat-option>
-                                        <mat-option value="False">False</mat-option>
+                                <mat-form-field appearance="fill" class="width-100">
+                                    <mat-select [(ngModel)]="row.GrainDirectionInternal"
+                                        [(value)]="row.GrainDirectionInternal">
+                                        <ng-container *ngIf="row.GrainDirectionInternal">
+                                            <mat-option [value]="row.GrainDirectionInternal">
+                                                {{row.GrainDirectionInternal}} </mat-option>
+                                        </ng-container>
+                                        <ng-container *ngIf="!row.GrainDirectionInternal">
+                                            <mat-option value="">True</mat-option>
+                                            <mat-option value="">False</mat-option>
+                                        </ng-container>
                                     </mat-select>
                                 </mat-form-field>
                             </td>
@@ -60,14 +108,15 @@
                                 <mat-form-field appearance="fill">
                                     <mat-select [(ngModel)]="row.Paper">
                                         <ng-container *ngIf="row.Paper">
+
                                             <mat-option *ngFor="let item of paperListObjectsKey[row.ComponentType]"
-                                            [value]="item.paperNo"> {{item.paperNo}} </mat-option>
+                                                [value]="item.paperNo"> {{item.paperNo}} </mat-option>
                                         </ng-container>
                                         <ng-container *ngIf="!row.Paper">
                                             <mat-option *ngFor="let item of paperListObjectsKey[row.ComponentType]"
-                                            value=""> {{item.paperNo}} </mat-option>
+                                                value=""> {{item.paperNo}} </mat-option>
                                         </ng-container>
-                                       
+
                                     </mat-select>
                                 </mat-form-field>
                             </td>
@@ -77,10 +126,7 @@
                         </tr>
                         <tr class="outer-row" *ngIf="!layoutPrepVM && shouldShowLoader">
                             <td colspan="6">
-                                <mat-progress-spinner
-                                    style="margin: auto" 
-                                  color="primary" 
-                                  mode="indeterminate">
+                                <mat-progress-spinner style="margin: auto" color="primary" mode="indeterminate">
                                 </mat-progress-spinner>
                             </td>
                         </tr>
@@ -103,19 +149,19 @@
         <div class="tab-content">
             <!--begin::Table-->
             <div class="">
-                <table
-                    class="table table-head-custom table-head-bg table-borderless table-vertical-center component-table table-responsive">
+                <table class="table table-head-custom table-head-bg table-borderless table-vertical-center component-table table-responsive">
                     <thead>
                         <tr class="text-left text-uppercase">
                             <th *ngFor="let item of columnsToDisplayCompBreakTable"> {{item}}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor="let row of layoutPrepVM?.ComponentsBreakdown; let i = index" >
+                        <!-- default value -->
+                        <ng-container *ngFor="let row of layoutPrepVM?.ComponentsBreakdown; let i = index">
                             <tr style="cursor: pointer;"
-                            [ngClass]="selectedComponentBreakdown === row.Id ? 'outer-row selected-background' : 'outer-row'"
-                            (click)="handleComponentBreakdownSelection(row.Id)">
-                                <td> {{row.ComponentsSNo}} </td>
+                                [ngClass]="selectedComponentBreakdown === row.Id ? 'outer-row selected-background' : 'outer-row'"
+                                (click)="handleComponentBreakdownSelection(row.SNo)">
+                                <td> {{row.SNo}} </td>
                                 <td> {{row.ComponentType}} </td>
                                 <td> {{row.Layout}} </td>
                                 <td> {{row.Quantity}} </td>
@@ -146,15 +192,28 @@
                                 </td>
                             </tr>
                         </ng-container>
-                        <tr class="outer-row" *ngIf="!(layoutPrepVM?.ComponentsBreakdown.length > 0) && !shouldShowLoader">
+                        <tr style="cursor: pointer; height: 42px" class="outer-row"
+                            (click)="handleComponentBreakdownSelection('Other')">
+                            <td>-</td>
+                            <td>Binding & Others</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr class="outer-row"
+                            *ngIf="!(layoutPrepVM?.ComponentsBreakdown.length > 0) && !shouldShowLoader">
                             <td colspan="11" style="text-align: center;">No records found</td>
                         </tr>
                         <tr class="outer-row" *ngIf="!layoutPrepVM && shouldShowLoader">
                             <td colspan="11">
-                                <mat-progress-spinner
-                                    style="margin: auto" 
-                                  color="primary" 
-                                  mode="indeterminate">
+                                <mat-progress-spinner style="margin: auto" color="primary" mode="indeterminate">
                                 </mat-progress-spinner>
                             </td>
                         </tr>
@@ -165,14 +224,15 @@
         </div>
     </div>
 
-    <a class="pl-3" (click)="openModal('ADD_COMPONENT_BREAKDOWN')" 
+    <a class="pl-3" (click)="openModal('ADD_COMPONENT_BREAKDOWN', 'Add A Production Activity')"
+        [ngClass]="(store.$productSpecReadonly | async) && !(store.$IsPrepressModule | async) ? 'readonly-box' : '' "
         *ngIf="layoutPrepVM && store.$IsPrepressModule | async">
         <span class="material-icons add-icon pr-2 cursor-pointer font-18px ">
             add_circle_outline
         </span>
         <span class="font-12px blue-link ">Add Another</span>
     </a>
-
+    
     <div class="col-lg-12 pt-6 pb-6">
         <mat-divider></mat-divider>
     </div>
@@ -189,18 +249,19 @@
         <div class="tab-content">
             <!--begin::Table-->
             <div class="">
-                <table
-                    class="table table-head-custom table-head-bg table-borderless table-vertical-center product-activitiy-table table-responsive">
+                <!-- original -->
+                <table class="table table-head-custom table-head-bg table-borderless table-vertical-center product-activitiy-table table-responsive">
                     <thead>
                         <tr class="text-left text-uppercase">
                             <th *ngFor="let item of columnsToDisplayProdActivityTable"> {{item}}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor="let row of productionActivitiesList;let i = index;">
+                        <ng-container *ngFor="let row of ProductionActivitiesList;let i = index;">
                             <tr class="outer-row">
                                 <td> {{row.ComponentBreakdownSNo}}</td>
                                 <td> {{row.Dept}} </td>
+                                <td *ngIf="showVendorCode"> {{row.VendorCode}} </td>
                                 <td> {{row.Type}} </td>
                                 <td> {{row.Qty}} </td>
                                 <td> {{row.Layout}} </td>
@@ -208,8 +269,8 @@
                                     {{row.ProcessCode}} {{row.Activity}}
                                 </td>
                                 <td> ${{row.TotalEstCost}} </td>
-                                <td> 2.86% </td>
-                                <td> {{row.Unit}} </td>
+                                <td> {{row.AvgCost}}% </td>
+                                <!-- <td> {{row.Unit}} </td> -->
                                 <td> {{row.Duration}} </td>
                                 <td> ${{row.UnitCost}} </td>
                                 <td> ${{row.NewUnitCost}} </td>
@@ -222,197 +283,70 @@
                                         }}
                                     </span>
                                 </td>
+                                <td [ngClass]="((store.$productSpecReadonly | async) && !(store.$IsPrepressModule | async) && !(store.$planningModuleState | async)) ? 'readonly-box pb-0' : 'action-column pb-0' ">
+                                    <span  
+                                    class="material-icons add-icon pr-2 cursor-pointer " style="font-size: 27px !important;" 
+                                     (click)="addNewOutsource('ADD_PRODUCTION_ACTIVITIES_MODAL', 'Add Outsource', row.ComponentBreakdownSNo, row.ProcessCode, row.Activity, row.Dept, row.Description, row.Id)">
+                                        add_circle_outline
+                                    </span>
+                                    <!-- <i class="fas fa-plus-square" ></i> -->
+                                </td>
+                                <td class="action-column pb-0">
+                                    <i *ngIf="newAddProductionActivity?.includes(row)" class="fas fa-trash" (click)="remove(i)"></i>
+                                </td>
                             </tr>
                             <ng-container *ngIf="shouldShowDetails && i == rowIdToExpand" class="width-100">
                                 <tr>
                                     <td colspan="14" class="pl-0">
-                                        <table
-                                        class="table table-head-custom table-head-bg table-borderless 
-                                        table-vertical-center product-activitiy-child-table mb-0">
-                                        <thead>
-                                            <tr class="text-left text-uppercase expandedRow padding-11" style="border-bottom: 1px solid #e6e6e6;">
-                                                <th class="info-label">In Use</th>
-                                                <th class="info-label">Operation Code</th>
-                                                <th class="info-label">Operation Description</th>
-                                                <th class="info-label"></th>
-                                                <th class="info-label">UOM</th>
-                                                <th class="info-label">Unit Selling Price</th>
-                                                <th class="info-label">Sales Amount</th>
-                                                <th class="info-label">Formula Code</th>
-                                                <th class="info-label">Speed Table</th>
-                                                <th class="info-label"> Price List Code</th>
-                                                <th class="info-label"></th>
-                                                <th class="info-label"></th>
-                                                <th class="info-label"></th>
-                                                <th class="info-label"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                                <td class="info-label">
-                                                    <span class="material-icons" style="color:green">
-                                                        done
-                                                    </span>
-                                                </td>
-                                                <td class="info-label">110</td>
-                                                <td class="info-label">-</td>
-                                                <td class="info-label">1</td>
-                                                <td class="info-label">MAKEREADYPRINT</td>
-                                                <td class="info-label">16</td>
-                                                <td class="info-label">125.00</td>
-                                                <td class="info-label">4202</td>
-                                                <td class="info-label">-</td>
-                                                <td class="info-label">19212</td>
-                                                <td class="info-label"></td>
-                                                <td class="info-label"></td>
-                                                <td class="info-label"></td>
-                                                <td class="info-label"></td>
-                                            </tr>
-                                            <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                                <td class="info-label"></td>
-                                                <td class="info-label">110</td>
-                                                <td class="info-label">-</td>
-                                                <td class="info-label">1</td>
-                                                <td class="info-label">MAKEREADYPRINT</td>
-                                                <td class="info-label">16</td>
-                                                <td class="info-label">125.00</td>
-                                                <td class="info-label">4202</td>
-                                                <td class="info-label">-</td>
-                                                <td class="info-label">19212</td>
-                                                <td class="info-label"></td>
-                                                <td class="info-label"></td>
-                                                <td class="info-label"></td>
-                                                <td class="info-label"></td>
-                                            </tr>
-                                            <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                                <td class="info-label"></td>
-                                                <td class="info-label">110</td>
-                                                <td class="info-label">-</td>
-                                                <td class="info-label">360</td>
-                                                <td class="info-label">MAKEREADYPRINT</td>
-                                                <td class="info-label">16</td>
-                                                <td class="info-label">125.00</td>
-                                                <td class="info-label">4202</td>
-                                                <td class="info-label">-</td>
-                                                <td class="info-label">19212</td>
-                                                <td class="info-label"></td>
-                                                <td class="info-label"></td>
-                                                <td class="info-label"></td>
-                                                <td class="info-label"></td>
-                                            </tr>
-                                            <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                                <td class="info-label">
-                                                    <span class="material-icons" style="color:green">
-                                                        done
-                                                    </span>
-                                                </td>
-                                                <td class="info-label">110</td>
-                                                <td class="info-label">-</td>
-                                                <td class="info-label">1</td>
-                                                <td class="info-label">MAKEREADYPRINT</td>
-                                                <td class="info-label">16</td>
-                                                <td class="info-label">125.00</td>
-                                                <td class="info-label">4202</td>
-                                                <td class="info-label">-</td>
-                                                <td class="info-label">19212</td>
-                                                <td class="info-label"></td>
-                                                <td class="info-label"></td>
-                                                <td class="info-label"></td>
-                                                <td class="info-label"></td>
-                                            </tr>
-                                        </tbody>
+                                        <table class="table table-head-custom table-head-bg table-borderless 
+                                    table-vertical-center product-activitiy-child-table mb-0">
+                                            <thead>
+                                                <tr class="text-left text-uppercase expandedRow padding-11"
+                                                    style="border-bottom: 1px solid #e6e6e6;">
+                                                    <th class="info-label">In Use</th>
+                                                    <th class="info-label">Operation Code</th>
+                                                    <th class="info-label">Operation Description</th>
+                                                    <th class="info-label"></th>
+                                                    <th class="info-label">UOM</th>
+                                                    <th class="info-label">Quantity</th>
+                                                    <!-- <th class="info-label">Unit Selling Price</th> -->
+                                                    <th class="info-label">Sales Amount</th>
+                                                    <th class="info-label">Formula Code</th>
+                                                    <th class="info-label">Speed Table</th>
+                                                    <th class="info-label"> Price List Code</th>
+                                                    <th class="info-label"></th>
+                                                    <th class="info-label"></th>
+                                                    <th class="info-label"></th>
+                                                    <th class="info-label"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let subRow of ProductionActivitiesList[i].ProductionProcesses"
+                                                    class="expandedRow" style="border-bottom: 1px solid #afafaf;">
+                                                    <td class="info-label">
+                                                        <span *ngIf="subRow.mandatory" class="material-icons" style="color:green">
+                                                            done
+                                                        </span>
+                                                    </td>
+                                                    <td class="info-label">{{subRow.ProcessCode}}</td>
+                                                    <td class="info-label">{{subRow.Description}}</td>
+                                                    <td class="info-label"></td>
+                                                    <td class="info-label">{{subRow.Uom}}</td>
+                                                    <td class="info-label">{{subRow.Quantity}}</td>
+                                                    <!-- <td class="info-label">{{subRow.Price}}</td> -->
+                                                    <td class="info-label">{{subRow.Amount}}</td>
+                                                    <td class="info-label">{{subRow.FormulaId}}</td>
+                                                    <td class="info-label">{{subRow.Speed}}</td>
+                                                    <td class="info-label">{{subRow.PriceListId}}</td>
+                                                    <td class="info-label"></td>
+                                                    <td class="info-label"></td>
+                                                    <td class="info-label"></td>
+                                                    <td class="info-label"></td>
+                                                </tr>
+                                            </tbody>
                                         </table>
                                     </td>
                                 </tr>
-                               
-                                <!-- <tr class="expandedRow padding-11" style="border-bottom: 1px solid #e6e6e6;">
-                                    <th class="info-label">In Use</th>
-                                    <th class="info-label">Operation Code</th>
-                                    <th class="info-label">Operation Description</th>
-                                    <th class="info-label"></th>
-                                    <th class="info-label">UOM</th>
-                                    <th class="info-label">Unit Selling Price</th>
-                                    <th class="info-label">Sales Amount</th>
-                                    <th class="info-label">Formula Code</th>
-                                    <th class="info-label">Speed Table</th>
-                                    <th class="info-label"> Price List Code</th>
-                                    <th class="info-label"></th>
-                                    <th class="info-label"></th>
-                                    <th class="info-label"></th>
-                                    <th class="info-label"></th>
-                                </tr>
-                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                    <td class="info-label">
-                                        <span class="material-icons" style="color:green">
-                                            done
-                                        </span>
-                                    </td>
-                                    <td class="info-label">110</td>
-                                    <td class="info-label">-</td>
-                                    <td class="info-label">1</td>
-                                    <td class="info-label">MAKEREADYPRINT</td>
-                                    <td class="info-label">16</td>
-                                    <td class="info-label">125.00</td>
-                                    <td class="info-label">4202</td>
-                                    <td class="info-label">-</td>
-                                    <td class="info-label">19212</td>
-                                    <td class="info-label"></td>
-                                    <td class="info-label"></td>
-                                    <td class="info-label"></td>
-                                    <td class="info-label"></td>
-                                </tr>
-                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                    <td class="info-label"></td>
-                                    <td class="info-label">110</td>
-                                    <td class="info-label">-</td>
-                                    <td class="info-label">1</td>
-                                    <td class="info-label">MAKEREADYPRINT</td>
-                                    <td class="info-label">16</td>
-                                    <td class="info-label">125.00</td>
-                                    <td class="info-label">4202</td>
-                                    <td class="info-label">-</td>
-                                    <td class="info-label">19212</td>
-                                    <td class="info-label"></td>
-                                    <td class="info-label"></td>
-                                    <td class="info-label"></td>
-                                    <td class="info-label"></td>
-                                </tr>
-                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                    <td class="info-label"></td>
-                                    <td class="info-label">110</td>
-                                    <td class="info-label">-</td>
-                                    <td class="info-label">360</td>
-                                    <td class="info-label">MAKEREADYPRINT</td>
-                                    <td class="info-label">16</td>
-                                    <td class="info-label">125.00</td>
-                                    <td class="info-label">4202</td>
-                                    <td class="info-label">-</td>
-                                    <td class="info-label">19212</td>
-                                    <td class="info-label"></td>
-                                    <td class="info-label"></td>
-                                    <td class="info-label"></td>
-                                    <td class="info-label"></td>
-                                </tr>
-                                <tr class="expandedRow" style="border-bottom: 1px solid #afafaf;">
-                                    <td class="info-label">
-                                        <span class="material-icons" style="color:green">
-                                            done
-                                        </span>
-                                    </td>
-                                    <td class="info-label">110</td>
-                                    <td class="info-label">-</td>
-                                    <td class="info-label">1</td>
-                                    <td class="info-label">MAKEREADYPRINT</td>
-                                    <td class="info-label">16</td>
-                                    <td class="info-label">125.00</td>
-                                    <td class="info-label">4202</td>
-                                    <td class="info-label">-</td>
-                                    <td class="info-label">19212</td>
-                                    <td class="info-label"></td>
-                                    <td class="info-label"></td>
-                                    <td class="info-label"></td>
-                                    <td class="info-label"></td>
-                                </tr> -->
                             </ng-container>
                         </ng-container>
                         <tr class="outer-row" *ngIf="!(productionActivitiesList.length > 0) && !shouldShowLoader">
@@ -420,10 +354,7 @@
                         </tr>
                         <tr class="outer-row" *ngIf="!layoutPrepVM && shouldShowLoader">
                             <td colspan="14">
-                                <mat-progress-spinner
-                                    style="margin: auto" 
-                                  color="primary" 
-                                  mode="indeterminate">
+                                <mat-progress-spinner style="margin: auto" color="primary" mode="indeterminate">
                                 </mat-progress-spinner>
                             </td>
                         </tr>
@@ -433,7 +364,9 @@
             <!--end::Table-->
         </div>
     </div>
-    <a class="pl-3" (click)="openModal('ADD_PRODUCTION_ACTIVITIES_MODAL')" *ngIf="layoutPrepVM">
+    <a class="pl-3"
+        [ngClass]="((store.$productSpecReadonly | async) && !(store.$IsPrepressModule | async) && !(store.$planningModuleState | async)) ? 'readonly-box' : '' "
+        (click)="openModal('ADD_PRODUCTION_ACTIVITIES_MODAL', 'Add A Product Activity')" *ngIf="layoutPrepVM">
         <span class="material-icons add-icon pr-2 cursor-pointer font-18px ">
             add_circle_outline
         </span>
@@ -442,14 +375,16 @@
 </div>
 
 
-<app-modal id="ADD_PRODUCTION_ACTIVITIES_MODAL" size="modal-md" *ngIf="selectedModalToOpen === UimodalIds.ADD_PRODUCTION_ACTIVITIES_MODAL">
-    <app-add-production-activity-modal (acceptEvent)="handleAddProductionActivityModalEvent($event)" 
-    [componentBreakDownList]="layoutPrepVM?.ComponentsBreakdown">
+<app-modal id="ADD_PRODUCTION_ACTIVITIES_MODAL" size="modal-md"
+    *ngIf="selectedModalToOpen === UimodalIds.ADD_PRODUCTION_ACTIVITIES_MODAL">
+    <app-add-production-activity-modal (acceptEvent)="handleAddProductionActivityModalEvent($event)" [impositionInput]="impositionInput" [componentList]="layoutPrepVM?.Components" [label]="label" [componentId]="componentId"
+    [processCode]="processCode" [isOutsource]="isOutsource" [dept]="dept" [description]="description" [Id]="comId" [activity]="activity" [componentBreakDownList]="layoutPrepVM?.ComponentsBreakdown">
     </app-add-production-activity-modal>
 </app-modal>
 
-<app-modal id="ADD_COMPONENT_BREAKDOWN" size="modal-md" *ngIf="selectedModalToOpen === UimodalIds.ADD_COMPONENT_BREAKDOWN">
+<app-modal id="ADD_COMPONENT_BREAKDOWN" size="modal-md"
+    *ngIf="selectedModalToOpen === UimodalIds.ADD_COMPONENT_BREAKDOWN">
     <app-add-component-breakdown (acceptEvent)="handleAddComponentBreakdownEvent($event)"
-    [componentList]="layoutPrepVM?.Components">
+        [componentList]="layoutPrepVM?.Components">
     </app-add-component-breakdown>
 </app-modal>

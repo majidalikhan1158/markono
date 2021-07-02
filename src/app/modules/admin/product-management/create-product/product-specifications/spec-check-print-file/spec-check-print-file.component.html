@@ -138,7 +138,7 @@
       <mat-divider></mat-divider>
     </div>
 
-    <div class="col-lg-12 pt-3" style="display: grid;" *ngIf="!(store.$IsPrepressModule | async)">
+    <div class="col-lg-12 pt-3" style="display: grid;" *ngIf="!(store.$IsPrepressModule | async) && 0 > 1">
       <mat-checkbox [(ngModel)]="viewModal.checkBoxApproval">
         The customer has acknowledged the print defects/revisions made and has given explicit approval to proceed with
         printing.

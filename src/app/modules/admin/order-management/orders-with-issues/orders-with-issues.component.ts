@@ -2,22 +2,17 @@ import {
   Component,
   OnInit,
   ViewChild,
-  AfterViewInit,
   ViewEncapsulation,
   ChangeDetectorRef,
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import {
-  OrderSearchFilters,
   OrdersWithIssueSearchFilters,
   OrdersWithIssueSearchFilterTypes,
   PrintTypes,
 } from 'src/app/modules/shared/models/table-filter-modals';
-import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
-import { Router } from '@angular/router';
-import { ViewByArray, OrdersModel, StatusTypesArray, OrdersIssueModel, OrderVM } from 'src/app/modules/shared/models/order-management';
-import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
+import { ViewByArray, StatusTypesArray, OrderVM } from 'src/app/modules/shared/models/order-management';
 import { Subscription } from 'rxjs';
 import { OrderService } from 'src/app/modules/services/core/services/order.service';
 
@@ -32,9 +27,9 @@ export class OrdersWithIssuesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = [
     'id',
-    'JobNo', //not aviable in api (jobno)
+    'JobNo', // not aviable in api (jobno)
     'YourReference',
-    'ISBNPartNo', //not aviable in api (isbn)
+    'ISBNPartNo', // not aviable in api (isbn)
     'OrderDate',
     'RequestedDeliveryDate',
     'Qty',
@@ -56,21 +51,24 @@ export class OrdersWithIssuesComponent implements OnInit {
   viewByFilter = '';
   selectedOrderType = '';
   subscription: Subscription;
+  isLoading = true;
   //#endregion
 
   constructor(
     private orderService: OrderService,
-    private cd: ChangeDetectorRef,) {
-    this.tableFilters = { currentSelectedFilter: '', yourReference: '', printVisJobNo: '', printAiJobNo: '', isbn: '', orderDate: '', requestedDeliveryDate: '', currentActivityStatusName: '', type: '', companyName: '' };
+    private cd: ChangeDetectorRef, ) {
+    this.tableFilters = { currentSelectedFilter: '', yourReference: '', printVisJobNo: '',
+    printAiJobNo: '', isbn: '', orderDate: '', requestedDeliveryDate: '', currentActivityStatusName: '', type: '', companyName: '' };
   }
 
   ngOnInit(): void {
-    this.getAllIssueOrders()
+    this.getAllIssueOrders();
   }
 
   getAllIssueOrders() {
     this.subscription = this.orderService.getAllIssueOrders().subscribe(resp => {
       this.dataArray = resp.body.result ? resp.body.result as OrderVM[] : [];
+      this.dataArray.map(data => {console.log(data.CompanyName);});
       this.initializeDatatable();
     });
   }
@@ -79,12 +77,8 @@ export class OrdersWithIssuesComponent implements OnInit {
     this.dataSource = new MatTableDataSource<OrderVM>(this.dataArray);
     this.dataSource.paginator = this.paginator;
     this.dataSource.filterPredicate = this.customFilterPredicate();
+    this.isLoading = false;
     this.cd.detectChanges();
-  }
-
-  ngAfterViewInit() {
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.filterPredicate = this.customFilterPredicate();
   }
 
   applySearch(event: Event) {
@@ -294,11 +288,12 @@ export class OrdersWithIssuesComponent implements OnInit {
 
   viewByFilterChange(filterValue: string, filterPropType: string) {
     if (filterPropType === this.tableFilterTypes.CURRENTACTIVITYSTATUSNAME) {
-      this.tableFilters.currentActivityStatusName = this.selectedStatus = this.tableFilters.currentActivityStatusName === filterValue ? '' : filterValue;
+      this.tableFilters.currentActivityStatusName = this.selectedStatus =
+      this.tableFilters.currentActivityStatusName === filterValue ? '' : filterValue;
     } else {
 
     }
-    //this.tableFilters.currentSelectedFilter = filterPropType;
+    // this.tableFilters.currentSelectedFilter = filterPropType;
     this.dataSource.filter = JSON.stringify(this.tableFilters);
   }
 

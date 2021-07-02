@@ -6,8 +6,7 @@ import { MaterialDataList } from 'src/app/modules/services/shared/classes/produc
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/product-spec-helper.service';
-import { FinishingTypeList, BindingTypeList, ColorTypeList, OtherComponentChooseList } from 'src/app/modules/shared/enums/product-management/product-constants';
-import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
+import { BindingTypeList, ColorTypeList, GreyboardThicknessList, OtherComponentChooseList, ProductSpecificationTypes, OtherComponentChooseTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { OtherVM, DvdCDBindingMapper } from 'src/app/modules/shared/models/product-spec';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
 
@@ -19,18 +18,24 @@ import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spe
 })
 export class SpecOtherComponent implements OnInit, OnDestroy {
   productSpecTypes = ProductSpecTypes;
-  columnsToDisplay = ['#', 'Type', 'Weight', 'Material', 'Brand', 'Color Extend', 'Mono Extend', 'Total Extend' ];
+  greyboardThicknessList = GreyboardThicknessList.sort();
+  columnsToDisplay = ['#', 'Type', 'Weight', 'Material', 'Brand', 'Color Extend', 'Mono Extend', 'Total Extend'];
   viewModal: OtherVM[] = [];
   rowIdToExpand = 0;
   shouldShowOtherDetails = false;
   ExpansionIcons = ExpansionIcons;
   otherComponentChooseList = OtherComponentChooseList.sort();
+  productSpecTypesConstant = ProductSpecificationTypes;
 
   materialDataList: MaterialDataList[];
-  materialWeightList: string[];
-  materialList: string[];
-  materialBrandList: string[];
-  finishingTypeList: string[];
+  slipcaseMaterialDataList: MaterialDataList[];
+
+  materialWeightList: [string[]] = [[]];
+  materialList: [string[]] = [[]];
+  materialBrandList: [string[]] = [[]];
+  finishingTypeList: [string[]] = [[]];
+  finishingTypeDataList: string[];
+  slipcaseFinishingTypeDataList: string[];
   colorTypeList = ColorTypeList;
   selectedFinishingTypes: string[] = [];
 
@@ -54,44 +59,83 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
   constructor(public store: ProductSpecStore, private helper: ProductSpecHelperService) { }
 
   ngOnInit(): void {
+    this.handleUpdateStore();
     this.handleOtherComponentChooseFilterAutoComplete();
-    this.store.getCoverMaterialWeight('Text', ProductSpecTypes.OTHER_COMPONENT);
+    this.store.getMaterialWeight('Text', ProductSpecTypes.OTHER_COMPONENT);
     this.store.getFinishingTypes('Text', ProductSpecTypes.OTHER_COMPONENT);
+    this.store.getMaterialWeight('SlipCase', ProductSpecTypes.OTHER_COMPONENT, true);
+    this.store.getFinishingTypes('SlipCase', ProductSpecTypes.OTHER_COMPONENT, true);
     this.getApiData();
     this.getDefaultRecord();
+  }
+
+  handleComponentTypeChange = (index: number) => {
+    this.viewModal[index].type = this.viewModal[index].componentType;
+    if (this.viewModal[index].componentType === OtherComponentChooseTypes.SLIPCASE) {
+      this.finishingTypeList[index] = this.slipcaseFinishingTypeDataList;
+      this.materialWeightList[index] = [...new Set(this.slipcaseMaterialDataList.map(x => x.PaperWeight))].sort(this.helper.sortComparer);
+      console.log(this.materialWeightList[index]);
+      this.handleMaterialWeightFilterAutoComplete(index);
+    } else {
+      this.finishingTypeList[index] = this.finishingTypeDataList;
+      this.materialWeightList[index] = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort(this.helper.sortComparer);
+      this.handleMaterialWeightFilterAutoComplete(index);
+    }
+
+  }
+
+  handleUpdateStore = () => {
+    this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
+      if (resp && resp === this.productSpecTypesConstant.OTHER_COMPONENT) {
+        this.pushToStore();
+      }
+    });
   }
 
   getApiData = () => {
     this.subscription = this.store.$otherMaterialDataList.subscribe(list => {
       this.materialDataList = list;
-      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort();
-      this.handleMaterialWeightFilterAutoComplete();
+    });
+
+    this.subscription = this.store.$otherSlipCaseMaterialDataList.subscribe(list => {
+      this.slipcaseMaterialDataList = list;
     });
 
     this.subscription = this.store.$otherFinishingTypeList.subscribe(list => {
-      this.finishingTypeList = list.sort();
-      this.handleFinishingTypeFilterAutoComplete();
+      this.finishingTypeDataList = list.sort();
+    });
+
+    this.subscription = this.store.$otherSlipCaseFinishingTypeList.subscribe(list => {
+      this.slipcaseFinishingTypeDataList = list.sort();
     });
   }
 
   handleMaterialWeightChange = (type: string, index: number) => {
+    const isComponentTypeSlipCase = this.viewModal[index].componentType === OtherComponentChooseTypes.SLIPCASE;
     if (type === 'MATERIALWEIGHT') {
-      const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal[index].textMaterialWeight);
-      this.materialList = [...new Set(records.map(x => x.PaperMaterial))].sort();
-      this.handleMaterialFilterAutoComplete();
+      const records = isComponentTypeSlipCase
+        ? this.slipcaseMaterialDataList.filter(x => x.PaperWeight === this.viewModal[index].textMaterialWeight)
+        : this.materialDataList.filter(x => x.PaperWeight === this.viewModal[index].textMaterialWeight);
+
+      this.materialList[index] = [...new Set(records.map(x => x.PaperMaterial))].sort();
+      this.filteredMaterialList.next([]);
+      this.filteredMaterialBrandList.next([]);
+      this.handleMaterialFilterAutoComplete(index);
     } else if (type === 'MATERIAL') {
-      const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal[index].textMaterial);
-      this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))].sort();
-      this.handleMaterialBrandFilterAutoComplete();
+      const records = isComponentTypeSlipCase
+        ? this.slipcaseMaterialDataList.filter(x => x.PaperWeight === this.viewModal[index].textMaterialWeight && x.PaperMaterial === this.viewModal[index].textMaterial)
+        : this.materialDataList.filter(x => x.PaperWeight === this.viewModal[index].textMaterialWeight && x.PaperMaterial === this.viewModal[index].textMaterial);
+
+      this.materialBrandList[index] = [...new Set(records.map(x => x.PaperBrand))].sort();
+      this.handleMaterialBrandFilterAutoComplete(index);
     }
   }
 
-  showDvdDetails(rowId: number) {
+  showDvdDetails(rowId: number, index: number) {
     if (this.rowIdToExpand === rowId) {
       this.rowIdToExpand = 0;
       this.shouldShowOtherDetails = !this.shouldShowOtherDetails;
     } else {
-      const index = rowId - 1;
       if (this.viewModal[index].textMaterialWeight) {
         this.handleMaterialWeightChange('MATERIALWEIGHT', index);
       }
@@ -111,12 +155,17 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
     }
   }
 
-  addPantoneColour(event: Event, index: number) {
-    const value = (event.target as HTMLInputElement).value;
+  addPantoneColour(event: Event, index: number, color: string) {
+    let value;
+    if (event) {
+      value = (event.target as HTMLInputElement).value;
+      (event.target as HTMLInputElement).value = '';
+    } else {
+      value = color;
+    }
     if (value !== '' && this.viewModal[index].pantoneColour.indexOf(value) === -1) {
       this.viewModal[index].pantoneColour.push(value);
     }
-    (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelection(item: string, index: number) {
@@ -132,7 +181,15 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
   getDefaultRecord = () => {
     this.store.$productSpecStore.subscribe((resp) => {
       if (resp && resp.otherVM && resp.otherVM.length > 0) {
+        const isEqual = this.objectsEqual(this.viewModal, resp.otherVM);
         this.viewModal = resp.otherVM;
+        if (!isEqual) {
+          this.handleTypeChange(0);
+          // this.showDvdDetails(this.viewModal[0].id, 0);
+        }
+        this.viewModal.forEach((v, k) => {
+          this.handleComponentTypeChange(k);
+        });
       } else {
         if (this.viewModal.length === 0) {
           this.viewModal.push(this.initialObject());
@@ -140,6 +197,11 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  objectsEqual = (o1, o2) =>
+    Object.keys(o1).length === Object.keys(o2).length
+    && Object.keys(o1).every(p => o1[p] === o2[p]);
+
 
   initialObject = () => {
     const totalRows = this.viewModal.length;
@@ -154,6 +216,8 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
       totalExtend: '',
       componentType: '',
       orientationType: '',
+      Length: 0,
+      OpenSizeLength: 0,
       height: 0,
       width: 0,
       isOpenSize: false,
@@ -168,11 +232,13 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
       noOfMonoExtent: 0,
       totalExtent: 0,
       noOfColours: 0,
+      selectedColours: '',
       colorType: [],
       pantoneColour: [],
       finishingType: [],
       specialInstructions: '',
-      bindingVM: null
+      bindingVM: null,
+      GreyboardThickness: '',
     };
   }
 
@@ -180,14 +246,19 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
     this.viewModal.push(this.initialObject());
   }
 
-  deleteRecord = (recordId: number) => {
+  deleteRecord = (recordId: number, index: number) => {
     const filteredRows = this.viewModal.filter(
       (x) => x.id !== recordId
     );
     filteredRows.forEach((x, i) => {
       x.id = i + 1;
     });
+    this.materialBrandList.splice(index);
+    this.materialWeightList.splice(index);
+    this.materialList.splice(index);
+    this.finishingTypeList.splice(index);
     this.viewModal = filteredRows;
+    this.pushToStore();
   }
 
   catchChildComponentDataBindingType = ($event: DvdCDBindingMapper) => {
@@ -197,84 +268,86 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
     this.viewModal[$event.index].bindingVM = $event.bindingVM;
   }
 
-  handleMaterialWeightFilterAutoComplete = () => {
-    this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+  handleMaterialWeightFilterAutoComplete = (index: number) => {
+    this.filteredMaterialWeightList.next(this.materialWeightList[index].slice().sort(this.helper.sortComparer));
     this.materialWeightFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
-        this.filterMaterialWeight();
+        this.filterMaterialWeight(index);
       });
   }
 
-  handleMaterialFilterAutoComplete = () => {
-    this.filteredMaterialList.next(this.materialList.slice());
+  handleMaterialFilterAutoComplete = (index: number) => {
+    this.filteredMaterialList.next(this.materialList[index].slice());
     this.materialFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
-        this.filterMaterial();
+        this.filterMaterial(index);
       });
   }
 
-  handleMaterialBrandFilterAutoComplete = () => {
-    this.filteredMaterialBrandList.next(this.materialBrandList.slice());
+  handleMaterialBrandFilterAutoComplete = (index: number) => {
+    this.filteredMaterialBrandList.next(this.materialBrandList[index].slice());
     this.materialBrandFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
-        this.filterMaterialBrand();
+        this.filterMaterialBrand(index);
       });
   }
 
-  filterMaterialWeight = () => {
-    if (!this.materialWeightList) {
+  filterMaterialWeight = (index: number) => {
+    if (!this.materialWeightList[index]) {
       return;
     }
     // get the search keyword
     let search = this.materialWeightFltrCtrl.value;
     if (!search) {
-      this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+      console.log(this.materialWeightList[index]);
+      this.filteredMaterialWeightList.next(this.materialWeightList[index].slice().sort(this.helper.sortComparer));
       return;
     } else {
       search = search.toLowerCase();
     }
     // filter the banks
+    console.log(this.materialWeightList[index]);
     this.filteredMaterialWeightList.next(
-      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
+      this.materialWeightList[index].filter(item => item.toLowerCase().indexOf(search) > -1).sort(this.helper.sortComparer)
     );
   }
 
-  filterMaterial = () => {
+  filterMaterial = (index: number) => {
     if (!this.materialList) {
       return;
     }
     // get the search keyword
     let search = this.materialFltrCtrl.value;
     if (!search) {
-      this.filteredMaterialList.next(this.materialList.slice());
+      this.filteredMaterialList.next(this.materialList[index].slice());
       return;
     } else {
       search = search.toLowerCase();
     }
     // filter the banks
     this.filteredMaterialList.next(
-      this.materialList.filter(item => item.toLowerCase().indexOf(search) > -1)
+      this.materialList[index].filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
-  filterMaterialBrand = () => {
+  filterMaterialBrand = (index: number) => {
     if (!this.materialBrandList) {
       return;
     }
     // get the search keyword
     let search = this.materialBrandFltrCtrl.value;
     if (!search) {
-      this.filteredMaterialBrandList.next(this.materialBrandList.slice());
+      this.filteredMaterialBrandList.next(this.materialBrandList[index].slice());
       return;
     } else {
       search = search.toLowerCase();
     }
     // filter the banks
     this.filteredMaterialList.next(
-      this.materialBrandList.filter(item => item.toLowerCase().indexOf(search) > -1)
+      this.materialBrandList[index].filter(item => item.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -305,41 +378,23 @@ export class SpecOtherComponent implements OnInit, OnDestroy {
     );
   }
 
-  handleFinishingTypeFilterAutoComplete = () => {
-    this.filteredFinishingTypeList.next(this.finishingTypeList.slice());
-    this.subscription = this.finishingTypeFltrCtrl.valueChanges
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe(() => {
-        this.filterFinishingType();
-      });
-  }
-
-  filterFinishingType = () => {
-    if (!this.finishingTypeList) {
-      return;
-    }
-    // get the search keyword
-    let search = this.finishingTypeFltrCtrl.value;
-    if (!search) {
-      this.filteredFinishingTypeList.next(this.finishingTypeList.slice());
-      return;
-    } else {
-      search = search.toLowerCase();
-    }
-    // filter the banks
-    this.filteredFinishingTypeList.next(
-      this.finishingTypeList.filter(item => item.toLowerCase().indexOf(search) > -1)
-    );
-  }
-
   handleColorSum = (index) => {
     this.viewModal[index].totalExtent = this.helper.sum(this.viewModal[index].noOfColourExtent ?? 0,
-       this.viewModal[index].noOfMonoExtent ?? 0);
+      this.viewModal[index].noOfMonoExtent ?? 0);
   }
 
-  handleTypeChange = (index) => {
+  handleTypeChange = (index: number) => {
     this.viewModal[index].componentType = this.viewModal[index].type;
-    this.showDvdDetails(this.viewModal[index].id);
+    this.showDvdDetails(this.viewModal[index].id, index);
+    if (this.viewModal[index].componentType === OtherComponentChooseTypes.SLIPCASE) {
+      this.finishingTypeList[index] = this.slipcaseFinishingTypeDataList;
+      this.materialWeightList[index] = [...new Set(this.slipcaseMaterialDataList.map(x => x.PaperWeight))].sort(this.helper.sortComparer);
+      this.handleMaterialWeightFilterAutoComplete(index);
+    } else {
+      this.finishingTypeList[index] = this.finishingTypeDataList;
+      this.materialWeightList[index] = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort(this.helper.sortComparer);
+      this.handleMaterialWeightFilterAutoComplete(index);
+    }
   }
 
   pushToStore = () => {

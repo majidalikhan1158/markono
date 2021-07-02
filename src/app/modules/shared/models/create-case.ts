@@ -1,3 +1,4 @@
+import { version } from 'moment';
 export class CreateCaseViewModel {
     id: number;
     customerInfo: CustomerInfoVM;
@@ -63,6 +64,7 @@ export interface ProductISBNDetailVM {
     totalExtent: number;
     bindingType: string;
     productGroup: string;
+    carrierSheet: string;
     samplesRequired: number;
     bluePrintRequired: number;
     specsVersionNo: string;
@@ -79,6 +81,7 @@ export interface ProductISBNDetailVM {
     fgList: ProductDetailModals[];
     advancesList: ProductDetailModals[];
     spineWidth: number;
+    revisionNo: string;
 }
 
 export interface ShippingInfoVM {
@@ -134,6 +137,7 @@ export interface ShipmentToAddress {
     PostCode: string;
     City: string;
     CountryRegionCode: string;
+    shipmentNote: string;
     County: string;
     PhoneNo: string;
     State: string;
@@ -155,6 +159,7 @@ export interface ShipmentBillingDetails {
     PostCode: string;
     City: string;
     CountryRegionCode: string;
+    shipmentNote: string;
     County: string;
     PhoneNo: string;
     State: string;
@@ -165,7 +170,7 @@ export interface ShipmentBillingDetails {
 
 export interface MiscCostVM {
     id: number;
-    costCategory: number;
+    costCategory: string;
     description: string;
     subTotal: number;
 }
@@ -218,5 +223,16 @@ export interface ProductVersionVM {
     versionDescription: string;
     productDescription: string;
     statusDescription: string;
+}
+
+export interface ProductRevisionVM {
+    id: string;
+    isSpecsInView: boolean;
+    isbn: string;
+    versionNo: string;
+    revision: string;
+    createdDate: string;
+    createdBy: string;
+    versionDescription: string;
 }
 

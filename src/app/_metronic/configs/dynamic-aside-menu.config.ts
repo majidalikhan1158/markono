@@ -80,7 +80,7 @@ export const DynamicAsideMenuConfig = {
       title: 'Planning',
       root: true,
       bullet: 'dot',
-      page: '/admin/planning',
+      page: `/admin/${AppModules.PLANNING_MANAGMENT}`,
       icon: 'flaticon2-browser-2',
       png: SidebarIconsNormal.Planning,
       selected: SidebarIconsSelected.Planning,

@@ -26,14 +26,18 @@
       <div class="card card-custom example example-compact gutter-b reference-no-card">
           <div class="card-header">
             <div class="card-title">
-              <h3 class="card-label">External Reference No.</h3>
+              <h3 class="card-label">External Reference No.<span class="asteric">*</span></h3>
             </div>
           </div>
           <div class="card-body">
             <div class="row">
               <div class="col-lg-12">
                 <mat-form-field appearance="outline">
-                  <input matInput placeholder="Enter External Reference no" class="txtReferenceNo"
+                  <input 
+                  matInput
+                  maxlength="32" 
+                  placeholder="Enter External Reference no" 
+                  class="txtReferenceNo"
                   [(ngModel)]="customerInfoVM.referenceNumber"
                   [disabled]="disabled"
                   (keydown.enter)="handleReferenceNumberChange()"
@@ -53,7 +57,7 @@
     <div class="card card-custom example example-compact gutter-b search-customer-card">
       <div class="card-header">
         <div class="card-title">
-          <h3 class="card-label">Search Customer</h3>
+          <h3 class="card-label">Search Customer <span class="asteric">*</span></h3>
         </div>
         <div class="card-toolbar">
           <a class="font-14px blue-link font-b-500"
@@ -191,7 +195,32 @@
             <h3 class="card-label">Billing Info.</h3>
           </div>
           <div class="card-toolbar">
-            <h6>Bill-to-No: {{customerInfoVM.customerId}}</h6>
+            <h6>Bill-to-No: <span *ngIf="editBillingInfo"> 
+              <mat-form-field appearance="outline" style="width: 320px; height: 58px;" >
+              <mat-icon matPrefix>search</mat-icon>
+              <input 
+              #trigger2="matAutocompleteTrigger" 
+              [(ngModel)]="customerInfoVM2.customerId"
+              matInput placeholder="Search" aria-label="State" 
+              [formControl]="searchCustomerInfo2" 
+              [matAutocomplete]="auto"
+              (keyup)='handleCustomerSearch2()'
+              id="txtSearchCustomer2">
+              <mat-autocomplete  #auto="matAutocomplete" [displayWith]="displayFn" showPanel="true" (optionSelected)='handleSelectedCustomer2($event.option.value)'>
+                <mat-option *ngIf="isLoading2" class="is-loading" value="0">Loading...</mat-option>
+                <ng-container *ngIf="!isLoading2">
+                  <mat-option *ngFor="let item of customerDetailVMList2" [value]="item.CompanyCode">
+                    <span *ngIf="item.CompanyCode !== '-1'"><b>{{item.CompanyCode}}</b>_{{item.CompanyName}}</span>
+                    <span *ngIf="item.CompanyCode === '-1'">{{item.CompanyName}}</span>
+                  </mat-option> 
+                </ng-container>
+              </mat-autocomplete>
+            </mat-form-field>
+          </span>
+          <span *ngIf="!editBillingInfo">{{customerInfoVM2.customerId}}</span> &nbsp;&nbsp; 
+              <i *ngIf="!editBillingInfo" style="color: #5f8dff; cursor: pointer;" (click)="editBillingInfo = !editBillingInfo" class="fas fa-edit"></i>
+              <i *ngIf="editBillingInfo" style="color: #5f8dff; cursor: pointer; font-size: 18px;" (click)="editBillingInfo = !editBillingInfo" class="fas fa-window-close"></i>
+            </h6>
           </div>
         </div>
         <div class="card-body">
@@ -207,19 +236,19 @@
           <div class="row display-flex">
             <div class="col-lg-4 col-4">
               <p class="info-label">Company Name</p>
-              <p class="info-label-value">{{customerInfoVM.customerDetail.CompanyName}}</p>
+              <p class="info-label-value">{{customerInfoVM2.customerDetail.CompanyName}}</p>
             </div>
             <div class="col-lg-4 col-4">
               <p class="info-label">Contact Person</p>
-              <p class="info-label-value">{{customerInfoVM.customerDetail.Contact}}</p>
+              <p class="info-label-value">{{customerInfoVM2.customerDetail.Contact}}</p>
             </div>
             <div class="col-lg-4 col-4">
               <p class="info-label">Email</p>
-              <p class="info-label-value">{{customerInfoVM.customerDetail.Email}}</p>
+              <p class="info-label-value">{{customerInfoVM2.customerDetail.Email}}</p>
             </div>
             <div class="col-lg-4 col-4">
               <p class="info-label">Phone No</p>
-              <p class="info-label-value">{{customerInfoVM.customerDetail.PhoneNo}}</p>
+              <p class="info-label-value">{{customerInfoVM2.customerDetail.PhoneNo}}</p>
             </div>
             <div class="col-lg-4 col-4">
               <p class="info-label">Co-ordinator</p>
@@ -227,7 +256,7 @@
             </div>
             <div class="col-lg-4 col-4">
               <p class="info-label">Sales Person</p>
-              <p class="info-label-value">{{customerInfoVM.customerDetail.SalesPerson}}</p>
+              <p class="info-label-value">{{customerInfoVM2.customerDetail.SalesPerson}}</p>
             </div>
           </div>
           <br><br>
@@ -243,27 +272,27 @@
           <div class="row display-flex">
             <div class="col-lg-4 col-4">
               <p class="info-label">Address 1</p>
-              <p class="info-label-value">{{customerInfoVM.customerDetail.Address}}</p>
+              <p class="info-label-value">{{customerInfoVM2.customerDetail.Address}}</p>
             </div>
             <div class="col-lg-4 col-4">
               <p class="info-label">Address 2</p>
-              <p class="info-label-value">{{customerInfoVM.customerDetail.Address2}}</p>
+              <p class="info-label-value">{{customerInfoVM2.customerDetail.Address2}}</p>
             </div>
             <div class="col-lg-4 col-4">
               <p class="info-label">Postcode</p>
-              <p class="info-label-value">{{customerInfoVM.customerDetail.PostCode}}</p>
+              <p class="info-label-value">{{customerInfoVM2.customerDetail.PostCode}}</p>
             </div>
             <div class="col-lg-4 col-4">
               <p class="info-label">City</p>
-              <p class="info-label-value">{{customerInfoVM.customerDetail.City}}</p>
+              <p class="info-label-value">{{customerInfoVM2.customerDetail.City}}</p>
             </div>
             <div class="col-lg-4 col-4">
               <p class="info-label">State</p>
-              <p class="info-label-value">{{customerInfoVM.customerDetail.State}}</p>
+              <p class="info-label-value">{{customerInfoVM2.customerDetail.State}}</p>
             </div>
             <div class="col-lg-4 col-4">
               <p class="info-label">Country</p>
-              <p class="info-label-value">{{customerInfoVM.customerDetail.CountryRegionCode}}</p>
+              <p class="info-label-value">{{customerInfoVM2.customerDetail.CountryRegionCode}}</p>
             </div>
           </div>
         </div>

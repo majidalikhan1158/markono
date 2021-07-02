@@ -1,5 +1,6 @@
 import { ChildIsbnModal, ProductVersions } from '../../services/shared/classes/product-modals/product-modals';
 import { GetPaperResponse, ImpositionLayout } from './estimation';
+import { LayoutPrepVM } from 'src/app/modules/shared/models/estimation';
 export interface ProductSpecListVM {
   id: number;
   isbn: string;
@@ -35,6 +36,7 @@ export interface GeneralVM {
   isDvdAdded: boolean;
   isWebcodeAdded: boolean;
   versionNo: string;
+  printQuality: string;
 }
 
 export interface TextVM {
@@ -42,11 +44,13 @@ export interface TextVM {
   textMaterialWeight: string;
   textMaterial: string;
   materialBrand: string;
-  noOfColourExtent: number;
-  noOfMonoExtent: number;
-  totalExtent: number;
+  TxtNoOfOneColourExtent: number;
+  TxtNoOfTwoColourExtent: number;
+  TxtNoOfFourColourExtent: number;
+  TxtTotalExtent: number;
   noOfColours: number;
   colorType: string[];
+  selectedColours: string;
   pantoneColour: string[];
   finishingType: string[];
   specialInstructions: string;
@@ -82,6 +86,7 @@ export interface BindingTypeCaseBound {
   noOfMonoExtent: number;
   totalExtent: number;
   noOfColours: number;
+  selectedColours: string;
   colorType: string[];
   pantoneColour: string[];
   finishingType: string[];
@@ -144,6 +149,17 @@ export interface ChildIsbnVM {
   pantoneColour: string[];
   finishingType: string[];
   specialInstructions2: string;
+  SlipCaseOrientation: string;
+  SlipCaseLength: number;
+SlipCaseOpenSizeLength: number;
+  SlipCaseWidth: number;
+  SlipCaseHeight: number;
+  SlipCaseOpenSize: boolean;
+  SlipCaseOpenSizeWidth: number;
+  SlipCaseOpenSizeHeight: number;
+  SlipCaseNoOfColourExtent: number;
+  SlipCaseNoOfMonoExtent: number;
+  SlipCaseTotalExtent: number;
 }
 
 export interface WebCodeVM {
@@ -181,6 +197,7 @@ export interface DVDVM {
   finishingType: string[];
   specialInstructions: string;
   bindingVM: BindingVM;
+  MediaISBN: string;
 }
 
 export interface UnitPriceVM {
@@ -202,6 +219,7 @@ export class ProductSpecStoreVM {
   checkPrintFileVM: CheckPrintFileVM;
   unitPriceVM: UnitPriceVM;
   selectedVersion: ProductVersions;
+  layoutPrep: LayoutPrepVM;
 }
 
 export interface CoverVM {
@@ -214,6 +232,7 @@ export interface CoverVM {
   noOfMonoExtent: number;
   totalExtent: number;
   noOfColours: number;
+  selectedColours: string;
   colorTypeOutside: string[];
   colorTypeInside: string[];
   pantoneColourInside: string[];
@@ -235,9 +254,11 @@ export interface OtherVM {
   type: string;
   componentType: string;
   orientationType: string;
+  Length: number;
   height: number;
   width: number;
   isOpenSize: boolean;
+  OpenSizeLength: number;
   openSizeHeight: number;
   openSizeWidth: number;
   textMaterialWeight: string;
@@ -250,10 +271,12 @@ export interface OtherVM {
   totalExtent: number;
   noOfColours: number;
   colorType: string[];
+  selectedColours: string;
   pantoneColour: string[];
   finishingType: string[];
   specialInstructions: string;
   bindingVM: BindingVM;
+  GreyboardThickness: string;
 }
 
 export interface CheckPrintQA {
@@ -314,4 +337,9 @@ export interface LayoutPrepProductionActivities {
 export interface IsbnOwner {
   CompanyCode: string;
   CompanyName: string;
+}
+
+export interface VendorCodeList {
+  partner_code: string;
+  name: string;
 }

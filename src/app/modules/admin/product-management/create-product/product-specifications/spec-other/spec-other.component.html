@@ -1,6 +1,6 @@
-<div class="row spec-other" [ngClass]="(store.$productSpecReadonly | async) ? 'readonly-box' : '' ">
+<div class="row spec-other">
     <div class="col-lg-12">
-        <span class="font-16px font-roboto-bold">Create Specs</span>
+        <span class="font-16px font-roboto-bold">{{store.$productSpecHeading | async}}</span>
         <mat-hint class="font-14px d-flex">Other Component</mat-hint>
     </div>
 
@@ -19,7 +19,7 @@
                     <tr class="outer-row">
                         <td style="width: 10px;">
                             {{viewModal[i].id}}
-                        <td style="width: 150px;">
+                        <td style="width: 150px;" [ngClass]="((store.$productSpecReadonly | async) || (store.$IsProductCreated | async)) ? 'readonly-box' : '' ">
                             <mat-form-field appearance="fill">
                                 <mat-label>Choose</mat-label>
                                 <mat-select [(ngModel)]="viewModal[i].type" (selectionChange)="handleTypeChange(i)">
@@ -43,10 +43,10 @@
                         <td>{{viewModal[i].totalExtent}}</td>
                         <td class="action-column pb-0 text-right">
                             <span class="material-icons delete-icon pr-2 cursor-pointer"
-                                (click)="deleteRecord(viewModal[i].id)" *ngIf="viewModal.length > 1">
+                                (click)="deleteRecord(viewModal[i].id, i)" *ngIf="viewModal.length > 0">
                                 delete
                             </span>
-                            <span class="material-icons expansion-icon" (click)="showDvdDetails(viewModal[i].id)">
+                            <span class="material-icons expansion-icon" (click)="showDvdDetails(viewModal[i].id, i)">
                                 {{
                                 viewModal[i].id == rowIdToExpand ?
                                 ExpansionIcons.KEYBOARD_ARROW_UP :
@@ -56,12 +56,12 @@
                         </td>
                     </tr>
                     <ng-container *ngIf="shouldShowOtherDetails && viewModal[i].id == rowIdToExpand">
-                        <tr class="expandedRow">
+                        <tr class="expandedRow" [ngClass]="((store.$productSpecReadonly | async) || (store.$IsProductCreated | async)) ? 'readonly-box' : '' ">
                             <td class="pr-0 pl-2" colspan="9">
                                 <div class="col-lg-4 pl-1 pr-0 pt-2">
                                     <mat-form-field appearance="fill">
                                         <mat-label>Add Component</mat-label>
-                                        <mat-select [(ngModel)]="viewModal[i].componentType">
+                                        <mat-select [(ngModel)]="viewModal[i].componentType" (selectionChange)="handleComponentTypeChange(i)">
                                             <mat-option>
                                                 <ngx-mat-select-search [formControl]="otherComponentChooseFltrCtrl" placeholderLabel="Search..">
                                                 </ngx-mat-select-search>
@@ -87,6 +87,12 @@
                                     </div>
 
                                     <div class="col-lg-12 display-flex pl-0">
+                                        <div class="col-lg-3 pr-0" *ngIf="viewModal[i].componentType == 'Slip case'">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Length(mm)</mat-label>
+                                                <input matInput [(ngModel)]="viewModal[i].Length" type="number" min="0">
+                                            </mat-form-field>
+                                        </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Height(mm)</mat-label>
@@ -110,6 +116,12 @@
                                     </div>
 
                                     <div class="col-lg-12 display-flex pl-0" *ngIf="viewModal[i].isOpenSize">
+                                        <div class="col-lg-3 pr-0" *ngIf="viewModal[i].componentType == 'Slip case'">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Open Size Length(mm)</mat-label>
+                                                <input matInput [(ngModel)]="viewModal[i].OpenSizeLength" type="number" min="0">
+                                            </mat-form-field>
+                                        </div>
                                         <div class="col-lg-3 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Open Size Height(mm)</mat-label>
@@ -168,6 +180,15 @@
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
+                                        <div class="col-lg-3 pr-0">
+                                            <mat-form-field appearance="fill"  *ngIf="viewModal[i].componentType == 'Slip case'">
+                                                <mat-label>Greyboard Thickness</mat-label>
+                                                <mat-select [(ngModel)]="viewModal[i].GreyboardThickness">
+                                                    <mat-option [value]="item.value" *ngFor="let item of greyboardThicknessList">{{item.text}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
                                     </div>
 
                                     <div class="col-lg-12 display-flex pl-0 pt-3">
@@ -216,11 +237,12 @@
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Pantone Colour (Optional)</mat-label>
                                                 <input matInput pattern="(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)"
-                                                    (keyup.enter)="addPantoneColour($event, i)">
-                                                <span matSuffix class="suffix-style">+ ADD</span>
+                                                    (keyup.enter)="addPantoneColour($event, i, null)"
+                                                    #pantouneColor>
+                                                    <span matSuffix class="suffix-style" (click)="addPantoneColour(null, i,pantouneColor.value)">+ ADD</span>
                                             </mat-form-field>
                                         </div>
-                                        <div class="col-lg-5">
+                                        <div class="col-lg-3">
                                             <div class="scroll-bar">
                                                 <mat-chip-list #pantoneColourchipList class="table-filter-chips">
                                                     <mat-chip [removable]="true" [ngStyle]="{'background-color': item}"
@@ -244,7 +266,7 @@
                                                 <mat-label>Finishing</mat-label>
                                                 <mat-select multiple [(ngModel)]="viewModal[i].finishingType">
                                                     <mat-option [value]="item"
-                                                        *ngFor="let item of finishingTypeList">{{item}}
+                                                        *ngFor="let item of finishingTypeList[i]">{{item}}
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>
@@ -280,7 +302,7 @@
                                     </div>
 
                                     <div class="col-lg-12 pt-3">
-                                        <app-spec-binding [parentComponent]="productSpecTypes.OTHER_COMPONENT"
+                                        <app-spec-binding *ngIf="viewModal[i].type !== 'Slip case'" [parentComponent]="productSpecTypes.OTHER_COMPONENT"
                                             [parentRecordIndex]="i" [parentData]="viewModal[i].bindingVM"
                                             (childComponentDataBindingType)="catchChildComponentDataBindingType($event)">
                                         </app-spec-binding>
@@ -297,7 +319,7 @@
             </tbody>
         </table>
     </div>
-    <div class="col-lg-12 pt-10">
+    <div class="col-lg-12 pt-10" [ngClass]="((store.$productSpecReadonly | async) || (store.$IsProductCreated | async)) ? 'readonly-box' : '' ">
         <div class="sticky-bottom full-width pl-5 pb-4 product-detail-footer-row">
             <a (click)="addRow()">
                 <span class="material-icons add-icon pr-2 cursor-pointer">

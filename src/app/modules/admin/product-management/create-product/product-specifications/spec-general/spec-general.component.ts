@@ -56,8 +56,8 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.handleUpdateStore();
-    this.getApisData();
     this.getDefaultRecord();
+    this.getApisData();
   }
 
   handleUpdateStore = () => {
@@ -70,6 +70,7 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
 
   handleCustomerSearch() {
     if (this.generalVM.isbnOwner !== '' && this.generalVM.isbnOwner !== this.previousValue && this.generalVM.isbnOwner.length >= 3) {
+      console.log('Helllo');
       this.matAutoCompleteSubscription?.unsubscribe();
       this.isbnOwnerList = [];
       this.ref.detectChanges();
@@ -79,7 +80,8 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
       // call api to get customer results
       this.matAutoCompleteSubscription = this.orderService.getCustomerDetail({CustCode: this.generalVM.isbnOwner}).subscribe(resp => {
         const details = resp.body as unknown as IsbnOwner[];
-        this.isbnOwnerList = details && details.length > 0 ? details : [];
+        this.isbnOwnerList = details && details.length > 0 ? details.sort((a, b) => (a.CompanyCode > b.CompanyCode) ? 1
+        : ((b.CompanyCode > a.CompanyCode) ? -1 : 0)) : [];
         this.isLoading = false;
         this.ref.detectChanges();
       }, (err) => {
@@ -152,12 +154,13 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
       isChildIsbnAdded: false,
       isDvdAdded: false,
       isWebcodeAdded: false,
-      versionNo: ''
+      versionNo: '',
+      printQuality: ''
     };
   }
 
   handleFilterAutoComplete = () => {
-    this.filteredProductType.next(this.productTypeList.slice());
+    this.filteredProductType.next(this.productTypeList.slice().sort());
     this.productTypeFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
@@ -185,8 +188,9 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
 
   getApisData = () => {
     this.subscription = this.store.$productGroupList.subscribe(resp => {
-      this.productTypeList = resp.sort((a, b) => a.Id - b.Id);
+      this.productTypeList = resp.sort();
       this.handleFilterAutoComplete();
+      this.shouldShowJournalFields();
     });
   }
 
@@ -195,10 +199,12 @@ export class SpecGeneralComponent implements OnInit, OnDestroy {
   }
 
   shouldShowJournalFields = () => {
-    this.store.$productGroupList.subscribe(list => {
-      const obj = list.find(x => x.Id.toString() === this.generalVM.productType.toString());
-      this.store.setShouldShowJournalFields(obj?.ProductName.toLowerCase() === this.productTypes.JOURNALS.toLowerCase());
-    });
+    const obj = this.productTypeList.find(x => x.Id.toString() === this.generalVM?.productType.toString());
+    this.store.setShouldShowJournalFields(obj?.ProductName.toLowerCase() === this.productTypes.JOURNALS.toLowerCase());
+  }
+
+  trimInputValue = (value: any) => {
+    this.generalVM.productNumber = value.trim();
   }
 
   pushToStore = () => {

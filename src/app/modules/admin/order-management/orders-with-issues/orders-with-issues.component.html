@@ -1,5 +1,5 @@
 <!--begin::Notice-->
-<div class="row pt-5 responsive">
+<div class="row pt-5 responsive" *ngIf="0 > 1">
     <div class="col-lg-12 display-flex">
         <div class="card card-custom example example-compact gutter-b orders-header-card">
             <div class="card-body">
@@ -121,12 +121,12 @@
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.orderDate != ''"
                                     (removed)="removeFilter(tableFilterTypes.ORDERDATE)">
-                                    {{tableFilters.orderDate | date:'shortDate'}}
+                                    {{tableFilters.orderDate | dateFormat}}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.requestedDeliveryDate != ''"
                                     (removed)="removeFilter(tableFilterTypes.REQUESTEDDELIVERYDATE)">
-                                    {{tableFilters.requestedDeliveryDate | date:'shortDate' }}
+                                    {{tableFilters.requestedDeliveryDate | dateFormat }}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>
                                 <mat-chip [removable]="true" *ngIf="tableFilters.currentActivityStatusName != ''"
@@ -282,7 +282,7 @@
                         <td mat-cell *matCellDef="let element">{{element.YourReference }}
                             <br>
                             <span class="cutomer-name">
-                                {{ getCustomerName(element.id)}}
+                                {{  element.CompanyName}}
                             </span>
                         </td>
                     </ng-container>
@@ -294,7 +294,7 @@
 
                     <ng-container matColumnDef="OrderDate">
                         <th mat-header-cell *matHeaderCellDef> Order Date </th>
-                        <td mat-cell *matCellDef="let element"> {{element.CaseDetail[0].OrderDate | date:'shortDate'}}
+                        <td mat-cell *matCellDef="let element"> {{element.CaseDetail[0].OrderDate  | dateFormat}}
                         </td>
                     </ng-container>
 
@@ -305,7 +305,7 @@
                                 -
                             </ng-container>
                             <ng-container *ngIf="element.CaseDetail[0].RequestedDeliveryDate!==null">
-                                {{element.CaseDetail[0].RequestedDeliveryDate | date:'shortDate'}}
+                                {{element.CaseDetail[0].RequestedDeliveryDate  | dateFormat}}
                             </ng-container>
                         </td>
                     </ng-container>
@@ -401,6 +401,12 @@
                                     <span class="label label-lg label-light-blue label-inline">No Setup</span>
                                 </span>
                             </div>
+
+                            <div class="status-options" *ngIf="element.CurrentActivityStatusCode == 22">
+                                <span style="width: 100px;">
+                                    <span class="label label-lg label-light-orange label-inline">Incomplete Setup</span>
+                                </span>
+                            </div>
                         </td>
                     </ng-container>
 
@@ -412,7 +418,10 @@
                             "{{tableSearchInput.value}}"</td>
                     </tr>
                 </table>
-
+                <div *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
+                    <mat-progress-spinner color="primary" mode="indeterminate">
+                    </mat-progress-spinner>
+                </div>
                 <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
             </div>
         </div>

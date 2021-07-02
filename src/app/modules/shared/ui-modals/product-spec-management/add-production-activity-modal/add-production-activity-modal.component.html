@@ -1,18 +1,40 @@
 <div class="modal-header">
-  <h4 class="modal-title">Add A Production Activity</h4>
-  <button type="button" class="close" aria-label="Close" (click)="addActivity()">
+  <h4 class="modal-title">{{label}}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
       <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body add-production-activity-form position-relative font-12px">
   <div class="row pb-5" *ngIf="productionActivityVM">
+    <div class="col-lg-12 display-flex pr-0" *ngIf="isOutsource">
+      <div class="col-lg-12 pl-0">
+      <mat-form-field appearance="fill">
+        <mat-label>Vendor Code <span class="asteric">*</span></mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput [(ngModel)]="vendorCode" [value] = "vendorCode"
+        #trigger="matAutocompleteTrigger" 
+        [formControl]="vendorCodeSearchCtrl"
+        [matAutocomplete]="auto"
+        (keyup)='handleCustomerSearch()'>
+        <mat-autocomplete  #auto="matAutocomplete" [displayWith]="displayFn" showPanel="true" (optionSelected)='handleSelectedVendorCode($event.option.value)'>
+            <mat-option *ngIf="isLoading" class="is-loading" value="0">Loading...</mat-option>
+            <ng-container *ngIf="!isLoading">
+              <mat-option *ngFor="let item of vendorCodeList" [value]="item.CompanyCode" title="{{item.CompanyCode}}_{{item.CompanyName}}">
+                <span class="font-12px"><b>{{item.CompanyCode}}</b>_{{item.CompanyName}}</span>
+              </mat-option> 
+            </ng-container>
+          </mat-autocomplete>
+    </mat-form-field>
+  </div>
+    </div>
     <div class="col-lg-12 display-flex pr-0">
       <div class="col-lg-6 pl-0">
         <mat-form-field appearance="fill">
           <mat-label>Component Id</mat-label>
-          <mat-select [(ngModel)]="productionActivityVM.ComponentBreakdownSNo" (selectionChange)="handleComponentTypeChange()">
+          <mat-select *ngIf="!isOutsource" [(ngModel)]="productionActivityVM.ComponentBreakdownSNo" (selectionChange)="handleComponentTypeChange()">
               <mat-option [value]="item.Id" *ngFor="let item of componentBreakDownList"> {{item.SNo}}</mat-option>
           </mat-select>
+          <input matInput *ngIf="isOutsource" [(ngModel)]="comId" readonly="true">
         </mat-form-field>
       </div>
       <div class="col-lg-6 pl-0">
@@ -40,9 +62,10 @@
       <div class="col-lg-6 pl-0">
         <mat-form-field appearance="fill">
           <mat-label>Activity</mat-label>
-          <mat-select [(ngModel)]="productionActivityVM.Activity" (selectionChange)="handleActivityChange()">
-              <mat-option [value]="item.id" *ngFor="let item of activitySettingList">{{item.description}}</mat-option>
+          <mat-select *ngIf="!isOutsource" [(ngModel)]="productionActivityVM.ProcessCode" (selectionChange)="handleActivityChange()">
+              <mat-option [value]="item.processCode" *ngFor="let item of activitySettingList">{{item.description}}</mat-option>
           </mat-select>
+          <input matInput *ngIf="isOutsource" [(ngModel)]="productionActivityVM.Activity" readonly="true">
         </mat-form-field>
       </div>
       <div class="col-lg-6 pl-0">

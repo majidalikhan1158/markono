@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectorRef, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { ModalService } from 'src/app/modules/shared/ui-services/modal.service';
 import { CustomerDetailVM, CustomerInfoVM } from 'src/app/modules/shared/models/create-case';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
@@ -26,20 +26,27 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   @Input() createCaseMode: CreateCaseMode;
   @Output() stepperNextEvent = new EventEmitter<CreateCaseSteps>();
   @ViewChild('trigger') trigger: MatAutocompleteTrigger;
+  @ViewChild('trigger2') trigger2: MatAutocompleteTrigger;
   modes = CreateCaseMode;
   disabled = false;
   caseTypeConstant = CaseTypes;
   caseTypeList: DDLListModal[] = [];
   customerDetailVMList: CustomerDetailVM[] = [];
+  customerDetailVMList2: CustomerDetailVM[] = [];
   shouldShowSearchCustomerBox = false;
   shouldShowCustomerInfoBox = false;
   customerInfoVM: CustomerInfoVM;
+  customerInfoVM2: CustomerInfoVM;
   searchCustomerInfo = new FormControl();
+  searchCustomerInfo2 = new FormControl();
   isLoading = false;
+  isLoading2 = false;
+  editBillingInfo = false;
   previousValue = '';
   selectedCaseType = '';
   matAutoCompleteSubscription: Subscription;
   referenceNumber: string;
+  subscription: Subscription;
   constructor(
     private modalService: ModalService,
     private store: CaseStore,
@@ -73,7 +80,8 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
       // call api to get customer results
       this.matAutoCompleteSubscription = this.orderService.getCustomerDetail({CustCode: this.customerInfoVM.customerId}).subscribe(resp => {
         const details = resp.body as unknown as CustomerDetailVM[];
-        this.customerDetailVMList = details && details.length > 0 ? details : [];
+        this.customerDetailVMList = details && details.length > 0 ? details.sort((a, b) => (a.CompanyCode > b.CompanyCode) ? 1
+        : ((b.CompanyCode > a.CompanyCode) ? -1 : 0)) : [];
         if (this.customerDetailVMList.length === 0) {
           const customerObj = this.getEmptyDetails();
           customerObj.CompanyName = 'No record found';
@@ -97,6 +105,44 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleCustomerSearch2() {
+    console.log('hello2');
+    if (this.customerInfoVM2.customerId !== '' && this.customerInfoVM2.customerId !== this.previousValue) {
+      this.matAutoCompleteSubscription?.unsubscribe();
+      this.customerDetailVMList2 = [];
+      this.ref.detectChanges();
+      this.previousValue = this.customerInfoVM2.customerId;
+      this.isLoading2 = true;
+      setTimeout(_ => this.trigger2.openPanel());
+      // call api to get customer results
+      this.matAutoCompleteSubscription = this.orderService.getCustomerDetail({CustCode: this.customerInfoVM2.customerId}
+        ).subscribe(resp => {
+        const details = resp.body as unknown as CustomerDetailVM[];
+        this.customerDetailVMList2 = details && details.length > 0 ? details.sort((a, b) =>
+         (a.CompanyCode > b.CompanyCode) ? 1 : ((b.CompanyCode > a.CompanyCode) ? -1 : 0)) : [];
+        if (this.customerDetailVMList2.length === 0) {
+          const customerObj = this.getEmptyDetails();
+          customerObj.CompanyName = 'No record found';
+          customerObj.CompanyCode = '-1';
+          this.customerDetailVMList2.push(customerObj);
+        }
+        this.isLoading2 = false;
+        this.ref.detectChanges();
+      }, (err: HttpErrorResponse) => {
+        this.customerDetailVMList2 = [];
+        this.isLoading2 = false;
+        if (this.customerDetailVMList2.length === 0) {
+          const customerObj = this.getEmptyDetails();
+          customerObj.CompanyName = 'No record found';
+          customerObj.CompanyCode = '-1';
+          this.customerDetailVMList2.push(customerObj);
+        }
+        this.ref.detectChanges();
+      });
+
+    }
+  }
+
   handleSelectedCustomer = (customerId: string) => {
     if (customerId === '0') {
       setTimeout(_ => this.trigger.openPanel());
@@ -107,7 +153,23 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
     }
     this.customerInfoVM.customerId = customerId;
     this.customerInfoVM.customerDetail = this.customerDetailVMList.find(x => x.CompanyCode === customerId);
+    this.customerInfoVM2.customerId = customerId;
+    this.customerInfoVM2.customerDetail = this.customerDetailVMList.find(x => x.CompanyCode === customerId);
     this.shouldShowCustomerInfoBox = true;
+  }
+
+  handleSelectedCustomer2 = (customerId: string) => {
+    if (customerId === '0') {
+      setTimeout(_ => this.trigger.openPanel());
+      return;
+    }
+    if (customerId === '-1') {
+      return;
+    }
+    this.customerInfoVM2.customerId = customerId;
+    this.customerInfoVM2.customerDetail = this.customerDetailVMList2.find(x => x.CompanyCode === customerId);
+    this.shouldShowCustomerInfoBox = true;
+    this.editBillingInfo = !this.editBillingInfo;
   }
 
   displayFn(info: CustomerDetailVM) {
@@ -121,11 +183,13 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.createCaseStore.subscribe((resp) => {
+    this.subscription = this.store.createCaseStore.subscribe((resp) => {
       if (resp && resp.customerInfo && resp.customerInfo.id > 0) {
         this.customerInfoVM = resp.customerInfo;
+        this.customerInfoVM2 = resp.customerInfo;
       } else {
         this.customerInfoVM = this.initialObject();
+        this.customerInfoVM2 = this.initialObject();
       }
     });
   }
@@ -192,5 +256,7 @@ export class CustomerInfoComponent implements OnInit, OnDestroy {
 
   handleModalRejectEvent(modalId: string) {}
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
 }

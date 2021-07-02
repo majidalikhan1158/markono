@@ -1,4 +1,7 @@
 app-spec-layout-prep {
+    .table-responsive {
+        display: revert !important;
+    }
     mat-form-field {
         font-size: 12px !important;
     }

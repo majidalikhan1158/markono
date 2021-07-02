@@ -1,4 +1,4 @@
-import { AppModules, AppPageRoutes } from './../../../../modules/shared/enums/app-constants';
+import { AppModules, AppPageRoutes, StorageKeys } from './../../../../modules/shared/enums/app-constants';
 import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
@@ -140,6 +140,7 @@ export class TopbarComponent implements OnInit, AfterViewInit {
   handleEmbededLinkChange = () => {
     if (this.embededLinkModel !== '') {
       this.dynamicHeaderMenuService.setEditEmbeddedLink(this.embededLinkModel);
+      localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.DASHBOARD_URL}`, this.embededLinkModel);
     }
   }
 

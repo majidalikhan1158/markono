@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h4 class="modal-title">Samples Required</h4>
-    <button type="button" class="close" aria-label="Close" (click)="addSample()">
+    <button type="button" class="close" aria-label="Close" (click)="addSample(0)">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -28,7 +28,7 @@
               <div class="col-lg-2 pl-0 pr-0">
                   <mat-form-field appearance="fill">
                     <mat-label>Quantity</mat-label>
-                      <input matInput placeholder="Quantity" type="number" min="0" [(ngModel)]="item.quantity">
+                      <input matInput placeholder="Quantity" type="number" min="0" [(ngModel)]="item.quantity"  (change)="enableDeleteButton=true"/>
                   </mat-form-field>
               </div>
               <div class="col-lg-3">
@@ -38,7 +38,8 @@
                   </mat-form-field>
               </div>
               <div class="col-lg-1">
-                <span class="material-icons delete-icon pr-2 cursor-pointer pt-3" (click)="deleteRow(item.id)" *ngIf="samplesListVM.length > 1">
+                <span class="material-icons delete-icon pr-2 cursor-pointer pt-3" (click)="deleteRow(item.id)" 
+                *ngIf="samplesListVM.length > 1 || enableDeleteButton">
                     delete
                 </span>
               </div>
@@ -58,6 +59,6 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary ui-modal-cancel-button ui-modal-action-button" (click)="addSample()">CANCEL</button>
-    <button type="button" class="btn btn-primary ui-modal-action-button" (click)="addSample()">ADD</button>
+    <button type="button" class="btn btn-secondary ui-modal-cancel-button ui-modal-action-button" (click)="addSample(0)">CANCEL</button>
+    <button type="button" class="btn btn-primary ui-modal-action-button" (click)="addSample(1)">ADD</button>
   </div>

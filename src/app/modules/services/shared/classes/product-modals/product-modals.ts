@@ -10,7 +10,7 @@ export interface ProductResponseModal {
 
 
 export interface ProductGroupDDL {
-    Id: number;
+    Id: string;
     ProductName: string;
 }
 
@@ -24,6 +24,12 @@ export interface ChildIsbnModal {
     Id: string;
     ISBN: string;
     VersionNo: string;
+    Revision: string;
+}
+
+export interface GroupedProductVersions {
+    ParentVersion: ProductVersions;
+    ChildVersions: ProductVersions[];
 }
 
 export interface ProductVersions {
@@ -33,6 +39,7 @@ export interface ProductVersions {
     CreatedBy: string;
     VersionDescription: string;
     active: boolean;
+    Revision: string;
 }
 
 
@@ -44,8 +51,9 @@ export interface SpineWidthThicknessParamHistory {
 }
 
 export interface SpineWidthParamHistory {
-    noOfColourExtent: number;
-    noOfMonoExtent: number;
+    TxtNoOfOneColourExtent: number;
+    TxtNoOfTwoColourExtent: number;
+    TxtNoOfFourColourExtent: number;
     thickness: number;
     bindingType: string;
 }
@@ -95,4 +103,5 @@ export interface ProductSpecsList {
     productAdditionalComponent: string;
     productCD: string;
     id: string;
+    revision: string;
 }

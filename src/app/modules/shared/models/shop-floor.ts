@@ -44,6 +44,8 @@ export interface MachineCurrentJobVM {
     jobActionStop: string;
     jobReadOnly: boolean;
     jobStatus: string;
+    jobSheetUrl: string;
+    productSpecUrl: string;
     machineSummaryList: MachineJobSummaryVM[];
     machineJobActionsList: MachineJobActionsVM[];
 }
@@ -185,3 +187,77 @@ export type TimelineStatusLabel = {
     label: string;
     value: number;
   };
+
+
+export interface Customer {
+    acctManager: string;
+    name: string;
+    peName: string;
+    salesPerson: string;
+    sellToNo: string;
+}
+
+export interface Product {
+    extPartNo: string;
+    isbn: string;
+    isbnParent: string;
+    productGrp: string;
+    set: string;
+    title: string;
+}
+
+export interface JobSheetInstructions {
+    dept: string;
+    instruction: string;
+}
+
+export interface JobSheetOthers {
+    forVal: string;
+    instruction: string;
+    quantity: string;
+    reqDate: string;
+    title: string;
+}
+
+export interface JobSheet {
+    createdBy: string;
+    createdDate: string;
+    customer: Customer;
+    fsc: string;
+    instructions: JobSheetInstructions[];
+    issue: string;
+    jobType: string;
+    journalCode: string;
+    orderType: string;
+    others: JobSheetOthers[];
+    poNo: string;
+    printQuality: string;
+    product: Product;
+    quantity: string;
+    reqDeliveryDate: string;
+    volume: string;
+}
+
+export interface Datum {
+    em: boolean;
+    size: number;
+    value: string;
+}
+
+export interface Row {
+    data: Datum[];
+}
+
+export interface Table {
+    rows: Row[];
+    title: string;
+}
+
+export interface Tab {
+    tables: Table[];
+    title: string;
+}
+
+export interface ProductSpecShopFloor {
+    tabs: Tab[];
+}

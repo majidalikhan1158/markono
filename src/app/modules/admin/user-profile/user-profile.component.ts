@@ -12,7 +12,7 @@ export class UserProfileComponent implements OnInit {
   disabled = true;
 
   constructor(private modalService: ModalService,
-    private snack: SnackBarService,) { }
+              private snack: SnackBarService, ) { }
 
   ngOnInit(): void {
   }

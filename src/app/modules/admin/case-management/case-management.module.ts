@@ -14,6 +14,8 @@ import { SpecialInstructionsComponent } from './create-case/case-details/special
 import { InvoiceComponent } from './create-case/case-details/invoice/invoice.component';
 import { SummaryComponent } from './create-case/summary/summary.component';
 import { GroupByPipeModule } from '../../shared/pipe/group-by.pipe';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import {SpecialCharacterDirective } from '../../shared/directives/specialCharacter.directive';
 
 @NgModule({
   declarations: [
@@ -27,13 +29,15 @@ import { GroupByPipeModule } from '../../shared/pipe/group-by.pipe';
     SpecialInstructionsComponent,
     InvoiceComponent,
     SummaryComponent,
+    SpecialCharacterDirective
   ],
   imports: [
     CommonModule,
     CaseManagementRoutingModule,
     MaterialUiModule,
     SharedModule,
-    GroupByPipeModule
+    GroupByPipeModule,
+    NgxMatSelectSearchModule
   ],
   providers: []
 })

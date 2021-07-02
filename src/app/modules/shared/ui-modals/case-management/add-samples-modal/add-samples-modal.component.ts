@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { UIModalID } from '../../../enums/app-constants';
 import { CreateCaseDataType } from '../../../enums/app-enums';
 import { ProductDetailModals, ProductDetailsVM } from '../../../models/create-case';
@@ -15,6 +16,8 @@ export class AddSamplesModalComponent implements OnInit, OnDestroy {
   @Output() acceptEvent = new EventEmitter<ProductDetailModals[]>();
   samplesListVM: ProductDetailModals[] = [];
   productDetailsVMList: ProductDetailsVM[] = [];
+  subscription: Subscription;
+  enableDeleteButton = false;
   constructor(private modalService: ModalService, private store: CaseStore) { }
 
   ngOnInit(): void {
@@ -25,7 +28,7 @@ export class AddSamplesModalComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.createCaseStore.subscribe((resp) => {
+    this.subscription = this.store.createCaseStore.subscribe((resp) => {
       if (
         resp &&
         resp.productDetailsList &&
@@ -35,6 +38,7 @@ export class AddSamplesModalComponent implements OnInit, OnDestroy {
         const productRecord = this.productDetailsVMList.find(x => x.id === this.recordId);
         if (productRecord && productRecord.productISBNDetail && productRecord.productISBNDetail.sampleList.length > 0) {
           this.samplesListVM = productRecord.productISBNDetail.sampleList;
+          this.enableDeleteButton = true;
         }
       }
       if (this.samplesListVM.length === 0) {
@@ -43,10 +47,11 @@ export class AddSamplesModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  addSample() {
+  addSample(isAddMode: number) {
     const actualList = this.samplesListVM.filter(x => x.quantity > 0);
     this.acceptEvent.emit(actualList);
     this.samplesListVM = [];
+    this.enableDeleteButton = false;
     this.modalService.close(UIModalID.ADD_SAMPLES_MODAL);
   }
 
@@ -73,5 +78,6 @@ export class AddSamplesModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 }

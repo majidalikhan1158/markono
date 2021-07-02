@@ -19,7 +19,7 @@ import { SubheaderService } from 'src/app/_metronic/partials/layout/subheader/_s
 export class CreateProductComponent implements OnInit, OnDestroy {
   createProductTabs = CreateProductTabs;
   subscription: Subscription;
-  productSpecStatus: string;
+  productSpecStatus = '';
   productSpecTooltip: string;
   statusesList = StatusList;
   baseClass = 'status-box';
@@ -40,10 +40,10 @@ export class CreateProductComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.store.$productSpecStatus.subscribe(resp => {
-     if (resp){
+     if (resp && this.productSpecStatus === ''){
       const status = this.statusesList.find(x => x.status === resp.status);
       this.productSpecStatus = resp.status;
-      this.productSpecTooltip = status.message;
+      this.productSpecTooltip = status?.message;
       this.statusClass = resp.status === this.statusTypes.Live
       ? `${this.baseClass} status-live`
       : (resp.status === this.statusTypes.Complete || resp.status === this.statusTypes.LayoutReady)

@@ -58,7 +58,8 @@ export class ShopFloorHelperService {
         id: item.id,
         jobNo: item.attributes.jobNo,
         jobTitle: item.attributes.title,
-        estimatedDuration: item.attributes.plannedDuration / 60,
+        // tslint:disable-next-line: no-bitwise
+        estimatedDuration: ~~(item.attributes.plannedDuration / 60),
         scheduledTime: item.attributes.plannedStartDate,
         scheduledDate: item.attributes.plannedStartDate,
         links: item.links,
@@ -94,6 +95,8 @@ export class ShopFloorHelperService {
       jobActionStop: item.jobActionStop,
       jobReadOnly: item.jobReadOnly,
       jobStatus: item.jobStatus,
+      jobSheetUrl: item.jobSheetUrl,
+      productSpecUrl: item.productSpecUrl,
       machineSummaryList: this.getMachineSummaries(item.jobSummaries),
       machineJobActionsList: this.getMachineActions(item.jobActions),
     };

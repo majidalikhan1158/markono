@@ -27,7 +27,8 @@ export const QuotationSpecFilterTypes = {
     SALESPERSON: 'SALESPERSON',
     CUSTOMER: 'CUSTOMER',
 };
-//Platemaking
+
+// Platemaking
 export interface PlatemakingSearchFilters {
     currentSelectedFilter: string;
     jobNo: string;
@@ -44,7 +45,7 @@ export const PlatemakingnSearchFilterTypes = {
     SCHEDULEDPRINTING_DATE: 'SCHEDULEDPRINTING_DATE',
     CUSTOMER: 'CUSTOMER',
 };
-//Orders
+// Orders
 
 export interface OrderSearchFilters {
     currentSelectedFilter: string;
@@ -54,6 +55,17 @@ export interface OrderSearchFilters {
     orderDate: string;
     requestedDeliveryDate: string;
     currentActivityStatusName: string;
+    jobNo: string;
+}
+
+export interface PlanningSearchFilters {
+    currentSelectedFilter: string;
+    type: string;
+    orderDate: string;
+    requestedDeliveryDate: string;
+    currentActivityStatusName: string;
+    jobNo: string;
+    printType: string;
 }
 
 export const OrderSearchFilterTypes = {
@@ -62,7 +74,9 @@ export const OrderSearchFilterTypes = {
     ORDER_DATE: 'ORDER_DATE',
     STATUS: 'STATUS',
     COMPANY_NAME: 'COMPANY_NAME',
-    REQUEST_DELIVERYDATE: 'REQUEST_DELIVERYDATE'
+    REQUEST_DELIVERYDATE: 'REQUEST_DELIVERYDATE',
+    JOB_NO: 'JOB_NO',
+    PRINT_TYPE: 'PRINT_TYPE'
 };
 
 export const PrintTypes = {
@@ -104,7 +118,7 @@ export interface OrderJobInfoDetailSearchFilters {
     qty: string;
     jobType: string;
     status: string;
-};
+}
 
 export interface OrderInfoDetailSearchFilters {
     currentSelectedFilter: string;
@@ -115,7 +129,7 @@ export interface OrderInfoDetailSearchFilters {
     OrderQuantity: string;
     PrintType: string;
     CurrentActivityStatusName: string;
-};
+}
 
 export const OrdersInfoDetailSearchFilterTypes = {
     // ORDER_DATE: 'ORDER_DATE',

@@ -17,7 +17,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { OrderManagementModule } from './order-management/order-management.module';
 import { PrepressManagementModule } from './prepress-management/prepress-management.module';
-
+import { PlanningManagementModule } from './planning-management/planning-management.module';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };
@@ -34,7 +34,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgApexchartsModule,
     PerfectScrollbarModule, SharedModule, SplashScreenModule, MatProgressSpinnerModule,
     OverlayModule,
-    PrepressManagementModule
+    PrepressManagementModule,
+    PlanningManagementModule
   ],
   exports: [RouterModule],
   providers: [

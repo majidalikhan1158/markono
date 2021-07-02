@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { DvdCDBindingMapper, DVDVM } from 'src/app/modules/shared/models/product-spec';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
-import { FinishingTypeList, BindingTypeList, ColorTypeList } from 'src/app/modules/shared/enums/product-management/product-constants';
+import { FinishingTypeList, BindingTypeList, ColorTypeList, ProductSpecificationTypes } from 'src/app/modules/shared/enums/product-management/product-constants';
 import { SelectionList } from 'src/app/modules/shared/enums/product-management/product-interfaces';
 import { ProductSpecTypes } from 'src/app/modules/shared/enums/app-enums';
 import { ProductSpecStore } from 'src/app/modules/shared/ui-services/product-spec.service';
@@ -19,11 +19,12 @@ import { ProductSpecHelperService } from 'src/app/modules/shared/enums/helpers/p
 })
 export class SpecDvdCdComponent implements OnInit, OnDestroy {
   productSpecTypes = ProductSpecTypes;
-  columnsToDisplay = ['#', 'Type', 'Quantity', 'Sleeve Type', ];
+  columnsToDisplay = ['#', 'Type', 'Quantity', 'Sleeve Type', 'Media ISBN (If any)' ];
   viewModal: DVDVM[] = [];
   rowIdToExpand = 0;
   shouldShowDvdDetails = false;
   ExpansionIcons = ExpansionIcons;
+  productSpecTypesConstant = ProductSpecificationTypes;
 
   materialDataList: MaterialDataList[];
   materialWeightList: string[];
@@ -50,16 +51,25 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
   constructor(public store: ProductSpecStore, private helper: ProductSpecHelperService) { }
 
   ngOnInit(): void {
-    this.store.getCoverMaterialWeight('Text', ProductSpecTypes.DVD_CD);
+    this.handleUpdateStore();
+    this.store.getMaterialWeight('Text', ProductSpecTypes.DVD_CD);
     this.store.getFinishingTypes('Text', ProductSpecTypes.DVD_CD);
     this.getApiData();
     this.getDefaultRecord();
   }
 
+  handleUpdateStore = () => {
+    this.subscription = this.store.$productSpecStoreUpdate.subscribe(resp => {
+      if (resp && resp === this.productSpecTypesConstant.OTHER_COMPONENT ) {
+         this.pushToStore();
+      }
+    });
+  }
+
   getApiData = () => {
     this.subscription = this.store.$dvdCdMaterialDataList.subscribe(list => {
       this.materialDataList = list;
-      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort();
+      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort(this.helper.sortComparer);
       this.handleMaterialWeightFilterAutoComplete();
     });
 
@@ -90,9 +100,12 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
     if (type === 'MATERIALWEIGHT') {
       const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal[index].textMaterialWeight);
       this.materialList = [...new Set(records.map(x => x.PaperMaterial))].sort();
+      this.filteredMaterialList.next([]);
+      this.filteredMaterialBrandList.next([]);
       this.handleMaterialFilterAutoComplete();
     } else if (type === 'MATERIAL') {
-      const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal[index].textMaterial);
+      const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal[index].textMaterialWeight
+        && x.PaperMaterial === this.viewModal[index].textMaterial);
       this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))].sort();
       this.handleMaterialBrandFilterAutoComplete();
     }
@@ -106,12 +119,17 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
     }
   }
 
-  addPantoneColour(event: Event, index: number) {
-    const value = (event.target as HTMLInputElement).value;
+  addPantoneColour(event: Event, index: number, color: string) {
+    let value;
+    if (event) {
+      value = (event.target as HTMLInputElement).value;
+      (event.target as HTMLInputElement).value = '';
+    } else {
+      value = color;
+    }
     if (value !== '' && this.viewModal[index].pantoneColour.indexOf(value) === -1) {
       this.viewModal[index].pantoneColour.push(value);
     }
-    (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelection(item: string, index: number) {
@@ -161,7 +179,8 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
       pantoneColour: [],
       finishingType: [],
       specialInstructions: '',
-      bindingVM: null
+      bindingVM: null,
+      MediaISBN: ''
     };
   }
 
@@ -213,9 +232,8 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
     );
   }
 
-  
   handleMaterialWeightFilterAutoComplete = () => {
-    this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+    this.filteredMaterialWeightList.next(this.materialWeightList.slice().sort(this.helper.sortComparer));
     this.materialWeightFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
@@ -248,14 +266,14 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
     // get the search keyword
     let search = this.materialWeightFltrCtrl.value;
     if (!search) {
-      this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+      this.filteredMaterialWeightList.next(this.materialWeightList.slice().sort(this.helper.sortComparer));
       return;
     } else {
       search = search.toLowerCase();
     }
     // filter the banks
     this.filteredMaterialWeightList.next(
-      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
+      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1).sort(this.helper.sortComparer)
     );
   }
 
@@ -301,11 +319,14 @@ export class SpecDvdCdComponent implements OnInit, OnDestroy {
        this.viewModal[index].noOfMonoExtent ?? 0);
   }
 
-
-  ngOnDestroy(): void {
+  pushToStore = () => {
     this.store.setProductSpecStore(
       this.viewModal,
       ProductSpecTypes.DVD_CD
     );
+  }
+
+  ngOnDestroy(): void {
+    this.pushToStore();
   }
 }

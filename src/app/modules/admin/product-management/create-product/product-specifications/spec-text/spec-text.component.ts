@@ -41,7 +41,7 @@ export class SpecTextComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.handleUpdateStore();
-    this.store.getCoverMaterialWeight('Text', ProductSpecTypes.TEXT);
+    this.store.getMaterialWeight('Text', ProductSpecTypes.TEXT);
     this.store.getFinishingTypes('Text', ProductSpecTypes.TEXT);
     this.getApiData();
     this.getDefaultRecord();
@@ -58,7 +58,7 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   getApiData = () => {
     this.store.$textMaterialDataList.subscribe(list => {
       this.materialDataList = list;
-      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort();
+      this.materialWeightList = [...new Set(this.materialDataList.map(x => x.PaperWeight))].sort(this.helper.sortComparer);
       this.handleMaterialWeightFilterAutoComplete();
     });
 
@@ -72,9 +72,13 @@ export class SpecTextComponent implements OnInit, OnDestroy {
     if (type === 'MATERIALWEIGHT') {
       const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.textMaterialWeight);
       this.materialList = [...new Set(records.map(x => x.PaperMaterial))].sort();
+      this.filteredMaterialBrandList.next([]);
+      this.filteredMaterialList.next([]);
       this.handleMaterialFilterAutoComplete();
+      this.handleMaterialWeightChange('MATERIAL');
     } else if (type === 'MATERIAL') {
-      const records = this.materialDataList.filter(x => x.PaperMaterial === this.viewModal.textMaterial);
+      const records = this.materialDataList.filter(x => x.PaperWeight === this.viewModal.textMaterialWeight
+        && x.PaperMaterial === this.viewModal.textMaterial);
       this.materialBrandList = [...new Set(records.map(x => x.PaperBrand))].sort();
       this.handleMaterialBrandFilterAutoComplete();
     }
@@ -88,12 +92,17 @@ export class SpecTextComponent implements OnInit, OnDestroy {
     }
   }
 
-  addPantoneColour(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+  addPantoneColour(event: Event, color: string) {
+    let value;
+    if (event) {
+      value = (event.target as HTMLInputElement).value;
+      (event.target as HTMLInputElement).value = '';
+    } else {
+      value = color;
+    }
     if (value !== '' && this.viewModal.pantoneColour.indexOf(value) === -1) {
       this.viewModal.pantoneColour.push(value);
     }
-    (event.target as HTMLInputElement).value = '';
   }
 
   removePantoneColourSelection(item: string) {
@@ -124,10 +133,12 @@ export class SpecTextComponent implements OnInit, OnDestroy {
       textMaterialWeight: '',
       textMaterial: '',
       materialBrand: '',
-      noOfColourExtent: 0,
-      noOfMonoExtent: 0,
-      totalExtent: 0,
+      TxtNoOfOneColourExtent: 0,
+      TxtNoOfTwoColourExtent: 0,
+      TxtNoOfFourColourExtent: 0,
+      TxtTotalExtent: 0,
       noOfColours: 0,
+      selectedColours: '',
       colorType: [],
       pantoneColour: [],
       finishingType: [],
@@ -136,7 +147,7 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   }
 
   handleMaterialWeightFilterAutoComplete = () => {
-    this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+    this.filteredMaterialWeightList.next(this.materialWeightList.slice().sort(this.helper.sortComparer));
     this.materialWeightFltrCtrl.valueChanges
       .pipe(takeUntil(this.onDestroy))
       .subscribe(() => {
@@ -169,14 +180,14 @@ export class SpecTextComponent implements OnInit, OnDestroy {
     // get the search keyword
     let search = this.materialWeightFltrCtrl.value;
     if (!search) {
-      this.filteredMaterialWeightList.next(this.materialWeightList.slice());
+      this.filteredMaterialWeightList.next(this.materialWeightList.slice().sort(this.helper.sortComparer));
       return;
     } else {
       search = search.toLowerCase();
     }
     // filter the banks
     this.filteredMaterialWeightList.next(
-      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1)
+      this.materialWeightList.filter(item => item.toLowerCase().indexOf(search) > -1).sort(this.helper.sortComparer)
     );
   }
 
@@ -244,7 +255,8 @@ export class SpecTextComponent implements OnInit, OnDestroy {
   }
 
   handleColorSum = () => {
-    this.viewModal.totalExtent = this.helper.sum(this.viewModal.noOfColourExtent ?? 0, this.viewModal.noOfMonoExtent ?? 0);
+    this.viewModal.TxtTotalExtent = this.helper.sum(this.viewModal.TxtNoOfOneColourExtent ?? 0, this.viewModal.TxtNoOfTwoColourExtent ?? 0,
+                                this.viewModal.TxtNoOfFourColourExtent ?? 0);
   }
 
   pushToStore = () => {

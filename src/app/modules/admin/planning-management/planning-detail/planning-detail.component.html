@@ -1,0 +1,234 @@
+<div class="row">
+  <!--order info-->
+  <div class="col-xl-12">
+    <div class="card card-custom example example-compact gutter-b planning-info-card">
+      <div class="card-header">
+        <div class="card-title">
+          <h3 class="card-label">Order Info.</h3>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="order-info-table-card" style="width: 100%;">
+          <thead>
+            <tr class="th-order">
+              <th *ngFor="let item of displayedColumnsOrderInfo">
+                {{ item }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container>
+              <tr class="outer-row" style="font-size: 16px">
+                <td class="">
+                  {{ planningJobDetail?.jobNo }}
+                </td>
+                <td class="">
+                  {{ planningJobDetail?.yourReference }}
+                </td>
+                <td class="">
+                  {{ planningJobDetail?.isbnPartNo }}
+                </td>
+                <td class="">
+                  {{ planningJobDetail?.orderQuantity }}
+                </td>
+                <td class="" >
+                  {{ planningJobDetail?.printType }}
+                </td>
+                <td class="">
+                  <!--orange > Pending File Prep-->
+                  <div class="status-options" *ngIf="planningJobDetail?.currentActivityStatusCode == 301">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-orange label-inline">Pending File
+                        Prep</span>
+                    </span>
+                  </div>
+                  <!--green > Order Confirmed-->
+                  <div class="status-options" *ngIf="planningJobDetail?.currentActivityStatusCode == 207">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-green label-inline">Order
+                        Confirmed</span>
+                    </span>
+                  </div>
+                  <!--purple > RFQ-->
+                  <div class="status-options" *ngIf="planningJobDetail?.currentActivityStatusCode == 201">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-purple label-inline">RFQ</span>
+                    </span>
+                  </div>
+                  <!-- light-blue > Case Created-->
+                  <div class="status-options" *ngIf="planningJobDetail?.currentActivityStatusCode == 101">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Case
+                        Created</span>
+                    </span>
+                  </div>
+                  <!-- light-blue > Pending Est-->
+                  <div class="status-options" *ngIf="planningJobDetail?.currentActivityStatusCode == 202">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Pending
+                        Est</span>
+                    </span>
+                  </div>
+                   <!-- light-blue > Scheduling -->
+                  <div class="status-options" *ngIf="planningJobDetail?.currentActivityStatusCode == 402">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Scheduling</span>
+                    </span>
+                  </div>
+                  <!-- light-blue > Est. Compl-->
+                  <div class="status-options" *ngIf="planningJobDetail?.currentActivityStatusCode == 203">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Est.
+                        Compl</span>
+                    </span>
+                  </div>
+                  <!-- light-blue > Printing-->
+                  <div class="status-options" *ngIf="planningJobDetail?.currentActivityStatusCode == 503">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Printing</span>
+                    </span>
+                  </div>
+                  <!-- light-blue > Folding Compl-->
+                  <div class="status-options" *ngIf="planningJobDetail?.currentActivityStatusCode == 602">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Folding
+                        Compl</span>
+                    </span>
+                  </div>
+                  <!-- light-blue > Bind Compl-->
+                  <div class="status-options" *ngIf="planningJobDetail?.currentActivityStatusCode == 801">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Bind
+                        Compl</span>
+                    </span>
+                  </div>
+                  <!-- light-blue > Shipped-->
+                  <div class="status-options" *ngIf="planningJobDetail?.currentActivityStatusCode == 806">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">Shipped</span>
+                    </span>
+                  </div>
+                  <!-- light-blue > No Setup-->
+                  <div class="status-options" *ngIf="planningJobDetail?.currentActivityStatusCode == 21">
+                    <span class="width-100">
+                      <span class="width-auto" class="label label-lg label-light-blue label-inline">No
+                        Setup</span>
+                    </span>
+                  </div>
+                  <div class="status-options"*ngIf="planningJobDetail?.currentActivityStatusCode == 22">
+                    <span style="width: 100px;">
+                        <span class="label label-lg status-incomplete label-inline">Incomplete Setup</span>
+                    </span>
+                </div>
+                </td>
+                <td class="">
+                  {{ planningJobDetail?.orderDate | dateFormat }}
+                </td>
+                <td class="">
+                  {{ planningJobDetail?.requestedDeliveryDate | dateFormat}}
+                </td>
+                <td class="display-flex">
+                  <a style="text-decoration: underline;" target="_blank" class="font-12px" [routerLink]="[ '/admin/order-management/order-details', planningJobDetail?.caseID]">
+                    View Order Details
+                  </a>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-12">
+  <div class="col-xl-12 display-flex" style="flex: none;">
+    <div class="col-xl-2 padding-l-0px order-types">
+      <div class="card card-custom example example-compact gutter-b order-details-types">
+        <div class="card-body">
+          <mat-selection-list class="label-mat-selection">
+            <mat-list-option class="selectbox-header font-12px">
+              PRODUCTION
+            </mat-list-option>
+          </mat-selection-list>
+          <mat-accordion class="example-headers-align">
+            <mat-expansion-panel style="box-shadow: none;" #matExpansionPanelElement
+                [expanded]="!shouldExpandedPanelClose">
+                <mat-expansion-panel-header class="pr-2 pl-5">
+                    <mat-panel-title class="font-12px font-roboto-medium">
+                        Specs
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-selection-list [multiple]="false" class="pt-0 pb-0 sub-types"
+                    (selectionChange)="handleProductSpecTypeChange($event, productSpecTypesArray)">
+                    <mat-list-option class="font-12px font-roboto-medium" 
+                      *ngFor="let types of productStore.$productSpecTypeObjectList | async"
+                        [selected]="types.isSelected" [value]="types.enum">
+                        {{types.value}}
+                    </mat-list-option>
+                </mat-selection-list>
+            </mat-expansion-panel>
+            <mat-selection-list [multiple]="false" class="pt-0 pb-0 main-types"
+            (selectionChange)="handleProductSpecTypeChange($event, productSpecTypeOtherArray)">
+            <mat-list-option *ngFor="let types of productSpecTypeOtherArray" [selected]="types.isSelected"
+                class="font-12px font-roboto-medium" 
+                [value]="types.enum">{{types.value}}</mat-list-option>
+            </mat-selection-list>
+          </mat-accordion>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-10 padding-l-0px" style="background-color: white;padding-right: 0px;">
+      <ng-container *ngIf="currentSelectedType === productSpecTypesConstant.GENERAL">
+        <app-spec-general (productSpecTypeEvent)="addProductSpecType($event)"></app-spec-general>
+      </ng-container>
+      <ng-container *ngIf="currentSelectedType === productSpecTypesConstant.COVER">
+          <app-spec-cover></app-spec-cover>
+      </ng-container>
+      <ng-container *ngIf="currentSelectedType === productSpecTypesConstant.TEXT">
+          <app-spec-text></app-spec-text>
+      </ng-container>
+      <ng-container *ngIf="currentSelectedType === productSpecTypesConstant.BINDING">
+          <app-spec-binding></app-spec-binding>
+      </ng-container>
+      <ng-container *ngIf="currentSelectedType === productSpecTypesConstant.CHILD_ISBN">
+          <app-spec-child-isbn></app-spec-child-isbn>
+      </ng-container>
+      <ng-container *ngIf="currentSelectedType === productSpecTypesConstant.DVD_CD">
+          <app-spec-dvd-cd></app-spec-dvd-cd>
+      </ng-container>
+      <ng-container *ngIf="currentSelectedType === productSpecTypesConstant.WEB_CODE">
+          <app-spec-webcode></app-spec-webcode>
+      </ng-container>
+      <ng-container *ngIf="currentSelectedType === productSpecTypesConstant.OTHER_COMPONENT">
+        <app-spec-other></app-spec-other>
+      </ng-container>
+      <ng-container *ngIf="currentSelectedType === productSpecTypesConstant.LAYOUT_PREP">
+        <app-spec-layout-prep [fromPlanning]="!shouldDisableLayoutPrepANDVerifyFileSaveButton ? true : false" [documentId]="planningJobDetail.id"
+        (acceptEvent)="getJobDetails()"></app-spec-layout-prep>
+      </ng-container>
+      <ng-container *ngIf="currentSelectedType === productSpecTypesConstant.VERIFY_PRINT_FILE">
+        <app-verify-print-file [productId]="productId"></app-verify-print-file>
+    </ng-container>
+    <ng-container *ngIf="currentSelectedType === productSpecTypesConstant.PROOF_APPROVAL">
+        <app-proof-approval [filePrepCaseDetail]="filePrepCaseDetail"></app-proof-approval>
+    </ng-container>
+    <!-- <ng-container>
+      <div class="pb-5">
+          <div class="col-lg-12 pt-10 text-right">
+              <button mat-button (click)="createProductSpec()"
+                  *ngIf="(currentSelectedType === productSpecTypesConstant.LAYOUT_PREP || 
+                      currentSelectedType === productSpecTypesConstant.VERIFY_PRINT_FILE || 
+                      currentSelectedType === productSpecTypesConstant.PROOF_APPROVAL) && 
+                      shouldDisableLayoutPrepANDVerifyFileSaveButton"
+                      class="btn btn-primary stepper-next-button"
+                      [disabled]="shouldDisableLayoutPrepANDVerifyFileSaveButton">
+                  Save
+              </button>
+          </div>
+      </div>
+  </ng-container> -->
+    </div>
+  </div>
+</div>

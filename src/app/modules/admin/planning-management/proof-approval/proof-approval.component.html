@@ -1,0 +1,142 @@
+<div class="row spec-proof-approval" style="padding: 20px;">
+    <div class="col-lg-12 pb-3">
+        <span class="font-16px font-roboto-bold">Proof Approval</span>
+        <mat-hint class="font-14px d-flex">Final file checks before production</mat-hint>
+    </div>
+
+    <div class="col-lg-12 pt-2 pb-5 pl-0">
+        <mat-divider></mat-divider>
+    </div>
+
+    <div class="col-lg-12 pb-4">
+        <span class="font-14px font-roboto-bold">Blueprint Requirements</span>
+    </div>
+
+    <div class="col-lg-12 d-flex pl-4">
+        <div class="col-lg-3 display-flex-direction-column">
+            <span class="txt-label">Required date</span>
+            <!-- <span class="txt-value">1/26/2021</span> -->
+        </div>
+        <div class="col-lg-3 display-flex-direction-column">
+            <span class="txt-label">For who</span>
+            <!-- <span class="txt-value">Psychology 3e</span> -->
+        </div>
+        <div class="col-lg-2 display-flex-direction-column">
+            <span class="txt-label">Quantity</span>
+            <!-- <span class="txt-value">140</span> -->
+        </div>
+        <div class="col-lg-4 display-flex-direction-column">
+            <span class="txt-label">Special Instructions</span>
+            <!-- <span class="txt-value">Physical blueprint special instructions lorem ipsum dolor imit lorem ipsum.</span> -->
+        </div>
+    </div>
+    <div class="col-lg-12 d-flex pl-4" *ngFor="let item of filePrepCaseDetail.CaseDetailAdditional">
+        <div class="col-lg-3 display-flex-direction-column">
+            <span class="txt-value">{{item.RequiredDate | dateFormat}}</span>
+        </div>
+        <div class="col-lg-3 display-flex-direction-column">
+            <span class="txt-value">{{item.ForWho}}</span>
+        </div>
+        <div class="col-lg-2 display-flex-direction-column">
+            <span class="txt-value">{{item.Quantity}}</span>
+        </div>
+        <div class="col-lg-4 display-flex-direction-column">
+            <span class="txt-value">{{item.SpecialInstruction}}</span>
+        </div>
+    </div>
+
+    <div class="col-lg-12 pt-2 pb-5 pl-0">
+        <mat-divider></mat-divider>
+    </div>
+
+    <div class="col-lg-12 pb-4">
+        <span class="font-14px font-roboto-bold">Checklist for Prepress specialist</span>
+    </div>
+
+    <div class="col-lg-12 pt-2 pl-0">
+        <mat-divider></mat-divider>
+    </div>
+
+    <div class="col-lg-12 pl-0 display-flex">
+        <div class="col-lg-6">
+            <div class="col-lg-12 pb-3 pt-4">
+                <span class="font-14px font-roboto-bold">Cover</span>
+            </div>
+            <div class="col-lg-12 pb-3">
+                <ul class="pl-0">
+                    <li style="list-style: none;" class="pb-3" *ngFor="let item of coverCheckList; let i = index">
+                        <div class="col-lg-12">
+                            <span class="font-14px font-roboto-bold">
+                                {{ i + 1}})
+                            </span>
+                            <span class="font-14px font-roboto-regular pl-5">
+                                {{item.title}}
+                            </span>
+                        </div>
+                        <div class="col-lg-12 pt-2" *ngIf="item.childTitles">
+                            <span *ngFor="let child of item.childTitles; let j = index" class="pl-10">
+                                <span class="font-14px font-roboto-bold">
+                                    {{i + 1}}{{ child.bullet}})
+                                </span>
+                                <span class="font-14px font-roboto-regular pl-5">
+                                    {{child.title}}
+                                </span>
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <mat-divider [vertical]="true"></mat-divider>
+
+        <div class="col-lg-6">
+            <div class="col-lg-12 pb-3 pt-4">
+                <span class="font-14px font-roboto-bold">Text</span>
+            </div>
+            <div class="col-lg-12 pb-3">
+                <ul class="pl-0">
+                    <li style="list-style: none;" class="pb-3" *ngFor="let item of textCheckList; let i = index">
+                        <div class="col-lg-12">
+                            <span class="font-14px font-roboto-bold">
+                                {{ i + 1}})
+                            </span>
+                            <span class="font-14px font-roboto-regular pl-5">
+                                {{item.title}}
+                            </span>
+                        </div>
+                        <div class="col-lg-12 pt-2 display-flex-direction-column" *ngIf="item.childTitles">
+                            <span *ngFor="let child of item.childTitles; let j = index" class="pl-10 pb-3">
+                                <span class="font-14px font-roboto-bold">
+                                    {{i + 1}}{{ child.bullet}})
+                                </span>
+                                <span class="font-14px font-roboto-regular pl-5">
+                                    {{child.title}}
+                                </span>
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 pl-0" style="top: -8px">
+        <mat-divider></mat-divider>
+    </div>
+
+    <div class="col-lg-12 pt-3" style="display: grid;">
+        <mat-checkbox [(ngModel)]="isAgree">
+            The customer has acknowledged the print defects/revisions made and has given explicit approval to proceed
+            with
+            printing.
+        </mat-checkbox>
+        <a class="font-14px font-roboto-bold pl-8">Export QD Report</a>
+    </div>
+    <div class="col-lg-12 pt-10 text-right">
+        <button mat-button (click)="createProductSpec()" class="btn btn-primary stepper-next-button"
+            [disabled]="!isAgree">
+            Save
+        </button>
+    </div>
+</div>

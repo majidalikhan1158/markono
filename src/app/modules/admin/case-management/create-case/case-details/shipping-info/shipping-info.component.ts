@@ -13,9 +13,13 @@ import { CreateCaseMode, CreateCaseDataType } from 'src/app/modules/shared/enums
 import { ShipmentTypes } from 'src/app/modules/shared/enums/case-management/case-contants';
 import { CustomerInfoVM, ShipmentBillingDetails, ShipmentToAddress, ShippingInfoVM, ShippingItemsModel } from 'src/app/modules/shared/models/create-case';
 import { ExpansionIcons } from 'src/app/modules/shared/enums/app-constants';
-import { DDLListModal } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
+import { DDLListModal, ShipToCode } from 'src/app/modules/services/shared/classes/case-modals/case-modal';
 import { ProductSpecHelperService } from '../../../../../shared/enums/helpers/product-spec-helper.service';
 import { SnackBarService } from '../../../../../shared/ui-services/snack-bar.service';
+import { CostCategory } from '../../../../../services/shared/classes/response-modal';
+import { Subject, Subscription } from 'rxjs';
+import { OrderService } from '../../../../../services/core/services/order.service';
+import { takeUntil } from 'rxjs/operators';
 
 export interface ShipmentTypesBox {
   boxId: number;
@@ -41,6 +45,8 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   shipmentTermList: DDLListModal[] = [];
   shipmentModeList: DDLListModal[] = [];
   shipmentAgentList: DDLListModal[] = [];
+  filterShipmentAgentList: DDLListModal[] = [];
+  costCategoryList: CostCategory[] = [];
   shipmentItems: ShippingItemsModel[] = [];
   customerInfoVM: CustomerInfoVM;
   ExpansionIcons = ExpansionIcons;
@@ -49,13 +55,18 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   isShipmentModeLibrary = false;
   isShipmentModeInternalTransfer = false;
   shipmentSelectedTypeFormControl: FormControl;
+  shippingAgentFltrCtrl: FormControl = new FormControl();
   selectedShipmentType: any;
+  subscription: Subscription;
+  availableQuantityList: number[] = [];
+  protected onDestroy = new Subject<void>();
   constructor(
     private store: CaseStore,
     private ref: ChangeDetectorRef,
     private helper: ProductSpecHelperService,
-    private snack: SnackBarService
-  ) {}
+    private snack: SnackBarService,
+    private orderService: OrderService
+  ) { }
 
   ngOnInit(): void {
     this.disabled = this.createCaseMode === CreateCaseMode.EDIT;
@@ -73,7 +84,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   }
 
   handleIsShipmentDetails = () => {
-    this.selectedShipmentType = 1 ;
+    this.selectedShipmentType = 1;
     this.shipmentSelectedTypeFormControl.setValue(this.selectedShipmentType);
     this.handleShipmentTypeChange(null);
   }
@@ -114,7 +125,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   handleShipmentTypeChange(event: MatSelectChange) {
     let shipmentToBeAdded;
     if (!this.isShippingDetails) {
-      const isShipmentExist = this.shipmentsInfoVMList.find((x) => x.shipmentId === event.value);
+      // const isShipmentExist = this.shipmentsInfoVMList.find((x) => x.shipmentId === event.value);
       // if (isShipmentExist) {
       //   this.resetShipmentTypeSelect();
       //   this.snack.open(`Shipment Type ${isShipmentExist.shippingDetails.shipmentCategory} already added`);
@@ -146,7 +157,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
       }
       obj.shipmentAddress = this.getShipmentAddressDetails('s');
       obj.shipmentBillingDetails = this.getShipmentAddressDetails('b');
-      obj.shipmentBillingDetails.BillToNumber = this.customerInfoVM.customerId;
+      obj.shipmentBillingDetails.BillToNumber = this.customerInfoVM?.customerId;
       this.shipmentsInfoVMList.push(obj);
       this.shouldShowShipmentDetails = false;
       this.resetShipmentTypeSelect();
@@ -179,7 +190,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   }
 
   handleShipmentModeChange(event: MatSelectChange, shipmentId: number) {
-    const selectedMode = this.shipmentModeList.find(x => x.attributes.description === event.value);
+    const selectedMode = this.shipmentModeList.find(x => x.attributes.code === event.value);
     this.shipmentsInfoVMList.forEach((element) => {
       if (element.shipmentId === shipmentId) {
         if (
@@ -197,6 +208,40 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
         }
       }
     });
+    if (selectedMode.attributes.shipToCode) {
+      this.getShipToCodes(selectedMode.attributes.shipToCode, shipmentId);
+    } else {
+      this.setDefaultfromCustomerInfo(shipmentId);
+    }
+  }
+
+  getShipToCodes = (value: string, shipmentId: number) => {
+    this.subscription = this.orderService.getShipToCodes(value).subscribe((resp) => {
+      if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
+        const shipToCode = resp.body.result[0] as ShipToCode;
+        this.shipmentsInfoVMList.forEach((element) => {
+          if (element.shipmentId === shipmentId) {
+            element.shipmentAddress.AttentionTo = shipToCode.attention;
+            element.shipmentAddress.Email = shipToCode.email;
+            element.shipmentAddress.PhoneNo = shipToCode.phoneNo;
+            element.shipmentAddress.Address = shipToCode.address1;
+            element.shipmentAddress.Address2 = shipToCode.address2;
+            element.shipmentAddress.City = shipToCode.city;
+            element.shipmentAddress.PostCode = shipToCode.postCode;
+            element.shipmentAddress.CountryRegionCode = shipToCode.countryCode;
+          }
+        });
+        this.ref.detectChanges();
+      }
+    });
+  }
+
+  setDefaultfromCustomerInfo = (shipmentId: number) => {
+    this.shipmentsInfoVMList.forEach((element) => {
+      if (element.shipmentId === shipmentId) {
+        element.shipmentAddress = this.getShipmentAddressDetails('s');
+      }
+    });
   }
 
   compare(c1: { name: string }, c2: { name: string }) {
@@ -206,7 +251,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   getShipmentObject = (shipmentToBeAdded: any): ShippingInfoVM => {
     const totalShipments = this.shipmentsInfoVMList.length;
     return {
-      shipmentId: shipmentToBeAdded.value,
+      shipmentId: this.helper.sum(shipmentToBeAdded.value, this.shipmentsInfoVMList.length),
       boxId: totalShipments + 1,
       shippingDetails: {
         billable: false,
@@ -225,7 +270,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
       shippingSpecificCost: [
         {
           id: 1,
-          costCategory: '0',
+          costCategory: '',
           description: '',
           subTotal: 0,
         },
@@ -253,24 +298,40 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
     if (shipmentItem) {
       if (this.isShippingDetails) {
         shipmentItem.shipmentQty = value;
-      } else {
-        if (value > shipmentItem.availableQty) {
-          (event.target as HTMLInputElement).value = '0';
-        } else {
-          const availableQuantity = this.helper.sum(shipmentItem.availableQty, shipmentItem.shipmentQty) ;
-          shipmentItem.shipmentQty = value;
-          shipmentItem.availableQty = this.helper.minus(availableQuantity, shipmentItem.shipmentQty);
-        }
       }
-    }
+      else {
+        if (Number(value) < Number(shipmentItem.shipmentQty) && this.availableQuantityList[i] < 1) {
+          shipmentItem.availableQty = this.availableQuantityList[i] = this.helper.minus(shipmentItem.shipmentQty, value);
+          shipmentItem.shipmentQty = value;
+        }
+        else
+          if (this.availableQuantityList[i] === 0) {
+            // shipmentItem.shipmentQty = shipmentItem.shipmentQty;
+            (event.target as HTMLInputElement).value = shipmentItem.shipmentQty.toString();
+            this.snack.open('Available qty not available');
+          }
+          else {
+            shipmentItem.shipmentQty = value;
+            // const availableQuantity = this.helper.sum(this.availableQuantityList[i], shipmentItem.shipmentQty);
+            const availableQuantity = this.availableQuantityList[i];
+            this.availableQuantityList[i] = this.availableQuantityList[i];
+            shipmentItem.availableQty = this.availableQuantityList[i + 1] = this.helper.minus(availableQuantity, shipmentItem.shipmentQty);
+          }
+      }
 
-    this.shipmentsInfoVMList[i].shippingItems[k] = shipmentItem;
+      this.shipmentsInfoVMList[i].shippingItems[k] = shipmentItem;
+    }
+    // this.shipmentsInfoVMList.forEach(shipment => {
+    //   shipment.shippingItems?.forEach(shipmentItem => {
+    //     shipmentItem.availableQty = shipmentItem.availableQty;
+    //   });
+    // });
   }
 
   getShipmentItemQty = (shipmentId: number, shipmentItemId: number) => {
     return this.shipmentsInfoVMList
-    .find(x => x.shipmentId === shipmentId).shippingItems
-    .find(y => y.id === shipmentItemId).shipmentQty ?? 0;
+      .find(x => x.shipmentId === shipmentId).shippingItems
+      .find(y => y.id === shipmentItemId).shipmentQty ?? 0;
   }
 
   getAvaiableQty = (i) => {
@@ -289,45 +350,51 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.createCaseStore.subscribe((resp) => {
+    this.subscription = this.store.createCaseStore.subscribe((resp) => {
       if (resp && resp.shippingInfoList && resp.shippingInfoList.length > 0) {
         this.shipmentsInfoVMList = resp.shippingInfoList;
       } else {
         if (this.isShippingDetails) {
-         // this.handleIsShipmentDetails();
+          // this.handleIsShipmentDetails();
         }
       }
     });
   }
 
+  handleShipmentPromisedDateChange = (i: number, event) => {
+    this.shipmentsInfoVMList[i].shippingDetails.shippmentExpectedDeliveryDate =
+      this.shipmentsInfoVMList[i].shippingDetails.shippmentPromisedDate;
+  }
+
   private getShipmentAddressDetails = (type) => {
     const obj = type === 's'
-    ? (this.customerInfoVM.customerDetail as unknown) as ShipmentToAddress
-    : (this.customerInfoVM.customerDetail as unknown) as ShipmentBillingDetails;
+      ? (this.customerInfoVM?.customerDetail as unknown) as ShipmentToAddress
+      : (this.customerInfoVM?.customerDetail as unknown) as ShipmentBillingDetails;
     return {
-      AttentionTo: obj.CompanyName,
-      BillToNumber: obj.BillToNumber,
-      CompanyCode: obj.CompanyCode,
-      CompanyName: obj.CompanyName,
-      PrintFileFolder: obj.PrintFileFolder,
-      CurrencyCode: obj.CurrencyCode,
-      Contact: obj.Contact,
-      Address: obj.Address,
-      Address2: obj.Address2,
-      PostCode: obj.PostCode,
-      City: obj.City,
-      CountryRegionCode: obj.CountryRegionCode,
-      County: obj.County,
-      PhoneNo: obj.PhoneNo,
-      State: obj.State,
-      Email: obj.Email,
-      SalesPerson: obj.SalesPerson,
+      AttentionTo: obj?.CompanyName ?? '',
+      BillToNumber: obj?.BillToNumber ?? '',
+      CompanyCode: obj?.CompanyCode ?? '',
+      CompanyName: obj?.CompanyName?.substring(0, 45) ?? '',
+      PrintFileFolder: obj?.PrintFileFolder ?? '',
+      CurrencyCode: obj?.CurrencyCode ?? '',
+      Contact: obj?.Contact?.substring(0, 18) ?? '',
+      Address: obj?.Address ?? '',
+      Address2: obj?.Address2 ?? '',
+      PostCode: obj?.PostCode ?? '',
+      City: obj?.City ?? '',
+      CountryRegionCode: obj?.CountryRegionCode ?? '',
+      shipmentNote: obj?.shipmentNote ?? '',
+      County: obj?.County ?? '',
+      PhoneNo: obj?.PhoneNo?.substring(0, 16) ?? '',
+      State: obj?.State ?? '',
+      Email: obj?.Email ?? '',
+      SalesPerson: obj?.SalesPerson ?? '',
       Coordinator: ''
     };
   }
 
   private getProductDetailsData = () => {
-    this.store.createCaseStore.subscribe(data => {
+    this.subscription = this.store.createCaseStore.subscribe(data => {
       if (data && data.productDetailsList && data.productDetailsList.length > 0) {
         this.shipmentItems = [];
         data.productDetailsList.forEach((item, i) => {
@@ -339,6 +406,7 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
             shipmentQty: 0,
             maximumAllowed: item.prodQty
           });
+          this.availableQuantityList.push(item.prodQty);
         });
       } else if (this.isShippingDetails) {
         this.shipmentItems.push({
@@ -349,12 +417,13 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
           shipmentQty: 0,
           maximumAllowed: 0
         });
+        this.availableQuantityList.push(0);
       }
     });
   }
 
   private getCustomerInfo = () => {
-    this.store.createCaseStore.subscribe(data => {
+    this.subscription = this.store.createCaseStore.subscribe(data => {
       if (data && data.customerInfo && data.customerInfo.customerId) {
         this.customerInfoVM = data.customerInfo;
       }
@@ -367,13 +436,38 @@ export class ShippingInfoComponent implements OnInit, OnDestroy {
         this.shipmentTermList = result.data.shipmentTermList;
         this.shipmentModeList = result.data.shipmentModeList;
         this.shipmentAgentList = result.data.shipmentAgentList;
+        this.filterShipmentAgentList = result.data.shipmentAgentList;
+        this.costCategoryList = result.data.shippingInfoCostCategoryList;
+
+        this.shippingAgentFltrCtrl.valueChanges
+          .pipe(takeUntil(this.onDestroy))
+          .subscribe(() => {
+            this.filterShippingAgent();
+          });
       }
       this.ref.detectChanges();
     });
   }
 
+  filterShippingAgent = () => {
+    if (!this.shipmentAgentList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.shippingAgentFltrCtrl.value;
+    if (!search) {
+      this.filterShipmentAgentList = this.shipmentAgentList.slice();
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filterShipmentAgentList = this.shipmentAgentList.filter(item => item.attributes.description.toLowerCase().indexOf(search) > -1);
+  }
+
   ngOnDestroy(): void {
     this.pushToStore();
+    this.subscription?.unsubscribe();
   }
 
   pushToStore = () => {

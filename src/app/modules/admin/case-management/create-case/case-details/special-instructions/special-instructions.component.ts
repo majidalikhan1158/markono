@@ -10,6 +10,7 @@ import { SpecialInstructionViewModel } from 'src/app/modules/shared/models/creat
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import { CreateCaseMode, CreateCaseDataType } from 'src/app/modules/shared/enums/app-enums';
 import { Departments } from 'src/app/modules/shared/enums/case-management/case-contants';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-special-instructions',
@@ -24,6 +25,7 @@ export class SpecialInstructionsComponent implements OnInit, OnDestroy {
   disabled = false;
   columnsToDisplay = ['#', 'Department', 'Instructions', ''];
   rowsToDisplay: SpecialInstructionViewModel[] = [];
+  subscription: Subscription;
   constructor(
     private createCaseService: CaseStore,
     private ref: ChangeDetectorRef
@@ -34,8 +36,8 @@ export class SpecialInstructionsComponent implements OnInit, OnDestroy {
     if (this.createCaseMode === CreateCaseMode.EDIT) {
       this.disabled = true;
     }
-    this.createCaseService.createCaseStore.subscribe((data) => {
-      if (data.specialInstructionList && data.specialInstructionList.length > 0) {
+    this.subscription = this.createCaseService.createCaseStore.subscribe((data) => {
+      if (data && data.specialInstructionList && data.specialInstructionList.length > 0) {
         this.rowsToDisplay = data.specialInstructionList;
       } else {
         if (this.rowsToDisplay.length === 0) {
@@ -68,6 +70,7 @@ export class SpecialInstructionsComponent implements OnInit, OnDestroy {
       this.rowsToDisplay,
       CreateCaseDataType.SPECIAL_INSTRUCTIONS
     );
+    this.subscription?.unsubscribe();
   }
 
   pushToStore = () => {

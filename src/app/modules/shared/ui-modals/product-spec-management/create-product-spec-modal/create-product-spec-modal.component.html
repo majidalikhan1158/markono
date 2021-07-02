@@ -8,8 +8,9 @@
     <div class="row">
         <div class="col-lg-12 mb-3">
             <mat-form-field appearance="fill">
-                <mat-label>Product No./ISBN</mat-label>
+                <mat-label>Product No./ISBN <span class="asteric">*</span></mat-label>
                 <input matInput 
+                    (ngModelChange)="trimInputValue(childIsbnNumber1, 1)"
                     #productIsbn
                     [(ngModel)]="childIsbnNumber1"
                     #trigger1="matAutocompleteTrigger" 
@@ -30,7 +31,7 @@
         </div>
         <div class="col-lg-12 mb-5">
             <mat-form-field appearance="fill">
-                <mat-label>Describe</mat-label>
+                <mat-label>Version Description <span class="asteric">*</span></mat-label>
                 <input matInput [(ngModel)]="description">
                 <mat-hint>Describe this specs version in a few words e.g. 4C, case</mat-hint>
             </mat-form-field>
@@ -40,8 +41,9 @@
         </div>
         <div class="col-lg-12" *ngIf="useExistingTemplate">
             <mat-form-field appearance="fill">
-                <mat-label>Enter Existing Product No./ISBN</mat-label>
+                <mat-label>Enter Existing Product No./ISBN <span class="asteric">*</span></mat-label>
                 <input matInput 
+                (ngModelChange)="trimInputValue(childIsbnNumber2, 2)"
                     #existingProductIsbn
                     [(ngModel)]="childIsbnNumber2"
                     #trigger2="matAutocompleteTrigger" 

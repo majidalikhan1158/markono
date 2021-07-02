@@ -60,6 +60,22 @@ export class CaseBaseService {
         );
       }
     });
+
+     this.orderService.getMiscBillingCostCategory().subscribe((result) => {
+      if (result.body.success) {
+        this.caseService.setCaseDropDownsDataSource(
+          null, RecordType.MISC_BILLING_COST_CATEGORY, result.body.result
+        );
+      }
+    });
+
+     this.orderService.getShippingInfoCostCategory().subscribe((result) => {
+      if (result.body.success) {
+        this.caseService.setCaseDropDownsDataSource(
+          null, RecordType.SHIPPING_INFO_COST_CATEGORY, result.body.result
+        );
+      }
+    });
   }
 
 }

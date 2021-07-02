@@ -31,7 +31,9 @@ export enum RecordType {
     GET_CASE_TYPE,
     SHIPMENT_MODE,
     SHIPMENT_TERM,
-    SHIPMENT_AGENT
+    SHIPMENT_AGENT,
+    MISC_BILLING_COST_CATEGORY,
+    SHIPPING_INFO_COST_CATEGORY
 }
 
 export enum ProductSpecTypes {
@@ -46,5 +48,6 @@ export enum ProductSpecTypes {
     OTHER_COMPONENT,
     VERIFY_PRINT_FILE,
     BINDING_OTHER_COMPONENT,
-    BINDING_DVD_CD
+    BINDING_DVD_CD,
+    LAYOUT_PREP
 }

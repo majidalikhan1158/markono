@@ -1,38 +1,70 @@
-<mat-table #table [dataSource]="dataSource" class="product-version-table">
-    <!--- Note that these columns can be defined in any order.
-				The actual rendered columns are set as a property on the row definition" -->
+<mat-table #table [dataSource]="parentVersionsDataSource" class="product-version-table" multiTemplateDataRows >
     <!-- Position Column -->
     <ng-container matColumnDef="versionNo">
         <mat-header-cell *matHeaderCellDef> Version no. </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.VersionNo}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.ParentVersion.VersionNo}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="revision">
+        <mat-header-cell *matHeaderCellDef> Revision </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.ParentVersion.Revision}} </mat-cell>
     </ng-container>
     <!-- Name Column -->
     <ng-container matColumnDef="dateCreated">
         <mat-header-cell *matHeaderCellDef> Date Created </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.CreatedDateTime | date:'shortDate'}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.ParentVersion.CreatedDateTime | dateFormat}} </mat-cell>
     </ng-container>
     <!-- Weight Column -->
     <ng-container matColumnDef="createdBy">
         <mat-header-cell *matHeaderCellDef> Created By </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.CreatedBy}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.ParentVersion.CreatedBy}} </mat-cell>
     </ng-container>
     <!-- Symbol Column -->
     <ng-container matColumnDef="versionDescription">
         <mat-header-cell *matHeaderCellDef> Version Description </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.VersionDescription}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.ParentVersion.VersionDescription}} </mat-cell>
     </ng-container>
-    <!-- <ng-container matColumnDef="estimateNo">
-        <mat-header-cell *matHeaderCellDef> Estimate No. </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.estimateNo}} </mat-cell>
-    </ng-container> -->
     <ng-container matColumnDef="isSpecsInView">
         <mat-header-cell *matHeaderCellDef> Specs in View </mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <mat-radio-button (click)="handleVersionSelection(element.Id, 1)" [checked]="element.active"></mat-radio-button>
+            <mat-radio-button (click)="handleVersionSelection(element.ParentVersion.Id, 1, false)" [checked]="element.ParentVersion.active"></mat-radio-button>
         </mat-cell>
     </ng-container>
+    
+    <ng-container matColumnDef="expandedDetail">
+        <mat-cell *matCellDef="let element">
+            <table  class="table table-head-custom  table-vertical-center child-versions-table" *ngIf="element.ChildVersions && element.ChildVersions.length > 0">
+                <thead>
+                    <th>Version No</th>
+                    <th>Revision</th>
+                    <th> Date Created</th>
+                    <th>Created By</th>
+                    <th>Version Description</th>
+                    <th>Specs in View</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of element.ChildVersions">
+                        <td>{{item.VersionNo}}</td>
+                        <td>{{item.Revision}}</td>
+                        <td>{{item.CreatedDateTime | dateFormat}}</td>
+                        <td>{{item.CreatedBy}}</td>
+                        <td>{{item.VersionDescription}}</td>
+                        <td>
+                            <mat-radio-button (click)="handleVersionSelection(item.Id, 1, true)"  [checked]="item.active"></mat-radio-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </mat-cell>
+    </ng-container> 
+
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="handleRowClick(row)" style="cursor: pointer;"></mat-row>
+
+    <mat-row *matRowDef="let row; columns: ['expandedDetail'];"
+        [@detailExpand]="row === expandedElement ? 'expanded' : 'collapsed'" style="overflow: hidden">
+    </mat-row>
 </mat-table>
 
 <mat-paginator [pageSize]="15" [pageSizeOptions]="[5, 10, 15, 20]" showFirstLastButtons></mat-paginator>

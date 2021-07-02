@@ -20,7 +20,6 @@ import {
 import {
   CaseDetailTypes,
   CaseDetailTypesArray,
-  CostCategory,
 } from 'src/app/modules/shared/enums/case-management/case-contants';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import {
@@ -31,6 +30,9 @@ import {
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
 import { CaseHelperService } from 'src/app/modules/shared/enums/helpers/case-helper.service';
 import { GroupByPipe } from 'src/app/modules/shared/pipe/group-by.pipe';
+import { Subscription } from 'rxjs';
+import { OnDestroy } from '@angular/core';
+import { CostCategory } from '../../../../services/shared/classes/response-modal';
 @Component({
   selector: 'app-case-details',
   templateUrl: './case-details.component.html',
@@ -38,7 +40,7 @@ import { GroupByPipe } from 'src/app/modules/shared/pipe/group-by.pipe';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseDetailsComponent implements OnInit, OnChanges {
+export class CaseDetailsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() createCaseMode: CreateCaseMode;
   @Input() tabToOpen: number;
   @Input() isShippingDetails = false;
@@ -52,6 +54,8 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
   overAllCostVM: OverAllCostVM;
   totalAmout: number;
   discountPercentage: number;
+  subscription: Subscription;
+  costCategoryList: CostCategory[] = [];
   constructor(
     private ref: ChangeDetectorRef,
     private store: CaseStore,
@@ -59,13 +63,26 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
     private helper: CaseHelperService
   ) {}
 
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
   ngOnInit(): void {
     this.overAllCostVM = this.initialObject();
     this.setCreateCaseModeData();
     this.getOverallCostData();
     this.getIsShippingDetailsStatus();
+    this.getMiscBillingCostCategoryList();
   }
 
+  getMiscBillingCostCategoryList(){
+    this.store.caseDropDownStore.subscribe(result => {
+      if (result && result.data) {
+        this.costCategoryList = result.data.miscBillingCostCategoryList;
+      }
+      this.ref.detectChanges();
+    });
+  }
   ngOnChanges(changes: SimpleChanges) {
     const createCaseModeChange = changes['createCaseMode'];
     const tabToOpenChange = changes['tabToOpen'];
@@ -175,7 +192,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
   }
 
   getOverallCostData = () => {
-    this.store.createCaseStore.subscribe((data) => {
+    this.subscription = this.store.createCaseStore.subscribe((data) => {
       let totalCost = 0;
       let subTotal = 0;
       this.overAllCostVM = this.initialObject();
@@ -207,7 +224,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
 
           if (totalCost > 0) {
             this.overAllCostVM.otherCharges.push({
-              type: CostCategory.find(x => x.value === cost.id).text,
+              type: this.costCategoryList.find(x => x.Code === cost.costCategory).Description,
               total: totalCost,
               title: 'Misc costs'
             });
@@ -269,7 +286,7 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
 
       if (
         (data && !data.overallCostVM) ||
-        data.overallCostVM.subTotal !== this.overAllCostVM.subTotal
+        data?.overallCostVM?.subTotal !== this.overAllCostVM.subTotal
       ) {
         this.pushToStore();
       }
@@ -339,5 +356,5 @@ export class CaseDetailsComponent implements OnInit, OnChanges {
       // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
       return result;
     }, {}); // empty object is the initial value for result object
-  };
+  }
 }

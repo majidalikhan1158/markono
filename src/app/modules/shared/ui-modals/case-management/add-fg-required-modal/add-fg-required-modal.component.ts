@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { UIModalID } from '../../../enums/app-constants';
 import { ProductDetailModals, ProductDetailsVM } from '../../../models/create-case';
 import { CaseStore } from '../../../ui-services/create-case.service';
@@ -14,6 +15,8 @@ export class AddFgRequiredModalComponent implements OnInit, OnDestroy {
   @Output() acceptEvent = new EventEmitter<ProductDetailModals[]>();
   fgRequiredListVM: ProductDetailModals[] = [];
   productDetailsVMList: ProductDetailsVM[] = [];
+  subscription: Subscription; 
+  enableDeleteButton = false;
   constructor(private modalService: ModalService, private store: CaseStore) { }
 
   ngOnInit(): void {
@@ -24,7 +27,7 @@ export class AddFgRequiredModalComponent implements OnInit, OnDestroy {
   }
 
   getDefaultRecord = () => {
-    this.store.createCaseStore.subscribe((resp) => {
+    this.subscription = this.store.createCaseStore.subscribe((resp) => {
       if (
         resp &&
         resp.productDetailsList &&
@@ -34,6 +37,7 @@ export class AddFgRequiredModalComponent implements OnInit, OnDestroy {
         const productRecord = this.productDetailsVMList.find(x => x.id === this.recordId);
         if (productRecord && productRecord.productISBNDetail && productRecord.productISBNDetail.fgList.length > 0) {
           this.fgRequiredListVM = productRecord.productISBNDetail.fgList;
+          this.enableDeleteButton = true;
         }
       }
       if (this.fgRequiredListVM.length === 0) {
@@ -42,10 +46,11 @@ export class AddFgRequiredModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  addFG() {
+  addFG(isAddMode: number) {
     const actualList = this.fgRequiredListVM.filter(x => x.quantity > 0);
     this.acceptEvent.emit(actualList);
     this.fgRequiredListVM = [];
+    this.enableDeleteButton = false;
     this.modalService.close(UIModalID.ADD_FG_REQUIRED_MODAL);
   }
 
@@ -72,5 +77,6 @@ export class AddFgRequiredModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 }

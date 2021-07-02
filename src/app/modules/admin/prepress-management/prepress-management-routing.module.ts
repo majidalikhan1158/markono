@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { Error404Component } from '../../errors/error404/error404.component';
 import { AppPages } from '../../shared/enums/app-constants';
+import { PlanningListComponent } from '../planning-management/planning-list/planning-list.component';
 import { CreateProductComponent } from '../product-management/create-product/create-product.component';
-import { ProductSpecListComponent } from '../product-management/product-spec-list/product-spec-list.component';
 import { PlatemakingComponent } from './platemaking/platemaking.component';
 
 const routes: Routes = [
@@ -13,7 +13,7 @@ const routes: Routes = [
   },
   {
     path: AppPages.FILEPREP,
-    component: ProductSpecListComponent,
+    component: PlanningListComponent,
   },
   {
     path: AppPages.FILEPREP_VIEW,

@@ -167,7 +167,7 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="dynamicHeaderMenuService.shouldDisplayEditEmbeddedLink$ | async ">
+<ng-container *ngIf="((dynamicHeaderMenuService.shouldDisplayEditEmbeddedLink$ | async) && dynamicHeaderMenuService.shouldDisplayEmbededLinkButton$ | async)">
   <div class="topbar-item">
     <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2">
       <button class="mat-focus-indicator btn btn-primary mat-button mat-button-base text-upper-case"

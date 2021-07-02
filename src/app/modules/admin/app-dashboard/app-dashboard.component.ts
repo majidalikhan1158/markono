@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { DynamicHeaderMenuService } from 'src/app/_metronic/core';
+import { StorageKeys } from '../../shared/enums/app-constants';
 import { SnackBarService } from '../../shared/ui-services/snack-bar.service';
-declare let $: any;
 @Component({
   selector: 'app-app-dashboard',
   templateUrl: './app-dashboard.component.html',
@@ -12,7 +12,7 @@ declare let $: any;
 export class AppDashboardComponent implements OnInit, OnDestroy {
   embeddedURL: string;
   shouldDisplayFirstScreen = true;
-  defaultYoutubeUrl: string = 'https://www.youtube.com/embed/';
+  defaultYoutubeUrl = 'https://www.youtube.com/embed/';
   iFrameValue: SafeResourceUrl;
   constructor(
     private sanitizer: DomSanitizer,
@@ -37,6 +37,7 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
     }
     this.iFrameValue = this.sanitizer.bypassSecurityTrustResourceUrl(this.embeddedURL);
     this.dynamicHeaderMenuService.setEditEmbeddedLink(this.embeddedURL);
+    localStorage.setItem(`${StorageKeys.SUFFIX}_${StorageKeys.DASHBOARD_URL}`, this.embeddedURL);
     this.shouldDisplayFirstScreen = false;
     this.ref.detectChanges();
   }
@@ -51,6 +52,12 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
         if (x && x !== this.embeddedURL) {
           this.embeddedURL = x;
           this.submitUrl();
+        } else if (!x || !this.embeddedURL) {
+          const url = localStorage.getItem(`${StorageKeys.SUFFIX}_${StorageKeys.DASHBOARD_URL}`);
+          if (url && url !== '' && url !== 'undefined') {
+            this.embeddedURL = url;
+            this.submitUrl();
+          }
         }
       }
     );

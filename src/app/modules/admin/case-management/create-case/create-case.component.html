@@ -1,4 +1,5 @@
-<mat-horizontal-stepper  #stepper="matHorizontalStepper" class="stepper-transparent">
+<mat-horizontal-stepper  #stepper="matHorizontalStepper" class="stepper-transparent"
+*ngIf="!shouldDisplaySuccessScreen">
     <mat-step  completed="false">
       <ng-template matStepLabel >Customer Info.</ng-template>
       <app-customer-info (stepperNextEvent)="handleStepperNextEvent($event)"></app-customer-info>
@@ -32,3 +33,37 @@
       </div>
     </mat-step>
 </mat-horizontal-stepper>
+
+<div class="col-xl-12 pt-8" *ngIf="shouldDisplaySuccessScreen">
+  <div class="card card-custom example example-compact gutter-b success-screen-card">
+      <div class="card-body" style="margin-top: 10%;margin-bottom: 12%;">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="126" height="126" viewBox="0 0 126 126">
+                <g id="iconfinder_tick_646195" transform="translate(-7 -6.998)">
+                  <path id="Path_1721" data-name="Path 1721" d="M70,7a63,63,0,1,0,63,63A63,63,0,0,0,70,7Zm0,120.96A57.96,57.96,0,1,1,127.96,70,58.028,58.028,0,0,1,70,127.958Z" fill="#7db961"/>
+                  <path id="Path_1722" data-name="Path 1722" d="M164.374,158.192l-31.33,31.332-16.676-16.672L113.72,175.5l19.324,19.32L167,160.84Z" transform="translate(-70.362 -106.508)" fill="#7db961" stroke="#7db961" stroke-width="1"/>
+                </g>
+              </svg>          
+            </div>
+          </div>
+          <div class="col-lg-12 pt-10 pb-1">
+            <div class="text-center">
+              <h3 style="font-size: 25px;font-family: 'Roboto-Bold';">Your order has been created successfully!</h3>
+            </div>
+          </div>
+          <div class="col-lg-12 pb-3">
+            <div class="text-center">
+              <h3 style="font-size: 15px;font-family: 'Roboto-Regular';">Track the status of your order in the Confirmed Orders page </h3>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <div class="text-center">
+              <button class="btn btn-primary stepper-next-button" (click)="redirectToConfirmedOrders()">VIEW CONFIRMED ORDERS</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

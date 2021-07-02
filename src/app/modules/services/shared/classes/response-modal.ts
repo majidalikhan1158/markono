@@ -15,3 +15,16 @@ export interface ShopFloorResponseModal {
     links: any;
     meta: any;
 }
+
+export interface CostCategoryResponseModal {
+    result: CostCategory[];
+    error: any;
+    success: boolean;
+    targetUrl: string;
+    unAuthorizedRequest: boolean;
+}
+
+export interface CostCategory {
+    Code: string;
+    Description: string;
+}

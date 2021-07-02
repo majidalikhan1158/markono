@@ -704,19 +704,18 @@ mat-form-field.txtSearchWithJobNo .mat-form-field-infix {
 }
 
 table.job-schedule-table {
-  height: 506px;
+  // height: 506px;
 }
 
 .job-schedule-table.table tbody tr {
   border-bottom: 1px solid #e6e6e6 !important;
+  height: fit-content;
 }
 
 .job-schedule-table.table tbody tr td {
   padding-left: 0px;
   padding-right: 0px;
-  padding-top: 25px;
-  padding-bottom: 25px;
-  vertical-align: sub !important;
+  vertical-align: unset !important
 }
 
 .job-schedule-table.table tbody tr td.action-column {
@@ -896,6 +895,10 @@ table.job-schedule-table {
   color: #3699ff;
   background-color: #e1f0ff;
 }
+.label-light-orange {
+  color: #0c0c0c;
+  background-color: #f1ea24;
+}
 /* Horizontal scrollbar styles-End*/
 
 .cdk-overlay-container {z-index: 999999 !important;}
@@ -933,4 +936,8 @@ table.job-schedule-table {
 
 .non-readonly-box {
   pointer-events: all !important;
+}
+
+.asteric {
+  color: red !important;
 }

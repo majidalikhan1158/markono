@@ -10,7 +10,7 @@ import { HelperService } from './helper.service';
   providedIn: 'root'
 })
 export class ShopFloorService {
-
+  
   constructor(
     private http: ApiHttpService,
     private endPoint: ApiEndpointsService
@@ -51,4 +51,11 @@ export class ShopFloorService {
 
   getMachineOee = (endPoint: string): Observable<HttpResponse<ShopFloorResponseModal>> =>
   this.http.get(endPoint)
+
+  getMachineJobSheet = (endPoint: string): Observable<HttpResponse<any>> =>
+  this.http.get(endPoint)
+
+  getMachineProductSpec = (endPoint: string): Observable<HttpResponse<any>> =>
+  this.http.get(endPoint)
+
 }

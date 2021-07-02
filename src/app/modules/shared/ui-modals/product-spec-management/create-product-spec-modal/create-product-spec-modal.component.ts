@@ -33,9 +33,10 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
   previousValue1: string;
   previousValue2: string;
   subscription: Subscription;
-  selection: ChildIsbnModal = {ISBN: null, VersionNo: null, Id: null};
+  selection: ChildIsbnModal = {ISBN: null, VersionNo: null, Id: null, Revision: ''};
   selectedType: number;
   description: string;
+  recordsList: ChildIsbnModal[] = [];
   constructor(private modalService: ModalService,
               private store: ProductSpecStore,
               private ref: ChangeDetectorRef,
@@ -61,9 +62,18 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
     }
   }
 
+  trimInputValue(value: any, type: number){
+    if (type === 1) {
+      this.childIsbnNumber1 = this.childIsbnNumber1 ? this.childIsbnNumber1.trim() : this.childIsbnNumber1;
+    } else {
+      this.childIsbnNumber2 = this.childIsbnNumber2 ? this.childIsbnNumber2.trim() : this.childIsbnNumber2;
+    }
+  }
+
   manageProductIsbnSearch = () => {
     if (this.childIsbnNumber1 && this.childIsbnNumber1 !== this.previousValue1 && this.childIsbnNumber1.length >= 3) {
       this.isbnOwnerList1 = [];
+      this.recordsList = [];
       this.ref.detectChanges();
       this.previousValue1 = this.childIsbnNumber1;
       this.isLoading = true;
@@ -72,7 +82,8 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
       this.subscription?.unsubscribe();
       this.subscription = this.store.getProducts(this.childIsbnNumber1).subscribe(resp => {
         const details = (resp.body.result as unknown) as ChildIsbnModal[];
-        this.isbnOwnerList1 = details && details.length > 0 ? details : [];
+        this.recordsList = details && details.length > 0 ? details : [];
+        this.isbnOwnerList1 = this.getFilteredRecords();
         this.isLoading = false;
         this.ref.detectChanges();
       }, (err) => {
@@ -86,6 +97,7 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
   manageProductIsbnSearchForExisting = () => {
     if (this.childIsbnNumber2 && this.childIsbnNumber2 !== this.previousValue2 && this.childIsbnNumber2.length >= 3) {
       this.isbnOwnerList2 = [];
+      this.recordsList = [];
       this.ref.detectChanges();
       this.previousValue2 = this.childIsbnNumber2;
       this.isLoading = true;
@@ -94,7 +106,8 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
       this.subscription?.unsubscribe();
       this.subscription = this.store.getProducts(this.childIsbnNumber2).subscribe(resp => {
         const details = (resp.body.result as unknown) as ChildIsbnModal[];
-        this.isbnOwnerList2 = details && details.length > 0 ? details : [];
+        this.recordsList = details && details.length > 0 ? details : [];
+        this.isbnOwnerList2 = this.getFilteredRecords();
         this.isLoading = false;
         this.ref.detectChanges();
       }, (err) => {
@@ -103,6 +116,51 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
         this.ref.detectChanges();
       });
     }
+  }
+
+  getFilteredRecords = () => {
+    const list: ChildIsbnModal[] = [];
+    this.recordsList.forEach(item => {
+      const isExist = list.find(x => x.ISBN === item.ISBN && x.VersionNo === item.VersionNo);
+      if (!isExist) {
+        list.push(item);
+      } else {
+        const existedRevision = this.getNumber(isExist.Revision);
+        const incomingRevision = this.getNumber(item.Revision);
+        if (existedRevision < incomingRevision) {
+          // x => x.ISBN !== isExist.ISBN && x.VersionNo !== isExist.VersionNo && x.Revision !== isExist.Revision
+          const index = list.indexOf(isExist);
+          list.splice(index, 1);
+          list.push(item);
+        }
+      }
+    });
+    return list;
+  }
+
+  getNumber = (revision: string) => {
+    const revisionNumber = revision.split('R0000')[1];
+    return revisionNumber;
+  }
+
+  performGroupByISBNOperation = () => {
+    return this.recordsList.reduce((r, a) => {
+      r[a.ISBN] = r[a.ISBN] || [];
+      r[a.ISBN].push(a);
+      return r;
+    }, Object.create(null));
+  }
+
+  performGroupByISBNandVersionOperation = (array, f) => {
+    const groups = {};
+    array.forEach((o) => {
+         const group = JSON.stringify(f(o));
+         groups[group] = groups[group] || [];
+         groups[group].push(o);
+       });
+    return Object.keys(groups).map((group) => {
+      return groups[group];
+    });
   }
 
   displayFn1(isbnOwner: ChildIsbnModal) {
@@ -155,7 +213,6 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
         this.store.reset();
         const vm = this.getGeneralObj();
         vm.productNumber = value;
-        // vm.productDescription = this.description;
         this.store.setProductSpecStore(vm, ProductSpecTypes.GENERAL);
         this.setVersionDescription();
         this.router.navigate([AppPageRoutes.CREATE_PRODUCT]);
@@ -166,7 +223,7 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
       }
     }
 
-    if (this.selectedType === 1 && !this.description) {
+    if (!this.description) {
       this.snack.open('Description is required');
       return;
     }
@@ -177,11 +234,13 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
     this.productService.getProductDetails(reqObj).subscribe(resp => {
       if (resp && resp.body && resp.body.result && resp.body.result.length > 0) {
         const productDetails = resp.body.result[0];
+        if (this.childIsbnNumber1) { productDetails.VersionNo = this.childIsbnNumber1; }
         if (this.selectedType === 1) {
           this.store.setProductSpecReadonly(true);
           this.helper.transProductDetailToVM(productDetails);
         } else {
-          this.store.setProductSpecReadonly(false);
+          this.store.setProductSpecUpdateButton(false);
+          this.store.setProductSpecReadonlyOnly(false);
           this.helper.transProductDetailToVM(productDetails, 2);
         }
         this.setVersionDescription();
@@ -224,17 +283,17 @@ export class CreateProductSpecModalComponent implements OnInit, OnDestroy {
   setVersionDescription = () => {
     const version: ProductVersions = {
       Id: '',
-      VersionNo: '',
+      VersionNo: this.selection.VersionNo,
       CreatedDateTime: '',
       CreatedBy: '',
       VersionDescription: this.description,
-      active: false
+      active: false,
+      Revision: this.selection.Revision
     };
     this.store.setSelectedVersion(version);
   }
 
   ngOnDestroy(): void {
     this.acceptEvent.emit();
-    // this.router.navigate(['admin/product-management/view']);
   }
 }

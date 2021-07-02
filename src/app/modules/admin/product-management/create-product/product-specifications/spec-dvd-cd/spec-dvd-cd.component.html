@@ -1,6 +1,6 @@
-<div class="row spec-dvd" [ngClass]="(store.$productSpecReadonly | async) ? 'readonly-box' : '' ">
+<div class="row spec-dvd">
     <div class="col-lg-12">
-        <span class="font-16px font-roboto-bold">Create Specs</span>
+        <span class="font-16px font-roboto-bold">{{store.$productSpecHeading | async}}</span>
         <mat-hint class="font-14px d-flex">DVD/CD</mat-hint>
     </div>
 
@@ -16,10 +16,10 @@
             </thead>
             <tbody>
                 <ng-container *ngFor="let rowId of viewModal;let i = index;">
-                    <tr class="outer-row">
+                    <tr class="outer-row">                        
                         <td style="width: 10px;">
                             {{viewModal[i].id}}
-                        <td style="width: 150px;">
+                        <td style="width: 150px;" [ngClass]="((store.$productSpecReadonly | async) || (store.$IsProductCreated | async)) ? 'readonly-box' : '' ">
                             <mat-form-field appearance="fill">
                                 <mat-label>Choose</mat-label>
                                 <mat-select [(ngModel)]="viewModal[i].type">
@@ -28,13 +28,13 @@
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td style="width: 150px;">
+                        <td style="width: 150px;" [ngClass]="((store.$productSpecReadonly | async) || (store.$IsProductCreated | async)) ? 'readonly-box' : '' ">
                             <mat-form-field appearance="fill">
                                 <mat-label>Quantity</mat-label>
                                 <input [(ngModel)]="viewModal[i].quantity" matInput type="number" min="0">
                             </mat-form-field>
                         </td>
-                        <td style="width: 150px;">
+                        <td style="width: 150px;" [ngClass]="((store.$productSpecReadonly | async) || (store.$IsProductCreated | async)) ? 'readonly-box' : '' ">
                             <mat-form-field appearance="fill">
                                 <mat-label>Choose</mat-label>
                                 <mat-select [(ngModel)]="viewModal[i].sleeveType">
@@ -46,10 +46,14 @@
                                 </mat-select>
                             </mat-form-field>
                         </td>
-
+                        <td style="width: 150px;" [ngClass]="((store.$productSpecReadonly | async) || (store.$IsProductCreated | async)) ? 'readonly-box' : '' ">
+                            <mat-form-field appearance="fill">
+                                <input [(ngModel)]="viewModal[i].MediaISBN" matInput type="text">
+                            </mat-form-field>
+                        </td>
                         <td class="action-column pb-0 text-right">
                             <span class="material-icons delete-icon pr-2 cursor-pointer"
-                                (click)="deleteRecord(viewModal[i].id)" *ngIf="viewModal.length > 1">
+                                (click)="deleteRecord(viewModal[i].id)" *ngIf="viewModal.length > 0">
                                 delete
                             </span>
                             <span class="material-icons expansion-icon" (click)="showDvdDetails(viewModal[i].id)">
@@ -62,7 +66,7 @@
                         </td>
                     </tr>
                     <ng-container *ngIf="shouldShowDvdDetails && viewModal[i].id == rowIdToExpand">
-                        <tr class="expandedRow">
+                        <tr class="expandedRow" [ngClass]="((store.$productSpecReadonly | async) || (store.$IsProductCreated | async)) ? 'readonly-box' : '' ">
                             <td class="pr-0 pl-2" colspan="5">
                                 <div class="col-lg-4 pl-1 pr-0 pt-2">
                                     <mat-form-field appearance="fill">
@@ -233,8 +237,9 @@
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Pantone Colour (Optional)</mat-label>
                                                 <input matInput pattern="(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)"
-                                                    (keyup.enter)="addPantoneColour($event, i)">
-                                                <span matSuffix class="suffix-style">+ ADD</span>
+                                                    (keyup.enter)="addPantoneColour($event, i, null)"
+                                                    #pantouneColor>
+                                                    <span matSuffix class="suffix-style" (click)="addPantoneColour(null, i, pantouneColor.value)">+ ADD</span>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-5">
@@ -313,7 +318,7 @@
             </tbody>
         </table>
     </div>
-    <div class="col-lg-12 pt-10">
+    <div class="col-lg-12 pt-10" [ngClass]="((store.$productSpecReadonly | async) || (store.$IsProductCreated | async)) ? 'readonly-box' : '' ">
         <div class="sticky-bottom full-width pl-5 pb-4 product-detail-footer-row">
             <a (click)="addRow()">
                 <span class="material-icons add-icon pr-2 cursor-pointer">

@@ -11,6 +11,7 @@ import { CreateCaseStepperEvent } from 'src/app/modules/shared/models/app-modal'
 import {
   CreateCaseSteps,
   CreateCaseMode,
+  TokenType,
 } from 'src/app/modules/shared/enums/app-enums';
 import { CaseBaseService } from '../case-base.service';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
@@ -18,8 +19,12 @@ import { CaseHelperService } from 'src/app/modules/shared/enums/helpers/case-hel
 import { OrderService } from 'src/app/modules/services/core/services/order.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackBarService } from 'src/app/modules/shared/ui-services/snack-bar.service';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { CreateCaseViewModel } from '../../../shared/models/create-case';
+import { Router } from '@angular/router';
+import { AppPageRoutes } from '../../../shared/enums/app-constants';
+import { OnDestroy } from '@angular/core';
+import { AppAuthService } from 'src/app/modules/services/core/services/app-auth.service';
 @Component({
   selector: 'app-create-case',
   templateUrl: './create-case.component.html',
@@ -27,7 +32,7 @@ import { CreateCaseViewModel } from '../../../shared/models/create-case';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class CreateCaseComponent implements OnInit {
+export class CreateCaseComponent implements OnInit, OnDestroy {
   @ViewChild('stepper') private createCaseStepper: MatStepper;
   isLinear = false;
   createCaseSteps = CreateCaseSteps;
@@ -40,13 +45,18 @@ export class CreateCaseComponent implements OnInit {
   subscription: Subscription;
   shouldDisplayCreateCaseButton = true;
   disableCreateCaseButton = false;
+  shouldDisplaySuccessScreen = false;
+  createCaseViewModel: CreateCaseViewModel;
+  shouldViewConfirmedOrdersDisable = true;
   constructor(
     private ref: ChangeDetectorRef,
     private caseBaseService: CaseBaseService,
     private store: CaseStore,
     private caseHelper: CaseHelperService,
     private orderService: OrderService,
-    private snack: SnackBarService
+    private snack: SnackBarService,
+    private router: Router,
+    private authService: AppAuthService
   ) { }
 
   ngOnInit() {
@@ -57,6 +67,9 @@ export class CreateCaseComponent implements OnInit {
      */
     this.caseBaseService.getServerData();
     this.getSecondStepTitle();
+    this.subscription = this.store.createCaseStore.subscribe(data => {
+      this.createCaseViewModel = data;
+    });
   }
 
   handleStepperNextEvent(createCaseStep: CreateCaseSteps) {
@@ -91,54 +104,143 @@ export class CreateCaseComponent implements OnInit {
   }
 
   createCase = () => {
+    this.subscription = this.authService.getTokenFromServer(TokenType.ESTIMATION).subscribe(resp => {
+      if (resp && resp.body) {
+        this.authService.saveToken(resp.body, TokenType.ESTIMATION);
+      }
+    });
     this.disableCreateCaseButton = true;
-    this.subscription = this.store.createCaseStore.subscribe(data => {
-      const mappedData = this.caseHelper.transCaseDataToCaseApiModal(data);
-      this.orderService.createCase(mappedData).subscribe(resp => {
-        if (resp && resp.body.result && resp.body.result) {
-          const response = resp.body.result as any;
-          if (response.message && response.message === 'Successful') {
-            this.snack.open('Case has been created successfully');
-            this.shouldDisplayCreateCaseButton = false;
-            const jobNo = response?.caseDetail[0].jobNo ?? '';
-            const caseDetailNo = response?.caseDetail[0].caseDetailNo ?? '';
-            this.createShipment(data, response.caseId, jobNo, caseDetailNo);
-          } else {
-            this.snack.open(response);
-          }
+    const mappedData = this.caseHelper.transCaseDataToCaseApiModal(this.createCaseViewModel);
+    this.subscription = this.orderService.createCase(mappedData).subscribe(resp => {
+      if (resp && resp.body.result && resp.body.result) {
+        const response = resp.body.result as any;
+        if (response.message && response.message === 'Successful') {
+          this.snack.open('Case has been created successfully');
+          this.shouldDisplayCreateCaseButton = false;
+          this.createCaseLayout(response);
+          this.createShipment(null, response.caseId, response?.caseDetail);
+        } else if (response?.errors) {
+          const errors = response?.errors;
+          const entries = Object.entries(errors);
+          entries.forEach(error => {
+            const message = `Field: ${error[0]}, Message: ${error[1]}`;
+            this.snack.open(message, '', 'top', 5000, 'center');
+          });
+          this.subscription?.unsubscribe();
+        } else {
+          this.subscription?.unsubscribe();
+          this.snack.open('Unable to create case');
         }
-      }, (err: HttpErrorResponse) => {
-        this.snack.open(err.error);
+      }
+    }, (err: HttpErrorResponse) => {
+      const response = err.error.result as any;
+      if (response?.errors) {
+        const errors = response?.errors;
+        const entries = Object.entries(errors);
+        entries.forEach(error => {
+          const message = `Field: ${error[0]}, Message: ${error[1]}`;
+          this.snack.open(message, '', 'top', 5000, 'center');
+        });
+        this.disableCreateCaseButton = false;
+        this.subscription?.unsubscribe();
+      } else
+      if (typeof (response) === 'string') {
+        this.disableCreateCaseButton = false;
+        this.snack.open(response);
+        this.subscription?.unsubscribe();
+      } else {
+        this.snack.open('Unable to create case');
+        this.subscription?.unsubscribe();
+      }
+    });
+  }
+
+  createCaseLayout = (createCaseResponse: any) => {
+    const caseDetails = createCaseResponse?.caseDetail;
+    caseDetails.forEach((caseDetail, i) => {
+      const reqObj = {
+        ISBN: this.createCaseViewModel.productDetailsList[i].isbn,
+        ISBNVersion: this.createCaseViewModel.productDetailsList[i].productISBNDetail.specsVersionNo,
+        ISBNRevision: this.createCaseViewModel.productDetailsList[i].productISBNDetail.revisionNo,
+        OrderQuantity: this.createCaseViewModel.productDetailsList[i].orderQty,
+        ProductionQuantity: this.createCaseViewModel.productDetailsList[i].prodQty,
+        CaseDetailId: caseDetail.caseDetailId,
+        CaseDetailNo: caseDetail.caseDetailNo,
+        JobNo: caseDetail.jobNo,
+        CaseNo: createCaseResponse.caseNo,
+        QuoteNo: createCaseResponse.quoteNo,
+        OrderNo: createCaseResponse.orderNo,
+        YourReference: createCaseResponse.yourReference,
+        RDD: new Date(),
+        UpdatedBy: 'CCE'
+      };
+
+      this.subscription = this.orderService.createCaseLayout(reqObj).subscribe(resp => {
       });
     });
   }
 
-  createShipment = (data: CreateCaseViewModel, caseId: string, jobNo: string, caseDetailNo: string) => {
+  createShipment = (data: CreateCaseViewModel, caseId: string, caseDetailResp: any) => {
+    data = this.createCaseViewModel;
     if (data && (!data.shippingInfoList || data.shippingInfoList.length === 0 )) {
       this.endCreateProcess();
       return;
     }
-    const mappedData = this.caseHelper.transToCreateShipment(data, caseId, jobNo, caseDetailNo);
-    this.orderService.createShipment(mappedData).subscribe(resp => {
+    const mappedData = this.caseHelper.transToCreateShipment(data, caseId, caseDetailResp);
+    this.subscription = this.orderService.createShipment(mappedData).subscribe(resp => {
       if (resp && resp.body.result && resp.body.result) {
         const response = resp.body.result as any;
         if (response.message && response.message === 'Successful') {
           this.snack.open('Shipping Info has been created successfully');
           this.endCreateProcess();
-        } else {
+        } else if (response?.errors) {
+          const errors = response?.errors;
+          const entries = Object.entries(errors);
+          entries.forEach(error => {
+            const message = `Field: ${error[0]}, Message: ${error[1]}`;
+            this.snack.open(message, '', 'top', 5000, 'center');
+          });
+          this.subscription?.unsubscribe();
+        }  else {
+          this.subscription?.unsubscribe();
           this.snack.open('unable to create shipment record');
         }
-        this.subscription.unsubscribe();
       }
     }, (err: HttpErrorResponse) => {
-      this.snack.open(err.error);
+      this.subscription?.unsubscribe();
+      const response = err.error.result as any;
+      if (response?.errors) {
+        const errors = response?.errors;
+        const entries = Object.entries(errors);
+        entries.forEach(error => {
+          const message = `Field: ${error[0]}, Message: ${error[1]}`;
+          this.snack.open(message, '', 'top', 5000, 'center');
+        });
+        this.disableCreateCaseButton = false;
+        this.subscription?.unsubscribe();
+      } else
+      if (typeof (response) === 'string') {
+        this.snack.open(response);
+        this.disableCreateCaseButton = false;
+        this.subscription?.unsubscribe();
+      } else {
+        this.snack.open('unable to create shipment record');
+        this.subscription?.unsubscribe();
+      }
     });
   }
 
   endCreateProcess = () => {
-    this.subscription?.unsubscribe();
-    location.reload();
-    this.ref.detectChanges();
+    this.shouldDisplaySuccessScreen = true;
+    setTimeout(() => {
+      this.subscription?.unsubscribe();
+      this.store.resetCreateCaseStore();
+      this.ref.detectChanges();
+    }, 5000);
+  }
+
+  redirectToConfirmedOrders = () => {
+    this.router.navigate([AppPageRoutes.LIST_ORDERS]);
   }
 
   getSecondStepTitle = () => {
@@ -161,4 +263,8 @@ export class CreateCaseComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+    this.subscription?.unsubscribe();
+  }
 }

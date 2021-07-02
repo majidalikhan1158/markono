@@ -57,6 +57,12 @@ export class ApiEndpointsService {
   getShipmentAgentUrl = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.case.getShipmentAgent}`
 
+  getMiscBillingCostCategoryUrl = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.case.getMiscBillingCostCategory}`
+
+  getShippingInfoCostCategoryUrl = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.case.getShippingInfoCostCategory}`
+
   getLiveVersion = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getLiveVersion}`
 
@@ -74,6 +80,15 @@ export class ApiEndpointsService {
 
   getProductsUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getProducts}`
+
+  getProductList = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.GetProductList}`
+
+  getSearchProductsUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getSearchProductsList}`
+
+  getProductsListUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.getProductsList}`
 
   getProductGroupUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getProductGroups}`
@@ -93,8 +108,14 @@ export class ApiEndpointsService {
   getBookWeightUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getBookWeight}`
 
+  setLayoutReadyUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.setLayoutReady}`
+
   getCreateProductUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.createProduct}`
+
+  getCreateProductRevisionUrl = () =>
+    `${this.getProductServicesEndpoint()}${Endpoints.product.createProductRevision}`
 
   getFileCheckConfigUrl = () =>
     `${this.getProductServicesEndpoint()}${Endpoints.product.getFileCheckConfig}`
@@ -108,6 +129,15 @@ export class ApiEndpointsService {
   // order-managemnt-module
   getAllOrders = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.order.getAllOrders}`
+
+  getAllOrderDetails = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.order.getAllOrderDetails}`
+
+  getPlanningOrder = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.order.getCaseDetails}`
+
+  getCaseDetails = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.order.caseDetails}`
 
   getOrderDeatils = () =>
     `${this.getOrderServicesEndpoint()}${Endpoints.order.getAllOrders}`
@@ -136,9 +166,49 @@ export class ApiEndpointsService {
   getCalculatePaperUrl = () =>
     `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getCalculatePaper}`
 
+  setReleaseUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.setRelease}`
+
+  setCaseActivityUrl = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.order.getCaseActivity}`
+
   getCreateLayoutPrepUrl = () =>
     `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getCreateLayoutPrep}`
 
   getActivitySettingsNotUnitOfListUrl = () =>
     `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getActivitySettingsNotUnitOfList}`
+
+  getShipToCodeUrl = () =>
+    `${this.getOrderServicesEndpoint()}${Endpoints.order.getShipToCode}`
+
+  getProductSpecViaCaseDetailUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getProductSpecViaCaseDetail}`
+
+  getEstimatedPriceProductDetailUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getEstimatedPriceProductDetail}`
+
+  getCalculateProductionProcessUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.CalculateProductionProcess}`
+
+  getEstimationUrlViaCaseDetailUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getEstimationsViaCaseDetail}`
+
+  getCreateCaseLayoutUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.case.createCaseLayout}`
+
+  getUpdateLayoutPrepUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getUpdateLayoutPrep}`
+
+  getEstimateLayoutUrl = () =>
+    `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.getEstimateLayout}`
+
+  UpdateCaseProductFileCheckUrl = () =>
+   `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.UpdateCaseProductFileCheck}`
+
+  CreateProofApprovalUrl = () =>
+   `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.CreateProofApproval}`
+
+   GetCaseFileCheck = () =>
+   `${this.getEstimationServicesEndPoint()}${Endpoints.estimation.GetCaseFileCheck}`
+
 }

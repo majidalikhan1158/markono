@@ -1,6 +1,6 @@
-<div class="row spec-general" [ngClass]="(store.$productSpecReadonly | async) ? 'readonly-box' : '' ">
+<div class="row spec-general" [ngClass]="((store.$productSpecReadonly | async) || (store.$IsProductCreated | async)) ? 'readonly-box' : '' ">
     <div class="col-lg-12">
-        <span class="font-16px font-roboto-bold">Create Specs</span>
+        <span class="font-16px font-roboto-bold">{{store.$productSpecHeading | async}}</span>
         <mat-hint class="font-14px d-flex">General</mat-hint>
     </div>
 
@@ -11,19 +11,19 @@
     <div class="col-lg-12 display-flex pl-0">
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
-                <mat-label>ISBN / Product No</mat-label>
-                <input matInput [(ngModel)]="generalVM.productNumber">
+                <mat-label>ISBN / Product No <span class="asteric">*</span></mat-label>
+                <input matInput (keyup)="trimInputValue(generalVM.productNumber)" [(ngModel)]="generalVM.productNumber">
             </mat-form-field>
         </div>
-        <div class="col-lg-3 pr-0">
+        <div class="col-lg-2 pr-0">
             <mat-form-field appearance="fill">
                 <mat-label>External Part No.</mat-label>
                 <input matInput [(ngModel)]="generalVM.externalPartNo">
             </mat-form-field>
         </div>
-        <div class="col-lg-3 pr-0">
+        <div class="col-lg-2 pr-0">
             <mat-form-field appearance="fill">
-                <mat-label>Printing Type</mat-label>
+                <mat-label>Printing Type <span class="asteric">*</span></mat-label>
                 <mat-select [(ngModel)]="generalVM.printingType" (selectionChange)="handlePrintTypeChange()">
                     <mat-option value="Digital">Digital</mat-option>
                     <mat-option value="Offset">Offset</mat-option>
@@ -31,9 +31,19 @@
                 </mat-select>
             </mat-form-field>
         </div>
+        <div class="col-lg-2 pr-0" *ngIf="generalVM.printingType === 'Digital' || generalVM.printingType === 'POD'">
+            <mat-form-field appearance="fill">
+                <mat-label>Print Quality</mat-label>
+                <mat-select [(ngModel)]="generalVM.printQuality">
+                    <mat-option value="Standard">Standard</mat-option>
+                    <mat-option value="Enhance">Enhance</mat-option>
+                    <mat-option value="Premium">Premium</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
-                <mat-label>ISBN Owner</mat-label>
+                <mat-label>ISBN Owner <span class="asteric">*</span></mat-label>
                 <mat-icon matPrefix>search</mat-icon>
                 <input matInput [(ngModel)]="generalVM.isbnOwner" [value] = "generalVM.isbnOwner"
                 #trigger="matAutocompleteTrigger" 
@@ -43,8 +53,8 @@
                 <mat-autocomplete  #auto="matAutocomplete" [displayWith]="displayFn" showPanel="true" (optionSelected)='handleSelectedIsbnOwner($event.option.value)'>
                     <mat-option *ngIf="isLoading" class="is-loading" value="0">Loading...</mat-option>
                     <ng-container *ngIf="!isLoading">
-                      <mat-option *ngFor="let item of isbnOwnerList" [value]="item.CompanyCode">
-                        <span><b>{{item.CompanyCode}}</b>_{{item.CompanyName}}</span>
+                      <mat-option *ngFor="let item of isbnOwnerList" [value]="item.CompanyCode" title="{{item.CompanyCode}}_{{item.CompanyName}}">
+                        <span class="font-12px"><b>{{item.CompanyCode}}</b>_{{item.CompanyName}}</span>
                       </mat-option> 
                     </ng-container>
                   </mat-autocomplete>
@@ -54,7 +64,7 @@
     <div class="col-lg-12 display-flex pl-0">
         <div class="col-lg-3 pr-0">
             <mat-form-field appearance="fill">
-                <mat-label>Product Type</mat-label>
+                <mat-label>Product Type <span class="asteric">*</span></mat-label>
                 <mat-select [(ngModel)]="generalVM.productType" (selectionChange)="shouldShowJournalFields()">
                     <mat-option>
                         <ngx-mat-select-search [formControl]="productTypeFltrCtrl" placeholderLabel="Search..">
@@ -88,7 +98,7 @@
     </div>
     <div class="col-lg-12 display-flex">
         <mat-form-field appearance="fill">
-            <mat-label>Product Description</mat-label>
+            <mat-label>Product Description <span class="asteric">*</span></mat-label>
             <input matInput [(ngModel)]="generalVM.productDescription">
         </mat-form-field>
     </div>
@@ -127,13 +137,13 @@
             <div class="row pt-5">
                 <div class="col-lg-6 pr-0">
                     <mat-form-field appearance="fill">
-                        <mat-label>Height(mm)</mat-label>
+                        <mat-label>Height(mm) <span class="asteric">*</span></mat-label>
                         <input matInput [(ngModel)]="generalVM.height" type="number" min="0">
                     </mat-form-field>
                 </div>
                 <div class="col-lg-6 pr-0">
                     <mat-form-field appearance="fill">
-                        <mat-label>Width(mm)</mat-label>
+                        <mat-label>Width(mm) <span class="asteric">*</span></mat-label>
                         <input matInput [(ngModel)]="generalVM.width" type="number" min="0">
                     </mat-form-field>
                 </div>

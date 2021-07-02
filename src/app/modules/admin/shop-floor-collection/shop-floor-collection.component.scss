@@ -56,6 +56,11 @@ app-shop-floor-collection {
     line-height: inherit !important;
   }
 
+  .btnJobScheduleSelect:disabled {
+    cursor: not-allowed !important; 
+    opacity: 0.8;
+  }
+
   .outline-button {
     border: 1px solid #5face2 !important;
     border-radius: 2px !important;
@@ -101,5 +106,6 @@ app-shop-floor-collection {
     border-color: #5FACE2;
     color: #5FACE2;
     margin-right: 6.5px;
+    margin-top: 0.5rem !important;
   }
 }

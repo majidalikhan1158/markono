@@ -10,6 +10,7 @@ import { InvoiceViewModel } from 'src/app/modules/shared/models/create-case';
 import { CaseStore } from 'src/app/modules/shared/ui-services/create-case.service';
 import { CreateCaseMode, CreateCaseDataType } from 'src/app/modules/shared/enums/app-enums';
 import { SnackBarService } from '../../../../../shared/ui-services/snack-bar.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-invoice',
@@ -23,6 +24,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   disabled = false;
   columnsToDisplay = ['#', 'Position', 'Notes', ''];
   rowsToDisplay: InvoiceViewModel[] = [];
+  subscription: Subscription;
   constructor(
     private createCaseService: CaseStore,
     private ref: ChangeDetectorRef,
@@ -34,8 +36,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     if (this.createCaseMode === CreateCaseMode.EDIT) {
       this.disabled = true;
     }
-    this.createCaseService.createCaseStore.subscribe((data) => {
-      if (data.invoiceList && data.invoiceList.length > 0) {
+    this.subscription = this.createCaseService.createCaseStore.subscribe((data) => {
+      if (data && data.invoiceList && data.invoiceList.length > 0) {
         this.rowsToDisplay = data.invoiceList;
       } else {
         if (this.rowsToDisplay.length === 0) {
@@ -72,6 +74,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.pushToStore();
+    this.subscription?.unsubscribe();
   }
 
   handleChangeToSyncWithStore = (index: number, type: number) => {

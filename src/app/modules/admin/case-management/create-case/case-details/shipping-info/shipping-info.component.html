@@ -32,8 +32,8 @@
                                     (click)="displayShipmentDetails(shipment.boxId)">
                                     {{
                                     shipment.boxId == boxIdToExpand ?
-                                    ExpansionIcons.KEYBOARD_ARROW_UP :
-                                    ExpansionIcons.KEYBOARD_ARROW_DOWN
+                                    ExpansionIcons.KEYBOARD_ARROW_DOWN :
+                                    ExpansionIcons.KEYBOARD_ARROW_UP
                                     }}
                                 </span>
                             </div>
@@ -65,6 +65,7 @@
                                         <mat-form-field appearance="fill">
                                             <mat-label>Shipment Promised Date</mat-label>
                                             <input matInput [matDatepicker]="picker1"
+                                                (dateChange)="handleShipmentPromisedDateChange(i, $event)"
                                                 [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippmentPromisedDate"
                                                 [disabled]="disabled">
                                             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -88,7 +89,7 @@
                                                 (selectionChange)="handleShipmentModeChange($event,shipment.shipmentId)"
                                                 [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shipmentMode"
                                                 [disabled]="disabled">
-                                                <mat-option *ngFor="let item of shipmentModeList" [value]="item.attributes.description">
+                                                <mat-option *ngFor="let item of shipmentModeList" [value]="item.attributes.code">
                                                     {{item.attributes.description}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
@@ -107,7 +108,7 @@
                                             [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingTerms"
                                             [disabled]="disabled">
                                             <mat-option *ngFor="let item of shipmentTermList" [value]="item.attributes.code">
-                                                {{item.attributes.code}}</mat-option>
+                                                {{item.attributes.description}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                     </div>
@@ -127,7 +128,11 @@
                                                 <mat-select
                                                     [(ngModel)]="shipmentsInfoVMList[i].shippingDetails.shippingAgent"
                                                     [disabled]="disabled">
-                                                    <mat-option *ngFor="let item of shipmentAgentList" [value]="item.attributes.description">
+                                                    <mat-option>
+                                                        <ngx-mat-select-search [formControl]="shippingAgentFltrCtrl" placeholderLabel="Search..">
+                                                        </ngx-mat-select-search>
+                                                    </mat-option>
+                                                    <mat-option *ngFor="let item of filterShipmentAgentList" [value]="item.attributes.code">
                                                         {{item.attributes.description}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
@@ -187,7 +192,8 @@
                                                                 </ng-container>
                                                             </td>
                                                             <td>{{isShippingDetails ? '-': shipmentItem.title}}</td>
-                                                            <td>{{isShippingDetails ? '-' : shipmentItem.availableQty}}
+                                                            <!-- <td>{{isShippingDetails ? '-' : shipmentItem.availableQty}} -->
+                                                                <td>{{isShippingDetails ? '-' : availableQuantityList[i]}}
                                                             </td>
                                                             <td>
                                                                 <mat-form-field appearance="fill" class=""
@@ -251,21 +257,11 @@
                                                         <td>
                                                             <mat-form-field appearance="fill">
                                                                 <mat-label>Choose</mat-label>
-                                                                <mat-select [(ngModel)]="rowId.costCategory"
+                                                                <mat-select 
+                                                                    [(ngModel)]="rowId.costCategory"
                                                                     [disabled]="disabled">
-                                                                    <mat-option value="Filfillment">Filfillment
-                                                                    </mat-option>
-                                                                    <mat-option value="Fulfillment">Fulfillment
-                                                                    </mat-option>
-                                                                    <mat-option value="Packing Materials">Packing
-                                                                        Materials</mat-option>
-                                                                    <mat-option value="Order Handling">Order Handling
-                                                                    </mat-option>
-                                                                    <mat-option value="Shipping">Shipping</mat-option>
-                                                                    <mat-option value="Storage Charges">Storage Charges
-                                                                    </mat-option>
-                                                                    <mat-option value="Value Added Services">Value Added
-                                                                        Services</mat-option>
+                                                                    <mat-option *ngFor="let item of costCategoryList" [value]="item.Code">
+                                                                        {{item.Description}}</mat-option>
                                                                 </mat-select>
                                                             </mat-form-field>
                                                         </td>
@@ -324,13 +320,18 @@
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Attention To</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentAddress.AttentionTo">
+                                                <input
+                                                required 
+                                                matInput 
+                                                [(ngModel)]="shipment.shipmentAddress.AttentionTo">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Contact Person</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentAddress.Contact">
+                                                <input matInput 
+                                                maxlength="18"
+                                                [(ngModel)]="shipment.shipmentAddress.Contact">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -345,7 +346,9 @@
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Phone</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentAddress.PhoneNo">
+                                                <input matInput 
+                                                maxlength="16"
+                                                [(ngModel)]="shipment.shipmentAddress.PhoneNo">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -353,7 +356,10 @@
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Address 1</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentAddress.Address">
+                                                <input
+                                                    required 
+                                                    matInput 
+                                                    [(ngModel)]="shipment.shipmentAddress.Address">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pl-0">
@@ -373,7 +379,10 @@
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Postcode</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentAddress.PostCode">
+                                                <input
+                                                    required 
+                                                    matInput 
+                                                    [(ngModel)]="shipment.shipmentAddress.PostCode">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -387,8 +396,18 @@
                                         <div class="col-lg-6 pl-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Country</mat-label>
-                                                <input matInput
+                                                <input
+                                                    required 
+                                                    matInput
                                                     [(ngModel)]="shipment.shipmentAddress.CountryRegionCode">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 display-flex pl-0 pr-0 pt-3">
+                                        <div class="col-lg-6 pl-0">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Shipment Note</mat-label>
+                                                <input matInput maxlength="255" specialIsAlphaNumeric [(ngModel)]="shipment.shipmentAddress.shipmentNote">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -410,7 +429,9 @@
                                         <div class="col-lg-6 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Attention To</mat-label>
-                                                <input matInput
+                                                <input
+                                                    required
+                                                     matInput
                                                     [(ngModel)]="shipment.shipmentBillingDetails.AttentionTo">
                                             </mat-form-field>
                                         </div>
@@ -419,7 +440,9 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Contact Person</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.Contact">
+                                                <input matInput
+                                                maxlength="18" 
+                                                [(ngModel)]="shipment.shipmentBillingDetails.Contact">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pr-0">
@@ -434,13 +457,18 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Phone</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.PhoneNo">
+                                                <input matInput 
+                                                maxlength="16"
+                                                [(ngModel)]="shipment.shipmentBillingDetails.PhoneNo">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Address 1</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.Address">
+                                                <input
+                                                    required 
+                                                    matInput 
+                                                    [(ngModel)]="shipment.shipmentBillingDetails.Address">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -462,7 +490,10 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Postcode</mat-label>
-                                                <input matInput [(ngModel)]="shipment.shipmentBillingDetails.PostCode">
+                                                <input
+                                                    required 
+                                                    matInput 
+                                                    [(ngModel)]="shipment.shipmentBillingDetails.PostCode">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-lg-6 pr-0">
@@ -476,7 +507,9 @@
                                         <div class="col-lg-6 pl-0 pr-0">
                                             <mat-form-field appearance="fill">
                                                 <mat-label>Country</mat-label>
-                                                <input matInput
+                                                <input
+                                                    required 
+                                                    matInput
                                                     [(ngModel)]="shipment.shipmentBillingDetails.CountryRegionCode">
                                             </mat-form-field>
                                         </div>
